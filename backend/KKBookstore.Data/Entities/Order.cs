@@ -2,23 +2,48 @@
 
 namespace KKBookstore.Data.Entities
 {
-    public class Order : BaseEntity
+
+    //OrderID
+    //CustomerID
+    //DueWhen
+    //ExpectedDeliveryWhen
+    //OrderNumber
+    //ShippingAddressID
+    //Subtotal
+    //TaxAmount
+    //Comment
+    //DeliveryInstruction
+    //DiscountID
+    //PaymentMethod
+    //Status
+    //PickingCompletedWhen
+    //OrderWhen
+    //LastEditedBy
+    //LastEditedWhen
+    public class Order : BaseEntity, ITrackable
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int  OrderId { get; set; }
-
-        public int? CustomerId { get; set; }
-
-        public int? DeliveryId { get; set; }
-
-        public int? PaymentId { get; set; }
-
-        public Guid PaymentCode { get; set; }
-
+        public int OrderID { get; set; }
+        public string OrderNumber { get; set; }
+        public DateTimeOffset? DueWhen { get; set; }
+        public DateTimeOffset ExpectedDeliveryWhen { get; set; }
         public decimal? Subtotal { get; set; }
+        public decimal TaxRate { get; set; }
+        public string? Comment { get; set; }
+        public string? DeliveryInstruction { get; set; }
+        public int CustomerID { get; set; }
+        public User Customer { get; set; }
+        public int ShippingAddressID { get; set; }
 
-        public decimal? Total { get; set; }
-
-        // Implement Discount system
+        public int DeliveryMethodID { get; set; }
+        public int? DiscountID { get; set; }
+        public int PaymentMethodID  { get; set; }
+        public string Status { get; set; }
+        public DateTimeOffset? PickingCompletedWhen { get; set; }
+        public DateTimeOffset? ConfirmedDeliveryWhen { get; set; }
+        public DateTimeOffset? ConfirmedReceivedWhen { get; set; }
+        public DateTimeOffset OrderWhen { get; set; }
+        public int LastEditedBy { get; set; }
+        public User LastEditedByUser { get; set; }
+        public DateTimeOffset LastEditedWhen { get; set; }
     }
 }

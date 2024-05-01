@@ -16,10 +16,16 @@ namespace KKBookstore.Data.EntitiesContext
             ];
 
             modelBuilder.Entity<User>().HasData(usersList);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.Customer)
+                .HasForeignKey(o => o.CustomerID);
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<ShippingAddress> ShippingAddresses { get; set; }
-        
+        public DbSet<Order> Orders { get; set; }
+
     }
 }

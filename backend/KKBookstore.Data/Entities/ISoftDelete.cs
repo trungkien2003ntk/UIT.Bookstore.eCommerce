@@ -7,12 +7,12 @@ namespace KKBookstore.Data.Entities
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
 
-        public DateTimeOffset? DeletedAt { get; set; }
+        public DateTimeOffset? DeletedWhen { get; set; }
         
         public void Undo()
         {
             IsDeleted = false;
-            DeletedAt = null;
+            DeletedWhen = null;
         }
     }
 }

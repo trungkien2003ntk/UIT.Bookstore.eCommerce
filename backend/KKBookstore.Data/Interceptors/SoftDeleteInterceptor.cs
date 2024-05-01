@@ -17,7 +17,7 @@ namespace KKBookstore.Data.Interceptors
                 if (entry is not { State: EntityState.Deleted, Entity: ISoftDelete delete }) continue;
                 entry.State = EntityState.Modified;
                 delete.IsDeleted = true;
-                delete.DeletedAt = DateTimeOffset.UtcNow;
+                delete.DeletedWhen = DateTimeOffset.UtcNow;
             }
             return result;
         }

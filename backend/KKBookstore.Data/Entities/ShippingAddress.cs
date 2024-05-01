@@ -1,37 +1,56 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Data.Entities
+namespace KKBookstore.Data.Entities;
+
+
+//ShippingAddressID
+//UserID
+//Name
+//PhoneNumber
+//Province
+//District
+//Commune
+//DetailAddress
+//IsDefault
+//AddressTypeCode
+//LastEditedBy
+//LastEditedWhen
+
+
+
+public class ShippingAddress : BaseEntity, ISoftDelete, ITrackable
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int ShippingAddressId { get; set; }
 
-    [Table("ShippingAddress")]
-    public class ShippingAddress : BaseEntity, ISoftDelete
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ShippingAddressId { get; set; }
+    public int UserId { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
 
-        public string Province { get; set; }
+    public string Province { get; set; }
 
-        public string District { get; set; }
+    public string District { get; set; }
 
-        public string Ward { get; set; }
+    public string Commune { get; set; }
 
-        public string Street { get; set; }
+    public string DetailAddress { get; set; }
 
-        public string AddressType { get; set; }
+    public bool IsDefault { get; set; }
 
-        public string? Note { get; set; }
+    public string AddressTypeCode { get; set; }
 
-        public bool IsDefault { get; set; }
+    public int LastEditedBy { get; set; }
 
-        public User? User { get; set; }
-        
-        public bool IsDeleted { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        
-        public DateTimeOffset? DeletedAt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    }
+    public DateTimeOffset LastEditedWhen { get; set; }
+    
+    public bool IsDeleted { get; set; }
+    
+    public DateTimeOffset? DeletedWhen { get; set; }
+
+    // navigation property
+    public User LastEditedByUser { get; set; }
+    public User User { get; set; }
+    public RefAddressType AddressType { get; set; }
 }

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ProjectContext.dgml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.11.1" />
     <PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -20,6 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KKBookstore.Model\KKBookstore.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Conventions\" />
   </ItemGroup>
 
 </Project>

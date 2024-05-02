@@ -9,7 +9,10 @@ namespace KKBookstore.Data.Entities
         public decimal RecommendedRetailPrice { get; set; }
         public decimal UnitPrice { get; set; }
         public int LastEditedBy { get; set; }
-        public User LastEditedByUser { get; set; }
         public DateTimeOffset LastEditedWhen { get; set; }
+
+        // navigation properties
+        public User LastEditedByUser { get; set; }
+        public Sku Sku { get; set; }
     }
 }

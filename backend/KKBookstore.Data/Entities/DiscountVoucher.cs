@@ -19,6 +19,13 @@ public class DiscountVoucher : BaseEntity, ISoftDelete, ITrackable
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
     public int LastEditedBy { get; set; }
-    public User LastEditedByUser { get; set; }
     public DateTimeOffset LastEditedWhen { get; set; }
+
+
+    // navigation property to Order and OrderLine
+    public Product? Product { get; set; }
+    public User LastEditedByUser { get; set; }
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
+    public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
+
 }

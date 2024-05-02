@@ -21,6 +21,13 @@ public class Sku : BaseEntity, ITrackable, ISoftDelete
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
     public int LastEditedBy { get; set; }
-    public User LastEditedByUser { get; set; }
     public DateTimeOffset LastEditedWhen { get; set; }
+
+    // navigation properties
+    public User LastEditedByUser { get; set; }
+    public Product Product { get; set; }
+    public ICollection<SkuOptionValue> SkuOptionValues { get; set; } = new List<SkuOptionValue>();
+    public ICollection<SkuImage> SkuImages { get; set; } = new List<SkuImage>();
+    public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
+    
 }

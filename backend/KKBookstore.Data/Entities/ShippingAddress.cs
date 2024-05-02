@@ -23,7 +23,7 @@ public class ShippingAddress : BaseEntity, ISoftDelete, ITrackable
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ShippingAddressId { get; set; }
 
-    public int UserId { get; set; }
+    public int UserID { get; set; }
 
     public string Name { get; set; }
 

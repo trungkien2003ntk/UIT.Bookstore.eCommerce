@@ -13,14 +13,14 @@ public class OrderLine : BaseEntity, ITrackable
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public DateTimeOffset PickingCompletedWhen { get; set; }
-    public int? DiscountID { get; set; }
+    public int? DiscountVoucherID { get; set; }
     public int LastEditedBy { get; set; }
     public DateTimeOffset LastEditedWhen { get; set; }
 
     // navigation property
-    public User LastEditedByUser { get; set; }
     public Order Order { get; set; }
     public Sku Sku { get; set; }
     public DiscountVoucher DiscountVoucher { get; set; }
+    public User LastEditedByUser { get; set; }
 
 }

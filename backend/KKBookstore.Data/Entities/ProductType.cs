@@ -17,4 +17,5 @@ public class ProductType : BaseEntity, ITrackable, ISoftDelete
 
     // navigation property
     public ProductType ParentProductType { get; set; }
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 }

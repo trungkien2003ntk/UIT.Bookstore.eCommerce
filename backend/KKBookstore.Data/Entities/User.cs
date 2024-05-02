@@ -12,8 +12,6 @@ namespace KKBookstore.Data.Entities
 
         public string Email { get; set; }
 
-        public string HashedPassword { get; set; }
-
         public string? Phone { get; set; }
 
         public string? ImageUrl { get; set; }
@@ -41,6 +39,8 @@ namespace KKBookstore.Data.Entities
         // navigation property
         public User LastEditedByUser { get; set; }
         public ICollection<ShippingAddress> ShippingAddresses { get; set; } = new List<ShippingAddress>();
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+        public ICollection<UserPassword> UserPasswords { get; set; } = new List<UserPassword>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

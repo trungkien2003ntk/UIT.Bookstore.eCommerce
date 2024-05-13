@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -10,6 +11,9 @@ export default {
       fontFamily: {
         Inter: ['Inter', 'sans-serif']
       },
+      boxShadow: {
+        'ct': '0px 0px 10px 0px rgba(0, 0, 0, 0.15)'
+      },
       colors: {
         'ct-black': {
           100: '#D0D5DD',
@@ -20,6 +24,9 @@ export default {
           100: '#C1FF72',
           200: '#7ED957',
           300: '#00BF63',
+          400: '#008F4A',
+          500: '#006A37',
+          600: '#004624',
         },
         'error': '#F04438',
         'warning': '#F79009',
@@ -47,6 +54,8 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 }
 

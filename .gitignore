@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/backend/KKBookstore.API/appsettings.Production.json
+/backend/KKBookstore.API/appsettings.Development.json
+/backend/KKBookstore.API/appsettings.json

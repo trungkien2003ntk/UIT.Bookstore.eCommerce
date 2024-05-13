@@ -1,8 +1,11 @@
 ﻿using KKBookstore.API.Extensions;
-using KKBookstore.Application.Users.CreateUser;
-using KKBookstore.Application.Users.RefreshAccessToken;
-using KKBookstore.Application.Users.SignIn;
+using KKBookstore.Application.Users.Commands.CreateUser;
+using KKBookstore.Application.Users.Commands.RefreshAccessToken;
+using KKBookstore.Application.Users.Commands.SignIn;
+using KKBookstore.Application.Users.Queries.GetUser;
+using KKBookstore.Domain.Common.Constants;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KKBookstore.API.Controllers
@@ -13,6 +16,26 @@ namespace KKBookstore.API.Controllers
     {
         private readonly IMediator _mediator = mediator;
 
+        [HttpGet("users")]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> GetUsersAsync(
+            CancellationToken cancellationToken = default
+        )
+        {
+            
+            return Ok();
+        }
+
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetUserAsync(
+            [FromRoute]int id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var result = await _mediator.Send(new GetUserQuery(id), cancellationToken);
+
+            return result.IsSuccess ? Ok(result.Value) : result.ToActionResult();
+        }
 
         // write an endpoint for register account, using email, password and userroles
         [HttpPost("register")]
@@ -24,7 +47,12 @@ namespace KKBookstore.API.Controllers
             // Implement account registration logic here
             var result = await _mediator.Send(createUserCommand, cancellationToken);
 
-            return result.IsSuccess? Created() : result.ToActionResult();
+            return result.IsSuccess ?
+                CreatedAtAction(
+                    nameof(GetUserAsync),
+                    new { id = result.Value }
+                ) : 
+                result.ToActionResult();
         }
 
         [HttpPost("signin")]

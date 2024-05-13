@@ -1,9 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Users.CreateUser;
-using KKBookstore.Application.Users.RefreshAccessToken;
-using KKBookstore.Application.Users.SignIn;
+using KKBookstore.Application.Users.Commands.CreateUser;
+using KKBookstore.Application.Users.Commands.RefreshAccessToken;
+using KKBookstore.Application.Users.Commands.SignIn;
 using KKBookstore.Domain.Common;
 using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
@@ -19,14 +19,14 @@ namespace KKBookstore.Infrastructure.Identity;
 
 public class IdentityService(
     UserManager<User> userManager,
-    RoleManager<IdentityRole> roleManager,
+    RoleManager<IdentityRole<int>> roleManager,
     IPasswordHasher<User> passwordHasher,
     IOptions<JwtSettings> jwtSettings,
     ApplicationDbContext dbContext
 ) : IIdentityService
 {
     private readonly UserManager<User> _userManager = userManager;
-    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly RoleManager<IdentityRole<int>> _roleManager = roleManager;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
     private readonly IOptions<JwtSettings> _jwtSettings = jwtSettings;
     private readonly ApplicationDbContext _dbContext = dbContext;
@@ -40,33 +40,34 @@ public class IdentityService(
             : Result.Success(user);
     }
 
-    public async Task<Result> CreateUserAsync(CreateUserRequest request)
+    public async Task<Result<int>> CreateUserAsync(CreateUserRequest request)
     {
         var searchResult = await FindUserAsync(new(request.Email));
         if (searchResult.IsSuccess)
         {
-            return Result.Failure(UserErrors.AlreadyExists);
+            return Result.Failure<int>(UserErrors.AlreadyExists);
         }
 
         var role = await _roleManager.FindByNameAsync(request.Role);
         if (role == null)
         {
-            return Result.Failure(UserErrors.InvalidRole);
+            return Result.Failure<int>(UserErrors.InvalidRole);
         }
 
         var user = request.ToEntity();
+        user.LoginType = LoginType.Email;
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
             var errors = result.ToErrors();
-            return Result.Failure(errors.FirstOrDefault() ?? UserErrors.Unknown);
+            return Result.Failure<int>(errors.FirstOrDefault() ?? UserErrors.Unknown);
         }
 
         await _userManager.AddToRoleAsync(user, role.Name!);
         
-        return Result.Success();
+        return Result.Success(user.Id);
     }
 
     public async Task<Result<SignInResponse>> SignInAsync(SignInRequest request)
@@ -91,15 +92,6 @@ public class IdentityService(
             return Result.Failure<SignInResponse>(UserErrors.MissingRole);
         }
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Name, user.Email!),
-            new(ClaimTypes.Role, roles.FirstOrDefault()!),
-            // Add other claims as needed...
-        };
-
-        
         JwtSecurityToken accessToken = await GenerateAccessToken(user);
         var expires = accessToken.ValidTo;
 
@@ -129,7 +121,7 @@ public class IdentityService(
             return Result.Failure<RefreshAccessTokenResponse>(TokenErrors.InvalidRefreshToken);
         }
 
-        var user = await _userManager.FindByIdAsync(existingRefreshToken.UserId);
+        var user = await _userManager.FindByIdAsync(existingRefreshToken.UserId.ToString());
         var accessToken = await GenerateAccessToken(user!);
         string writtenToken = ConvertJwtTokenToString(accessToken);
         var response = new RefreshAccessTokenResponse(writtenToken);
@@ -137,7 +129,7 @@ public class IdentityService(
         return Result.Success(response);
     }
 
-    public async Task<bool> IsValidRefreshToken(string userId, string refreshToken)
+    public async Task<bool> IsValidRefreshToken(int userId, string refreshToken)
     {
         var utcNow = DateTimeOffset.UtcNow;
 
@@ -152,9 +144,9 @@ public class IdentityService(
         return false;
     }
 
-    public async Task<bool> IsInRoleAsync(string userId, string role)
+    public async Task<bool> IsInRoleAsync(int userId, string role)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         return user != null && await _userManager.IsInRoleAsync(user, role);
     }
@@ -164,7 +156,7 @@ public class IdentityService(
         var roles = await _userManager.GetRolesAsync(user);
         var claims = new List<Claim>
     {
-        new(ClaimTypes.NameIdentifier, user.Id),
+        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new(ClaimTypes.Name, user.Email!),
         new(ClaimTypes.Role, roles.FirstOrDefault()!),
         // Add other claims as needed...
@@ -175,7 +167,7 @@ public class IdentityService(
 
         var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings.Value.AccessExpirationInMinutes));
 
-        JwtSecurityToken token = new JwtSecurityToken(
+        var token = new JwtSecurityToken(
             _jwtSettings.Value.Issuer,
             _jwtSettings.Value.Issuer,
             claims,
@@ -186,7 +178,7 @@ public class IdentityService(
         return token;
     }
 
-    private async Task<Result<RefreshToken>> GetRefreshToken(string userId)
+    private async Task<Result<RefreshToken>> GetRefreshToken(int userId)
     {
         var existingRefreshToken = await FindExistingRefreshToken(userId);
 
@@ -200,14 +192,14 @@ public class IdentityService(
         return await CreateAndSaveNewRefreshToken(userId);
     }
 
-    private async Task<RefreshToken?> FindExistingRefreshToken(string userId)
+    private async Task<RefreshToken?> FindExistingRefreshToken(int userId)
     {
         var utcNow = DateTimeOffset.UtcNow;
         return await _dbContext.RefreshTokens
             .FirstOrDefaultAsync(rt => rt.UserId == userId && rt.ExpiryDate > utcNow);
     }
 
-    private async Task RemoveExpiredRefreshTokens(string userId)
+    private async Task RemoveExpiredRefreshTokens(int userId)
     {
         var utcNow = DateTimeOffset.UtcNow;
         var invalidRefreshTokens = await _dbContext.RefreshTokens
@@ -218,7 +210,7 @@ public class IdentityService(
         await _dbContext.SaveChangesAsync();
     }
 
-    private async Task<Result<RefreshToken>> CreateAndSaveNewRefreshToken(string userId)
+    private async Task<Result<RefreshToken>> CreateAndSaveNewRefreshToken(int userId)
     {
         var refreshTokenResult = RefreshToken.Create(userId, _jwtSettings.Value.RefreshExpirationInMonths);
         if (refreshTokenResult.IsFailure)

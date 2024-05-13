@@ -1,29 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using KKBookstore.Domain.Common;
 using KKBookstore.Domain.Common.Interfaces;
 using KKBookstore.Domain.Users;
 
 namespace KKBookstore.Domain.OrderAggregate;
 
-
-//ShippingAddressId
-//UserId
-//Name
-//PhoneNumber
-//Province
-//District
-//Commune
-//DetailAddress
-//IsDefault
-//AddressTypeCode
-//LastEditedBy
-//LastEditedWhen
-
-
-
-public class ShippingAddress : BaseEntity, ISoftDelete, ITrackable
+public class ShippingAddress : BaseAuditableEntity, ISoftDelete
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ShippingAddressId { get; set; }
+    private ShippingAddress(
+        int userId,
+        string name,
+        string phoneNumber,
+        string province,
+        string district,
+        string commune,
+        int addressTypeId,
+        string detailAddress
+    ) : base()
+    {
+        UserId = userId;
+        Name = name;
+        PhoneNumber = phoneNumber;
+        Province = province;
+        District = district;
+        Commune = commune;
+        DetailAddress = detailAddress;
+        AddressTypeId = addressTypeId;
+        IsDeleted = false;
+    }
 
     public int UserId { get; set; }
 
@@ -41,18 +44,45 @@ public class ShippingAddress : BaseEntity, ISoftDelete, ITrackable
 
     public bool IsDefault { get; set; }
 
-    public string AddressTypeCode { get; set; }
+    public int AddressTypeId { get; set; }
 
-    public int LastEditedBy { get; set; }
-
-    public DateTimeOffset LastEditedWhen { get; set; }
+    public AddressType AddressTypeEnum
+    {
+        get => (AddressType)AddressTypeId;
+        set => AddressTypeId = (int)value;
+    }
 
     public bool IsDeleted { get; set; }
 
     public DateTimeOffset? DeletedWhen { get; set; }
 
     // navigation property
-    public User LastEditedByUser { get; set; }
     public User User { get; set; }
     public RefAddressType AddressType { get; set; }
+
+    // factory method
+    public static Result<ShippingAddress> Create(
+        int userId,
+        string name,
+        string phoneNumber,
+        string province,
+        string district,
+        string commune,
+        int addressTypeId,
+        string detailAddress = ""
+    )
+    {
+
+        return new ShippingAddress(userId, name, phoneNumber, province, district, commune, addressTypeId, detailAddress);
+    }
+
+    public void SetAsDefault()
+    {
+        IsDefault = true;
+    }
+
+    public void RemoveAsDefault()
+    {
+        IsDefault = false;
+    }
 }

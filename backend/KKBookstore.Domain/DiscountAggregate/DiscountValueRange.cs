@@ -4,13 +4,26 @@ namespace KKBookstore.Domain.DiscountAggregate;
 
 public sealed class DiscountValueRange : ValueObject
 {
-    public decimal MinValue { get; private set; }
+    private DiscountValueRange(
+        decimal maxValue,
+        decimal minValue = 0
+    )
+    {
+        MaxValue = maxValue;
+        MinValue = minValue;
+    }
+
+    public decimal MinValue { get; private set; } = 0;
     public decimal MaxValue { get; private set; }
 
-    public DiscountValueRange(decimal minValue, decimal maxValue)
+    public static Result<DiscountValueRange> Create(decimal maxValue, decimal minValue = 0)
     {
-        MinValue = minValue;
-        MaxValue = maxValue;
+        if (maxValue < minValue)
+        {
+            return Result.Failure<DiscountValueRange>(DiscountVoucherError.InvalidValueRange);
+        }
+
+        return new DiscountValueRange(maxValue, minValue);
     }
 
     public bool IsValidValue(decimal value)

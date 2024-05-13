@@ -1,4 +1,5 @@
-﻿using KKBookstore.Domain.Common;
+﻿using KKBookstore.Application.Users.Commands.CreateUser;
+using KKBookstore.Domain.Common;
 using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
@@ -22,8 +23,7 @@ public static class MappingExtension
     public static User ToEntity(this CreateUserRequest dto) =>
         new()
         {
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
+            FullName = dto.FullName,
             Email = dto.Email,
             UserName = dto.Email
         };

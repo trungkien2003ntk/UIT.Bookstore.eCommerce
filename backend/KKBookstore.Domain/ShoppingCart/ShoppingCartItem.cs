@@ -6,10 +6,17 @@ namespace KKBookstore.Domain.ShoppingCart;
 
 public class ShoppingCartItem : BaseAuditableEntity
 {
-    public ShoppingCartItem(int id): base(id)
+    private ShoppingCartItem(
+        int customerId,
+        int skuId,
+        int quantity
+    )
     {
-         
+        CustomerId = customerId;
+        SkuId = skuId;
+        Quantity = quantity;
     }
+
     public int ShoppingCartItemId { get; set; }
     public int CustomerId { get; set; }
     public int SkuId { get; set; }
@@ -19,4 +26,19 @@ public class ShoppingCartItem : BaseAuditableEntity
     // navigation properties
     public Sku Sku { get; set; }
     public User Customer { get; set; }
+
+    public static Result<ShoppingCartItem> Create(
+        int customerId,
+        int skuId,
+        int quantity
+    )
+    {
+        if (quantity <= 0)
+        {
+            return Result.Failure<ShoppingCartItem>(ShoppingCartError.QuantityMustBePositive);
+        }
+
+
+        return new ShoppingCartItem(customerId, skuId, quantity);
+    }
 }

@@ -10,9 +10,12 @@ internal class AuthorConfiguration : IEntityTypeConfiguration<Author>
 {
     public void Configure(EntityTypeBuilder<Author> builder)
     {
-        // set column name of key property in database to AuthorId instead of Id
-        builder.Property(t => t.Name)
+        builder.HasKey(t => t.Id);
+
+        builder.Property(t => t.Id)
             .HasColumnName("AuthorId");
+
+        builder.Property(t => t.Name);
 
         builder.Property(t => t.Name)
             .HasMaxLength(100)
@@ -27,5 +30,13 @@ internal class AuthorConfiguration : IEntityTypeConfiguration<Author>
         builder.HasMany(t => t.AuthorBooks)
             .WithOne(t => t.Author)
             .HasForeignKey(t => t.AuthorId);
+
+        builder.HasOne(t => t.LastEditedByUser)
+            .WithMany()
+            .HasForeignKey(t => t.LastEditedBy);
+
+        builder.HasOne(t => t.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(t => t.CreatedBy);
     }
 }

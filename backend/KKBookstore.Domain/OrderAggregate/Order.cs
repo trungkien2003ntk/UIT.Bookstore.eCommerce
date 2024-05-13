@@ -1,6 +1,5 @@
 ﻿using KKBookstore.Domain.Common;
 using KKBookstore.Domain.DiscountAggregate;
-using KKBookstore.Domain.Interfaces;
 using KKBookstore.Domain.Users;
 
 namespace KKBookstore.Domain.OrderAggregate
@@ -26,7 +25,6 @@ namespace KKBookstore.Domain.OrderAggregate
     public class Order : BaseAuditableEntity
     {
         private Order(
-            int id,
             int customerId,
             int shippingAddressId,
             int deliveryMethodId,
@@ -34,7 +32,7 @@ namespace KKBookstore.Domain.OrderAggregate
             DateTimeOffset orderWhen,
             decimal taxRate,
             OrderStatus status
-            ) : base(id)
+        ) : base()
         {
             OrderNumber = GenerateOrderNumber();
             CustomerId = customerId;
@@ -78,30 +76,26 @@ namespace KKBookstore.Domain.OrderAggregate
             return $"{OrderWhen.Year}-{OrderWhen.Month}-{OrderWhen.Day}/{Guid.NewGuid().ToString()[..5]}";
         }
 
-        public static Order Create(
-            int id,
+        public static Result<Order> Create(
             int customerId,
             int shippingAddressId,
             int deliveryMethodId,
             int paymentMethodId,
             DateTimeOffset orderWhen,
             decimal taxRate,
-            string status)
+            OrderStatus status
+        )
         {
-            if (Enum.TryParse(status, true, out OrderStatus orderStatus))
-            {
-                return Result.Failure<Order>("Invalid order status");
-            }
 
             return new Order(
-                id,
                 customerId,
                 shippingAddressId,
                 deliveryMethodId,
                 paymentMethodId,
                 orderWhen,
                 taxRate,
-                orderStatus);
+                status
+            );
         }
     }
 }

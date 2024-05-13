@@ -38,7 +38,8 @@ public static class DependencyInjection
                 .EnableSensitiveDataLogging()
                 .AddInterceptors(new SoftDeleteInterceptor());
         });
-
+        
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services
@@ -64,8 +65,7 @@ public static class DependencyInjection
 
         services.AddAuthorization();
 
-        services.AddIdentityCore<User>()
-            .AddRoles<IdentityRole>()
+        services.AddIdentity<User, IdentityRole<int>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddApiEndpoints();
 

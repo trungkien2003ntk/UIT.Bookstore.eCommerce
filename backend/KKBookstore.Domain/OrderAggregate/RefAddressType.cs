@@ -1,17 +1,22 @@
-﻿using KKBookstore.Domain.Common.Interfaces;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Common;
+using KKBookstore.Domain.Common.Interfaces;
 
 namespace KKBookstore.Domain.OrderAggregate;
 
-public class RefAddressType : ISoftDelete, ITrackable
+public class RefAddressType : BaseAuditableEntity, ISoftDelete
 {
-    public string RefAddressTypeCode { get; set; }
+    public RefAddressType(
+        string name,
+        string description
+    ) : base()
+    {
+        Name = name;
+        Description = description;
+        IsDeleted = false;
+    }
+
+    public string Name { get; set; }
     public string Description { get; set; }
-    public int LastEditedBy { get; set; }
-    public DateTimeOffset LastEditedWhen { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
-
-    // navigation property
-    public User LastEditedByUser { get; set; }
 }

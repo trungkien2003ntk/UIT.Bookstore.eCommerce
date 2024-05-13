@@ -5,11 +5,12 @@ namespace KKBookstore.Domain.ProductAggregate;
 
 public class Author : BaseAuditableEntity, ISoftDelete
 {
-    public Author(
-        int id,
+    public Author() { }
+
+    private Author(
         string name,
         string description
-        ) : base(id)
+        ) : base()
     {
         Name = name;
         Description = description;
@@ -22,6 +23,10 @@ public class Author : BaseAuditableEntity, ISoftDelete
     public DateTimeOffset? DeletedWhen { get; set; }
 
     // navigation propery
-    public ICollection<WrittenBy> AuthorBooks { get; set; } = new List<WrittenBy>();
+    public ICollection<BookAuthor> AuthorBooks { get; set; } = new List<BookAuthor>();
 
+    public static Result<Author> Create(string name, string description)
+    {
+        return new Author(name, description);
+    }
 }

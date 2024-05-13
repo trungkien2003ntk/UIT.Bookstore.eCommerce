@@ -6,119 +6,33 @@ using KKBookstore.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using KKBookstore.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using KKBookstore.Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using KKBookstore.Infrastructure.Data.Configurations;
 
 namespace KKBookstore.Infrastructure.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
-            modelBuilder.Entity<RefAddressType>()
-                .HasKey(r => r.RefAddressTypeCode);
+            builder.ApplyConfigurationsFromAssembly(typeof(ProductConfiguration).Assembly);    
 
-            modelBuilder.Entity<UnitMeasure>()
-                .HasKey(u => u.UnitMeasureCode);
-
-            modelBuilder.Entity<ProductType>()
-                .HasKey(pt => pt.ProductTypeCode);
-
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Orders)
-                .WithOne(o => o.Customer)
-                .HasForeignKey(o => o.CustomerId);
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.LastEditedByUser)
-                .WithMany()
-                .HasForeignKey(u => u.LastEditedBy)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ShippingAddress>()
-                .HasOne(sa => sa.User)
-                .WithMany(u => u.ShippingAddresses)
-                .HasForeignKey(sa => sa.UserId);
-
-            modelBuilder.Entity<Rating>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Ratings)
-                .HasForeignKey(r => r.UserId);
-
-            modelBuilder.Entity<UserPassword>()
-                .HasOne(up => up.User)
-                .WithMany(u => u.UserPasswords)
-                .HasForeignKey(r => r.UserId);
-
-            modelBuilder.Entity<ProductPriceHistory>()
-                .HasKey(table => new
-                {
-                    table.SkuId,
-                    table.StartWhen
-                });
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.UnitMeasure)
-                .WithMany()
-                .HasForeignKey(p => p.UnitMeasureCode);
-
-            modelBuilder.Entity<SkuOptionValue>()
-                .HasKey(table => new
-                {
-                    table.SkuId,
-                    table.OptionId
-                });
-
-            modelBuilder.Entity<WrittenBy>()
-                .HasKey(table => new
-                {
-                    table.ProductId,
-                    table.AuthorId
-                });
-
-            modelBuilder.Entity<Order>()
-                .Property(o => o.Subtotal)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Order>()
-                .Property(o => o.TaxRate)
-                .HasPrecision(18, 2);
-            modelBuilder.Entity<OrderLine>()
-                .Property(o => o.UnitPrice)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Sku>()
-                .Property(s => s.RecommendedRetailPrice)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Sku>()
-                .Property(s => s.UnitPrice)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Sku>()
-                .Property(s => s.TaxRate)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<ProductPriceHistory>()
-                .Property(s => s.RecommendedRetailPrice)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<ProductPriceHistory>()
-                .Property(s => s.UnitPrice)
-                .HasPrecision(18, 2);
-
-
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<WrittenBy> WrittenBys { get; set; }
+        public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
         public DbSet<DiscountVoucher> DiscountVouchers { get; set; }
@@ -138,7 +52,5 @@ namespace KKBookstore.Infrastructure.Data
         public DbSet<Sku> Skus { get; set; }
         public DbSet<SkuOptionValue> SkuOptionValues { get; set; }
         public DbSet<UnitMeasure> UnitMeasures { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<UserPassword> UserPasswords { get; set; }
     }
 }

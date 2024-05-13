@@ -7,7 +7,12 @@ public abstract class BaseEntity : IEquatable<BaseEntity>
         Id = id;
     }
 
-    public int Id { get; }
+    protected BaseEntity()
+    {
+
+    }
+
+    public int Id { get; set; }
 
     // implement IEquatable<BaseEntity>
     public bool Equals(BaseEntity? other)

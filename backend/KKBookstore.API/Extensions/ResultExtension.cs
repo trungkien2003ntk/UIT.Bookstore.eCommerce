@@ -37,6 +37,7 @@ public static class ResultExtension
         {
             // switch errorType:
             case ErrorType.Validation:
+            case ErrorType.Failure:
                 return StatusCodes.Status400BadRequest;
             case ErrorType.Unauthorized:
                 return StatusCodes.Status401Unauthorized;

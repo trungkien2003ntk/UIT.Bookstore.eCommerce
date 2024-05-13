@@ -6,47 +6,38 @@ namespace KKBookstore.Infrastructure.Identity;
 
 public class RefreshToken
 {
+    protected RefreshToken() { }
+
     private RefreshToken(
         string token,
-        string jwtId,
-        string userId,
+        int userId,
         DateTimeOffset creationDate,
         DateTimeOffset expiryDate
     )
     {
         Token = token;
-        JwtId = jwtId;
         UserId = userId;
-        CreationDate = creationDate;
+        CreatedDate = creationDate;
         ExpiryDate = expiryDate;
-        Used = false;
-        Invalidated = false;
     }
+
     public int Id { get; set; }
     public string Token { get; set; }
-    public string JwtId { get; set; }
-    public string UserId { get; set; }
-    public DateTimeOffset CreationDate { get; set; }
+    public int UserId { get; set; }
+    public DateTimeOffset CreatedDate { get; set; }
     public DateTimeOffset ExpiryDate { get; set; }
-    public bool Used { get; set; }
-    public bool Invalidated { get; set; }
     public User User { get; set; }
 
     public static Result<RefreshToken> Create(
-        string userId,
+        int userId,
         int refreshTokenExpirationInMonths
     )
     {
-        if (string.IsNullOrWhiteSpace(userId))
-        {
-            return Result.Failure<RefreshToken>(Error.NullValue);
-        }
-        var jwtId = Guid.NewGuid().ToString();
         var token = GenerateToken();
-        var creationDate = DateTimeOffset.UtcNow;
+        var createdDate = DateTimeOffset.UtcNow;
         var expiryDate = DateTimeOffset.UtcNow.AddMonths(refreshTokenExpirationInMonths);
 
-        return new RefreshToken(token, jwtId, userId, creationDate, expiryDate);
+        return new RefreshToken(token, userId, createdDate, expiryDate);
     }
 
     private static string GenerateToken()

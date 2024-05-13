@@ -1,21 +1,38 @@
-﻿using KKBookstore.Domain.Common.Interfaces;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Common;
+using KKBookstore.Domain.Common.Interfaces;
 
 namespace KKBookstore.Domain.ProductAggregate
 {
-    public class OptionValue : BaseEntity, ISoftDelete, ITrackable
+    public class OptionValue : BaseAuditableEntity, ISoftDelete
     {
-        public int OptionValueId { get; set; }
+        private OptionValue(
+            int optionId,
+            string value
+        ) : base()
+        {
+            OptionId = optionId;
+            Value = value;
+            IsDeleted = false;
+        }
+
         public int OptionId { get; set; }
-        public string Name { get; set; }
+        public string Value { get; set; }
         public bool IsDeleted { get; set; }
         public DateTimeOffset? DeletedWhen { get; set; }
-        public int LastEditedBy { get; set; }
-        public User LastEditedByUser { get; set; }
-        public DateTimeOffset LastEditedWhen { get; set; }
 
         //navigation properties
         public Option Option { get; set; }
-        public ICollection<SkuOptionValue> SkuOptionVales { get; set; } = new List<SkuOptionValue>();
+
+        public static Result<OptionValue> Create(int optionId, string name)
+        {
+            // Perform validation or any other necessary logic
+            if (string.IsNullOrEmpty(name))
+            {
+                return Result.Failure<OptionValue>(ProductErrors.NotFound);
+            }
+
+            // Return the created instance as a successful result
+            return new OptionValue(optionId, name);
+        }
     }
 }

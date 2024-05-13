@@ -1,15 +1,17 @@
-﻿using KKBookstore.Domain.Common.Interfaces;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Common;
+using KKBookstore.Domain.Common.Interfaces;
 
 namespace KKBookstore.Domain.OrderAggregate;
 
-public class PaymentMethod : BaseEntity, ITrackable
+public class PaymentMethod : BaseAuditableEntity, ISoftDelete
 {
-    public int PaymentMethodId { get; set; }
-    public string PaymentMethodName { get; set; }
-    public int LastEditedBy { get; set; }
-    public DateTimeOffset LastEditedWhen { get; set; }
+    public PaymentMethod(string name)
+    {
+        Name = name;
+    }
 
-    // navigation property
-    public User LastEditedByUser { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool IsDeleted { get ; set ; }
+    public DateTimeOffset? DeletedWhen { get ; set ; }
 }

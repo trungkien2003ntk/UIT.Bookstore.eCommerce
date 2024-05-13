@@ -3,17 +3,19 @@ using Microsoft.AspNetCore.Identity;
 
 namespace KKBookstore.Domain.Users;
 
-public class User : IdentityUser, ISoftDelete
+public class User : IdentityUser<int>, ISoftDelete
 {
     public string FullName { get; set; }
 
     public string? Phone { get; set; }
 
+    public DateTimeOffset DateOfBirth { get; set; }
+
     public string? ImageUrl { get; set; }
 
     public string? UserPreferences { get; set; }
 
-    public string LoginType { get; set; }
+    public LoginType LoginType { get; set; }
 
     public bool IsActive { get; set; }
 
@@ -21,16 +23,22 @@ public class User : IdentityUser, ISoftDelete
 
     public bool IsAdmin { get; set; }
 
-    public string Status { get; set; }
+    public UserStatus Status { get; set; }
 
     public bool IsDeleted { get; set; }
 
     public DateTimeOffset? DeletedWhen { get; set; }
 
-    public int LastEditedBy { get; set; }
+
+    public DateTimeOffset CreatedWhen { get; set; }
+
+    public int? CreatedBy { get; set; }
+
+    public User? CreatedByUser { get; set; }
+
+    public int? LastEditedBy { get; set; }
 
     public DateTimeOffset LastEditedWhen { get; set; }
 
-    // navigation property
-    public User LastEditedByUser { get; set; }
+    public User? LastEditedByUser { get; set; }
 }

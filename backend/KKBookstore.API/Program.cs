@@ -2,6 +2,7 @@ using KKBookstore.API.HelperModels;
 using KKBookstore.API.Infrastructure;
 using KKBookstore.Application;
 using KKBookstore.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -52,7 +53,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-
 builder.Services
     .AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration);
@@ -92,7 +92,7 @@ app.MapControllers();
 
 //using (var scope = app.Services.CreateScope())
 //{
-//    var identityRoleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//    var identityRoleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
 //    // Create a list of roles for admin, salesstaff ,customercarestaff and customer and then add to the database
 //    var roles = new List<string> { "Admin", "SalesStaff", "CustomerCareStaff", "Customer" };
@@ -101,7 +101,7 @@ app.MapControllers();
 //    {
 //        if (!await identityRoleManager.RoleExistsAsync(role))
 //        {
-//            await identityRoleManager.CreateAsync(new IdentityRole(role));
+//            await identityRoleManager.CreateAsync(new IdentityRole<int>(role));
 //        }
 //    }
 //}

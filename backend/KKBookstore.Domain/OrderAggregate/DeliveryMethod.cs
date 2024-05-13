@@ -5,9 +5,10 @@ namespace KKBookstore.Domain.OrderAggregate;
 
 public class DeliveryMethod : BaseAuditableEntity, ISoftDelete
 {
-    public DeliveryMethod(
-        int id
-        ) : base(id)
+    private DeliveryMethod(
+        string name,
+        string description
+    ) : base()
     {
 
     }
@@ -18,4 +19,13 @@ public class DeliveryMethod : BaseAuditableEntity, ISoftDelete
     // navigation properties
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
+
+    // factory method
+    public static DeliveryMethod Create(
+        string name,
+        string description
+    )
+    {
+        return new DeliveryMethod(name, description);
+    }
 }

@@ -26,7 +26,7 @@ public record Error
     public static Error Conflict(string code, string description) => new(code, description, ErrorType.Conflict);
     public static Error Failure(string code, string description) => new(code, description, ErrorType.Failure);
     public static Error Unauthorized(string code, string description) => new(code, description, ErrorType.Unauthorized);
-
+    public static Error BusinessRuleViolation(string code, string description) => new(code, description, ErrorType.BusinessRuleViolation);
 }
 
 public enum ErrorType
@@ -35,5 +35,6 @@ public enum ErrorType
     Unauthorized,
     NotFound,
     Validation,
+    BusinessRuleViolation,
     Conflict
 }

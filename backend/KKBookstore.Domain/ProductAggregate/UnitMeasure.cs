@@ -1,11 +1,14 @@
 ﻿using KKBookstore.Domain.Common;
 using KKBookstore.Domain.Common.Interfaces;
-using KKBookstore.Domain.Users;
 
 namespace KKBookstore.Domain.ProductAggregate;
 
 public class UnitMeasure : BaseAuditableEntity, ISoftDelete
 {
+    public UnitMeasure()
+    {
+        
+    }
     private UnitMeasure(
         string name,
         string description

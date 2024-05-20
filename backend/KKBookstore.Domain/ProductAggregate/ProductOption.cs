@@ -3,9 +3,13 @@ using KKBookstore.Domain.Common.Interfaces;
 
 namespace KKBookstore.Domain.ProductAggregate;
 
-public class Option : BaseAuditableEntity, ISoftDelete
+public class ProductOption : BaseAuditableEntity, ISoftDelete
 {
-    private Option(
+    public ProductOption()
+    {
+        IsDeleted = false;
+    }
+    private ProductOption(
         int productId,
         string name
     ) : base()
@@ -22,11 +26,11 @@ public class Option : BaseAuditableEntity, ISoftDelete
 
     // navigation properties
     public Product Product { get; set; }
-    public ICollection<OptionValue> OptionValues { get; set; } = new List<OptionValue>();
+    public ICollection<ProductOptionValue> OptionValues { get; set; } = new List<ProductOptionValue>();
 
-    public static Result<Option> Create(int productId, string name)
+    public static Result<ProductOption> Create(int productId, string name)
     {
-        return new Option(
+        return new ProductOption(
             productId,
             name
         );

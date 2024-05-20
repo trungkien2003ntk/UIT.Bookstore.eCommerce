@@ -16,6 +16,7 @@ public record Error
 
     public Result ToResult() => Result.Failure(this);
 
+
     public string Code { get; }
     public string Description { get; }
     public ErrorType ErrorType { get; }
@@ -27,6 +28,8 @@ public record Error
     public static Error Failure(string code, string description) => new(code, description, ErrorType.Failure);
     public static Error Unauthorized(string code, string description) => new(code, description, ErrorType.Unauthorized);
     public static Error BusinessRuleViolation(string code, string description) => new(code, description, ErrorType.BusinessRuleViolation);
+    public static Error InvalidSortProperty(string sortProperty, string validProperties) => Validation("Application.InvalidSortProperty", $"Invalid sort property: {sortProperty}. Valid properties are: {validProperties}");
+    
 }
 
 public enum ErrorType

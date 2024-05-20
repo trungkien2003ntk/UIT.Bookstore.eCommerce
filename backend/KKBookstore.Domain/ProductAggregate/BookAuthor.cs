@@ -6,6 +6,11 @@ namespace KKBookstore.Domain.ProductAggregate;
 
 public class BookAuthor : BaseAuditableEntity, ISoftDelete
 {
+    public BookAuthor()
+    {
+        
+    }
+
     private BookAuthor(
         int authorId,
         int productId,

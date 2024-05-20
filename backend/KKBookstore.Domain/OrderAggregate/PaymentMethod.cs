@@ -5,6 +5,10 @@ namespace KKBookstore.Domain.OrderAggregate;
 
 public class PaymentMethod : BaseAuditableEntity, ISoftDelete
 {
+    public PaymentMethod()
+    {
+        
+    }
     public PaymentMethod(string name)
     {
         Name = name;

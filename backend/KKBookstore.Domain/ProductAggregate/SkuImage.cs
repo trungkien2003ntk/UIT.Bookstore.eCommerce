@@ -6,6 +6,10 @@ namespace KKBookstore.Domain.ProductAggregate;
 
 public class SkuImage : BaseAuditableEntity, ISoftDelete
 {
+    public SkuImage()
+    {
+        
+    }
     private SkuImage(
         int skuId,
         string thumbnailImageUrl,

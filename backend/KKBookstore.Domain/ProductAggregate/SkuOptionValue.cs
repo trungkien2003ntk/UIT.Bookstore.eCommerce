@@ -6,6 +6,10 @@ namespace KKBookstore.Domain.ProductAggregate;
 
 public class SkuOptionValue : BaseAuditableEntity, ISoftDelete, ITrackable
 {
+    public SkuOptionValue()
+    {
+        
+    }
     private SkuOptionValue(
         int skuId,
         int optionId,
@@ -25,9 +29,9 @@ public class SkuOptionValue : BaseAuditableEntity, ISoftDelete, ITrackable
     public DateTimeOffset? DeletedWhen { get; set; }
 
     // navigation properties
-    public Option Option { get; set; }
+    public ProductOption Option { get; set; }
     public Sku Sku { get; set; }
-    public OptionValue OptionValue { get; set; }
+    public ProductOptionValue OptionValue { get; set; }
 
     public static Result<SkuOptionValue> Create(
         int skuId,

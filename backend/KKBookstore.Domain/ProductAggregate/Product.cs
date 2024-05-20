@@ -5,6 +5,13 @@ namespace KKBookstore.Domain.ProductAggregate;
 
 public class Product : BaseAuditableEntity, ISoftDelete
 {
+    public Product() : base()
+    {
+        IsActive = true;
+        IsDeleted = false;
+
+    }
+
     private Product(
         string name,
         int productTypeId,

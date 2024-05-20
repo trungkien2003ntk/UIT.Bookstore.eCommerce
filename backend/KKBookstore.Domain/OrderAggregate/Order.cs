@@ -4,24 +4,6 @@ using KKBookstore.Domain.Users;
 
 namespace KKBookstore.Domain.OrderAggregate
 {
-
-    //OrderId
-    //CustomerId
-    //DueWhen
-    //ExpectedDeliveryWhen
-    //OrderNumber
-    //ShippingAddressId
-    //Subtotal
-    //TaxAmount
-    //Comment
-    //DeliveryInstruction
-    //DiscountId
-    //PaymentMethod
-    //Status
-    //PickingCompletedWhen
-    //OrderWhen
-    //LastEditedBy
-    //LastEditedWhen
     public class Order : BaseAuditableEntity
     {
         private Order(

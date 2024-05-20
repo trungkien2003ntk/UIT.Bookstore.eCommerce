@@ -5,6 +5,10 @@ namespace KKBookstore.Domain.OrderAggregate;
 
 public class DeliveryMethod : BaseAuditableEntity, ISoftDelete
 {
+    public DeliveryMethod()
+    {
+        
+    }
     private DeliveryMethod(
         string name,
         string description

@@ -17,9 +17,7 @@ public static class ProductErrors
 
     public static readonly Error ProductImageUrlRequired = Error.Validation("Product.ProductImageUrlRequired", "A product image URL is required.");
 
-    public static Error InvalidSortProperty(string sortProperty, string validProperties)
-    {
-        return Error.Validation("Product.InvalidSortProperty", $"Invalid sort property: {sortProperty}. Valid properties are: {validProperties}");
-    }
-
+    public static readonly Error NegativeHeight = Error.Validation("Product.NegativeHeight", "Height cannot be negative.");
+    public static readonly Error NegativeWidth = Error.Validation("Product.NegativeWidth", "Width cannot be negative.");
+    public static readonly Error NegativeLength = Error.Validation("Product.NegativeLength", "Length cannot be negative.");
 }

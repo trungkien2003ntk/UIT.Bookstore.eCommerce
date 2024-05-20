@@ -5,6 +5,10 @@ namespace KKBookstore.Domain.OrderAggregate;
 
 public class RefAddressType : BaseAuditableEntity, ISoftDelete
 {
+    public RefAddressType()
+    {
+        
+    }
     public RefAddressType(
         string name,
         string description

@@ -7,6 +7,10 @@ namespace KKBookstore.Domain.ProductAggregate;
 
 public class ProductType : BaseAuditableEntity, ISoftDelete
 {
+    public ProductType()
+    {
+        
+    }
     private ProductType(
         string productTypeCode,
         string displayName,
@@ -33,6 +37,7 @@ public class ProductType : BaseAuditableEntity, ISoftDelete
 
     // navigation property
     public ProductType? ParentProductType { get; set; }
+    public ICollection<ProductTypeAttributeMapping> Attributes { get; set; } = new List<ProductTypeAttributeMapping>();
 
     public static Result<ProductType> Create(
         string displayName,

@@ -3,9 +3,14 @@ using KKBookstore.Domain.Common.Interfaces;
 
 namespace KKBookstore.Domain.ProductAggregate
 {
-    public class OptionValue : BaseAuditableEntity, ISoftDelete
+    public class ProductOptionValue : BaseAuditableEntity, ISoftDelete
     {
-        private OptionValue(
+        public ProductOptionValue() : base()   
+        {
+            
+        }
+
+        private ProductOptionValue(
             int optionId,
             string value
         ) : base()
@@ -21,18 +26,18 @@ namespace KKBookstore.Domain.ProductAggregate
         public DateTimeOffset? DeletedWhen { get; set; }
 
         //navigation properties
-        public Option Option { get; set; }
+        public ProductOption Option { get; set; }
 
-        public static Result<OptionValue> Create(int optionId, string name)
+        public static Result<ProductOptionValue> Create(int optionId, string name)
         {
             // Perform validation or any other necessary logic
             if (string.IsNullOrEmpty(name))
             {
-                return Result.Failure<OptionValue>(ProductErrors.NotFound);
+                return Result.Failure<ProductOptionValue>(ProductErrors.NotFound);
             }
 
             // Return the created instance as a successful result
-            return new OptionValue(optionId, name);
+            return new ProductOptionValue(optionId, name);
         }
     }
 }

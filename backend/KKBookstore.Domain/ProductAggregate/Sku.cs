@@ -7,6 +7,15 @@ public class Sku : BaseAuditableEntity, ISoftDelete
 {
     protected Sku() : base() { }
 
+    public Sku(int productId) : base() 
+    {
+        ProductId = productId;
+        Comment = "";
+        Tags = "";
+        IsActive = true;
+        IsDeleted = false;
+    }
+
     private Sku(
         SkuValue skuValue,
         int productId,
@@ -42,9 +51,11 @@ public class Sku : BaseAuditableEntity, ISoftDelete
     public DateTimeOffset? ValidTo { get; set; }
     public DateTimeOffset? DiscontinuedWhen { get; set; }
     public int Quantity { get; set; }
+    public int Weight { get; set; }
+    public Dimension Dimension { get; set; }
     public bool IsActive { get; set; }
     public string Tags { get; set; }
-    public SkuStatus Status { get; private set; }
+    public SkuStatus Status { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
 

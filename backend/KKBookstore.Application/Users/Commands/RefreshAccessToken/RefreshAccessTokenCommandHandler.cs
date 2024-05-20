@@ -1,11 +1,13 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using AutoMapper;
+using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Common;
 using MediatR;
 
 namespace KKBookstore.Application.Users.Commands.RefreshAccessToken;
 
 public class RefreshAccessTokenCommandHandler(
-    IIdentityService identityService
+    IIdentityService identityService,
+    IMapper mapper
 ) : IRequestHandler<RefreshAccessTokenCommand, Result<RefreshAccessTokenResponse>>
 {
     private readonly IIdentityService _identityService = identityService;
@@ -14,14 +16,16 @@ public class RefreshAccessTokenCommandHandler(
         RefreshAccessTokenCommand request,
         CancellationToken cancellationToken)
     {
-        var result = await _identityService.RefreshAccessToken(request.ToDto());
+        var refreshResult = await _identityService.RefreshAccessToken(request);
 
-        if (result.IsFailure)
+        if (refreshResult.IsFailure)
         {
-            return Result.Failure<RefreshAccessTokenResponse>(result.Error);
+            return Result.Failure<RefreshAccessTokenResponse>(refreshResult.Error);
         }
 
-        return result;
+        var response = mapper.Map<RefreshAccessTokenResponse>(refreshResult.Value);
+
+        return response;
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Users.Queries.Models;
 using KKBookstore.Domain.Common;
 using KKBookstore.Domain.Users;
 using MediatR;
@@ -14,11 +15,9 @@ public class GetUserQueryHandler(
 {
     public async Task<Result<UserDto>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var queryDto = request.ToDto();
-
         var user = await dbContext.Users
             .Where(u => u.IsActive)
-            .FirstOrDefaultAsync(u => u.Id == queryDto.UserId, cancellationToken);
+            .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
         if (user is null)
         {

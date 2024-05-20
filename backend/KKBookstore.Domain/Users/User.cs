@@ -5,9 +5,17 @@ namespace KKBookstore.Domain.Users;
 
 public class User : IdentityUser<int>, ISoftDelete
 {
-    public string FullName { get; set; }
+    public User()
+    {
 
-    public string? Phone { get; set; }
+        IsActive = true;
+        IsEmployee = false;
+        IsAdmin = false;
+        IsDeleted = false;
+    }
+
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
     public DateTimeOffset DateOfBirth { get; set; }
 

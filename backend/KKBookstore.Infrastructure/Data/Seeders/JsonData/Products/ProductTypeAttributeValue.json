@@ -1,0 +1,77 @@
+[
+	{
+		"Id": 1,
+		"ProductTypeAttributeId": 1,
+		"Value": "Bìa mềm"
+	},
+	{
+		"Id": 2,
+		"ProductTypeAttributeId": 2,
+		"Value": "Hà Nội"
+	},
+	{
+		"Id": 3,
+		"ProductTypeAttributeId": 3,
+		"Value": "2019"
+	},
+	{
+		"Id": 4,
+		"ProductTypeAttributeId": 4,
+		"Value": "Tiếng Việt"
+	},
+	{
+		"Id": 5,
+		"ProductTypeAttributeId": 5,
+		"Value": "28"
+	},
+	{
+		"Id": 6,
+		"ProductTypeAttributeId": 2,
+		"Value": "Văn Học"
+	},
+	{
+		"Id": 7,
+		"ProductTypeAttributeId": 5,
+		"Value": "30"
+	},
+	{
+		"Id": 8,
+		"ProductTypeAttributeId": 2,
+		"Value": "Đại Học Quốc Gia Hà Nội"
+	},
+	{
+		"Id": 9,
+		"ProductTypeAttributeId": 3,
+		"Value": "2024"
+	},
+	{
+		"Id": 10,
+		"ProductTypeAttributeId": 5,
+		"Value": "178"
+	},
+	{
+		"Id": 11,
+		"ProductTypeAttributeId": 2,
+		"Value": "Giáo Dục Việt Nam"
+	},
+	{
+		"Id": 12,
+		"ProductTypeAttributeId": 3,
+		"Value": "2023"
+	},
+	{
+		"Id": 13,
+		"ProductTypeAttributeId": 10,
+		"Value": "7"
+	},
+	{
+		"Id": 14,
+		"ProductTypeAttributeId": 11,
+		"Value": "Cấp 2"
+	},
+	{
+		"Id": 15,
+		"ProductTypeAttributeId": 5,
+		"Value": "0"
+	}
+]

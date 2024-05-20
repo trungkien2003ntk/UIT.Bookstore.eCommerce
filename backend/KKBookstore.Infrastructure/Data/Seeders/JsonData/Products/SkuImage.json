@@ -1,0 +1,68 @@
+[
+	{
+		"Id": 1,
+		"SkuId": 1,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg"
+	},
+	{
+		"Id": 2,
+		"SkuId": 2,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg"
+	},
+	{
+		"Id": 3,
+		"SkuId": 3,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg"
+	},
+	{
+		"Id": 4,
+		"SkuId": 4,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg"
+	},
+	{
+		"Id": 5,
+		"SkuId": 5,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg"
+	},
+	{
+		"Id": 6,
+		"SkuId": 6,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg"
+	},
+	{
+		"Id": 7,
+		"SkuId": 7,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg"
+	},
+	{
+		"Id": 8,
+		"SkuId": 8,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg"
+	},
+	{
+		"Id": 9,
+		"SkuId": 9,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg"
+	},
+	{
+		"Id": 10,
+		"SkuId": 10,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg"
+	},
+	{
+		"Id": 11,
+		"SkuId": 11,
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg"
+	}
+]

@@ -1,12 +1,13 @@
-Repository pattern
 Result pattern
 Static Factory Method pattern
-Unit Of Work pattern
 Value Object pattern
 Cqrs pattern
-
+Mediator pattern (using MediatR)
 
 Incoming:
 Domain Event pattern
 Outbox pattern
 Event Sourcing pattern
+
+
+Applied: DbTransaction 

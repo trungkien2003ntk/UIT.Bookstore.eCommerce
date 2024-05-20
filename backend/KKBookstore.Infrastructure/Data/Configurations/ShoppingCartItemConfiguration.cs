@@ -9,7 +9,7 @@ internal class ShoppingCartItemConfiguration : IEntityTypeConfiguration<Shopping
     public void Configure(EntityTypeBuilder<ShoppingCartItem> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("ShoppingCartItemId");
+            .HasColumnName($"{nameof(ShoppingCartItem)}Id");
 
         builder.Property(t => t.SkuId)
             .IsRequired();

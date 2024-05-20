@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
-internal class ProducTypeConfiguration : IEntityTypeConfiguration<ProductType>
+internal class ProductTypeConfiguration : IEntityTypeConfiguration<ProductType>
 {
     public void Configure(EntityTypeBuilder<ProductType> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("ProductTypeId");
+            .HasColumnName($"{nameof(ProductType)}Id");
 
         builder.Property(t => t.DisplayName)
             .HasMaxLength(100)
@@ -17,6 +17,9 @@ internal class ProducTypeConfiguration : IEntityTypeConfiguration<ProductType>
 
         builder.Property(t => t.ProductTypeCode)
             .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(t => t.Level)
             .IsRequired();
 
         builder.Property(t => t.Description)

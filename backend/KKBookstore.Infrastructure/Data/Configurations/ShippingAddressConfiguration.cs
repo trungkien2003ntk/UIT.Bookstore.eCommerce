@@ -9,7 +9,7 @@ internal class ShippingAddressConfiguration : IEntityTypeConfiguration<ShippingA
     public void Configure(EntityTypeBuilder<ShippingAddress> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("ShippingAddressId");
+            .HasColumnName($"{nameof(ShippingAddress)}Id");
 
         builder.Property(t => t.UserId)
             .IsRequired();

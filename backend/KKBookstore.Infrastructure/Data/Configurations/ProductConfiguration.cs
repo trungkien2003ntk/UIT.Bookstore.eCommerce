@@ -16,7 +16,7 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder.Property(t => t.Description)
-            .HasMaxLength(500);
+            .HasColumnType("nvarchar(max)");
 
         builder.Property(t => t.ProductTypeId)
             .IsRequired();

@@ -11,7 +11,7 @@ internal class ProductPriceHistoryConfiguration : IEntityTypeConfiguration<Produ
         builder.HasKey(t => t.Id);
 
         builder.Property(t => t.Id)
-            .HasColumnName("ProductPriceHistoryId");
+            .HasColumnName($"{nameof(ProductPriceHistory)}Id");
 
         builder.Property(t => t.RecommendedRetailPrice)
             .HasPrecision(18, 2);

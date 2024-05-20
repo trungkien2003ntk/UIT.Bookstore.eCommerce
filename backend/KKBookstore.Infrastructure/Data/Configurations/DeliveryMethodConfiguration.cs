@@ -10,7 +10,7 @@ internal class DeliveryMethodConfiguration : IEntityTypeConfiguration<DeliveryMe
     public void Configure(EntityTypeBuilder<DeliveryMethod> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("DeliveryMethodId");
+            .HasColumnName($"{nameof(DeliveryMethod)}Id");
 
         builder.HasIndex(t => t.Name)
             .IsUnique();

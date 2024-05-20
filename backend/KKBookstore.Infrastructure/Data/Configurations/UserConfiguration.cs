@@ -9,9 +9,13 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.Property(u => u.Id)
-            .HasColumnName("UserId");
+            .HasColumnName($"{nameof(User)}Id");
 
-        builder.Property(u => u.FullName)
+        builder.Property(u => u.FirstName)
+            .HasMaxLength(300)
+            .IsRequired();
+        
+        builder.Property(u => u.LastName)
             .HasMaxLength(300)
             .IsRequired();
 

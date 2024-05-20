@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
-internal class OptionValueConfiguration : IEntityTypeConfiguration<OptionValue>
+internal class ProductOptionValueConfiguration : IEntityTypeConfiguration<ProductOptionValue>
 {
-    public void Configure(EntityTypeBuilder<OptionValue> builder)
+    public void Configure(EntityTypeBuilder<ProductOptionValue> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("OptionValueId");
+            .HasColumnName($"{nameof(ProductOptionValue)}Id");
 
         builder.Property(t => t.Value)
             .HasMaxLength(100)

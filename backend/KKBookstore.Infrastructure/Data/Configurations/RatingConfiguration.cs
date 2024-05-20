@@ -9,7 +9,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
     public void Configure(EntityTypeBuilder<Rating> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("RatingId");
+            .HasColumnName($"{nameof(Rating)}Id");
 
         builder.Property(t => t.SkuId)
             .IsRequired();

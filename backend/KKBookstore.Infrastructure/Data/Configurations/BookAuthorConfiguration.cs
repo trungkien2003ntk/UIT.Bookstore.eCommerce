@@ -9,7 +9,7 @@ internal class BookAuthorConfiguration : IEntityTypeConfiguration<BookAuthor>
     public void Configure(EntityTypeBuilder<BookAuthor> builder)
     {
         builder.Property(wb => wb.Id)
-            .HasColumnName("BookAuthorId");
+            .HasColumnName($"{nameof(BookAuthor)}Id");
 
         builder.Property(wb => wb.WrittenWhen)
             .IsRequired();

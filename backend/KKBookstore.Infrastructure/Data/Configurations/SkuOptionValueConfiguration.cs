@@ -9,7 +9,7 @@ internal class SkuOptionValueConfiguration : IEntityTypeConfiguration<SkuOptionV
     public void Configure(EntityTypeBuilder<SkuOptionValue> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("SkuOptionValueId");
+            .HasColumnName($"{nameof(SkuOptionValue)}Id");
 
         builder.HasIndex(t => new { t.SkuId, t.OptionId, t.OptionValueId })
             .IsUnique();

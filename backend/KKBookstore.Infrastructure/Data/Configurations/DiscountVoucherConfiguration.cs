@@ -9,7 +9,7 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
     public void Configure(EntityTypeBuilder<DiscountVoucher> builder)
     {
         builder.Property(dv => dv.Id)
-            .HasColumnName("DiscountVoucherId");
+            .HasColumnName($"{nameof(DiscountVoucher)}Id");
 
         builder.Property(dv => dv.Name)
             .HasMaxLength(100)
@@ -28,13 +28,25 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         builder.Property(dv => dv.StartWhen)
             .IsRequired();
 
-        // complex type: QuantityRange and ValueRange
-        builder.ComplexProperty(dv => dv.QuantityRange)
+        builder.OwnsOne(dv => dv.QuantityRange)
             .Property(qr => qr.MinApplyQuantity)
             .IsRequired();
 
-        builder.ComplexProperty(dv => dv.ValueRange);
+        builder.OwnsOne(dv => dv.ValueRange)
+            .Property(dv => dv.MinValue)
+            .HasPrecision(18, 2);
+        
+        builder.OwnsOne(dv => dv.ValueRange)
+            .Property(dv => dv.MaxValue)
+            .HasPrecision(18, 2);
 
+        builder.OwnsOne(dv => dv.QuantityRange)
+            .Property(dv => dv.MinApplyQuantity)
+            .HasPrecision(18, 2);
+        
+        builder.OwnsOne(dv => dv.QuantityRange)
+            .Property(dv => dv.MaxApplyQuantity)
+            .HasPrecision(18, 2);
 
         builder.HasOne(t => t.LastEditedByUser)
             .WithMany()

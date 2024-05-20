@@ -9,7 +9,7 @@ internal class SkuImageConfiguration : IEntityTypeConfiguration<SkuImage>
     public void Configure(EntityTypeBuilder<SkuImage> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("SkuImageId");
+            .HasColumnName($"{nameof(SkuImage)}Id");
 
         builder.Property(t => t.SkuId)
             .IsRequired();

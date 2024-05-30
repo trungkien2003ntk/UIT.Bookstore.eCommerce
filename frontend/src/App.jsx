@@ -8,8 +8,23 @@ import Account from "./pages/Admin/account"
 import Unauthorized from "./pages/Admin/unauthorized"
 
 import { default as UserHome } from "./pages/User/home"
+import { default as UserLogin } from "./pages/User/login"
+import { default as UserSignUp } from "./pages/User/sign-up"
+import { default as UserForgotPassword } from "./pages/User/forgot-password"
+import { default as UserAccount } from "./pages/User/account"
+import { default as UserAddress } from "./pages/User/address"
+import { default as UserChangePassword } from "./pages/User/change-password"
+import { default as UserNotiSettings } from "./pages/User/noti-settings"
+import { default as UserDeleteAccount } from "./pages/User/delete-account"
+import { default as UserProfile } from "./pages/User/profile"
+import { default as UserOrders } from "./pages/User/orders"
+import { default as UserNotifications } from "./pages/User/notifications"
+import { default as UserVouchers } from "./pages/User/vouchers"
+import { default as UserCoin } from "./pages/User/coin"
+import { default as UserCatalog } from "./pages/User/catalog"
 
 import Layout from "./components/Layout"
+import UserLayout from "./components/User/UserLayout"
 import RequireAuth from "./components/RequireAuth"
 
 import Missing from "./pages/missing"
@@ -36,7 +51,45 @@ function App() {
 
         {/* USER */}
         {/* public routes */}
-        <Route path='/' element={<UserHome />} />
+        <Route element={<UserLayout />}>
+          <Route path='/' element={<UserHome />} />
+
+          <Route path='/catalog' element={<UserCatalog />} />
+
+          <Route path='user/login' element={<UserLogin />} />
+          <Route path='user/sign-up' element={<UserSignUp />} />
+          <Route path='user/forgot-password' element={<UserForgotPassword />} />
+
+          <Route element={<UserAccount />}>
+            {/* user account */}
+            <Route path='user/account/profile' element={<UserProfile />} />
+            <Route path='user/account/address' element={<UserAddress />} />
+            <Route
+              path='user/account/change-password'
+              element={<UserChangePassword />}
+            />
+            <Route
+              path='user/account/noti-settings'
+              element={<UserNotiSettings />}
+            />
+            <Route
+              path='user/account/delete-account'
+              element={<UserDeleteAccount />}
+            />
+
+            {/* user orders */}
+            <Route path='user/orders' element={<UserOrders />} />
+
+            {/* user notifications */}
+            <Route path='user/notifications' element={<UserNotifications />} />
+
+            {/* vouchers */}
+            <Route path='user/vouchers' element={<UserVouchers />} />
+
+            {/* coin */}
+            <Route path='user/coin' element={<UserCoin />} />
+          </Route>
+        </Route>
 
         {/* catch all */}
         <Route path='*' element={<Missing />} />

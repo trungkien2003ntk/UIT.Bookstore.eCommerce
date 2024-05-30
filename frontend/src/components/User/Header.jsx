@@ -1,540 +1,103 @@
-import { Fragment, useState } from "react"
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { Fragment, useState, useRef } from "react"
 import { Link } from "react-router-dom"
-import CombinationLogo from "../../assets/images/combination-logo.svg"
-
 import {
   PopoverButton,
   Popover,
   PopoverPanel,
   Transition,
+  MenuItem,
 } from "@headlessui/react"
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
-const category = [
+import CombinationLogo from "../../assets/images/combination-logo.svg"
+import Logo from "../../assets/images/logo.svg"
+import MyMenu from "../MyMenu"
+import PopUp from "../PopUp"
+import VND from "../vnd"
+import useClickOutside from "../../hooks/useClickOutside"
+
+const inCart = [
   {
-    name: "Sách trong nước",
-    icon: (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 24 24'
-        fill='currentColor'
-        className='h-6 w-6 text-orange-500'
-      >
-        <path d='M11.25 4.533A9.707 9.707 0 0 0 6 3a9.735 9.735 0 0 0-3.25.555.75.75 0 0 0-.5.707v14.25a.75.75 0 0 0 1 .707A8.237 8.237 0 0 1 6 18.75c1.995 0 3.823.707 5.25 1.886V4.533ZM12.75 20.636A8.214 8.214 0 0 1 18 18.75c.966 0 1.89.166 2.75.47a.75.75 0 0 0 1-.708V4.262a.75.75 0 0 0-.5-.707A9.735 9.735 0 0 0 18 3a9.707 9.707 0 0 0-5.25 1.533v16.103Z' />
-      </svg>
-    ),
-    children: [
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh chungf dsdsd dsdsdkn dsdskd sdskdsd sdskdsds sds ddfd",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-      {
-        name: "Nuôi dạy con",
-        children: [
-          {
-            name: "Cẩm nang làm cha mẹ",
-          },
-          {
-            name: "Phương pháp giáo dục trẻ các nước",
-          },
-          {
-            name: "Phát triển trí tuệ cho trẻ",
-          },
-          {
-            name: "Phát triển kỹ năng cho trẻ",
-          },
-        ],
-      },
-    ],
+    name: "Vở Crabit Kẻ Ngang, Cornell, Ô Vuông 80 120 Trang, Vở Học Sinh Studygram",
+    image:
+      "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lh9zpatio75e8e",
+    price: 46000,
   },
   {
-    name: "Sách nước ngoài",
-    icon: (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 24 24'
-        fill='currentColor'
-        className='h-6 w-6 text-[#6A52F3]'
-      >
-        <path d='M21.721 12.752a9.711 9.711 0 0 0-.945-5.003 12.754 12.754 0 0 1-4.339 2.708 18.991 18.991 0 0 1-.214 4.772 17.165 17.165 0 0 0 5.498-2.477ZM14.634 15.55a17.324 17.324 0 0 0 .332-4.647c-.952.227-1.945.347-2.966.347-1.021 0-2.014-.12-2.966-.347a17.515 17.515 0 0 0 .332 4.647 17.385 17.385 0 0 0 5.268 0ZM9.772 17.119a18.963 18.963 0 0 0 4.456 0A17.182 17.182 0 0 1 12 21.724a17.18 17.18 0 0 1-2.228-4.605ZM7.777 15.23a18.87 18.87 0 0 1-.214-4.774 12.753 12.753 0 0 1-4.34-2.708 9.711 9.711 0 0 0-.944 5.004 17.165 17.165 0 0 0 5.498 2.477ZM21.356 14.752a9.765 9.765 0 0 1-7.478 6.817 18.64 18.64 0 0 0 1.988-4.718 18.627 18.627 0 0 0 5.49-2.098ZM2.644 14.752c1.682.971 3.53 1.688 5.49 2.099a18.64 18.64 0 0 0 1.988 4.718 9.765 9.765 0 0 1-7.478-6.816ZM13.878 2.43a9.755 9.755 0 0 1 6.116 3.986 11.267 11.267 0 0 1-3.746 2.504 18.63 18.63 0 0 0-2.37-6.49ZM12 2.276a17.152 17.152 0 0 1 2.805 7.121c-.897.23-1.837.353-2.805.353-.968 0-1.908-.122-2.805-.353A17.151 17.151 0 0 1 12 2.276ZM10.122 2.43a18.629 18.629 0 0 0-2.37 6.49 11.266 11.266 0 0 1-3.746-2.504 9.754 9.754 0 0 1 6.116-3.985Z' />
-      </svg>
-    ),
-    children: [
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-    ],
+    name: "Giá đỡ điện thoại iPhone, máy tính bảng iPad chân xoay 360 độ tiện lợi bằng hợp kim nhôm Macbox",
+    image:
+      "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfyas92mk4fe4a",
+    price: 80000,
   },
   {
-    name: "Sách giáo khoa",
-    icon: (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 24 24'
-        fill='currentColor'
-        className='h-6 w-6 text-red-500'
-      >
-        <path d='M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z' />
-        <path
-          fillRule='evenodd'
-          d='M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 14.625v-9.75ZM8.25 9.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM18.75 9a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V9.75a.75.75 0 0 0-.75-.75h-.008ZM4.5 9.75A.75.75 0 0 1 5.25 9h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H5.25a.75.75 0 0 1-.75-.75V9.75Z'
-          clipRule='evenodd'
-        />
-        <path d='M2.25 18a.75.75 0 0 0 0 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 0 0-.75-.75H2.25Z' />
-      </svg>
-    ),
-    children: [
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-    ],
+    name: "Khăn Tắm Cotton Lapyarn Mollis BM8V 60x120cm dày dặn mềm mại thấm hút không đổ lông dùng cho gia đình spa",
+    image:
+      "https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lsc4tpiputm677",
+    price: 192765,
   },
   {
-    name: "Văn phòng phẩm",
-    icon: (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 24 24'
-        fill='currentColor'
-        className='h-6 w-6 text-[#44A1F7]'
-      >
-        <path d='M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z' />
-      </svg>
-    ),
-    children: [
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-    ],
+    name: "Áo sơ mi nam cổ bẻ dài tay chất liệu LINEN cao cấp, phom dáng thoải mái thấm hút cực tốt - LUCIINON",
+    image:
+      "https://down-vn.img.susercontent.com/file/f8022403d8fce9db8acd0701507cbf32",
+    price: 319000,
   },
   {
-    name: "Đồ chơi trẻ em",
-    icon: (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 24 24'
-        fill='currentColor'
-        className='h-6 w-6 text-[#F7AD11]'
-      >
-        <path d='M11.25 5.337c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.036 1.007-1.875 2.25-1.875S15 2.34 15 3.375c0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959 0 .332.278.598.61.578 1.91-.114 3.79-.342 5.632-.676a.75.75 0 0 1 .878.645 49.17 49.17 0 0 1 .376 5.452.657.657 0 0 1-.66.664c-.354 0-.675-.186-.958-.401a1.647 1.647 0 0 0-1.003-.349c-1.035 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401.31 0 .557.262.534.571a48.774 48.774 0 0 1-.595 4.845.75.75 0 0 1-.61.61c-1.82.317-3.673.533-5.555.642a.58.58 0 0 1-.611-.581c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.035-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959a.641.641 0 0 1-.658.643 49.118 49.118 0 0 1-4.708-.36.75.75 0 0 1-.645-.878c.293-1.614.504-3.257.629-4.924A.53.53 0 0 0 5.337 15c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401a.656.656 0 0 0 .659-.663 47.703 47.703 0 0 0-.31-4.82.75.75 0 0 1 .83-.832c1.343.155 2.703.254 4.077.294a.64.64 0 0 0 .657-.642Z' />
-      </svg>
-    ),
-    children: [
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-      {
-        name: "Nuôi dạy con",
-        children: [
-          {
-            name: "Cẩm nang làm cha mẹ",
-          },
-          {
-            name: "Phương pháp giáo dục trẻ các nước",
-          },
-          {
-            name: "Phát triển trí tuệ cho trẻ",
-          },
-          {
-            name: "Phát triển kỹ năng cho trẻ",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Đồ lưu niệm",
-    icon: (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 24 24'
-        fill='currentColor'
-        className='h-6 w-6 text-ct-green-400'
-      >
-        <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
-      </svg>
-    ),
-    children: [
-      {
-        name: "Văn học",
-        children: [
-          {
-            name: "Tiểu thuyết",
-          },
-          {
-            name: "Truyện ngắn",
-          },
-          {
-            name: "Light Novel",
-          },
-          {
-            name: "Ngôn tình",
-          },
-        ],
-      },
-      {
-        name: "Kinh tế",
-        children: [
-          {
-            name: "Nhân vật - Bài học kinh doanh",
-          },
-          {
-            name: "Quản trị - Lãnh đạo",
-          },
-          {
-            name: "Marketing - Bán hàng",
-          },
-          {
-            name: "Phân tích kinh tế",
-          },
-        ],
-      },
-      {
-        name: "Tâm lý - Kỹ năng sống",
-        children: [
-          {
-            name: "Kỹ năng sống",
-          },
-          {
-            name: "Rèn luyện nhân cách",
-          },
-          {
-            name: "Tâm lý",
-          },
-          {
-            name: "Sách cho tuổi mới lớn",
-          },
-        ],
-      },
-      {
-        name: "Nuôi dạy con",
-        children: [
-          {
-            name: "Cẩm nang làm cha mẹ",
-          },
-          {
-            name: "Phương pháp giáo dục trẻ các nước",
-          },
-          {
-            name: "Phát triển trí tuệ cho trẻ",
-          },
-          {
-            name: "Phát triển kỹ năng cho trẻ",
-          },
-        ],
-      },
-    ],
+    name: "Mũ bảo hiểm 3/4 đầu Lót Màu Cao Cấp,Nút Đồng Chống Rĩ,Nón 3/4 tặng kèm lưỡi trai-Đạt Chuản CR",
+    image:
+      "https://down-vn.img.susercontent.com/file/4c54b802a801203697c5cac490035bd0",
+    price: 135000,
   },
 ]
 
-const Header = () => {
+const searchHistory = [
+  {
+    text: "tuổi trẻ đáng giá bao nhiêu",
+  },
+  {
+    text: "doraemon",
+  },
+  {
+    text: "sách giáo khoa lớp 8",
+  },
+  {
+    text: "bút chì kim",
+  },
+  {
+    text: "quà lưu niệm",
+  },
+]
+
+const Header = ({ category }) => {
+  const wrapperRef = useRef(null)
+
   const [catePop, setCatePop] = useState(category[0])
+
+  const [isLogin, setIsLogin] = useState(true)
+
+  // const [isFocusedInput, setIsFocusedInput] = useState(false)
+  const [isOpenHistory, setIsOpenHistory] = useState(false)
 
   const handleCategory = (index) => {
     setCatePop(category[index])
   }
 
-  return (
-    <header className='relative w-full bg-white shadow'>
-      <div className='mx-auto flex w-full max-w-screen-xl items-center justify-between p-4 lg:px-8'>
-        <div className='logo w-full basis-1/5'>
-          <img className='w-[150px]' src={CombinationLogo} alt='svg' />
-        </div>
+  const handleDeleteHistory = () => {}
 
-        <div className='flex basis-3/5 items-center justify-center'>
-          <div className='category flex'>
+  useClickOutside(wrapperRef, () => setIsOpenHistory(false))
+
+  return (
+    <header className='relative max-h-max min-h-14 w-full bg-white shadow'>
+      <div className='mx-auto flex w-full max-w-screen-xl items-center justify-center gap-0 px-1 py-2 xs:gap-4 xs:p-4 lg:px-8'>
+        <Link to={"/"} className='logo hidden md:block md:basis-1/5'>
+          <img className='w-[150px]' src={CombinationLogo} alt='svg' />
+        </Link>
+
+        <div className='flex items-center xs:basis-4/6 xs:justify-around xs:gap-2 md:basis-3/5'>
+          <div className='category'>
             <div className='p-1 hover:cursor-pointer hover:rounded hover:bg-gray-200'>
-              <Popover className=''>
+              <Popover>
                 <PopoverButton className='flex select-none items-center outline-none'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -567,11 +130,11 @@ const Header = () => {
                 >
                   <PopoverPanel
                     className='absolute left-1/2 top-full z-10 mt-2 flex max-h-fit w-full max-w-screen-xl 
-                  -translate-x-1/2 hover:cursor-default'
+                    -translate-x-1/2 hover:cursor-default'
                   >
                     <div
                       className='max-w-screen-xl flex-auto overflow-hidden rounded-3xl 
-                    bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5'
+                      bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5'
                     >
                       <div className='grid grid-cols-4 divide-x-2 p-4'>
                         <div className='pr-4'>
@@ -588,7 +151,7 @@ const Header = () => {
                                 key={index}
                                 className='group flex justify-between rounded p-2 font-medium 
                                 hover:cursor-pointer hover:bg-[#EDFFEB] hover:font-semibold'
-                                onClick={() => handleCategory(index)}
+                                onMouseOver={() => handleCategory(index)}
                               >
                                 <div className='flex items-center justify-center'>
                                   <div className='icon mr-2'>{item.icon}</div>
@@ -667,14 +230,15 @@ const Header = () => {
             </div>
           </div>
 
-          <div className='search-bar ml-5 flex-1'>
+          <div className='search-bar relative min-w-0 xs:flex-1'>
             <div
-              className='flex w-full items-center justify-center rounded-lg border-[1px]
-              border-slate-300 px-2 py-2 shadow'
+              className='flex w-full items-center justify-center
+              rounded-lg border-[1px] border-slate-300 px-2 py-2 shadow'
+              onClick={() => setIsOpenHistory(true)}
             >
               <input
-                className='flex-1 px-1 font-medium leading-normal text-ct-black-300 outline-none
-                placeholder:text-sm placeholder:font-normal'
+                className='placeholder:font-sm box-border w-36 px-1 font-medium
+                leading-normal text-ct-black-300 outline-none placeholder:text-sm 2xs:w-full'
                 placeholder='Tìm kiếm ...'
               />
               <div className='icon'>
@@ -691,64 +255,285 @@ const Header = () => {
                   />
                 </svg>
               </div>
+              <div
+                ref={wrapperRef}
+                className={`absolute left-0 top-full z-10 mt-2 w-full animate-fadeIn 
+                rounded border-[1px] bg-white shadow-lg ${isOpenHistory ? "" : "hidden"}`}
+              >
+                <div className='flex flex-col justify-center text-sm'>
+                  {searchHistory.map((item, index) => (
+                    <Link
+                      key={index}
+                      className='flex items-center justify-between px-3 py-2 hover:cursor-pointer
+                    hover:bg-gray-100'
+                    >
+                      <div className='text line-clamp-2'>{item.text}</div>
+                      <div
+                        className='icon text-gray-400 hover:cursor-pointer hover:text-red-400'
+                        onClick={handleDeleteHistory}
+                      >
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='h-6 w-6'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <ul className='flex w-full basis-1/5 items-center justify-between pl-12'>
-          <li className='notifications group rounded p-2 hover:cursor-pointer hover:bg-gray-200'>
-            <Link className=''>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={2}
-                stroke='currentColor'
-                className='h-6 w-6 text-ct-green-400'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0'
-                />
-              </svg>
-            </Link>
+        <ul className='flex items-center justify-around xs:basis-2/6 md:basis-1/5'>
+          <li className='notifications flex items-center justify-center'>
+            <PopUp
+              direction='right'
+              button={
+                <div
+                  className='notifications relative rounded p-2 text-ct-green-400 hover:cursor-pointer
+                hover:bg-gray-200'
+                >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={2}
+                    stroke='currentColor'
+                    className='h-6 w-6 '
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0'
+                    />
+                  </svg>
+                  <div className='absolute right-3 top-2 h-2 w-2 rounded bg-orange-500'></div>
+                </div>
+              }
+            >
+              <div className='flex max-w-fit items-center justify-center'>
+                <div className='w-48 text-center'>Thông báo cập nhật</div>
+              </div>
+            </PopUp>
           </li>
-          <li className='cart rounded p-2 hover:cursor-pointer hover:bg-gray-200'>
-            <Link>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={2}
-                stroke='currentColor'
-                className='h-6 w-6 text-ct-green-400'
+
+          <li className='cart flex items-center justify-center'>
+            <PopUp
+              direction='right'
+              button={
+                <div className='cart relative rounded p-2 text-ct-green-400 hover:bg-gray-200'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={2}
+                    stroke='currentColor'
+                    className='h-6 w-6'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
+                    />
+                  </svg>
+                  <div className='absolute left-6 top-0 z-20 rounded-full bg-orange-500 px-[5px] py-[2px] text-xs text-white'>
+                    18
+                  </div>
+                </div>
+              }
+            >
+              <div
+                className='w-screen max-w-md flex-auto 
+                flex-col justify-center divide-y-[0.5px] divide-gray-200 p-3 text-gray-700'
               >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
-                />
-              </svg>
-            </Link>
+                <div className='title pb-2 text-start text-sm font-medium uppercase'>
+                  Sản phẩm mới thêm
+                </div>
+                <div className='flex flex-col items-center justify-center py-2'>
+                  {inCart.map((item, index) => (
+                    <div
+                      key={index}
+                      className='flex items-center gap-2 rounded p-2 hover:cursor-pointer hover:bg-gray-100'
+                    >
+                      <img className='h-14 w-14' alt='img' src={item.image} />
+                      <div className='line-clamp-2 text-sm leading-6'>
+                        {item.name}
+                      </div>
+                      <VND
+                        className={`font-medium text-ct-green-400`}
+                        number={item.price}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className='flex items-center justify-between pt-2'>
+                  <div className='text-sm'>13 sản phẩm trong giỏ</div>
+                  <div
+                    className='rounded bg-ct-green-400 px-3 py-1 text-sm text-white hover:cursor-pointer
+                    hover:bg-green-600'
+                  >
+                    Xem giỏ hàng
+                  </div>
+                </div>
+              </div>
+            </PopUp>
           </li>
-          <li className='account rounded p-2 hover:cursor-pointer hover:bg-gray-200'>
-            <Link>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={2}
-                stroke='currentColor'
-                className='h-6 w-6 text-ct-green-400'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'
-                />
-              </svg>
-            </Link>
+
+          <li className='account flex items-center justify-center'>
+            <MyMenu
+              button={
+                <div className='account rounded p-2 text-ct-green-400 hover:bg-gray-200'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={2}
+                    stroke='currentColor'
+                    className='h-6 w-6'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'
+                    />
+                  </svg>
+                </div>
+              }
+            >
+              {isLogin || (
+                <div className='py-1'>
+                  <MenuItem>
+                    <Link
+                      to={"/user/login"}
+                      className='group flex items-center justify-start gap-3 px-4
+                      py-2 text-sm hover:bg-gray-100'
+                    >
+                      <div className='icon text-gray-400 group-hover:text-ct-green-300'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='h-6 w-6 '
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm5.03 4.72a.75.75 0 0 1 0 1.06l-1.72 1.72h10.94a.75.75 0 0 1 0 1.5H10.81l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </div>
+                      <div className='title'>Đăng nhập</div>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      to={"/user/sign-up"}
+                      className='group flex items-center justify-start gap-3 px-4
+                        py-2 text-sm hover:bg-gray-100'
+                    >
+                      <div className='icon text-gray-400 group-hover:text-ct-green-300'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='h-6 w-6 '
+                        >
+                          <path d='M11.47 1.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1-1.06 1.06l-1.72-1.72V7.5h-1.5V4.06L9.53 5.78a.75.75 0 0 1-1.06-1.06l3-3ZM11.25 7.5V15a.75.75 0 0 0 1.5 0V7.5h3.75a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h3.75Z' />
+                        </svg>
+                      </div>
+                      <div className='title'>Đăng ký</div>
+                    </Link>
+                  </MenuItem>
+                </div>
+              )}
+
+              {isLogin && (
+                <div className='py-1'>
+                  <MenuItem>
+                    <Link
+                      to={"/user/account/profile"}
+                      className='group flex items-center justify-start gap-3 px-4
+                          py-2 text-sm font-semibold hover:bg-gray-100'
+                    >
+                      <div
+                        className='icon object-none object-center text-gray-400
+                          group-hover:text-gray-600'
+                      >
+                        <img
+                          alt='avt'
+                          src='https://th.bing.com/th/id/R.11b315105c63ad7bfd35778ddf984c9a?rik=2LjF8DiLJFIgcA&riu=http%3a%2f%2forig11.deviantart.net%2f0405%2ff%2f2014%2f082%2fb%2f8%2funivers_by_momez-d7bcl1h.jpg&ehk=K9hHXvRywf2iBjx2rp6ywehVhV8366uX%2bi%2bGDI388x8%3d&risl=1&pid=ImgRaw&r=0'
+                          className='h-10 w-10 rounded-full'
+                        />
+                      </div>
+                      <div className='title'>Phạm Tuấn Kiệt</div>
+                    </Link>
+                  </MenuItem>
+                </div>
+              )}
+
+              {isLogin && (
+                <div className='py-1'>
+                  <MenuItem>
+                    <Link
+                      className='group flex items-center justify-start gap-3 px-4
+                          py-2 text-sm hover:bg-gray-100'
+                    >
+                      <div className='icon text-gray-400 group-hover:text-ct-green-300'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='h-6 w-6'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M6.912 3a3 3 0 0 0-2.868 2.118l-2.411 7.838a3 3 0 0 0-.133.882V18a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0 0 17.088 3H6.912Zm13.823 9.75-2.213-7.191A1.5 1.5 0 0 0 17.088 4.5H6.912a1.5 1.5 0 0 0-1.434 1.059L3.265 12.75H6.11a3 3 0 0 1 2.684 1.658l.256.513a1.5 1.5 0 0 0 1.342.829h3.218a1.5 1.5 0 0 0 1.342-.83l.256-.512a3 3 0 0 1 2.684-1.658h2.844Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </div>
+                      <div className='title'>Đơn hàng</div>
+                    </Link>
+                  </MenuItem>
+                </div>
+              )}
+
+              {isLogin && (
+                <div className='py-1'>
+                  <MenuItem>
+                    <Link
+                      className='group flex items-center justify-start gap-3 px-4
+                          py-2 text-sm hover:bg-gray-100'
+                    >
+                      <div className='icon text-gray-400 group-hover:text-ct-green-300'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='h-6 w-6'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </div>
+                      <div className='title'>Đăng xuất</div>
+                    </Link>
+                  </MenuItem>
+                </div>
+              )}
+            </MyMenu>
           </li>
         </ul>
       </div>

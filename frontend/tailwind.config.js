@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
   content: [
     "./index.html",
@@ -7,12 +8,17 @@ export default {
     "./public/assets/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      '2xs': '450px',
+      'xs': '500px',
+      ...defaultTheme.screens,
+    },
     extend: {
       fontFamily: {
         Inter: ['Inter', 'sans-serif']
       },
       boxShadow: {
-        'ct': '0px 0px 10px 0px rgba(0, 0, 0, 0.15)'
+        'ct': '0px 0px 5px 0px rgba(0, 0, 0, 0.15)'
       },
       colors: {
         'ct-black': {
@@ -46,11 +52,20 @@ export default {
             transform: 'translateY(0) translateX(-50%)',
             opacity: 1
           }
+        },
+        fadeIn: {
+          '0%': {
+            opacity: 0
+          },
+          '100%': {
+            opacity: 1
+          }
         }
       },
       animation: {
         slideDown: 'slideDown .5s ease-in-out',
-        slideUp: 'slideUp .5s ease-in-out'
+        slideUp: 'slideUp .5s ease-in-out',
+        fadeIn: 'fadeIn .3s ease-in-out',
       }
     },
   },

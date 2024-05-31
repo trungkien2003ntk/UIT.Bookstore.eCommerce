@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Common;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Models;
 using System.Security.Cryptography;
 
 namespace KKBookstore.Infrastructure.Identity;

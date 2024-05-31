@@ -1,25 +1,26 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using AutoMapper;
+using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Users.Commands.Register;
-using KKBookstore.Application.Users.Commands.RefreshAccessToken;
-using KKBookstore.Application.Users.Commands.SignIn;
-using KKBookstore.Domain.Common;
-using KKBookstore.Domain.Users;
+using KKBookstore.Application.Features.Users.ChangePassword;
+using KKBookstore.Application.Features.Users.RefreshAccessToken;
+using KKBookstore.Application.Features.Users.Register;
+using KKBookstore.Application.Features.Users.ReplaceUser;
+using KKBookstore.Application.Features.Users.SignIn;
+using KKBookstore.Application.Features.Users.UpdatePassword;
+using KKBookstore.Application.Features.Users.UpdateUser;
+using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Constants;
+using KKBookstore.Domain.Models;
 using KKBookstore.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using KKBookstore.Domain.Common.Constants;
-using System.Data;
-using Azure;
-using KKBookstore.Application.Users.Commands.UpdateUser;
-using AutoMapper;
-using KKBookstore.Application.Users.Commands.ReplaceUser;
 
 namespace KKBookstore.Infrastructure.Identity;
 
@@ -81,6 +82,7 @@ public class IdentityService(
         var user = new User
         {
             FirstName = "temp",
+            LastName = "temp",
             Email = email,
             EmailConfirmed = true,
             UserName = email,
@@ -114,20 +116,20 @@ public class IdentityService(
         return Result.Success(user);
     }
 
-    public async Task<Result<User>> CreateUserAsync(RegisterCommand request)
+    public async Task<Result<TokenResponse>> CreateUserAsync(RegisterCommand request)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
         var searchResult = await FindUserAsync(new(request.Email));
         if (searchResult.IsSuccess)
         {
-            return Result.Failure<User>(UserErrors.AlreadyExists);
+            return Result.Failure<TokenResponse>(UserErrors.AlreadyExists);
         }
 
         var role = await _roleManager.FindByNameAsync(request.Role);
         if (role == null)
         {
-            return Result.Failure<User>(UserErrors.InvalidRole);
+            return Result.Failure<TokenResponse>(UserErrors.InvalidRole);
         }
 
         var user = request.ToEntity();
@@ -138,7 +140,7 @@ public class IdentityService(
         {
             var errors = result.ToErrors();
             await transaction.RollbackAsync();
-            return Result.Failure<User>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
+            return Result.Failure<TokenResponse>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
         }
 
         var assignRoleResult = await _userManager.AddToRoleAsync(user, role.Name!);
@@ -146,12 +148,16 @@ public class IdentityService(
         {
             var errors = result.ToErrors();
             await transaction.RollbackAsync();
-            return Result.Failure<User>(errors.FirstOrDefault() ?? UserErrors.AssignRoleFailed);
+            return Result.Failure<TokenResponse>(errors.FirstOrDefault() ?? UserErrors.AssignRoleFailed);
         }
 
         await transaction.CommitAsync();
 
-        return Result.Success(user);
+        // create a token response
+        var responseResult = await GenerateTokenResponse(user);
+
+
+        return responseResult;
     }
 
     public async Task<Result> UpdateUserAsync(UpdateUserCommand command)
@@ -222,7 +228,7 @@ public class IdentityService(
         return responseResult;
     }
 
-    public async Task<Result<TokenResponse>> RefreshAccessToken(RefreshAccessTokenCommand request)
+    public async Task<Result<TokenResponse>> RefreshAccessToken(RefreshAccessToken request)
     {
         // get the user send this
         var existingRefreshToken = await _dbContext.RefreshTokens
@@ -242,6 +248,49 @@ public class IdentityService(
         var responseResult = await GenerateTokenResponse(user);
 
         return responseResult;
+    }
+
+    public async Task<Result> UpdatePasswordAsync(UpdatePasswordCommand request)
+    {
+        var userResult = await FindUserAsync(new(request.Email));
+        
+        if (userResult.IsFailure)
+        {
+            return Result.Failure(userResult.Error);
+        }
+
+        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userResult.Value);
+        var result = await _userManager.ResetPasswordAsync(userResult.Value, resetToken, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
+    }
+
+    public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
+    {
+        var userResult = await FindUserAsync(new(request.Email));
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
+        }
+
+        var passwordValid = await _userManager.CheckPasswordAsync(userResult.Value, request.CurrentPassword);
+
+        if (!passwordValid)
+        {
+            return Result.Failure(UserErrors.InvalidCredentials);
+        }
+
+        var result = await _userManager.ChangePasswordAsync(userResult.Value, request.CurrentPassword, request.NewPassword);
+        
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
     }
 
     public async Task<bool> IsValidRefreshToken(int userId, string refreshToken)
@@ -290,12 +339,12 @@ public class IdentityService(
     {
         var roles = await _userManager.GetRolesAsync(user);
         var claims = new List<Claim>
-    {
-        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new(ClaimTypes.Name, user.Email!),
-        new(ClaimTypes.Role, roles.FirstOrDefault()!),
-        // Add other claims as needed...
-    };
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.Email!),
+            new(ClaimTypes.Role, roles.FirstOrDefault()!),
+            // Add other claims as needed...
+        };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Value.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -359,4 +408,6 @@ public class IdentityService(
 
         return refreshToken;
     }
+
+    
 }

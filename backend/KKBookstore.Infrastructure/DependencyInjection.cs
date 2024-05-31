@@ -4,13 +4,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Web;
 using KKBookstore.Infrastructure.Data;
 using KKBookstore.Infrastructure.Identity;
 using KKBookstore.Application.Common.Interfaces;
 using System.Text;
 using KKBookstore.Infrastructure.Data.Interceptors;
+using KKBookstore.Infrastructure.Email;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using KKBookstore.Domain.Aggregates.UserAggregate;
 
 namespace KKBookstore.Infrastructure;
 
@@ -18,37 +20,35 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        //services.AddDbContext<ProjectContext>(options =>
-        //{
-        //    options.UseSqlServer("Server=(local)\\SQLEXPRESS;Database=KKBookstoreDb;User Id=kien;Password=ntk0108;TrustServerCertificate=True;")
-        //        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-        //        .EnableSensitiveDataLogging()
-        //        .AddInterceptors(new SoftDeleteInterceptor());
-        //});
-
+        /// Config DbContext
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        services.AddScoped<IIdentityService, IdentityService>();
-        services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
+        
 
+        services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
-            //options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
             options.UseSqlServer(connectionString)
-                .EnableSensitiveDataLogging()
-                .AddInterceptors(new SoftDeleteInterceptor());
+                .EnableSensitiveDataLogging();
         });
         
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
+
+        /// Config AuthN and AuthZ
+        services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
+        services.AddScoped<IIdentityService, IdentityService>();
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services
             .AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(opt =>
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -62,18 +62,31 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });
-
         services.AddAuthorization();
 
-        services.AddIdentity<User, IdentityRole<int>>()
+
+        // More information, see AddIdentityCore vs AddIdentity
+        // AddIdentity replace the default authentication scheme with CookieSchemes while AddIdentityCore not
+        services.AddIdentityCore<User>()
+            .AddRoles<IdentityRole<int>>()
+            .AddRoleManager<RoleManager<IdentityRole<int>>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddApiEndpoints();
 
+
+        /// Config OTP service
+        services.AddScoped<IOtpService, OtpService>();
+
+
+        /// Config Email
+        services.Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)));
+        services.AddTransient<IEmailService, EmailService>();
+
+
+        /// Additional Config
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddSingleton(TimeProvider.System);
-
-
-
+        
         return services;
     }
 }

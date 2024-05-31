@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Common;
+﻿using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Infrastructure.Identity
 {

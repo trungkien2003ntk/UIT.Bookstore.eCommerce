@@ -1,8 +1,7 @@
 ﻿using KKBookstore.Application.Common;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Users.Commands.VerifyOtp;
-using KKBookstore.Domain.Common;
-using KKBookstore.Domain.Users;
+using KKBookstore.Application.Features.Users.VerifyOtp;
+using KKBookstore.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace KKBookstore.Infrastructure.Email;
@@ -15,18 +14,12 @@ public class OtpService(
     private readonly IMemoryCache _cache = cache;
     private readonly IEmailService _emailService = emailService;
 
-    public async Task<Result<string>> GenerateOtpAsync(string email)
+    public Result<string> GenerateOtp(string email)
     {
-        var searchResult = await identityService.FindUserAsync(new(email));
-        if (searchResult.IsSuccess)
-        {
-            return Result.Failure<string>(UserErrors.AlreadyExists);
-        }
-
         var otp = new Random().Next(100000, 999999).ToString();
 
-        // Store the OTP in cache for 5 minutes
-        _cache.Set(email, otp, TimeSpan.FromMinutes(5));
+        // Store the OTP in cache for 3 minutes
+        _cache.Set(email, otp, TimeSpan.FromMinutes(3));
 
         return otp;
     }

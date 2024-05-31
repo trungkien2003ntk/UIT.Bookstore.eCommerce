@@ -1,8 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Common;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+using KKBookstore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using KKBookstore.Domain.Users;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace KKBookstore.Infrastructure.Data.Interceptors;
 
@@ -23,6 +22,8 @@ public class AuditInterceptor : ISaveChangesInterceptor
             {
                 case EntityState.Added:
                     entry.Entity.CreatedBy = _currentUser.Id;
+                    entry.Entity.CreatedWhen = DateTime.UtcNow;
+                    entry.Entity.LastEditedBy = _currentUser.Id;
                     entry.Entity.CreatedWhen = DateTime.UtcNow;
                     break;
 

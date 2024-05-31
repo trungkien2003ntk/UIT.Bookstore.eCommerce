@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Common.Interfaces;
+﻿using KKBookstore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

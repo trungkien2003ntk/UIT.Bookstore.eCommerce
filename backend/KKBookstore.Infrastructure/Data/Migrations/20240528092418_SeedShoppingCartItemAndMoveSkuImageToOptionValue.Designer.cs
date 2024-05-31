@@ -4,6 +4,7 @@ using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240528092418_SeedShoppingCartItemAndMoveSkuImageToOptionValue")]
+    partial class SeedShoppingCartItemAndMoveSkuImageToOptionValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,22 +145,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5955), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(1758), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao hàng tiêu chuẩn",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5983), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(1798), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Giao hàng tiêu chuẩn"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5986), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(1801), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao hàng nhanh",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5987), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(1802), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Giao hàng nhanh"
                         });
                 });
@@ -1332,22 +1335,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8280), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(4706), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Thanh toán khi nhận hàng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8287), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(4726), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Thanh toán khi nhận hàng"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8290), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(4730), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Thanh toán qua thẻ",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8291), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(4731), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Thanh toán qua thẻ"
                         });
                 });
@@ -1405,22 +1408,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9592), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(6506), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Nhà riêng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9599), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(6519), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Nhà riêng"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9602), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(6523), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Văn phòng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9603), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 16, 226, DateTimeKind.Unspecified).AddTicks(6524), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Văn phòng"
                         });
                 });
@@ -3225,6 +3228,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
@@ -3232,6 +3238,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.HasIndex("LastEditedBy");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductId1");
 
                     b.ToTable("ProductOptions", (string)null);
 
@@ -4580,7 +4588,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "c9f837c2-b1d4-4297-c035-e92856db3g51",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(5607), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(5451), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1990, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@example.com",
                             EmailConfirmed = true,
@@ -4589,13 +4597,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(5235), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(5046), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Admin",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBk9sNh5Iiu0Pr4cxVt/MU4EpLx+ShX30Na4R9UZ0PACeQ+Njuh8kCEwI/Av+3Yycw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFNmXTxdS4RR8cRhsrGfNSBBTeO2ZYZb3psOJHBOAtf3Yaxp0L+I/oys6jFuzMFD2A==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "XJH4QW2N8GZRMLV5KF3Y7PCT9USB6ADO",
@@ -4608,7 +4616,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "d3e126c2-b2d3-4398-b024-e97372db4f60",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6176), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6048), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1985, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "salesstaff@example.com",
                             EmailConfirmed = true,
@@ -4617,13 +4625,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = false,
                             IsDeleted = false,
                             IsEmployee = true,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6172), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6044), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Staff",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "SALESSTAFF@EXAMPLE.COM",
                             NormalizedUserName = "SALESSTAFF@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOH5hZ0eTEh66/HWr1bRrj7EDAwxTTY6Y08ZUUuYh5Xh6875ey8eXg5iSxdO5kTQmA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECEoBZj0us1cWjo9hh4FmjRtqlY4dWVsbHO8ZmKTH0Kc1W4jrk48J/5oHH4QfNaYGw==",
                             PhoneNumber = "0987654321",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "LV9Q8G6ZRN2KM4PSTXJY5W3FB7HOCD1U",
@@ -4636,7 +4644,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e4f036c3-b2d3-4398-c034-e98272db4f61",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6179), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6051), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1992, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "customercare@example.com",
                             EmailConfirmed = true,
@@ -4645,13 +4653,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = false,
                             IsDeleted = false,
                             IsEmployee = true,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6178), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6050), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Staff",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "CUSTOMERCARE@EXAMPLE.COM",
                             NormalizedUserName = "CUSTOMERCARE@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDnZZOgCfEFJggME740YsekxU3jXwFUABOioY6ys5dl7bz3/96We+2WT5KZIKsU4Og==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ4ganQ46DGCNSSnaodxafrKLI2D8AoYBf+EWDmV2HWBidbHAccVLGehzuaMx7Oow==",
                             PhoneNumber = "1122334455",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "P5YHXJLZMO9V3G2KTRN4S8QWCFUB7D1A",
@@ -4664,7 +4672,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "f4e026b2-b1d3-4198-a024-e97272da3f50",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6180), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6052), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(2003, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "trungkien2003ntk@gmail.com",
                             EmailConfirmed = true,
@@ -4673,13 +4681,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6179), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6052), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Nguyễn",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "TRUNGKIEN2003NTK@GMAIL.COM",
                             NormalizedUserName = "TRUNGKIEN2003NTK@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMr4OxbuPLOJKo2ZCknTXrJsiQzp4bwUkKBuRBTt8bx5JhMgy3UlIIqZn0YmonYmWg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM5kDuPrzEPVsNQAiJWuXSk6t4VPzDq33CdxGiMuRUqzGQOuWQliDrZ8Z99kV7b0GQ==",
                             PhoneNumber = "0866919340",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "SENTMLQ2I6NCSBGSCLVXP4UOHGJF4G66",
@@ -4692,7 +4700,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "f0klsm1m-b1d6-4496-d036-e96378ef3g67",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6181), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6054), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(2003, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "truykichtk20031@gmail.com",
                             EmailConfirmed = true,
@@ -4701,13 +4709,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6181), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 24, 15, 915, DateTimeKind.Unspecified).AddTicks(6053), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Trần",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "TRUYKICHTK20031@GMAIL.COM",
                             NormalizedUserName = "TRUYKICHTK20031@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJnPZSEzBJDTQoDSNMAVlqzC5WUHceKZFfzqKs0rjuE58mXebj43slD+7aF7+xJFwA==",
                             PhoneNumber = "0939199946",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "MGJSHVQ2IJ28SKMVCLVXP4LAM8J2KJ5O",
@@ -4890,27 +4897,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         new
                         {
                             UserId = 1,
-                            RoleId = 2
+                            RoleId = 1
                         },
                         new
                         {
                             UserId = 2,
-                            RoleId = 3
+                            RoleId = 2
                         },
                         new
                         {
                             UserId = 3,
-                            RoleId = 4
+                            RoleId = 3
                         },
                         new
                         {
                             UserId = 4,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            RoleId = 1
+                            RoleId = 4
                         });
                 });
 
@@ -5438,10 +5440,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Domain.Products.Product", "Product")
-                        .WithMany("Options")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Products.Product", null)
+                        .WithMany("Options")
+                        .HasForeignKey("ProductId1")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
 

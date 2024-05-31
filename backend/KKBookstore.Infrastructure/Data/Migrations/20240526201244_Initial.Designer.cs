@@ -4,6 +4,7 @@ using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240526201244_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,22 +145,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5955), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 851, DateTimeKind.Unspecified).AddTicks(8992), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao hàng tiêu chuẩn",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5983), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 851, DateTimeKind.Unspecified).AddTicks(9142), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Giao hàng tiêu chuẩn"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5986), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 851, DateTimeKind.Unspecified).AddTicks(9146), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao hàng nhanh",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5987), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 851, DateTimeKind.Unspecified).AddTicks(9147), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Giao hàng nhanh"
                         });
                 });
@@ -1332,22 +1335,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8280), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(2423), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Thanh toán khi nhận hàng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8287), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(2437), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Thanh toán khi nhận hàng"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8290), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(2440), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Thanh toán qua thẻ",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8291), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(2441), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Thanh toán qua thẻ"
                         });
                 });
@@ -1405,22 +1408,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9592), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(4221), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Nhà riêng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9599), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(4229), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Nhà riêng"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9602), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(4232), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Văn phòng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9603), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 852, DateTimeKind.Unspecified).AddTicks(4233), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Văn phòng"
                         });
                 });
@@ -3146,42 +3149,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
                             ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_2-390x510.jpg"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 3,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg",
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg",
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg"
                         });
                 });
 
@@ -3205,11 +3172,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("IsOptionWithImage")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<int>("LastEditedBy")
                         .HasColumnType("int");
@@ -3242,7 +3204,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            IsOptionWithImage = true,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Phần",
@@ -3254,7 +3215,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            IsOptionWithImage = true,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Tập",
@@ -3283,10 +3243,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LargeImageUrl")
-                        .IsRequired()
-                        .HasColumnType("varchar(MAX)");
-
                     b.Property<int>("LastEditedBy")
                         .HasColumnType("int");
 
@@ -3295,10 +3251,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<int>("OptionId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ThumbnailImageUrl")
-                        .IsRequired()
-                        .HasColumnType("varchar(MAX)");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -3322,11 +3274,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
                             Value = "Một ngày của tớ và bố"
                         },
                         new
@@ -3335,11 +3285,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
                             Value = "Một ngày của tớ và mẹ"
                         },
                         new
@@ -3348,11 +3296,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
                             Value = "Một ngày của tớ và ông"
                         },
                         new
@@ -3361,11 +3307,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
                             Value = "Một ngày của tớ và bà"
                         },
                         new
@@ -3374,11 +3318,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
                             Value = "Tập 1 - Mùa Xuân"
                         },
                         new
@@ -3387,11 +3329,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
                             Value = "Tập 2 - Mùa Hạ"
                         },
                         new
@@ -3400,11 +3340,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
                             Value = "Tập 3 - Mùa Thu"
                         },
                         new
@@ -3413,11 +3351,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
                             Value = "Tập 4 - Mùa Đông"
                         });
                 });
@@ -3980,6 +3916,189 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("KKBookstore.Domain.Products.SkuImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("SkuImageId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LargeImageUrl")
+                        .IsRequired()
+                        .HasColumnType("varchar(MAX)");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("SkuId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailImageUrl")
+                        .IsRequired()
+                        .HasColumnType("varchar(MAX)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("SkuId");
+
+                    b.ToTable("SkuImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 1,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 7,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 8,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 9,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 10,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            SkuId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg"
+                        });
+                });
+
             modelBuilder.Entity("KKBookstore.Domain.Products.SkuOptionValue", b =>
                 {
                     b.Property<int>("Id")
@@ -4241,6 +4360,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("ShoppingCartItemId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SkuId")
                         .HasColumnType("int");
 
@@ -4254,63 +4376,10 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasIndex("SkuId");
 
-                    b.ToTable("ShoppingCartItems");
-
-                    b.HasData(
-                        new
+                    b.ToTable("ShoppingCartItems", t =>
                         {
-                            Id = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            CustomerId = 4,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Quantity = 3,
-                            SkuId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            CustomerId = 4,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Quantity = 2,
-                            SkuId = 3
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            CustomerId = 4,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Quantity = 1,
-                            SkuId = 5
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            CustomerId = 5,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Quantity = 4,
-                            SkuId = 11
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            CustomerId = 5,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Quantity = 1,
-                            SkuId = 10
+                            t.Property("ShoppingCartItemId")
+                                .HasColumnName("ShoppingCartItemId1");
                         });
                 });
 
@@ -4580,7 +4649,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "c9f837c2-b1d4-4297-c035-e92856db3g51",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(5607), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3007), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1990, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@example.com",
                             EmailConfirmed = true,
@@ -4589,13 +4658,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(5235), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(2677), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Admin",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBk9sNh5Iiu0Pr4cxVt/MU4EpLx+ShX30Na4R9UZ0PACeQ+Njuh8kCEwI/Av+3Yycw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHQaoHEMQVEH/qjlWW/O9BGZnwoDNG6EVFTDCv3HKIow9U5vYEMMl0qupqy/qdlJHQ==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "XJH4QW2N8GZRMLV5KF3Y7PCT9USB6ADO",
@@ -4608,7 +4677,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "d3e126c2-b2d3-4398-b024-e97372db4f60",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6176), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3553), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1985, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "salesstaff@example.com",
                             EmailConfirmed = true,
@@ -4617,13 +4686,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = false,
                             IsDeleted = false,
                             IsEmployee = true,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6172), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3548), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Staff",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "SALESSTAFF@EXAMPLE.COM",
                             NormalizedUserName = "SALESSTAFF@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOH5hZ0eTEh66/HWr1bRrj7EDAwxTTY6Y08ZUUuYh5Xh6875ey8eXg5iSxdO5kTQmA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMTcI3vU09hi1/kGE0O6c8pDdCGGk5o8stlAtublrbdvC5zHjVLYjaH1vgtWVpbHfg==",
                             PhoneNumber = "0987654321",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "LV9Q8G6ZRN2KM4PSTXJY5W3FB7HOCD1U",
@@ -4636,7 +4705,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e4f036c3-b2d3-4398-c034-e98272db4f61",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6179), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3555), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1992, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "customercare@example.com",
                             EmailConfirmed = true,
@@ -4645,13 +4714,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = false,
                             IsDeleted = false,
                             IsEmployee = true,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6178), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3554), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Staff",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "CUSTOMERCARE@EXAMPLE.COM",
                             NormalizedUserName = "CUSTOMERCARE@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDnZZOgCfEFJggME740YsekxU3jXwFUABOioY6ys5dl7bz3/96We+2WT5KZIKsU4Og==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM5LNDzxoNJkMvgmwBhKEx4P55H9KiMu315NychC+Zjx1omBzpfZP0xo1VKxLpSQ6Q==",
                             PhoneNumber = "1122334455",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "P5YHXJLZMO9V3G2KTRN4S8QWCFUB7D1A",
@@ -4664,7 +4733,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "f4e026b2-b1d3-4198-a024-e97272da3f50",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6180), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3557), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(2003, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "trungkien2003ntk@gmail.com",
                             EmailConfirmed = true,
@@ -4673,13 +4742,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6179), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3556), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Nguyễn",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "TRUNGKIEN2003NTK@GMAIL.COM",
                             NormalizedUserName = "TRUNGKIEN2003NTK@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMr4OxbuPLOJKo2ZCknTXrJsiQzp4bwUkKBuRBTt8bx5JhMgy3UlIIqZn0YmonYmWg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC9VwMExDNtN5XlQXvAG59ODtlcxL2YLZGF5HcrbMChOLX/nJ51inLM2a8cMI81+Sw==",
                             PhoneNumber = "0866919340",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "SENTMLQ2I6NCSBGSCLVXP4UOHGJF4G66",
@@ -4692,7 +4761,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "f0klsm1m-b1d6-4496-d036-e96378ef3g67",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6181), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3558), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(2003, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "truykichtk20031@gmail.com",
                             EmailConfirmed = true,
@@ -4701,13 +4770,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6181), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 27, 3, 12, 43, 882, DateTimeKind.Unspecified).AddTicks(3557), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Trần",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "TRUYKICHTK20031@GMAIL.COM",
                             NormalizedUserName = "TRUYKICHTK20031@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJnPZSEzBJDTQoDSNMAVlqzC5WUHceKZFfzqKs0rjuE58mXebj43slD+7aF7+xJFwA==",
                             PhoneNumber = "0939199946",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "MGJSHVQ2IJ28SKMVCLVXP4LAM8J2KJ5O",
@@ -4890,27 +4958,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         new
                         {
                             UserId = 1,
-                            RoleId = 2
+                            RoleId = 1
                         },
                         new
                         {
                             UserId = 2,
-                            RoleId = 3
+                            RoleId = 2
                         },
                         new
                         {
                             UserId = 3,
-                            RoleId = 4
+                            RoleId = 3
                         },
                         new
                         {
                             UserId = 4,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            RoleId = 1
+                            RoleId = 4
                         });
                 });
 
@@ -5438,7 +5501,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Domain.Products.Product", "Product")
-                        .WithMany("Options")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5775,6 +5838,33 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("KKBookstore.Domain.Products.SkuImage", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Products.Sku", "Sku")
+                        .WithMany("SkuImages")
+                        .HasForeignKey("SkuId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+
+                    b.Navigation("Sku");
+                });
+
             modelBuilder.Entity("KKBookstore.Domain.Products.SkuOptionValue", b =>
                 {
                     b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
@@ -6017,8 +6107,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                 {
                     b.Navigation("BookAuthors");
 
-                    b.Navigation("Options");
-
                     b.Navigation("ProductImages");
 
                     b.Navigation("Ratings");
@@ -6039,6 +6127,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
             modelBuilder.Entity("KKBookstore.Domain.Products.Sku", b =>
                 {
                     b.Navigation("Ratings");
+
+                    b.Navigation("SkuImages");
 
                     b.Navigation("SkuOptionValues");
                 });

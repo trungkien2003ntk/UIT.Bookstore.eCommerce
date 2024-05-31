@@ -82,3 +82,23 @@ public class CustomRoleManager : RoleManager<IdentityRole>
 
 
 }
+
+
+
+
+
+
+===========================================================
+
+Add Validations
+Implement Azure AI Search
+Implement Azure Function to reduce the image size and store to Azure Blob Storage
+Implement Azure Blob Storage to store the images
+Implement Azure SQL Database and change from sql server to Azure sql
+Implement Azure Key Vault to store the connection strings
+Implement Azure Application Insights for logging
+
+
+Batching operations to Azure SQL Database using Entity Framework Core, 
+by doing so we can reduce the number of round trips to the database and improve the performance of the application
+because the database operations often cost more than the application server operations.

@@ -1,0 +1,102 @@
+[
+	{
+		"Id": 1,
+		"Name": "Discount-qKmUC",
+		"Description": "Random discount description",
+		"IsPercentage": true,
+		"DiscountType": "Product",
+		"QuantityRange": {
+			"MinApplyQuantity": 2,
+			"MaxApplyQuantity": 7
+		},
+		"ValueRange": {
+			"MinValue": 25,
+			"MaxValue": 69
+		},
+		"Value": 13,
+		"StartWhen": "2022-04-04T19:42:58.725113",
+		"EndWhen": "2022-05-04T19:42:58.725113",
+		"ProductId": 3,
+		"IsDeleted": false
+	},
+	{
+		"Id": 2,
+		"Name": "Discount-zpKnQ",
+		"Description": "Random discount description",
+		"IsPercentage": true,
+		"DiscountType": "Order",
+		"QuantityRange": {
+			"MinApplyQuantity": 4,
+			"MaxApplyQuantity": 8
+		},
+		"ValueRange": {
+			"MinValue": 28,
+			"MaxValue": 65
+		},
+		"Value": 12,
+		"StartWhen": "2024-01-07T06:18:47.776270",
+		"EndWhen": "2024-02-06T06:18:47.776270",
+		"ProductId": null,
+		"IsDeleted": false
+	},
+	{
+		"Id": 3,
+		"Name": "Discount-NWTHr",
+		"Description": "Random discount description",
+		"IsPercentage": true,
+		"DiscountType": "Product",
+		"QuantityRange": {
+			"MinApplyQuantity": 5,
+			"MaxApplyQuantity": 10
+		},
+		"ValueRange": {
+			"MinValue": 10,
+			"MaxValue": 89
+		},
+		"Value": 38,
+		"StartWhen": "2022-11-25T01:39:14.092912",
+		"EndWhen": "2022-12-25T01:39:14.092912",
+		"ProductId": 3,
+		"IsDeleted": false
+	},
+	{
+		"Id": 4,
+		"Name": "Discount-JCuXo",
+		"Description": "Random discount description",
+		"IsPercentage": true,
+		"DiscountType": "Product",
+		"QuantityRange": {
+			"MinApplyQuantity": 5,
+			"MaxApplyQuantity": 9
+		},
+		"ValueRange": {
+			"MinValue": 22,
+			"MaxValue": 64
+		},
+		"Value": 47,
+		"StartWhen": "2024-01-06T03:10:02.751464",
+		"EndWhen": "2024-02-05T03:10:02.751464",
+		"ProductId": null,
+		"IsDeleted": false
+	},
+	{
+		"Id": 5,
+		"Name": "Discount-ogIJZ",
+		"Description": "Random discount description",
+		"IsPercentage": false,
+		"DiscountType": "Product",
+		"QuantityRange": {
+			"MinApplyQuantity": 4,
+			"MaxApplyQuantity": 7
+		},
+		"ValueRange": {
+			"MinValue": 23,
+			"MaxValue": 74
+		},
+		"Value": 13,
+		"StartWhen": "2022-03-03T22:44:50.579087",
+		"EndWhen": "2022-04-02T22:44:50.579087",
+		"ProductId": null,
+		"IsDeleted": false
+	}
+]

@@ -2,41 +2,57 @@
 	{
 		"Id": 1,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và bố"
+		"Value": "Một ngày của tớ và bố",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg"
 	},
 	{
 		"Id": 2,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và mẹ"
+		"Value": "Một ngày của tớ và mẹ",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg"
 	},
 	{
 		"Id": 3,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và ông"
+		"Value": "Một ngày của tớ và ông",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg"
 	},
 	{
 		"Id": 4,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và bà"
+		"Value": "Một ngày của tớ và bà",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg"
 	},
 	{
 		"Id": 5,
 		"OptionId": 2,
-		"Value": "Tập 1 - Mùa Xuân"
+		"Value": "Tập 1 - Mùa Xuân",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg"
 	},
 	{
 		"Id": 6,
 		"OptionId": 2,
-		"Value": "Tập 2 - Mùa Hạ"
+		"Value": "Tập 2 - Mùa Hạ",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg"
 	},
 	{
 		"Id": 7,
 		"OptionId": 2,
-		"Value": "Tập 3 - Mùa Thu"
+		"Value": "Tập 3 - Mùa Thu",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg"
 	},
 	{
 		"Id": 8,
 		"OptionId": 2,
-		"Value": "Tập 4 - Mùa Đông"
+		"Value": "Tập 4 - Mùa Đông",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg"
 	}
 ]

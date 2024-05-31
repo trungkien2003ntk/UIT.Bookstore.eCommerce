@@ -2,11 +2,13 @@
 	{
 		"Id": 1,
 		"ProductId": 1,
-		"Name": "Phần"
+		"Name": "Phần",
+		"IsOptionWithImage" : true
 	},
 	{
 		"Id": 2,
 		"ProductId": 2,
-		"Name": "Tập"
+		"Name": "Tập",
+		"IsOptionWithImage" : true
 	}
 ]

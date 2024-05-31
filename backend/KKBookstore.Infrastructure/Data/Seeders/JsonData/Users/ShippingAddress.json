@@ -1,0 +1,41 @@
+﻿[
+  {
+    "Id": 1,
+    "UserId": 1,
+    "ReceiverName": "Nguyễn Trung Kiên",
+    "PhoneNumber": "0866919340",
+    "Province": "Long An",
+    "District": "Huyện Đức Hòa",
+    "Commune": "Xã Đức Hòa Hạ",
+    "DetailAddress": "Số nhà 394",
+    "IsDefault": false,
+    "AddressTypeId": 1,
+    "IsDeleted": false
+  },
+  {
+    "Id": 2,
+    "UserId": 1,
+    "ReceiverName": "Nguyễn Trung Kiên",
+    "PhoneNumber": "0866919340",
+    "Province": "Hồ Chí Minh",
+    "District": "Quận Thủ Đức",
+    "Commune": "Phường Linh Trung",
+    "DetailAddress": "Ktx khu A, ĐHQG",
+    "IsDefault": true,
+    "AddressTypeId": 2,
+    "IsDeleted": false
+  },
+  {
+    "Id": 3,
+    "UserId": 5,
+    "ReceiverName": "Nguyễn Truy Kích",
+    "PhoneNumber": "0866919340",
+    "Province": "Long An",
+    "District": "Huyện Đức Hòa",
+    "Commune": "Xã Đức Hòa Thượng",
+    "DetailAddress": "Chung cư 977",
+    "IsDefault": true,
+    "AddressTypeId": 1,
+    "IsDeleted": false
+  }
+]

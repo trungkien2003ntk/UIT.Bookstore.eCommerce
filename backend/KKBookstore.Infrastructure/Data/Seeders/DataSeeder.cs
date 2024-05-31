@@ -1,9 +1,13 @@
-﻿using KKBookstore.Domain.Common;
-using KKBookstore.Domain.OrderAggregate;
-using KKBookstore.Domain.ProductAggregate;
-using Microsoft.AspNetCore.Http;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
+using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
+using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
+using Org.BouncyCastle.Bcpg;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,8 +16,12 @@ namespace KKBookstore.Infrastructure.Data.Seeders;
 
 internal static class DataSeeder
 {
-    private static readonly int DefaultAdminId = 9;
+    private static readonly int DefaultAdminId = 2;
     private static bool Seeded = false;
+
+    // User paths
+    private static readonly string UserJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Users/User.json";
+    private static readonly string ShippingAddressJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Users/ShippingAddress.json";
 
     // Product paths
     private static readonly string AuthorJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/Author.json";
@@ -21,16 +29,28 @@ internal static class DataSeeder
     private static readonly string ProductOptionJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductOption.json";
     private static readonly string ProductOptionValueJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductOptionValue.json";
     private static readonly string ProductJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/Product.json";
+    private static readonly string ProductImageJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductImage.json";
     private static readonly string ProductTypeJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductType.json";
     private static readonly string ProductTypeAttributeJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductTypeAttribute.json";
     private static readonly string ProductTypeAttributeMappingJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductTypeAttributeMapping.json";
     private static readonly string ProductTypeAttributeProductValueJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductTypeAttributeProductValue.json";
     private static readonly string ProductTypeAttributeValueJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/ProductTypeAttributeValue.json";
-    private static readonly string RatingJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/Rating.json"; // empty
+    private static readonly string RatingJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/Rating.json"; 
+    private static readonly string RatingLikeJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/RatingLike.json";
     private static readonly string SkuJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/Sku.json";
-    private static readonly string SkuImageJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/SkuImage.json";
     private static readonly string SkuOptionValueJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/SkuOptionValue.json";
     private static readonly string UnitMeasureJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Products/UnitMeasure.json";
+
+    // Order paths
+    private static readonly string OrderJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Orders/Order.json";
+    private static readonly string OrderLineJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Orders/OrderLine.json";
+
+    // ShoppingCartItem paths
+    private static readonly string ShoppingCartItemJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/ShoppingCartItems/ShoppingCartItem.json";
+
+    // User related data
+    private static readonly List<User> _users = [];
+    private static readonly List<ShippingAddress> _shippingAddresses = [];
 
     // Product related data
     private static readonly List<Author> _authors = [];
@@ -41,20 +61,26 @@ internal static class DataSeeder
     private static readonly List<ProductTypeAttributeValue> _productTypeAttributeValues = [];
     private static readonly List<ProductTypeAttributeProductValue> _productTypeAttributeProductValues = [];
     private static readonly List<Product> _products = [];
+    private static readonly List<ProductImage> _productImages = [];
+    private static readonly List<Rating> _ratings = [];
+    private static readonly List<RatingLike> _ratingLikes = [];
     private static readonly List<Sku> _skus = [];
-    private static readonly List<SkuImage> _skuImages = [];
     private static readonly List<BookAuthor> _bookAuthors = [];
     private static readonly List<ProductOption> _productOptions = [];
     private static readonly List<ProductOptionValue> _productOptionValues = [];
     private static readonly List<SkuOptionValue> _skuOptionValues = [];
     
-
     // Order related data
     private static readonly List<DeliveryMethod> _deliveryMethods = [];
     private static readonly List<PaymentMethod> _paymentMethods = [];
     private static readonly List<RefAddressType> _refAddressTypes = [];
     private static readonly List<Order> _orders = [];
     private static readonly List<OrderLine> _orderLines = [];
+
+    // ShoppingCartItem related data
+    private static readonly List<ShoppingCartItem> _shoppingCartItems = [];
+
+    private static readonly JsonSerializerOptions enumOption = new() { Converters = { new JsonStringEnumConverter() } };
 
     public static void Seed(ModelBuilder builder)
     {
@@ -64,9 +90,19 @@ internal static class DataSeeder
         }
         else
         {
+            SeedUsersRelatedData(builder);
             SeedProductRelatedData(builder);
             SeedOrderRelatedData(builder);
+            SeedShoppingCartItem(builder);
         }
+    }
+
+    private static void SeedUsersRelatedData(ModelBuilder builder)
+    {
+        SeedRoles(builder);
+        SeedUsers(builder);
+        SeedUserRoles(builder);
+        SeedShippingAddress(builder);
     }
 
     private static void SeedProductRelatedData(ModelBuilder builder)
@@ -79,20 +115,124 @@ internal static class DataSeeder
         SeedProductTypeAttributeValues(builder);
         SeedProductTypeAttributeProductValues(builder);
         SeedProducts(builder);
+        SeedProductImages(builder);
         SeedSkus(builder);
-        SeedSkuImages(builder);
         SeedBookAuthors(builder);
         SeedOptions(builder);
         SeedOptionValues(builder);
         SeedSkuOptionValues(builder);
+        SeedRatings(builder);
     }
-
-    
 
     private static void SeedOrderRelatedData(ModelBuilder builder)
     {
+        SeedReferenceValues(builder);
+        SeedOrders(builder);
+        SeedOrderLines(builder);
+    }
+
+    private static void SeedShoppingCartItem(ModelBuilder builder)
+    {
+        var shoppingCartItemJson = File.ReadAllText(ShoppingCartItemJsonPath, Encoding.UTF8);
+        var shoppingCartItems = JsonSerializer.Deserialize<List<ShoppingCartItem>>(shoppingCartItemJson);
+
+        AddAudit(shoppingCartItems);
+
+        _shoppingCartItems.AddRange(shoppingCartItems);
+
+        builder.Entity<ShoppingCartItem>()
+            .HasData(_shoppingCartItems);
+    }
+
+    private static void SeedRoles(ModelBuilder builder)
+    {
+        var roles = new List<IdentityRole<int>>
+        {
+            new() { Id = 1, Name = "Customer", NormalizedName = "CUSTOMER" },
+            new() { Id = 2, Name = "Admin", NormalizedName = "ADMIN" },
+            new() { Id = 3, Name = "SalesStaff", NormalizedName = "SALESSTAFF" },
+            new() { Id = 4, Name = "CustomerCareStaff", NormalizedName = "CUSTOMERCARESTAFF" },
+        };
+
+        builder.Entity<IdentityRole<int>>()
+            .HasData(roles);
+    }
+
+    private static void SeedUsers(ModelBuilder builder)
+    {
+        var userJson = File.ReadAllText(UserJsonPath, Encoding.UTF8);
+        var users = JsonSerializer.Deserialize<List<User>>(userJson, enumOption);
+
+        foreach (var user in users)
+        {
+            user.LastEditedWhen = DateTimeOffset.Now;
+            user.CreatedWhen = DateTimeOffset.Now;
+            user.CreatedBy = null;
+            user.LastEditedBy = null;
+        }
+
+        // use identity password hasher to hash a string as password
+        //users[0].PasswordHash = new PasswordHasher<User>().HashPassword(users[0], "Abc123*");
+        //users[1].PasswordHash = new PasswordHasher<User>().HashPassword(users[1], "Abc123*");
+        //users[2].PasswordHash = new PasswordHasher<User>().HashPassword(users[2], "Abc123*");
+        //users[3].PasswordHash = new PasswordHasher<User>().HashPassword(users[3], "Abc123*");
+        //users[4].PasswordHash = new PasswordHasher<User>().HashPassword(users[3], "Abc123*");
+
+        foreach (var user in users)
+        {
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, user.PasswordHash != null ? user.PasswordHash : "Abc123*");
+        }
+
+        _users.AddRange(users);
+
+        builder.Entity<User>()
+            .HasData(_users);
+    }
+
+    private static void SeedUserRoles(ModelBuilder builder)
+    {
+        var userRoles = new List<IdentityUserRole<int>>
+        {
+            new() { UserId = 1, RoleId = 2 },
+            new() { UserId = 2, RoleId = 3 },
+            new() { UserId = 3, RoleId = 4 },
+        };
+
+        foreach (var user in _users)
+        {
+            switch (user.Id)
+            {
+                case 1:
+                case 2:
+                case 3:
+                    break;
+                default:
+                    userRoles.Add(new() { UserId = user.Id, RoleId = 1 });
+                    break;
+            }
+        }
+
+        builder.Entity<IdentityUserRole<int>>()
+            .HasData(userRoles);
+    }
+
+    private static void SeedShippingAddress(ModelBuilder builder)
+    {
+        var shippingAddressJson = File.ReadAllText(ShippingAddressJsonPath, Encoding.UTF8);
+        var shippingAddresses = JsonSerializer.Deserialize<List<ShippingAddress>>(shippingAddressJson);
+
+        AddAudit(shippingAddresses);
+
+        _shippingAddresses.AddRange(shippingAddresses);
+
+        builder.Entity<ShippingAddress>()
+            .HasData(_shippingAddresses);
+    }
+
+    private static void SeedReferenceValues(ModelBuilder builder)
+    {
         _deliveryMethods.AddRange([
-            new DeliveryMethod { Id = 1, Name = "Giao hàng tiêu chuẩn", Description = "Giao hàng tiêu chuẩn", CreatedBy = DefaultAdminId, CreatedWhen = DateTimeOffset.Now, LastEditedBy = DefaultAdminId, LastEditedWhen = DateTimeOffset.Now },
+                    new DeliveryMethod { Id = 1, Name = "Giao hàng tiêu chuẩn", Description = "Giao hàng tiêu chuẩn", CreatedBy = DefaultAdminId, CreatedWhen = DateTimeOffset.Now, LastEditedBy = DefaultAdminId, LastEditedWhen = DateTimeOffset.Now },
             new DeliveryMethod { Id = 2, Name = "Giao hàng nhanh", Description = "Giao hàng nhanh", CreatedBy = DefaultAdminId, CreatedWhen = DateTimeOffset.Now, LastEditedBy = DefaultAdminId, LastEditedWhen = DateTimeOffset.Now },
         ]);
 
@@ -114,6 +254,32 @@ internal static class DataSeeder
 
         builder.Entity<RefAddressType>()
             .HasData(_refAddressTypes);
+    }
+
+    private static void SeedOrders(ModelBuilder builder)
+    {
+        var orderJson = File.ReadAllText(OrderJsonPath, Encoding.UTF8);
+        var orders = JsonSerializer.Deserialize<List<Order>>(orderJson, enumOption);
+        //Debugger.Launch();
+        AddAudit(orders);
+
+        _orders.AddRange(orders);
+
+        builder.Entity<Order>()
+            .HasData(_orders);
+    }
+
+    private static void SeedOrderLines(ModelBuilder builder)
+    {  
+        var orderLineJson = File.ReadAllText(OrderLineJsonPath, Encoding.UTF8);
+        var orderLines = JsonSerializer.Deserialize<List<OrderLine>>(orderLineJson);
+
+        AddAudit(orderLines);
+
+        _orderLines.AddRange(orderLines);
+
+        builder.Entity<OrderLine>()
+            .HasData(_orderLines);
     }
 
     private static void SeedAuthors(ModelBuilder builder)
@@ -154,7 +320,7 @@ internal static class DataSeeder
         foreach (var productType in _productTypes)
         {
             // set display name to PascalCase
-            productType.DisplayName = string.Join("", productType.DisplayName.Split(' ').Select(s => s.First().ToString().ToUpper() + s[1..].ToLower()));
+            productType.DisplayName = string.Join(" ", productType.DisplayName.Split(' ').Select(s => s.First().ToString().ToUpper() + s[1..].ToLower()));
         }
 
         builder.Entity<ProductType>()
@@ -226,14 +392,23 @@ internal static class DataSeeder
             .HasData(_products);
     }
 
+    private static void SeedProductImages(ModelBuilder builder)
+    {
+        var productImageJson = File.ReadAllText(ProductImageJsonPath, Encoding.UTF8);
+        var productImages = JsonSerializer.Deserialize<List<ProductImage>>(productImageJson);
+
+        AddAudit(productImages);
+
+        _productImages.AddRange(productImages);
+
+        builder.Entity<ProductImage>()
+            .HasData(_productImages);
+    }
+
     private static void SeedSkus(ModelBuilder builder)
     {
         var skuJson = File.ReadAllText(SkuJsonPath, Encoding.UTF8);
-        var options = new JsonSerializerOptions
-        {
-            Converters = { new JsonStringEnumConverter() } // Add this line to enable enum deserialization
-        };
-        var skus = JsonSerializer.Deserialize<List<Sku>>(skuJson, options);
+        var skus = JsonSerializer.Deserialize<List<Sku>>(skuJson, enumOption);
         AddAudit(skus);
 
         _skus.AddRange(skus);
@@ -329,19 +504,6 @@ internal static class DataSeeder
         }
     }
 
-    private static void SeedSkuImages(ModelBuilder builder)
-    {
-        var skuImageJson = File.ReadAllText(SkuImageJsonPath, Encoding.UTF8);
-        var skuImages = JsonSerializer.Deserialize<List<SkuImage>>(skuImageJson);
-
-        AddAudit(skuImages);
-
-        _skuImages.AddRange(skuImages);
-
-        builder.Entity<SkuImage>()
-            .HasData(_skuImages);
-    }
-
     private static void SeedBookAuthors(ModelBuilder builder)
     {
         var bookAuthorJson = File.ReadAllText(BookAuthorJsonPath, Encoding.UTF8);
@@ -394,14 +556,35 @@ internal static class DataSeeder
             .HasData(_skuOptionValues);
     }
 
+    private static void SeedRatings(ModelBuilder builder)
+    {
+        var ratingJson = File.ReadAllText(RatingJsonPath, Encoding.UTF8);
+        var ratings = JsonSerializer.Deserialize<List<Rating>>(ratingJson, enumOption);
+
+        AddAudit(ratings);
+
+        _ratings.AddRange(ratings);
+
+        builder.Entity<Rating>()
+            .HasData(_ratings);
+
+        var ratingLikeJson = File.ReadAllText(RatingLikeJsonPath, Encoding.UTF8);
+        var ratingLikes = JsonSerializer.Deserialize<List<RatingLike>>(ratingLikeJson);
+
+        _ratingLikes.AddRange(ratingLikes);
+
+        builder.Entity<RatingLike>()
+            .HasData(_ratingLikes);
+    }
+
     private static void AddAudit<TAuditableEntity>(List<TAuditableEntity> listItem) where TAuditableEntity : BaseAuditableEntity
     {
         foreach (var item in listItem)
         {
             item.CreatedBy = DefaultAdminId;
-            item.CreatedWhen = DateTimeOffset.Now;
+            item.CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0));
             item.LastEditedBy = DefaultAdminId;
-            item.LastEditedWhen = DateTimeOffset.Now;
+            item.LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0));
         }
     }
     

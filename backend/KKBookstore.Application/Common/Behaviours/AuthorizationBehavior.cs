@@ -4,14 +4,14 @@ using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Security;
 using KKBookstore.Application.Common.Exceptions;
 
-namespace KKBookstore.Application.Behaviours;
+namespace KKBookstore.Application.Common.Behaviours;
 
-public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly ICurrentUser _currentUser;
     private readonly IIdentityService _identityService;
 
-    public AuthorizationBehaviour(
+    public AuthorizationBehavior(
         ICurrentUser currentUser,
         IIdentityService identityService)
     {

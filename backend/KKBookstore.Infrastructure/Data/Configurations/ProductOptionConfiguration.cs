@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ public class ProductOptionConfiguration : IEntityTypeConfiguration<ProductOption
 {
     public void Configure(EntityTypeBuilder<ProductOption> builder)
     {
+        builder.ToTable($"{nameof(ProductOption)}s");
+
         builder.Property(t => t.Id)
             .HasColumnName($"{nameof(ProductOption)}Id");
 
@@ -15,8 +17,12 @@ public class ProductOptionConfiguration : IEntityTypeConfiguration<ProductOption
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(t => t.IsOptionWithImage)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.HasOne(t => t.Product)
-            .WithMany()
+            .WithMany(t => t.Options)
             .HasForeignKey(t => t.ProductId);
 
         builder.HasOne(t => t.LastEditedByUser)

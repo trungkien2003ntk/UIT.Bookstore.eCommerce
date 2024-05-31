@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.OrderAggregate;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
@@ -9,6 +10,8 @@ internal class SkuConfigurations : IEntityTypeConfiguration<Sku>
 {
     public void Configure(EntityTypeBuilder<Sku> builder)
     {
+        var converter = new EnumToStringConverter<SkuStatus>();
+
         // Property Config
         builder.Property(t => t.Id)
             .HasColumnName($"{nameof(Sku)}Id");
@@ -38,8 +41,8 @@ internal class SkuConfigurations : IEntityTypeConfiguration<Sku>
             .IsRequired();
 
         builder.Property(t => t.Status)
-            .HasConversion<string>()
-            .IsRequired();
+            .IsRequired()
+            .HasConversion(converter);
 
         builder.Property(t => t.Comment)
             .HasMaxLength(500)

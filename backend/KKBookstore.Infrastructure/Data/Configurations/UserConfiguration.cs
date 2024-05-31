@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Aggregates.UserAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

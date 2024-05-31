@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ internal class BookAuthorConfiguration : IEntityTypeConfiguration<BookAuthor>
 {
     public void Configure(EntityTypeBuilder<BookAuthor> builder)
     {
+        builder.ToTable($"{nameof(BookAuthor)}s");
+
         builder.Property(wb => wb.Id)
             .HasColumnName($"{nameof(BookAuthor)}Id");
 

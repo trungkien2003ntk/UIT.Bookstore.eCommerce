@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ internal class ProductPriceHistoryConfiguration : IEntityTypeConfiguration<Produ
 {
     public void Configure(EntityTypeBuilder<ProductPriceHistory> builder)
     {
+        builder.ToTable("ProductPriceHistories");
+
         builder.HasKey(t => t.Id);
 
         builder.Property(t => t.Id)

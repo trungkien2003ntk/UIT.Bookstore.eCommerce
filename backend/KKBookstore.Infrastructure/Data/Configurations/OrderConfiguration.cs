@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.OrderAggregate;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
@@ -8,6 +9,10 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
+        var converter = new EnumToStringConverter<OrderStatus>();
+
+        builder.ToTable($"{nameof(Order)}s");
+
         builder.HasOne(o => o.Customer)
             .WithMany()
             .HasForeignKey(o => o.CustomerId);
@@ -42,7 +47,8 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasPrecision(18, 2);
 
         builder.Property(o => o.Status)
-            .HasConversion<string>();
+            .IsRequired()
+            .HasConversion(converter);
 
         builder.HasOne(t => t.LastEditedByUser)
             .WithMany()

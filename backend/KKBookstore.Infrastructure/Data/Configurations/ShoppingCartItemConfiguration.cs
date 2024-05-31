@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ShoppingCart;
+﻿using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

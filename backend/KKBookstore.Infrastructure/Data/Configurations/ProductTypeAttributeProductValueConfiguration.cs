@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,25 +8,27 @@ internal class ProductTypeAttributeProductValueConfiguration : IEntityTypeConfig
 {
     public void Configure(EntityTypeBuilder<ProductTypeAttributeProductValue> builder)
     {
+        builder.ToTable($"{nameof(ProductTypeAttributeProductValue)}s");
+
         builder.Property(t => t.Id)
             .HasColumnName($"{nameof(ProductTypeAttributeProductValue)}Id");
 
         builder.Property(t => t.ProductId)
             .IsRequired();
 
-        builder.Property(t => t.ProductTypeAttributeValueId)
+        builder.Property(t => t.AttributeValueId)
             .IsRequired();
 
-        builder.HasIndex(t => new { t.ProductId, t.ProductTypeAttributeValueId })
+        builder.HasIndex(t => new { t.ProductId, t.AttributeValueId })
             .IsUnique();
 
         builder.HasOne(t => t.Product)
             .WithMany()
             .HasForeignKey(t => t.ProductId);
 
-        builder.HasOne(t => t.ProductTypeAttributeValue)
+        builder.HasOne(t => t.AttributeValue)
             .WithMany(av => av.ProductsAppliedValue)
-            .HasForeignKey(t => t.ProductTypeAttributeValueId);
+            .HasForeignKey(t => t.AttributeValueId);
 
         builder.HasOne(t => t.LastEditedByUser)
             .WithMany()

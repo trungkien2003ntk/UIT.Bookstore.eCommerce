@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ internal class ProductTypeAttributeMappingConfiguration : IEntityTypeConfigurati
 {
     public void Configure(EntityTypeBuilder<ProductTypeAttributeMapping> builder)
     {
+        builder.ToTable($"{nameof(ProductTypeAttributeMapping)}s");
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)

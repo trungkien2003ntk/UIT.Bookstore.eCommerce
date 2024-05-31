@@ -1,0 +1,142 @@
+[
+	{
+		"Id": 1,
+		"ProductId": 1,
+		"AttributeValueId": 1
+	},
+	{
+		"Id": 2,
+		"ProductId": 1,
+		"AttributeValueId": 2
+	},
+	{
+		"Id": 3,
+		"ProductId": 1,
+		"AttributeValueId": 9
+	},
+	{
+		"Id": 4,
+		"ProductId": 1,
+		"AttributeValueId": 4
+	},
+	{
+		"Id": 5,
+		"ProductId": 1,
+		"AttributeValueId": 5
+	},
+	{
+		"Id": 6,
+		"ProductId": 2,
+		"AttributeValueId": 1
+	},
+	{
+		"Id": 7,
+		"ProductId": 2,
+		"AttributeValueId": 6
+	},
+	{
+		"Id": 8,
+		"ProductId": 2,
+		"AttributeValueId": 9
+	},
+	{
+		"Id": 9,
+		"ProductId": 2,
+		"AttributeValueId": 4
+	},
+	{
+		"Id": 10,
+		"ProductId": 2,
+		"AttributeValueId": 7
+	},
+	{
+		"Id": 11,
+		"ProductId": 3,
+		"AttributeValueId": 1
+	},
+	{
+		"Id": 12,
+		"ProductId": 3,
+		"AttributeValueId": 8
+	},
+	{
+		"Id": 13,
+		"ProductId": 3,
+		"AttributeValueId": 4
+	},
+	{
+		"Id": 14,
+		"ProductId": 3,
+		"AttributeValueId": 10
+	},
+	{
+		"Id": 15,
+		"ProductId": 4,
+		"AttributeValueId": 1
+	},
+	{
+		"Id": 16,
+		"ProductId": 4,
+		"AttributeValueId": 11
+	},
+	{
+		"Id": 17,
+		"ProductId": 4,
+		"AttributeValueId": 13
+	},
+	{
+		"Id": 18,
+		"ProductId": 4,
+		"AttributeValueId": 14
+	},
+	{
+		"Id": 19,
+		"ProductId": 4,
+		"AttributeValueId": 12
+	},
+	{
+		"Id": 20,
+		"ProductId": 4,
+		"AttributeValueId": 4
+	},
+	{
+		"Id": 21,
+		"ProductId": 4,
+		"AttributeValueId": 15
+	},
+	{
+		"Id": 22,
+		"ProductId": 5,
+		"AttributeValueId": 1
+	},
+	{
+		"Id": 23,
+		"ProductId": 5,
+		"AttributeValueId": 11
+	},
+	{
+		"Id": 24,
+		"ProductId": 5,
+		"AttributeValueId": 13
+	},
+	{
+		"Id": 25,
+		"ProductId": 5,
+		"AttributeValueId": 14
+	},
+	{
+		"Id": 26,
+		"ProductId": 5,
+		"AttributeValueId": 12
+	},
+	{
+		"Id": 27,
+		"ProductId": 5,
+		"AttributeValueId": 4
+	},
+	{
+		"Id": 28,
+		"ProductId": 5,
+		"AttributeValueId": 15
+	}
+]

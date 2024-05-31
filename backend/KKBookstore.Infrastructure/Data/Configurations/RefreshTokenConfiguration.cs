@@ -9,7 +9,7 @@ internal class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
         builder.Property(rt => rt.Id)
-            .HasColumnName("RefreshTokenId");
+            .HasColumnName($"{nameof(RefreshToken)}Id");
 
         builder.Property(rt => rt.Token)
             .HasMaxLength(500)

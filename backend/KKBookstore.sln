@@ -12,6 +12,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5C70A64-1DEB-4138-A0B2-AFC9B4D42F3F}"
 	ProjectSection(SolutionItems) = preProject
 		DesignPatternUsed.txt = DesignPatternUsed.txt
+		IncomingTask.txt = IncomingTask.txt
+		RoomForImprovement.txt = RoomForImprovement.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KKBookstore.Domain", "KKBookstore.Domain\KKBookstore.Domain.csproj", "{28F57C0E-9A98-4AFE-A30A-4B32B9FF6DD2}"

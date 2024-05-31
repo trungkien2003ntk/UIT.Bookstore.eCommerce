@@ -1,16 +1,23 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using AutoMapper;
+using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Users.Commands.CreateUser;
-using KKBookstore.Application.Users.Commands.RefreshAccessToken;
-using KKBookstore.Application.Users.Commands.SignIn;
-using KKBookstore.Domain.Common;
-using KKBookstore.Domain.Users;
+using KKBookstore.Application.Features.Users.ChangePassword;
+using KKBookstore.Application.Features.Users.RefreshAccessToken;
+using KKBookstore.Application.Features.Users.Register;
+using KKBookstore.Application.Features.Users.ReplaceUser;
+using KKBookstore.Application.Features.Users.SignIn;
+using KKBookstore.Application.Features.Users.UpdatePassword;
+using KKBookstore.Application.Features.Users.UpdateUser;
+using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Constants;
+using KKBookstore.Domain.Models;
 using KKBookstore.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,6 +29,7 @@ public class IdentityService(
     RoleManager<IdentityRole<int>> roleManager,
     IPasswordHasher<User> passwordHasher,
     IOptions<JwtSettings> jwtSettings,
+    IMapper mapper,
     ApplicationDbContext dbContext
 ) : IIdentityService
 {
@@ -40,77 +48,187 @@ public class IdentityService(
             : Result.Success(user);
     }
 
-    public async Task<Result<int>> CreateUserAsync(CreateUserRequest request)
+    public async Task<Result<TokenResponse>> GenerateJwtToken(string email)
     {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return Result.Failure<TokenResponse>(UserErrors.NotFound);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles.Count == 0)
+        {
+            return Result.Failure<TokenResponse>(UserErrors.MissingRole);
+        }
+
+        var responseResult = await GenerateTokenResponse(user);
+
+        return responseResult;
+    }
+
+    public async Task<Result<User>> CreateTemporaryCustomerAsync(string email)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        // Check if a user with this email already exists
+        var searchResult = await FindUserAsync(new(email));
+        if (searchResult.IsSuccess)
+        {
+            return Result.Failure<User>(UserErrors.AlreadyExists);
+        }
+
+        // Create a new user with the provided email
+        var user = new User
+        {
+            FirstName = "temp",
+            LastName = "temp",
+            Email = email,
+            EmailConfirmed = true,
+            UserName = email,
+            LoginType = LoginType.Email,
+            Status = UserStatus.Verified
+        };
+
+        // Add the user to the database
+        var result = await _userManager.CreateAsync(user);
+        if (!result.Succeeded)
+        {
+            var errors = result.ToErrors();
+            await transaction.RollbackAsync();
+            return Result.Failure<User>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
+        }
+
+        var customerRole = await _roleManager.FindByNameAsync(Role.Customer);
+
+        var assignRoleResult = await _userManager.AddToRoleAsync(user, customerRole!.Name!);
+        if (!assignRoleResult.Succeeded)
+        {
+            var errors = result.ToErrors();
+            await transaction.RollbackAsync();
+            return Result.Failure<User>(errors.FirstOrDefault() ?? UserErrors.AssignRoleFailed);
+        }
+
+        // Commit the transaction
+        await transaction.CommitAsync();
+
+        // Return the created user
+        return Result.Success(user);
+    }
+
+    public async Task<Result<TokenResponse>> CreateUserAsync(RegisterCommand request)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
         var searchResult = await FindUserAsync(new(request.Email));
         if (searchResult.IsSuccess)
         {
-            return Result.Failure<int>(UserErrors.AlreadyExists);
+            return Result.Failure<TokenResponse>(UserErrors.AlreadyExists);
         }
 
         var role = await _roleManager.FindByNameAsync(request.Role);
         if (role == null)
         {
-            return Result.Failure<int>(UserErrors.InvalidRole);
+            return Result.Failure<TokenResponse>(UserErrors.InvalidRole);
         }
 
         var user = request.ToEntity();
-        user.LoginType = LoginType.Email;
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
             var errors = result.ToErrors();
-            return Result.Failure<int>(errors.FirstOrDefault() ?? UserErrors.Unknown);
+            await transaction.RollbackAsync();
+            return Result.Failure<TokenResponse>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
         }
 
-        await _userManager.AddToRoleAsync(user, role.Name!);
-        
-        return Result.Success(user.Id);
+        var assignRoleResult = await _userManager.AddToRoleAsync(user, role.Name!);
+        if (!assignRoleResult.Succeeded)
+        {
+            var errors = result.ToErrors();
+            await transaction.RollbackAsync();
+            return Result.Failure<TokenResponse>(errors.FirstOrDefault() ?? UserErrors.AssignRoleFailed);
+        }
+
+        await transaction.CommitAsync();
+
+        // create a token response
+        var responseResult = await GenerateTokenResponse(user);
+
+
+        return responseResult;
     }
 
-    public async Task<Result<SignInResponse>> SignInAsync(SignInRequest request)
+    public async Task<Result> UpdateUserAsync(UpdateUserCommand command)
+    {
+        var user = await _userManager.FindByIdAsync(command.Id.ToString());
+        if (user == null)
+        {
+            return Result.Failure(UserErrors.NotFound);
+        }
+
+        // Update the user's properties
+        mapper.Map(command, user);
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
+    }
+
+    public async Task<Result> ReplaceUserAsync(ReplaceUserCommand request)
+    {
+        var user = await _userManager.FindByIdAsync(request.Id.ToString());
+        if (user == null)
+        {
+            return Result.Failure(UserErrors.NotFound);
+        }
+
+        // Update the user's properties
+        mapper.Map(request, user);
+
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
+    }
+
+    public async Task<Result<TokenResponse>> SignInAsync(SignInCommand request)
     {
         var result = await FindUserAsync(new(request.Email));
         if (result.IsFailure)
         {
-            return Result.Failure<SignInResponse>(UserErrors.InvalidCredentials);
+            return Result.Failure<TokenResponse>(UserErrors.InvalidCredentials);
         }
 
         var user = result.Value;
         var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!passwordValid)
         {
-            return Result.Failure<SignInResponse>(UserErrors.InvalidCredentials);
+            return Result.Failure<TokenResponse>(UserErrors.InvalidCredentials);
         }
 
         // get user roles to include inside the claims
         var roles = await _userManager.GetRolesAsync(user);
         if (roles.Count == 0)
         {
-            return Result.Failure<SignInResponse>(UserErrors.MissingRole);
+            return Result.Failure<TokenResponse>(UserErrors.MissingRole);
         }
 
-        JwtSecurityToken accessToken = await GenerateAccessToken(user);
-        var expires = accessToken.ValidTo;
+        var responseResult = await GenerateTokenResponse(user);
 
-        var refreshTokenResult = await GetRefreshToken(user.Id);
-        if (refreshTokenResult.IsFailure)
-        {
-            return Result.Failure<SignInResponse>(refreshTokenResult.Error);
-        }
-
-        var refreshToken = refreshTokenResult.Value;
-
-        return Result.Success(new SignInResponse(
-            AccessToken : new JwtSecurityTokenHandler().WriteToken(accessToken),
-            AccessTokenExpiration : expires,
-            RefreshToken : refreshToken.Token
-        ));
+        return responseResult;
     }
 
-    public async Task<Result<RefreshAccessTokenResponse>> RefreshAccessToken(RefreshAccessTokenRequest request)
+    public async Task<Result<TokenResponse>> RefreshAccessToken(RefreshAccessToken request)
     {
         // get the user send this
         var existingRefreshToken = await _dbContext.RefreshTokens
@@ -118,15 +236,61 @@ public class IdentityService(
 
         if (existingRefreshToken == null)
         {
-            return Result.Failure<RefreshAccessTokenResponse>(TokenErrors.InvalidRefreshToken);
+            return Result.Failure<TokenResponse>(TokenErrors.InvalidRefreshToken);
         }
 
         var user = await _userManager.FindByIdAsync(existingRefreshToken.UserId.ToString());
-        var accessToken = await GenerateAccessToken(user!);
-        string writtenToken = ConvertJwtTokenToString(accessToken);
-        var response = new RefreshAccessTokenResponse(writtenToken);
+        if (user == null)
+        {
+            return Result.Failure<TokenResponse>(UserErrors.NotFound);
+        }
 
-        return Result.Success(response);
+        var responseResult = await GenerateTokenResponse(user);
+
+        return responseResult;
+    }
+
+    public async Task<Result> UpdatePasswordAsync(UpdatePasswordCommand request)
+    {
+        var userResult = await FindUserAsync(new(request.Email));
+        
+        if (userResult.IsFailure)
+        {
+            return Result.Failure(userResult.Error);
+        }
+
+        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userResult.Value);
+        var result = await _userManager.ResetPasswordAsync(userResult.Value, resetToken, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
+    }
+
+    public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
+    {
+        var userResult = await FindUserAsync(new(request.Email));
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
+        }
+
+        var passwordValid = await _userManager.CheckPasswordAsync(userResult.Value, request.CurrentPassword);
+
+        if (!passwordValid)
+        {
+            return Result.Failure(UserErrors.InvalidCredentials);
+        }
+
+        var result = await _userManager.ChangePasswordAsync(userResult.Value, request.CurrentPassword, request.NewPassword);
+        
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
     }
 
     public async Task<bool> IsValidRefreshToken(int userId, string refreshToken)
@@ -151,16 +315,36 @@ public class IdentityService(
         return user != null && await _userManager.IsInRoleAsync(user, role);
     }
 
+    private async Task<Result<TokenResponse>> GenerateTokenResponse(User user)
+    {
+        JwtSecurityToken accessToken = await GenerateAccessToken(user);
+        var expires = accessToken.ValidTo;
+
+        var refreshTokenResult = await GetRefreshToken(user.Id);
+        if (refreshTokenResult.IsFailure)
+        {
+            return Result.Failure<TokenResponse>(refreshTokenResult.Error);
+        }
+
+        var refreshToken = refreshTokenResult.Value;
+
+        return Result.Success(new TokenResponse(
+            AccessToken: new JwtSecurityTokenHandler().WriteToken(accessToken),
+            AccessTokenExpiration: expires,
+            RefreshToken: refreshToken.Token
+        ));
+    }
+
     private async Task<JwtSecurityToken> GenerateAccessToken(User user)
     {
         var roles = await _userManager.GetRolesAsync(user);
         var claims = new List<Claim>
-    {
-        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new(ClaimTypes.Name, user.Email!),
-        new(ClaimTypes.Role, roles.FirstOrDefault()!),
-        // Add other claims as needed...
-    };
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.Email!),
+            new(ClaimTypes.Role, roles.FirstOrDefault()!),
+            // Add other claims as needed...
+        };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Value.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -225,10 +409,5 @@ public class IdentityService(
         return refreshToken;
     }
 
-    private static string ConvertJwtTokenToString(JwtSecurityToken accessToken)
-    {
-        var jwtHandler = new JwtSecurityTokenHandler();
-        var writtenToken = jwtHandler.WriteToken(accessToken);
-        return writtenToken;
-    }
+    
 }

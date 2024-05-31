@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.OrderAggregate;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ internal class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMeth
 {
     public void Configure(EntityTypeBuilder<PaymentMethod> builder)
     {
+        builder.ToTable($"{nameof(PaymentMethod)}s");
+
         builder.Property(t => t.Id)
             .HasColumnName("PaymentMethodId");
 

@@ -1,0 +1,16 @@
+[
+  {
+    "Id": 1,
+    "RatingId": 1,
+    "UserId": 5,
+    "Liked": true,
+    "LikedWhen": "2024-05-27T07:03:00+07:00"
+  },
+  {
+    "Id": 2,
+    "RatingId": 2,
+    "UserId": 4,
+    "Liked": true,
+    "LikedWhen": "2024-05-26T07:03:00+07:00"
+  }
+]

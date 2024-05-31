@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
@@ -8,8 +9,12 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
 {
     public void Configure(EntityTypeBuilder<Rating> builder)
     {
+        builder.ToTable($"{nameof(Rating)}s");
+
+        var converter = new EnumToStringConverter<RatingStatus>();
+
         builder.Property(t => t.Id)
-            .HasColumnName("RatingId");
+            .HasColumnName($"{nameof(Rating)}Id");
 
         builder.Property(t => t.SkuId)
             .IsRequired();
@@ -18,7 +23,14 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
             .IsRequired();
 
         builder.Property(t => t.Comment)
-            .HasMaxLength(500);
+            .HasColumnType("nvarchar(max)");
+
+        builder.Property(t => t.Response)
+            .HasColumnType("nvarchar(max)");
+            
+        builder.Property(t => t.Status)
+            .IsRequired()
+            .HasConversion(converter);
 
         builder.HasOne(t => t.Sku)
             .WithMany(t => t.Ratings)

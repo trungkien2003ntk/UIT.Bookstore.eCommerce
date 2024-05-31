@@ -1,12 +1,26 @@
-Repository pattern
 Result pattern
 Static Factory Method pattern
-Unit Of Work pattern
 Value Object pattern
-Cqrs pattern
+Cqrs pattern :
+		In real world scenario CQRS might be useful when you have front end/web service client which needs lots of data from multiple 
+	domains and retrieval of these data from database takes long time.
+		In such case you might consider creation of separate read model which will be faster to develop and might have faster execution time.
 
+Mediator pattern (using MediatR)
+Facade pattern: Service class is the facade, the subsystems are the repositories, the domain models, subservices
 
 Incoming:
+- Decorator pattern - wrap around the service to take data, for caching, logging purpose
+- Template method - abstract class with abstract methods, concrete class with implementation, in the abstract class, there's a method that calls the abstract methods
+and the template thing here is that the abstract class is the template, the concrete class is the implementation
+- The template method is the method that calls the abstract methods, not the full class itself
+- The same methodology applied to factory method, the factory method is the method that creates the object, not the full class itself
+- Builder pattern - separate the construction of a complex object from its representation so that the same construction process can create different representations
+
+
 Domain Event pattern
 Outbox pattern
 Event Sourcing pattern
+
+
+Applied: DbTransaction 

@@ -1,0 +1,52 @@
+﻿[
+  {
+    "Id": 1,
+    "Comment": "Good Product!",
+    "RatingValue": 5,
+    "UserId": 4,
+    "SkuId": 1,
+    "ReportedCount": 0,
+    "Response": "Thank you for your compliment!",
+    "Status": "Approved"
+  },
+  {
+    "Id": 2,
+    "Comment": "Amazing thing, but need some upgrades",
+    "RatingValue": 4,
+    "UserId": 5,
+    "SkuId": 1,
+    "ReportedCount": 0,
+    "Response": "Thank you for your compliment!",
+    "Status": "Approved"
+  },
+  {
+    "Id": 3,
+    "Comment": "Good Product!",
+    "RatingValue": 5,
+    "UserId": 4,
+    "SkuId": 2,
+    "ReportedCount": 0,
+    "Response": "Thank you for your compliment!",
+    "Status": "Approved"
+  },
+  {
+    "Id": 4,
+    "Comment": "Hơi tệ một chút",
+    "RatingValue": 1,
+    "UserId": 5,
+    "SkuId": 3,
+    "ReportedCount": 0,
+    "Response": "Thank you for your compliment!",
+    "Status": "Approved"
+  },
+  {
+    "Id": 5,
+    "Comment": "Good Product!",
+    "RatingValue": 5,
+    "UserId": 4,
+    "SkuId": 4,
+    "ReportedCount": 0,
+    "Response": "Thank you for your compliment!",
+    "Status": "Approved"
+  }
+]

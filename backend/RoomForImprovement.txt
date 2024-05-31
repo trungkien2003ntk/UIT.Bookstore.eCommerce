@@ -1,0 +1,8 @@
+Room for improvement:
++ Add policies to User Roles
++ Add Unit Tests
++ A product can belong to multiple categories
++ Add chatbot feature
++ Intergrate VNPay payment gateway
++ Intergrate GHN or other delivery service -> tracking delivery feature
++ Discount programs

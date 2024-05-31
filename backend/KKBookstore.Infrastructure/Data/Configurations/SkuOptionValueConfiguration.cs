@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +9,7 @@ internal class SkuOptionValueConfiguration : IEntityTypeConfiguration<SkuOptionV
     public void Configure(EntityTypeBuilder<SkuOptionValue> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("SkuOptionValueId");
+            .HasColumnName($"{nameof(SkuOptionValue)}Id");
 
         builder.HasIndex(t => new { t.SkuId, t.OptionId, t.OptionValueId })
             .IsUnique();

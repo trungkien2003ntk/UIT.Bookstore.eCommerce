@@ -1,0 +1,72 @@
+[
+  {
+    "Id": 1,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "IsDeleted": false
+  },
+  {
+    "Id": 2,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "IsDeleted": false
+  },
+  {
+    "Id": 3,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*1v684ny*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTQ2NS41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*1v684ny*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTQ2NS41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "IsDeleted": false
+  },
+  {
+    "Id": 4,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_4-390x510.jpg",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_4-390x510.jpg",
+    "IsDeleted": false
+  },
+  {
+    "Id": 5,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ba/2024_05_20_17_11_53_3-390x510.jpg",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ba/2024_05_20_17_11_53_3-390x510.jpg",
+    "IsDeleted": false
+  },
+  {
+    "Id": 6,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*11n63iw*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTY0Ny41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*11n63iw*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTY0Ny41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+    "IsDeleted": false
+  },
+  {
+    "Id": 7,
+    "ProductId": 1,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_2-390x510.jpg",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_2-390x510.jpg",
+    "IsDeleted": false
+  },
+  {
+    "Id": 8,
+    "ProductId": 3,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
+    "IsDeleted": false
+  },
+  {
+    "Id": 9,
+    "ProductId": 4,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg",
+    "IsDeleted": false
+  },
+  {
+    "Id": 10,
+    "ProductId": 5,
+    "ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg",
+    "LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg",
+    "IsDeleted": false
+  }
+]

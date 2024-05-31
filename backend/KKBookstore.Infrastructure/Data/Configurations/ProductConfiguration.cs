@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.ToTable($"{nameof(Product)}s");
+
         builder.Property(t => t.Id)
             .HasColumnName("ProductId");
 
@@ -16,7 +18,7 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder.Property(t => t.Description)
-            .HasMaxLength(500);
+            .HasColumnType("nvarchar(max)");
 
         builder.Property(t => t.ProductTypeId)
             .IsRequired();

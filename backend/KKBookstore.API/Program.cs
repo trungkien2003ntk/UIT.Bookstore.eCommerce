@@ -1,8 +1,7 @@
-using KKBookstore.API.HelperModels;
 using KKBookstore.API.Infrastructure;
+using KKBookstore.API.Mappings;
 using KKBookstore.Application;
 using KKBookstore.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -12,8 +11,13 @@ var configuration = builder.Configuration;
 //HelperConstantsModel.LoadConfig(configuration);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
+// add mapper profiles
+builder.Services.AddAutoMapper(typeof(RequestProfile));
+builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -78,8 +82,6 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
-
-app.UseRouting();
 
 app.UseExceptionHandler();
 

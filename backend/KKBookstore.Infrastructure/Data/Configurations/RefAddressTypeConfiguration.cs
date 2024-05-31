@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.OrderAggregate;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +9,7 @@ internal class RefAddressTypeConfiguration : IEntityTypeConfiguration<RefAddress
     public void Configure(EntityTypeBuilder<RefAddressType> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("RefAddressTypeId");
+            .HasColumnName($"{nameof(RefAddressType)}Id");
 
         builder.Property(t => t.Name)
             .HasMaxLength(100)

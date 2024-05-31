@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.DiscountAggregate;
+﻿using KKBookstore.Domain.Aggregates.DiscountAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
@@ -8,8 +9,12 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
 {
     public void Configure(EntityTypeBuilder<DiscountVoucher> builder)
     {
+        var converter = new EnumToStringConverter<DiscountType>();
+        
+        builder.ToTable($"{nameof(DiscountVoucher)}s");
+
         builder.Property(dv => dv.Id)
-            .HasColumnName("DiscountVoucherId");
+            .HasColumnName($"{nameof(DiscountVoucher)}Id");
 
         builder.Property(dv => dv.Name)
             .HasMaxLength(100)
@@ -25,16 +30,32 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         builder.Property(dv => dv.EndWhen)
             .IsRequired();
 
+        builder.Property(dv => dv.DiscountType)
+            .IsRequired()
+            .HasConversion(converter);
+
         builder.Property(dv => dv.StartWhen)
             .IsRequired();
 
-        // complex type: QuantityRange and ValueRange
-        builder.ComplexProperty(dv => dv.QuantityRange)
+        builder.OwnsOne(dv => dv.QuantityRange)
             .Property(qr => qr.MinApplyQuantity)
             .IsRequired();
 
-        builder.ComplexProperty(dv => dv.ValueRange);
+        builder.OwnsOne(dv => dv.ValueRange)
+            .Property(dv => dv.MinValue)
+            .HasPrecision(18, 2);
+        
+        builder.OwnsOne(dv => dv.ValueRange)
+            .Property(dv => dv.MaxValue)
+            .HasPrecision(18, 2);
 
+        builder.OwnsOne(dv => dv.QuantityRange)
+            .Property(dv => dv.MinApplyQuantity)
+            .HasPrecision(18, 2);
+        
+        builder.OwnsOne(dv => dv.QuantityRange)
+            .Property(dv => dv.MaxApplyQuantity)
+            .HasPrecision(18, 2);
 
         builder.HasOne(t => t.LastEditedByUser)
             .WithMany()

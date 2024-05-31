@@ -1,0 +1,46 @@
+[
+	{
+		"Id": 1,
+		"Name": "Hình thức bìa"
+	},
+	{
+		"Id": 2,
+		"Name": "NXB"
+	},
+	{
+		"Id": 3,
+		"Name": "Năm xuất bản"
+	},
+	{
+		"Id": 4,
+		"Name": "Ngôn ngữ"
+	},
+	{
+		"Id": 5,
+		"Name": "Số trang"
+	},
+	{
+		"Id": 6,
+		"Name": "Thương hiệu"
+	},
+	{
+		"Id": 7,
+		"Name": "Nơi sản xuất"
+	},
+	{
+		"Id": 8,
+		"Name": "Chất liệu"
+	},
+	{
+		"Id": 9,
+		"Name": "Độ tuổi"
+	},
+	{
+		"Id": 10,
+		"Name": "Lớp"
+	},
+	{
+		"Id": 11,
+		"Name": "Cấp học"
+	}
+]

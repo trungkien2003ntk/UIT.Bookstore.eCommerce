@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +9,7 @@ internal class UnitMeasureConfiguration : IEntityTypeConfiguration<UnitMeasure>
     public void Configure(EntityTypeBuilder<UnitMeasure> builder)
     {
         builder.Property(t => t.Id)
-            .HasColumnName("UnitMeasureId");
+            .HasColumnName($"{nameof(UnitMeasure)}Id");
 
         builder.Property(t => t.Name)
             .HasMaxLength(100)

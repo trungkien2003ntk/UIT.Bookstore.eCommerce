@@ -1,0 +1,50 @@
+[
+	{
+		"Id": 1,
+		"SkuId": 1,
+		"OptionId": 1,
+		"OptionValueId": 1
+	},
+	{
+		"Id": 2,
+		"SkuId": 2,
+		"OptionId": 1,
+		"OptionValueId": 2
+	},
+	{
+		"Id": 3,
+		"SkuId": 3,
+		"OptionId": 1,
+		"OptionValueId": 3
+	},
+	{
+		"Id": 4,
+		"SkuId": 4,
+		"OptionId": 1,
+		"OptionValueId": 4
+	},
+	{
+		"Id": 5,
+		"SkuId": 5,
+		"OptionId": 2,
+		"OptionValueId": 5
+	},
+	{
+		"Id": 6,
+		"SkuId": 6,
+		"OptionId": 2,
+		"OptionValueId": 6
+	},
+	{
+		"Id": 7,
+		"SkuId": 7,
+		"OptionId": 2,
+		"OptionValueId": 7
+	},
+	{
+		"Id": 8,
+		"SkuId": 8,
+		"OptionId": 2,
+		"OptionValueId": 8
+	}
+]

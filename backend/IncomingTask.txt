@@ -1,0 +1,104 @@
+Custom UserManager and RoleManager in ASP.NET Core Identity for auditing and logging
+
+In this article, we will learn how to create a custom UserManager and RoleManager in ASP.NET Core Identity for auditing and logging. We will create a custom UserManager and RoleManager that will log all the operations performed on the user and role entities.
+
+First, let’s create a custom UserManager and RoleManager. We will inherit from the UserManager and RoleManager classes provided by ASP.NET Core Identity. We will override the methods that we want to log and call the base class method to perform the actual operation.
+
+Next, we will create a custom logger that will log the operations performed on the user and role entities. We will use the ILogger interface provided by ASP.NET Core to log the operations.
+
+Let’s create a custom UserManager and RoleManager.
+
+public class CustomUserManager : UserManager<ApplicationUser>
+{
+	private readonly ILogger<CustomUserManager> _logger;
+
+	public CustomUserManager(
+		IUserStore<ApplicationUser> store,
+		IOptions<IdentityOptions> optionsAccessor,
+		IPasswordHasher<ApplicationUser> passwordHasher,
+		IEnumerable<IUserValidator<ApplicationUser>> userValidators,
+		IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
+		ILookupNormalizer keyNormalizer,
+		IdentityErrorDescriber errors,
+		IServiceProvider services,
+		ILogger<CustomUserManager> logger)
+		: base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+	{
+		_logger = logger;
+	}
+
+	public override async Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
+	{
+		_logger.LogInformation($"Creating user {user.UserName}");
+		return await base.CreateAsync(user, password);
+	}
+
+	public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
+	{
+		_logger.LogInformation($"Updating user {user.UserName}");
+		return await base.UpdateAsync(user);
+	}
+
+	public override async Task<IdentityResult> DeleteAsync(ApplicationUser user)
+	{
+		_logger.LogInformation($"Deleting user {user.UserName}");
+		return await base.DeleteAsync(user);
+	}
+}
+
+// implement custom RoleManager class:
+public class CustomRoleManager : RoleManager<IdentityRole>
+{
+	private readonly ILogger<CustomRoleManager> _logger;
+
+	public CustomRoleManager(
+		IRoleStore<IdentityRole> store,
+		IEnumerable<IRoleValidator<IdentityRole>> roleValidators,
+		ILookupNormalizer keyNormalizer,
+		IdentityErrorDescriber errors,
+		ILogger<CustomRoleManager> logger)
+		: base(store, roleValidators, keyNormalizer, errors, logger)
+	{
+		_logger = logger;
+	}
+
+	public override async Task<IdentityResult> CreateAsync(IdentityRole role)
+	{
+		_logger.LogInformation($"Creating role {role.Name}");
+		return await base.CreateAsync(role);
+	}
+
+	public override async Task<IdentityResult> UpdateAsync(IdentityRole role)
+	{
+		_logger.LogInformation($"Updating role {role.Name}");
+		return await base.UpdateAsync(role);
+	}
+
+	public override async Task<IdentityResult> DeleteAsync(IdentityRole role)
+	{
+		_logger.LogInformation($"Deleting role {role.Name}");
+		return await base.DeleteAsync(role);
+	}
+
+
+}
+
+
+
+
+
+
+===========================================================
+
+Add Validations
+Implement Azure AI Search
+Implement Azure Function to reduce the image size and store to Azure Blob Storage
+Implement Azure Blob Storage to store the images
+Implement Azure SQL Database and change from sql server to Azure sql
+Implement Azure Key Vault to store the connection strings
+Implement Azure Application Insights for logging
+
+
+Batching operations to Azure SQL Database using Entity Framework Core, 
+by doing so we can reduce the number of round trips to the database and improve the performance of the application
+because the database operations often cost more than the application server operations.

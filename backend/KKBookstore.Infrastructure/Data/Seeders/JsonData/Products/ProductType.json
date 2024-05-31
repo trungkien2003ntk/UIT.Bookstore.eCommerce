@@ -1,0 +1,186 @@
+[
+	{
+		"Id": 1,
+		"ProductTypeCode": "sach-tieng-viet",
+		"DisplayName": "Sách Tiếng Việt",
+		"Description": "Các loại sách viết bằng tiếng Việt",
+		"ParentProductTypeId": null,
+		"Level": 1
+	},
+	{
+		"Id": 2,
+		"ProductTypeCode": "van-phong-pham",
+		"DisplayName": "Văn Phòng Phẩm",
+		"Description": "Các loại văn phòng phẩm như bút, viết, tập vở",
+		"ParentProductTypeId": null,
+		"Level": 1
+	},
+	{
+		"Id": 3,
+		"ProductTypeCode": "do-choi",
+		"DisplayName": "Đồ Chơi",
+		"Description": "Đồ chơi các loại",
+		"ParentProductTypeId": null,
+		"Level": 1
+	},
+	{
+		"Id": 4,
+		"ProductTypeCode": "thieu-nhi",
+		"DisplayName": "Thiếu Nhi",
+		"Description": "Các loại sách Thiếu Nhi",
+		"ParentProductTypeId": 1,
+		"Level": 2
+	},
+	{
+		"Id": 5,
+		"ProductTypeCode": "giao-khoa-tham-khao",
+		"DisplayName": "Giáo Khoa - Tham Khảo",
+		"Description": "Các loại SGK và sách tham khảo",
+		"ParentProductTypeId": 1,
+		"Level": 2
+	},
+	{
+		"Id": 6,
+		"ProductTypeCode": "manga-comic",
+		"DisplayName": "Manga - Comic",
+		"Description": "Các loại sách Manga và Comic",
+		"ParentProductTypeId": 1,
+		"Level": 2
+	},
+	{
+		"Id": 7,
+		"ProductTypeCode": "but-viet",
+		"DisplayName": "Bút - Viết",
+		"Description": "Các loại bút viết",
+		"ParentProductTypeId": 2,
+		"Level": 2
+	},
+	{
+		"Id": 8,
+		"ProductTypeCode": "dung-cu-hoc-sinh",
+		"DisplayName": "Dụng Cụ Học Sinh",
+		"Description": "Các loại dụng cụ học sinh dùng ở trường",
+		"ParentProductTypeId": 2,
+		"Level": 2
+	},
+	{
+		"Id": 9,
+		"ProductTypeCode": "san-pham-ve-giay",
+		"DisplayName": "Sản Phẩm Về Giấy",
+		"Description": "Các loại bút viết",
+		"ParentProductTypeId": 2,
+		"Level": 2
+	},
+	{
+		"Id": 10,
+		"ProductTypeCode": "bup-be-thu-bong",
+		"DisplayName": "Búp Bê - Thú Bông",
+		"Description": "Các loại thú bông và búp bê",
+		"ParentProductTypeId": 3,
+		"Level": 2
+	},
+	{
+		"Id": 11,
+		"ProductTypeCode": "mo-hinh",
+		"DisplayName": "Mô Hình",
+		"Description": "Các loại mô hình lắp ghép",
+		"ParentProductTypeId": 3,
+		"Level": 2
+	},
+	{
+		"Id": 12,
+		"ProductTypeCode": "board-game",
+		"DisplayName": "Board Game",
+		"Description": "Các loại board game",
+		"ParentProductTypeId": 3,
+		"Level": 2
+	},
+	{
+		"Id": 13,
+		"ProductTypeCode": "truyen-thieu-nhi",
+		"DisplayName": "Truyện Thiếu Nhi",
+		"Description": "Các loại truyện thiếu nhi",
+		"ParentProductTypeId": 4,
+		"Level": 3
+	},
+	{
+		"Id": 14,
+		"ProductTypeCode": "to-mau-luyen-chu",
+		"DisplayName": "Tô Màu - Luyện Chữ",
+		"Description": "Các loại sách tô màu và luyện chữ cho trẻ em",
+		"ParentProductTypeId": 4,
+		"Level": 3
+	},
+	{
+		"Id": 15,
+		"ProductTypeCode": "sach-tham-khao",
+		"DisplayName": "Sách Tham Khảo",
+		"Description": "Các loại sách tham khảo dành cho học sinh, sinh viên",
+		"ParentProductTypeId": 5,
+		"Level": 3
+	},
+	{
+		"Id": 16,
+		"ProductTypeCode": "sach-giao-khoa",
+		"DisplayName": "Sách Giáo Khoa",
+		"Description": "Các loại sách giáo khoa dành cho học sinh",
+		"ParentProductTypeId": 5,
+		"Level": 3
+	},
+	{
+		"Id": 17,
+		"ProductTypeCode": "manga",
+		"DisplayName": "Manga",
+		"Description": "Các loại sách Manga",
+		"ParentProductTypeId": 6,
+		"Level": 3
+	},
+	{
+		"Id": 18,
+		"ProductTypeCode": "comic",
+		"DisplayName": "Comic",
+		"Description": "Các loại sách Comic",
+		"ParentProductTypeId": 6,
+		"Level": 3
+	},
+	{
+		"Id": 19,
+		"ProductTypeCode": "but-chi",
+		"DisplayName": "Bút Chì",
+		"Description": "Các loại bút chì",
+		"ParentProductTypeId": 7,
+		"Level": 3
+	},
+	{
+		"Id": 20,
+		"ProductTypeCode": "but-muc-but-may",
+		"DisplayName": "Bút Mực - Bút Máy",
+		"Description": "Các loại bút mực và bút máy",
+		"ParentProductTypeId": 7,
+		"Level": 3
+	},
+	{
+		"Id": 21,
+		"ProductTypeCode": "gom-tay",
+		"DisplayName": "Gôm - Tẩy",
+		"Description": "Các loại gôm và tẩy",
+		"ParentProductTypeId": 8,
+		"Level": 3
+	},
+	{
+		"Id": 22,
+		"ProductTypeCode": "thu-bong",
+		"DisplayName": "Thú Bông",
+		"Description": "Các loại thú bông",
+		"ParentProductTypeId": 10,
+		"Level": 3
+	},
+	{
+		"Id": 23,
+		"ProductTypeCode": "bup-be",
+		"DisplayName": "Búp Bê",
+		"Description": "Các loại búp bê",
+		"ParentProductTypeId": 10,
+		"Level": 3
+	}
+]

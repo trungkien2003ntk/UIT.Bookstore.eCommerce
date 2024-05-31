@@ -1,0 +1,7 @@
+[
+	{ "Id": 1, "ProductId": 1, "AuthorId": 1 },
+	{ "Id": 2, "ProductId": 1, "AuthorId": 2 },
+	{ "Id": 3, "ProductId": 3, "AuthorId": 5 },
+	{ "Id": 4, "ProductId": 4, "AuthorId": 6 },
+	{ "Id": 5, "ProductId": 5, "AuthorId": 6 }
+]

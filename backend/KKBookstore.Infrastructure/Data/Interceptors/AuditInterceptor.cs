@@ -7,6 +7,8 @@ namespace KKBookstore.Infrastructure.Data.Interceptors;
 
 public class AuditInterceptor : ISaveChangesInterceptor
 {
+    // Todo: try to fix the issue with _currnetUserId is null, handle all the possible cases, and go here to remove the need of using a default user id.
+    private const int DEFAULT_USER_ID = 1;
     private readonly ICurrentUser _currentUser;
 
     public AuditInterceptor(ICurrentUser currentUser)
@@ -16,19 +18,21 @@ public class AuditInterceptor : ISaveChangesInterceptor
 
     public ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
+        var currnetUserId = _currentUser?.Id ?? DEFAULT_USER_ID;
+
         foreach (var entry in eventData.Context!.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedBy = _currentUser.Id;
+                    entry.Entity.CreatedBy = currnetUserId;
                     entry.Entity.CreatedWhen = DateTime.UtcNow;
-                    entry.Entity.LastEditedBy = _currentUser.Id;
+                    entry.Entity.LastEditedBy = currnetUserId;
                     entry.Entity.CreatedWhen = DateTime.UtcNow;
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.LastEditedBy = _currentUser.Id;
+                    entry.Entity.LastEditedBy = currnetUserId;
                     entry.Entity.LastEditedWhen = DateTime.UtcNow;
                     break;
             }

@@ -6,12 +6,12 @@ using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Aggregates.UserAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace KKBookstore.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-
     public DbSet<User> Users { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
@@ -37,8 +37,14 @@ public interface IApplicationDbContext
     public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
     public DbSet<Sku> Skus { get; set; }
     public DbSet<SkuOptionValue> SkuOptionValues { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
     public DbSet<UnitMeasure> UnitMeasures { get; set; }
 
     EntityEntry Entry(object entity);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+
+    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
+    Task CommitAsync(CancellationToken cancellationToken = default);
+    Task RollbackAsync(CancellationToken cancellationToken = default);
 }

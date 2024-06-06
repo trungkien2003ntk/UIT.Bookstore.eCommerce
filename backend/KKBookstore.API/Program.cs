@@ -57,14 +57,30 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// Congirue CORS to allow all origins
+var myAllowAllOrigins = "AllowAllOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(myAllowAllOrigins,
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 builder.Services
     .AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration);
+
 
 // add serilog to builder
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 {
     loggerConfiguration
+        .Enrich.FromLogContext()
         .ReadFrom.Configuration(hostingContext.Configuration);
 });
 
@@ -78,6 +94,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(myAllowAllOrigins);
 
 app.UseSerilogRequestLogging();
 

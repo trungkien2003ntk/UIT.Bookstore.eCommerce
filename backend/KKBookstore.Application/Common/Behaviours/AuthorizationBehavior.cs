@@ -42,7 +42,7 @@ internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TR
                 {
                     foreach (var role in roles)
                     {
-                        var isInRole = await _identityService.IsInRoleAsync(_currentUser.Id, role.Trim());
+                        var isInRole = await _identityService.IsInRoleAsync(_currentUser.Id.Value, role.Trim());
                         if (isInRole)
                         {
                             authorized = true;

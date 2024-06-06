@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace KKBookstore.Application.Features.Orders.GetOrderList;
 
-public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderSummary>>>
+public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderGeneralInformation>>>
 {
     public string SortBy { get; init; } = "CreatedWhen";
     public string SortDirection { get; init; } = "desc";
@@ -23,9 +23,9 @@ public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderSummary>>
 public class GetOrderListHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetOrderListQuery, Result<PaginatedResult<OrderSummary>>>
+) : IRequestHandler<GetOrderListQuery, Result<PaginatedResult<OrderGeneralInformation>>>
 {
-    public async Task<Result<PaginatedResult<OrderSummary>>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResult<OrderGeneralInformation>>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
     {
         var query = dbContext.Orders
             .Include(o => o.PaymentMethod)
@@ -58,10 +58,10 @@ public class GetOrderListHandler(
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return Result.Failure<PaginatedResult<OrderSummary>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
+            return Result.Failure<PaginatedResult<OrderGeneralInformation>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
         }
 
-        var result = mapper.Map<PaginatedResult<OrderSummary>>(paginatedOrders);
+        var result = mapper.Map<PaginatedResult<OrderGeneralInformation>>(paginatedOrders);
 
         return Result.Success(result);
     }

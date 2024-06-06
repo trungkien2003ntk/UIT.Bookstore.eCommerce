@@ -9,9 +9,9 @@ public class ShoppingCart
     public int UserId { get; private set; }
     public ICollection<ShoppingCartItem> Items { get; private set; }
     public IEnumerable<ShoppingCartItem> SelectedItems => Items.Where(i => i.IsSelected);
-    public decimal TotalUnitPrice => SelectedItems.Sum(i => i.GetTotalUnitPrice());
-    public decimal TotalRecommendedRetailPrice => SelectedItems.Sum(i => i.GetTotalRecommendedRetailPrice());
-    public decimal TotalSavedAmount => SelectedItems.Sum(i => i.GetTotalSavedAmount());
+    public decimal TotalUnitPrice => SelectedItems.Sum(i => i.TotalUnitPrice);
+    public decimal TotalRecommendedRetailPrice => SelectedItems.Sum(i => i.TotalRecommendedRetailPrice);
+    public decimal TotalSavedAmount => SelectedItems.Sum(i => i.TotalSavedAmount);
 
 
     private ShoppingCart(int userId, List<ShoppingCartItem> items)
@@ -27,17 +27,17 @@ public class ShoppingCart
         return new ShoppingCart(UserId, items);
     }
 
-    public Result AddItem(int skuId, int quantity)
+    public Result AddItem(int skuId, int newQuantity)
     {
         var existingItem = Items.FirstOrDefault(i => i.SkuId == skuId);
         if (existingItem != null)
         {
-            existingItem.AddQuantity(quantity);
+            existingItem.UpdateQuantity(newQuantity);
             return Result.Success();
         }
         else
         {
-            var newShoppingCartItemResult = ShoppingCartItem.Create(UserId, skuId, quantity);
+            var newShoppingCartItemResult = ShoppingCartItem.Create(UserId, skuId, newQuantity);
 
             if (newShoppingCartItemResult.IsFailure)
             {
@@ -57,6 +57,14 @@ public class ShoppingCart
         {
             Items.Remove(existingItem);
         }
+    }
+
+    public void SelectItems(List<int> ids)
+    {
+        Items
+            .Where(sci => ids.Contains(sci.Id))
+            .ToList()
+            .ForEach(sci => sci.IsSelected = true);
     }
 
     public void ClearItems()

@@ -5,6 +5,8 @@ using System.Text.Json;
 
 namespace KKBookstore.API.Infrastructure;
 
+
+
 public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;

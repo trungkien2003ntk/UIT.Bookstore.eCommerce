@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.DiscountAggregate;
+using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
 
@@ -8,8 +9,11 @@ namespace KKBookstore.Domain.Aggregates.OrderAggregate
     {
         public Order()
         {
-
+            OrderWhen = DateTimeOffset.Now;
+            OrderNumber = GenerateOrderNumber();
+            TaxRate = 0;
         }
+
         private Order(
             int customerId,
             int shippingAddressId,
@@ -31,7 +35,7 @@ namespace KKBookstore.Domain.Aggregates.OrderAggregate
         }
 
         public string OrderNumber { get; set; }
-        public decimal? Subtotal { get; set; }
+        public decimal Subtotal => OrderLines.Sum(ol => ol.Quantity * ol.UnitPrice /*with specific orderitem discount*/);
         public decimal TaxRate { get; set; }
         public string? Comment { get; set; }
         public string? DeliveryInstruction { get; set; }
@@ -55,7 +59,8 @@ namespace KKBookstore.Domain.Aggregates.OrderAggregate
         public DeliveryMethod DeliveryMethod { get; set; }
         public DiscountVoucher? DiscountVoucher { get; set; }
         public User Customer { get; set; }
-        public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
+        public ICollection<OrderLine> OrderLines { get; set; } = [];
+        public ICollection<Transaction> Transactions { get; set; } = [];
 
         private string GenerateOrderNumber()
         {

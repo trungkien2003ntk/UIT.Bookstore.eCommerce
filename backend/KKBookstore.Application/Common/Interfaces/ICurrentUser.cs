@@ -2,5 +2,5 @@
 
 public interface ICurrentUser
 {
-    public int Id { get; }
+    public int? Id { get; }
 }

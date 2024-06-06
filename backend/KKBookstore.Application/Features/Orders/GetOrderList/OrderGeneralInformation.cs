@@ -3,7 +3,7 @@ using KKBookstore.Application.Features.Orders.Models;
 
 namespace KKBookstore.Application.Features.Orders.GetOrderList;
 
-public record OrderSummary : BaseDto
+public record OrderGeneralInformation : BaseDto
 {
     public string OrderNumber { get; init; }
     public DateTimeOffset? DueWhen { get; init; }

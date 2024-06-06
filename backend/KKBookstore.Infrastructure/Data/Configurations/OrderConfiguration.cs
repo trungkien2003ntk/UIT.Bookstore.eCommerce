@@ -40,9 +40,6 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithMany()
             .HasForeignKey(o => o.CustomerId);
 
-        builder.Property(o => o.Subtotal)
-            .HasPrecision(18, 2);
-
         builder.Property(o => o.TaxRate)
             .HasPrecision(18, 2);
 

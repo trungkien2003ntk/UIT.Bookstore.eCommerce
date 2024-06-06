@@ -1,14 +1,17 @@
 ﻿using KKBookstore.Application.Common.Models;
+using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
+using KKBookstore.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
+namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 
-public record GetShoppingCartResponse
+public record UpdateShoppingCartResponse
 {
-    public List<ShoppingCartItemDto> Items { get; init; } = [];
+    public List<ShoppingCartItemDto> UpdatedItems { get; init; } = [];
+    public decimal TotalPrice { get; init; }
+    public DiscountDetailDto DiscountDetail { get; init; }
 
-    public GetShoppingCartResponse()
-    {
-    }
 
     public sealed record ShoppingCartItemDto : BaseDto
     {
@@ -19,7 +22,6 @@ public record GetShoppingCartResponse
         public int ProductTypeId { get; init; }
         public decimal UnitPrice { get; init; }
         public decimal RecommendedRetailPrice { get; init; }
-        public decimal BasicDiscountRate { get; init; }
         public int Quantity { get; init; }
         // todo: Currently, the available quantity is the same as total quantity
         // think about implement this later
@@ -38,6 +40,7 @@ public record GetShoppingCartResponse
             public string SkuName { get; init; }
             public decimal UnitPrice { get; init; }
             public decimal RecommendedRetailPrice { get; init; }
+            public decimal BasicDiscountRate { get; init; }
             public int AvailableQuantity { get; init; }
             public int TotalQuantity { get; init; }
             public string Status { get; init; }
@@ -76,11 +79,17 @@ public record GetShoppingCartResponse
             }
         }
 
-        public record ProductOptionAttributeDto
+        public sealed record ProductOptionAttributeDto
         {
             public string Name { get; init; }
             public IEnumerable<string> Values { get; init; }
             public IEnumerable<string> Images { get; init; }
         }
+    }
+    public sealed record DiscountDetailDto
+    {
+        public decimal Subtotal { get; set; }
+        public decimal TotalSaved { get; set; }
+        public decimal Total { get; set; }
     }
 }

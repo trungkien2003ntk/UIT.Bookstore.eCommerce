@@ -13,14 +13,12 @@ public class OrderLine : BaseAuditableEntity
     }
     private OrderLine(
         int skuId,
-        string description,
         int quantity,
         decimal unitPrice,
         int? discountVoucherId = null
     ) : base()
     {
         SkuId = skuId;
-        Description = description;
         Quantity = quantity;
         UnitPrice = unitPrice;
         DiscountVoucherId = discountVoucherId;
@@ -28,7 +26,6 @@ public class OrderLine : BaseAuditableEntity
 
     public int OrderId { get; set; }
     public int SkuId { get; set; }
-    public string Description { get; set; }
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public DateTimeOffset? PickingCompletedWhen { get; set; }
@@ -42,7 +39,6 @@ public class OrderLine : BaseAuditableEntity
     // factory method
     public static Result<OrderLine> Create(
         int skuId,
-        string description,
         int quantity,
         decimal unitPrice,
         int? discountVoucherId
@@ -50,7 +46,6 @@ public class OrderLine : BaseAuditableEntity
     {
         return new OrderLine(
             skuId,
-            description,
             quantity,
             unitPrice,
             discountVoucherId

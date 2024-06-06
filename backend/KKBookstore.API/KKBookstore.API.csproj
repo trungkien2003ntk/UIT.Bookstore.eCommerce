@@ -40,8 +40,8 @@
 		<Content Include="appsettings.$(ASPNETCORE_ENVIRONMENT).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Contracts\Enums\" />
-	  <Folder Include="Contracts\Responses\" />
+		<Folder Include="Contracts\Enums\" />
+		<Folder Include="Contracts\Responses\" />
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
 		<EnvironmentName>Development</EnvironmentName>

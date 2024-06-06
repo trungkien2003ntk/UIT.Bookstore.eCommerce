@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Application.Features.Users.GetUserShippingAddresses;
 
-public record GetUserShippingAddressesRequest(int UserId) : IRequest<Result<List<GetUserShippingAddressesResponse>>>;
+public record GetUserShippingAddressesQuery(int UserId) : IRequest<Result<List<GetUserShippingAddressesResponse>>>;
 
 public class GetUserShippingAddressesHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetUserShippingAddressesRequest, Result<List<GetUserShippingAddressesResponse>>>
+) : IRequestHandler<GetUserShippingAddressesQuery, Result<List<GetUserShippingAddressesResponse>>>
 {
-    public async Task<Result<List<GetUserShippingAddressesResponse>>> Handle(GetUserShippingAddressesRequest request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetUserShippingAddressesResponse>>> Handle(GetUserShippingAddressesQuery request, CancellationToken cancellationToken)
     {
         var shippingAddresses = await dbContext.ShippingAddresses
             .Where(sa => sa.UserId == request.UserId)

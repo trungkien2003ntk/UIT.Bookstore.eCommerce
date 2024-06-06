@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Features.Products.GetProductDetail;
+using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Application.Mappings.Helpers;
@@ -11,7 +13,7 @@ public class ProductProfile : Profile
 {
     public ProductProfile()
     {
-        CreateMap<Product, ProductDetailDto>()
+        CreateMap<Product, GetProductResponse>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.DisplayName))
@@ -38,9 +40,10 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Dimension.Height))
             .ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.Dimension.Width))
             .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Dimension.Length))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
             .ForMember(dest => dest.OptionValues, opt => opt.MapFrom(src => src.SkuOptionValues.Select(sov => sov.OptionValue)))
-            .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => MappingHelpers.GetSkuThumbnailImageUrl(src)))
-            .ForMember(dest => dest.LargeImageUrl, opt => opt.MapFrom(src => MappingHelpers.GetSkuLargeImageUrl(src)));
+            .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetThumbnailImageUrl()))
+            .ForMember(dest => dest.LargeImageUrl, opt => opt.MapFrom(src => src.GetLargeImageUrl()));
         
 
         CreateMap<ProductOptionValue, OptionValueDto>()

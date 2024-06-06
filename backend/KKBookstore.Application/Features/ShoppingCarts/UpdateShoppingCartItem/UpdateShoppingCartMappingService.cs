@@ -1,40 +1,22 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
-using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse;
+using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.ShoppingCartItemDto;
 
-namespace KKBookstore.Application.Features.ShoppingCarts;
+namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 
-public class ShoppingCartMappingService(
-    IApplicationDbContext dbContext
-) : IShoppingCartMappingService
+public class UpdateShoppingCartMappingService(
+    IApplicationDbContext _dbContext
+) : IUpdateShoppingCartMappingService
 {
-    private readonly IApplicationDbContext _dbContext = dbContext;
-
-    public async Task<Result<GetShoppingCartResponse>> MapToGetResponse(ShoppingCart shoppingCart)
-    {
-        var neededProducts = await ExtractDistinctProductInCart(shoppingCart);
-
-        var response = new GetShoppingCartResponse()
-        {
-            Items = shoppingCart.Items.Select(ci =>
-            {
-                var product = neededProducts.First(p => p.Id == ci.Sku.ProductId);
-                return MapToShoppingCartItemDto(ci, product);
-            }).ToList()
-        };
-
-        return response;
-    }
-
-    public async Task<Result<ShoppingCartUpdateSummary>> MapToUpdateResponse(ShoppingCart shoppingCart)
+    public async Task<Result<UpdateShoppingCartResponse>> MapToResponse(ShoppingCart shoppingCart)
     {
         List<Product> neededProducts = await ExtractDistinctProductInCart(shoppingCart);
 
-        var response = new ShoppingCartUpdateSummary()
+        var response = new UpdateShoppingCartResponse()
         {
             TotalPrice = shoppingCart.TotalUnitPrice,
 
@@ -111,6 +93,7 @@ public class ShoppingCartMappingService(
             SkuName = sku.SkuName,
             UnitPrice = sku.UnitPrice,
             RecommendedRetailPrice = sku.RecommendedRetailPrice,
+            BasicDiscountRate = sku.BasicDiscountRate,
             AvailableQuantity = sku.AvailableQuantity,
             TotalQuantity = sku.Quantity,
             ProductId = sku.ProductId,

@@ -35,4 +35,8 @@ public static class OrderErrors
     public static readonly Error OrderPaymentFailed = Error.Failure("Order.Error.OrderPaymentFailed", "Order payment failed");
     public static readonly Error OrderAuthorizationFailed = Error.Unauthorized("Order.Error.OrderAuthorizationFailed", "Order authorization failed");
     public static readonly Error OrderInternalError = Error.Failure("Order.Error.OrderInternalError", "Order internal error");
+
+    public static readonly Error MissingReturnUrl = Error.Validation("Order.Error.MissingReturnUrl", "Missing return url");
+    public static readonly Error InsufficientStock = Error.BusinessRuleViolation("Order.Error.InsufficientStock", "Insufficient stock");
+    public static readonly Error OrderCreationFailed = Error.Failure("Order.Error.OrderCreationFailed", "Order creation failed");
 }

@@ -2,6 +2,7 @@
 import { useState, useRef } from "react"
 
 const Input = ({
+  className,
   title,
   value,
   pwd,
@@ -31,7 +32,9 @@ const Input = ({
   }
 
   return (
-    <div className='relative flex w-full select-none flex-col gap-1'>
+    <div
+      className={`${className} relative flex w-full select-none flex-col gap-1`}
+    >
       {title && (
         <div className='text-sm font-semibold text-green-800'>
           {title}

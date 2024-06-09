@@ -27,8 +27,6 @@ const MyFilter = ({ section }) => {
     setSelectedColors(selected)
   }, [mySection])
 
-  console.log(selectedColors)
-
   return (
     <Disclosure as='div' className='border-b border-gray-200 py-6'>
       {({ open }) => (

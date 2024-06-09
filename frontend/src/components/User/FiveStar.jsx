@@ -3,7 +3,7 @@ import StarRating from "./StartRating"
 
 const FiveStar = ({ classNameForSize, rating }) => {
   return (
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center'>
       {Array.from({ length: 5 }).map((_, index) => {
         return (
           <StarRating

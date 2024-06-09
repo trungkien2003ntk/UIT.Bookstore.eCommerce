@@ -12,7 +12,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
 }
 
-const Dropdown = ({ avt, placeholder, items, selected, setSelected }) => {
+const Dropdown = ({
+  avt = false,
+  placeholder,
+  items,
+  selected,
+  setSelected,
+}) => {
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
@@ -24,9 +30,9 @@ const Dropdown = ({ avt, placeholder, items, selected, setSelected }) => {
             focus:ring-2 focus:ring-ct-green-300 sm:text-sm sm:leading-6'
           >
             <span className='flex items-center'>
-              {avt && (
+              {selected.avt && (
                 <img
-                  src={selected?.avatar}
+                  src={selected?.avt}
                   alt=''
                   className='h-5 w-5 flex-shrink-0 rounded-full'
                 />
@@ -71,7 +77,7 @@ const Dropdown = ({ avt, placeholder, items, selected, setSelected }) => {
                       <div className='flex items-center'>
                         {avt && (
                           <img
-                            src={item?.avatar}
+                            src={item?.avt}
                             alt=''
                             className='h-5 w-5 flex-shrink-0 rounded-full'
                           />

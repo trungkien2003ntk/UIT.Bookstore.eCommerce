@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react"
-import { Divider, CircularProgress } from "@mui/material"
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MinusIcon,
-  PlusIcon,
-} from "@heroicons/react/20/solid"
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react"
+import { Divider, CircularProgress, Pagination } from "@mui/material"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom"
 
 import Dropdown from "../../components/Dropdown"
@@ -22,13 +12,6 @@ import {
 import { findParent } from "../../components/funcCatalog"
 import ProductItem from "../../components/User/ProductItem"
 import MyFilter from "../../components/MyFilter"
-
-const breadcrumbs = [
-  {
-    href: "/",
-    name: "Sách tiếng việt",
-  },
-]
 
 const productTypes = [
   {
@@ -345,11 +328,13 @@ const Catalog = () => {
   const location = useLocation()
   const [objectSearch, setObjectSearch] = useState({})
 
+  const [loading, setLoading] = useState(false)
+
   // CATALOG
   const [currentProductType, setCurrentProductType] = useState(null)
-  const [parents, setParents] = useState([])
+  const [parents, setParents] = useState(null)
   const [child, setChild] = useState(null)
-  const [equalLevel, setEqualLevel] = useState([])
+  const [equalLevel, setEqualLevel] = useState(null)
 
   const handleCatalog = async (objectSearch) => {
     if (objectSearch?.ProductTypeIds?.length === 1) {
@@ -362,9 +347,11 @@ const Catalog = () => {
       if (current?.parentProductTypeId) {
         setParents(findParent(productTypes, idToFind))
       }
+
       setChild(
         productTypes.filter((item) => item.parentProductTypeId === idToFind)
       )
+
       if (current.level === 3) {
         setEqualLevel(
           productTypes.filter(
@@ -418,7 +405,7 @@ const Catalog = () => {
 
       console.log(objectSearch)
 
-      setObjectSearch(objectSearch)
+      // setObjectSearch(objectSearch)
 
       handleCatalog(objectSearch)
     }
@@ -426,6 +413,10 @@ const Catalog = () => {
     fetch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
+
+  const handleChange = (e, page) => {
+    console.log(page)
+  }
 
   return (
     <div className='relative w-full'>
@@ -444,42 +435,54 @@ const Catalog = () => {
                   >
                     Trang chủ
                   </Link>
-                  <svg
-                    width={16}
-                    height={20}
-                    viewBox='0 0 16 20'
-                    fill='currentColor'
-                    aria-hidden='true'
-                    className='h-5 w-4 text-gray-300'
-                  >
-                    <path d='M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z' />
-                  </svg>
+                  {currentProductType && (
+                    <svg
+                      width={16}
+                      height={20}
+                      viewBox='0 0 16 20'
+                      fill='currentColor'
+                      aria-hidden='true'
+                      className='h-5 w-4 text-gray-300'
+                    >
+                      <path d='M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z' />
+                    </svg>
+                  )}
                 </div>
               </li>
-              {breadcrumbs.map((breadcrumb, index) => (
+              {parents?.map((breadcrumb, index) => (
                 <li key={index}>
                   <div className='flex items-center'>
-                    <a
-                      href={breadcrumb.href}
-                      className='mr-2 text-sm font-medium text-green-900'
+                    <Link
+                      to={"/catalog?ProductTypeIds=" + breadcrumb.id}
+                      className='mx-2 text-sm font-medium text-green-900'
                     >
-                      {breadcrumb.name}
-                    </a>
-                    {index < breadcrumb.length && (
-                      <svg
-                        width={16}
-                        height={20}
-                        viewBox='0 0 16 20'
-                        fill='currentColor'
-                        aria-hidden='true'
-                        className='h-5 w-4 text-gray-300'
-                      >
-                        <path d='M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z' />
-                      </svg>
-                    )}
+                      {breadcrumb.displayName}
+                    </Link>
+                    <svg
+                      width={16}
+                      height={20}
+                      viewBox='0 0 16 20'
+                      fill='currentColor'
+                      aria-hidden='true'
+                      className='h-5 w-4 text-gray-300'
+                    >
+                      <path d='M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z' />
+                    </svg>
                   </div>
                 </li>
               ))}
+              {currentProductType && (
+                <li>
+                  <div className='flex items-center'>
+                    <Link
+                      to={"/"}
+                      className='ml-2 text-sm font-medium text-green-900'
+                    >
+                      {currentProductType?.displayName}
+                    </Link>
+                  </div>
+                </li>
+              )}
             </ol>
           </nav>
 
@@ -513,7 +516,10 @@ const Catalog = () => {
                     to={"/catalog"}
                     className={`${currentProductType === null && "text-ct-green-400"}
                         my-1 font-medium hover:cursor-pointer hover:text-ct-green-400`}
-                    onClick={() => setCurrentProductType(null)}
+                    onClick={() => {
+                      setParents(null)
+                      setCurrentProductType(null)
+                    }}
                   >
                     Tất cả
                   </NavLink>
@@ -654,83 +660,44 @@ const Catalog = () => {
               </div>
 
               <div className='flex w-full flex-1 items-center justify-center rounded-md bg-white p-3 shadow'>
-                {/* <CircularProgress sx={{ color: "green" }} size={50} /> */}
-                <div className='grid h-full w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                  {products.map((item, index) => (
-                    <ProductItem key={index} index={index} item={item} />
-                  ))}
-                </div>
+                {loading ? (
+                  <CircularProgress sx={{ color: "green" }} size={50} />
+                ) : (
+                  // <div className='flex flex-col items-center justify-center gap-y-4'>
+                  //   <div className='text-xl font-medium text-gray-400'>
+                  //     Không có kết quả
+                  //   </div>
+                  //   <div className='logo'>
+                  //     <svg
+                  //       xmlns='http://www.w3.org/2000/svg'
+                  //       viewBox='0 0 24 24'
+                  //       fill='currentColor'
+                  //       className='size-20 text-gray-300'
+                  //     >
+                  //       <path
+                  //         fillRule='evenodd'
+                  //         d='M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z'
+                  //         clipRule='evenodd'
+                  //       />
+                  //     </svg>
+                  //   </div>
+                  // </div>
+                  <div className='grid h-full w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                    {products.map((item, index) => (
+                      <ProductItem key={index} index={index} item={item} />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className='flex items-center gap-3 rounded-md bg-white p-2 shadow '>
-                <nav
-                  className='isolate inline-flex -space-x-px rounded-md shadow-sm'
-                  aria-label='Pagination'
-                >
-                  <Link className='relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>
-                    <span className='sr-only'>Previous</span>
-                    <ChevronLeftIcon className='h-5 w-5' aria-hidden='true' />
-                  </Link>
-                  {pageNumber > 4 && (
-                    <Link className='relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>
-                      ...
-                    </Link>
-                  )}
-                  {pageNumber - 2 > 0 && (
-                    <Link
-                      className='relative inline-flex items-center px-4 py-2 text-sm font-semibold 
-                        text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 
-                        focus:outline-offset-0'
-                    >
-                      {pageNumber - 2}
-                    </Link>
-                  )}
-                  {pageNumber - 1 > 0 && (
-                    <Link
-                      className='relative inline-flex items-center px-4 py-2 text-sm font-semibold 
-                        text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 
-                        focus:outline-offset-0'
-                    >
-                      {pageNumber - 1}
-                    </Link>
-                  )}
-                  <Link
-                    aria-current='page'
-                    className='relative z-10 inline-flex items-center bg-green-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                  >
-                    {pageNumber}
-                  </Link>
-
-                  {pageNumber + 1 <= totalPages && (
-                    <Link
-                      className='relative inline-flex items-center px-4 py-2 text-sm font-semibold 
-                        text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 
-                        focus:outline-offset-0'
-                    >
-                      {pageNumber + 1}
-                    </Link>
-                  )}
-
-                  {pageNumber + 2 <= totalPages && (
-                    <Link
-                      className='relative inline-flex items-center px-4 py-2 text-sm font-semibold 
-                        text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 
-                        focus:outline-offset-0'
-                    >
-                      {pageNumber + 2}
-                    </Link>
-                  )}
-
-                  {totalPages - (pageNumber + 2) > 0 && (
-                    <Link className='relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>
-                      ...
-                    </Link>
-                  )}
-                  <Link className='relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>
-                    <span className='sr-only'>Next</span>
-                    <ChevronRightIcon className='h-5 w-5' aria-hidden='true' />
-                  </Link>
-                </nav>
+                <Pagination
+                  count={10}
+                  variant='outlined'
+                  color='primary'
+                  size='large'
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>

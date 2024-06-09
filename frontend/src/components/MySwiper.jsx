@@ -46,7 +46,7 @@ const MySwiper = ({ slides }) => {
       onSwiper={(swiper) => {
         swiperRef.current = swiper
       }}
-      className='group relative'
+      className='group relative select-none'
     >
       {slides.map((slide, index) => (
         <SwiperSlide key={index} className='flex max-w-fit'>

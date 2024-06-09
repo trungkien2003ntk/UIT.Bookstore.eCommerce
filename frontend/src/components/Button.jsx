@@ -41,7 +41,7 @@ const Button = ({
       {...props}
     >
       {progressing || (
-        <div>
+        <div className='flex items-center justify-center gap-2'>
           {leftIcon && <span className=''>{leftIcon}</span>}
           <span className=''>{children}</span>
           {rightIcon && <span className=''>{rightIcon}</span>}

@@ -89,6 +89,10 @@ public class CustomRoleManager : RoleManager<IdentityRole>
 
 
 ===========================================================
+// tax = 0
+profit = subtotal - shippingDiscount - orderDiscount - funds
+income = sum of all orders
+
 
 Add Validations
 Implement Azure AI Search
@@ -99,6 +103,16 @@ Implement Azure Key Vault to store the connection strings
 Implement Azure Application Insights for logging
 
 
+Data money -> integer for storing more, we times the currency by 100, then store it as integer
+
 Batching operations to Azure SQL Database using Entity Framework Core, 
 by doing so we can reduce the number of round trips to the database and improve the performance of the application
 because the database operations often cost more than the application server operations.
+
+
+// So the teacher in university shouldn't evaluated everything based on just the UX on the front-end right? Because this is for learning purposes, not for production.
+// So I have to find a way to demonstrate the work I've been done in the back-end, right?
+
+
+
+-------- migrating to FastAPI to match with vsa

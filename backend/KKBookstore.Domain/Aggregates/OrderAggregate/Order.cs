@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.DiscountAggregate;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
@@ -35,14 +35,16 @@ namespace KKBookstore.Domain.Aggregates.OrderAggregate
         }
 
         public string OrderNumber { get; set; }
-        public decimal Subtotal => OrderLines.Sum(ol => ol.Quantity * ol.UnitPrice /*with specific orderitem discount*/);
+        public decimal Subtotal => OrderLines.Sum(ol => ol.Quantity * ol.UnitPrice);
         public decimal TaxRate { get; set; }
         public string? Comment { get; set; }
-        public string? DeliveryInstruction { get; set; }
+        public string? DeliveryInstruction { get; set; } = string.Empty;
         public int CustomerId { get; set; }
         public int ShippingAddressId { get; set; }
         public int DeliveryMethodId { get; set; }
-        public int? DiscountVoucherId { get; set; }
+        public decimal ShippingFee { get; set; }
+        public int? PriceDiscountVoucherId { get; set; }
+        public int? ShippingDiscountVoucherId { get; set; }
         public int PaymentMethodId { get; set; }
         public OrderStatus Status { get; set; }
         public DateTimeOffset OrderWhen { get; set; }
@@ -57,15 +59,57 @@ namespace KKBookstore.Domain.Aggregates.OrderAggregate
         public ShippingAddress ShippingAddress { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }
-        public DiscountVoucher? DiscountVoucher { get; set; }
+        public DiscountVoucher? PriceDiscountVoucher { get; set; }
+        public DiscountVoucher? ShippingDiscountVoucher { get; set; } 
         public User Customer { get; set; }
         public ICollection<OrderLine> OrderLines { get; set; } = [];
         public ICollection<Transaction> Transactions { get; set; } = [];
+
+        public Result ApplyVoucher(DiscountVoucher voucher)
+        {
+            if (!voucher.IsApplicable(Subtotal, CustomerId))
+            {
+                return Result.Failure(OrderErrors.DiscountVoucherNotAvailable);
+            }
+
+            if (voucher.VoucherType == DiscountVoucherType.Order)
+            {
+                PriceDiscountVoucherId = voucher.Id;
+                PriceDiscountVoucher = voucher;
+            }
+            else
+            {
+                ShippingDiscountVoucherId = voucher.Id;
+                ShippingDiscountVoucher = voucher;
+            }
+
+            return Result.Success();
+        }
 
         private string GenerateOrderNumber()
         {
             // generate order number follow pattern year-month-day/short_uid
             return $"{OrderWhen.Year}-{OrderWhen.Month}-{OrderWhen.Day}/{Guid.NewGuid().ToString()[..5]}";
+        }
+
+        public decimal CalculateTotal()
+        {
+            decimal shippingFee = ShippingFee;
+            decimal subtotal = Subtotal;
+            decimal shippingDiscount = 0m;
+            decimal priceDiscount = 0m;
+
+            if (ShippingDiscountVoucher != null)
+            {
+                shippingDiscount = ShippingDiscountVoucher.GetDiscountValue(shippingFee);
+            }
+
+            if (PriceDiscountVoucher != null)
+            {
+                priceDiscount = PriceDiscountVoucher.GetDiscountValue(subtotal);
+            }
+
+            return subtotal + shippingFee - shippingDiscount - priceDiscount;
         }
 
         public static Result<Order> Create(

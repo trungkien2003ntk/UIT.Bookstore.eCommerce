@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
@@ -45,6 +46,11 @@ internal static class DataSeeder
     private static readonly string OrderJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Orders/Order.json";
     private static readonly string OrderLineJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/Orders/OrderLine.json";
 
+    // Discount paths
+    private static readonly string DiscountVoucherJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/DiscountVouchers/DiscountVoucher.json";
+    private static readonly string VoucherUsageJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/DiscountVouchers/VoucherUsage.json";
+
+
     // ShoppingCartItem paths
     private static readonly string ShoppingCartItemJsonPath = "../KKBookstore.Infrastructure/Data/Seeders/JsonData/ShoppingCartItems/ShoppingCartItem.json";
 
@@ -77,9 +83,16 @@ internal static class DataSeeder
     private static readonly List<Order> _orders = [];
     private static readonly List<OrderLine> _orderLines = [];
 
+    // Discount related data
+    private static readonly List<DiscountVoucher> _discountVouchers = [];
+    private static readonly List<VoucherUsage> _voucherUsages = [];
+
     // ShoppingCartItem related data
     private static readonly List<ShoppingCartItem> _shoppingCartItems = [];
 
+
+
+    // Json option
     private static readonly JsonSerializerOptions enumOption = new() { Converters = { new JsonStringEnumConverter() } };
 
     public static void Seed(ModelBuilder builder)
@@ -94,7 +107,38 @@ internal static class DataSeeder
             SeedProductRelatedData(builder);
             SeedOrderRelatedData(builder);
             SeedShoppingCartItem(builder);
+            SeedDiscountVoucherRelatedData(builder);
         }
+    }
+
+    private static void SeedDiscountVoucherRelatedData(ModelBuilder builder)
+    {
+        SeedDiscountVouchers(builder);
+        SeedVoucherUsages(builder);
+    }
+
+    private static void SeedVoucherUsages(ModelBuilder builder)
+    {
+        var voucherUsageJson = File.ReadAllText(VoucherUsageJsonPath, Encoding.UTF8);
+        var voucherUsages = JsonSerializer.Deserialize<List<VoucherUsage>>(voucherUsageJson);
+
+        _voucherUsages.AddRange(voucherUsages);
+
+        builder.Entity<VoucherUsage>()
+            .HasData(_voucherUsages);
+    }
+
+    private static void SeedDiscountVouchers(ModelBuilder builder)
+    {
+        var discountVoucherJson = File.ReadAllText(DiscountVoucherJsonPath, Encoding.UTF8);
+        var discountVouchers = JsonSerializer.Deserialize<List<DiscountVoucher>>(discountVoucherJson, enumOption);
+
+        AddAudit(discountVouchers);
+
+        _discountVouchers.AddRange(discountVouchers);
+
+        builder.Entity<DiscountVoucher>()
+            .HasData(_discountVouchers);
     }
 
     private static void SeedUsersRelatedData(ModelBuilder builder)

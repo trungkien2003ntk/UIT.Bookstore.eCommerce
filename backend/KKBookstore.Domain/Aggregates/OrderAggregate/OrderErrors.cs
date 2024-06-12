@@ -39,4 +39,7 @@ public static class OrderErrors
     public static readonly Error MissingReturnUrl = Error.Validation("Order.Error.MissingReturnUrl", "Missing return url");
     public static readonly Error InsufficientStock = Error.BusinessRuleViolation("Order.Error.InsufficientStock", "Insufficient stock");
     public static readonly Error OrderCreationFailed = Error.Failure("Order.Error.OrderCreationFailed", "Order creation failed");
+
+
+    public static readonly Error DiscountVoucherNotAvailable =  Error.BusinessRuleViolation("Order.Error.DiscountVoucherNotAvailable", "Discount voucher not available");
 }

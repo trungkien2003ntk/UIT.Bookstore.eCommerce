@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
@@ -12,6 +13,8 @@ public record ConfirmCheckoutQuery : IRequest<Result<ConfirmCheckoutResponse>>
 {
     public int UserId { get; init; }
     public List<int> ItemIds { get; init; } = [];
+    public int? OrderDiscountVoucherId { get; init; }
+    public int? ShippingDiscountVoucherId { get; init; }
 }
 
 public class ConfirmCheckoutHandler(
@@ -112,14 +115,46 @@ public class ConfirmCheckoutHandler(
             expectedDeliveryTime = expectedDeliveryTimeResult.Value;
         }
 
+        var itemSubtotal = checkoutItems.Sum(i => i.TotalUnitPrice);
+        var orderSubtotal = itemSubtotal+ shippingFee;
+
+        var shippingVoucher = await _dbContext.DiscountVouchers
+            .Where(dv => dv.Id == request.ShippingDiscountVoucherId)
+            .Include(dv => dv.VoucherUsages)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var orderVoucher = await _dbContext.DiscountVouchers
+            .Where(dv => dv.Id == request.OrderDiscountVoucherId)
+            .Include(dv => dv.VoucherUsages)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var shippingDiscount = 0m;
+        var orderDiscount = 0m;
+        if (shippingVoucher is null)
+        {
+            if (request.ShippingDiscountVoucherId is not null)
+                return Result.Failure<ConfirmCheckoutResponse>(DiscountVoucherErrors.ShippingVoucherNotFound);
+        }
+        else
+        {
+            shippingDiscount = shippingVoucher.GetDiscountValue(shippingFee);
+        }
+
+        if (orderVoucher is null)
+        {
+            if (request.OrderDiscountVoucherId is not null)
+                return Result.Failure<ConfirmCheckoutResponse>(DiscountVoucherErrors.OrderVoucherNotFound);
+        }
+        else
+        {
+            orderDiscount = orderVoucher.GetDiscountValue(itemSubtotal);
+        }
+
+
+
         var paymentMethods = _dbContext.PaymentMethods.ToList();
         var deliveryMethods = _dbContext.DeliveryMethods.ToList();
-        
-
-        // var voucherDiscount = CalculateVoucherDiscount(checkoutItems, voucherCode);
-        var subtotal = checkoutItems.Sum(i => i.TotalUnitPrice);
-        var orderSubtotal = subtotal+ shippingFee;
-        var orderTotal = orderSubtotal /* - voucher discount*/;
+        var orderTotal = orderSubtotal - orderDiscount - shippingDiscount;
 
         var response = new ConfirmCheckoutResponse
         {
@@ -142,10 +177,10 @@ public class ConfirmCheckoutHandler(
 
             PriceSummary = new()
             {
-                //Discount = voucherDiscount
-                Discount = 0,
+                Subtotal = itemSubtotal,
                 ShippingFee = shippingFee,
-                Subtotal = orderSubtotal,
+                ShippingDiscount = shippingDiscount,
+                OrderVoucherDiscount = orderDiscount,
                 Total = orderTotal
             },
 

@@ -24,5 +24,5 @@ public record GetOrderDetailResponse : BaseDto
     public DeliveryMethodDto DeliveryMethod { get; init; }
     public PaymentMethodDto PaymentMethod { get; init; }
     public ShippingAddressDto ShippingAddress { get; init; }
-    public List<OrderLineDto> OrderLines { get; init; } = [];
+    public IEnumerable<OrderLineDto> OrderLines { get; init; } = [];
 }

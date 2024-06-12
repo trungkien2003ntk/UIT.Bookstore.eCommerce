@@ -19,7 +19,8 @@ public record ConfirmCheckoutResponse
     {
         public decimal Subtotal { get; init; }
         public decimal ShippingFee { get; init; }
-        public decimal Discount { get; init; }
+        public decimal ShippingDiscount { get; init; }
+        public decimal OrderVoucherDiscount { get; init; }
         public decimal Total { get; init; }
     }
 

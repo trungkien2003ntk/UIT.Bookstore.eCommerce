@@ -27,7 +27,9 @@ public class CheckoutController(ISender sender) : ApiController(sender)
         var query = new ConfirmCheckoutQuery
         {
             UserId = userId,
-            ItemIds = request.ItemIds
+            ItemIds = request.ItemIds,
+            OrderDiscountVoucherId = request.OrderDiscountVoucherId,
+            ShippingDiscountVoucherId = request.ShippingDiscountVoucherId
         };
 
         var result = await Sender.Send(query, cancellationToken);
@@ -49,9 +51,10 @@ public class CheckoutController(ISender sender) : ApiController(sender)
             ItemIds = request.ItemIds,
             ShippingAddressId = request.ShippingAddressId,
             PaymentMethodId = request.PaymentMethodId,
-            DeliveryMethodId = request.DeliveryMethodId,
-            DiscountVoucherId = request.DiscountVoucherId,
+            OrderDiscountVoucherId = request.OrderDiscountVoucherId,
             ShippingVoucherId = request.ShippingVoucherId,
+            DeliveryMethodId = request.DeliveryMethodId,
+            ShippingFee = request.ShippingFee,
             ExpectedDeliveryWhen = request.ExpectedDeliveryWhen,
             Note = request.Note,
             PaymentReturnUrl = request.PaymentReturnUrl,

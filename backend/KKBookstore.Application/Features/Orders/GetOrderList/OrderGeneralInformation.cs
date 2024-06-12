@@ -9,6 +9,7 @@ public record OrderGeneralInformation : BaseDto
     public DateTimeOffset? DueWhen { get; init; }
     public DateTimeOffset ExpectedDeliveryWhen { get; init; }
     public decimal? Subtotal { get; init; }
+    public decimal Total { get; init; }
     public decimal TaxRate { get; init; }
     public string? Comment { get; init; }
     public string? DeliveryInstruction { get; init; }
@@ -16,6 +17,7 @@ public record OrderGeneralInformation : BaseDto
     public int ShippingAddressId { get; init; }
     public string DeliveryMethodName { get; init; }
     public int? DiscountVoucherId { get; init; }
+    public int? ShippingVoucherId { get; init; }
     public string PaymentMethodName { get; init; }
     public string Status { get; init; }
     public DateTimeOffset? PickingCompletedWhen { get; init; }

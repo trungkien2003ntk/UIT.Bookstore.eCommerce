@@ -30,13 +30,21 @@ public class GetOrderListHandler(
         var query = dbContext.Orders
             .Include(o => o.PaymentMethod)
             .Include(o => o.DeliveryMethod)
+            .Include(o => o.ShippingDiscountVoucher)
+            .Include(o => o.PriceDiscountVoucher)
             .Include(o => o.OrderLines)
                 .ThenInclude(ol => ol.Sku)
                     .ThenInclude(s => s.Product)
             .Include(o => o.OrderLines)
                 .ThenInclude(ol => ol.Sku)
                     .ThenInclude(s => s.SkuOptionValues)
-                        .ThenInclude(sov => sov.OptionValue)
+                        .ThenInclude(sov => sov.Option)
+                            .ThenInclude(o => o.OptionValues)
+            .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.Sku)
+                    .ThenInclude(s => s.SkuOptionValues)
+                            .ThenInclude(o => o.OptionValue)
+            .AsSplitQuery()
             .AsNoTracking();
 
         query = ApplyOrderStatusFilter(query, request);

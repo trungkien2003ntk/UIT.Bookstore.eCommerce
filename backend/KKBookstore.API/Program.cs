@@ -4,6 +4,7 @@ using KKBookstore.Application;
 using KKBookstore.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -84,9 +85,8 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
         .ReadFrom.Configuration(hostingContext.Configuration);
 });
 
-
 var app = builder.Build();
-
+    
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -91,5 +91,12 @@ public record UpdateShoppingCartResponse
         public decimal Subtotal { get; set; }
         public decimal TotalSaved { get; set; }
         public decimal Total { get; set; }
+        public IEnumerable<DiscountForReason> Breakdown { get; set; }
+
+        public sealed class DiscountForReason
+        {
+            public string DiscountName { get; set; }
+            public decimal DiscountValue { get; set; }
+        }
     }
 }

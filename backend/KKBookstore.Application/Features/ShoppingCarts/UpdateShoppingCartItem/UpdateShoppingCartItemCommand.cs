@@ -4,6 +4,7 @@ using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
@@ -14,6 +15,8 @@ public record UpdateShoppingCartItemCommand : IRequest<Result<UpdateShoppingCart
     public UpdateCartActionType ActionType { get; init; }
     public List<int> SelectedItemIds { get; init; } = [];
     public List<UpdateShoppingCartItemBriefDto> UpdateItems { get; init; } = [];
+    public int? OrderDiscountVoucherId { get; init; }
+    public int? ShippingDiscountVoucherId { get; init; }
 
     public sealed record UpdateShoppingCartItemBriefDto
     {
@@ -46,6 +49,8 @@ public class UpdateShoppingCartItemCommandHandler(
     public async Task<Result<UpdateShoppingCartResponse>> Handle(UpdateShoppingCartItemCommand request, CancellationToken cancellationToken)
     {
         var userId = request.UserId;
+        var orderDiscountVoucherId = request.OrderDiscountVoucherId;
+        var shippingDiscountVoucherId = request.ShippingDiscountVoucherId;
 
         var cartItems = await GetCartItems(userId, cancellationToken);
         var createCartResult = ShoppingCart.Create(userId, cartItems);
@@ -93,7 +98,24 @@ public class UpdateShoppingCartItemCommandHandler(
             await _dbContext.Entry(item).Reference(nameof(Sku)).LoadAsync(cancellationToken);
         }
 
-        var result = await mappingService.MapToResponse(shoppingCart);
+        var orderDiscountVoucher = await _dbContext.DiscountVouchers
+            .FirstOrDefaultAsync(dv => dv.Id == orderDiscountVoucherId, cancellationToken);
+
+        var shippingDiscountVoucher = await _dbContext.DiscountVouchers
+            .FirstOrDefaultAsync(dv => dv.Id == shippingDiscountVoucherId, cancellationToken);
+
+        var discountFromVoucherAmount = 0m;
+        if (orderDiscountVoucher != null)
+        {
+            discountFromVoucherAmount += orderDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
+        }
+        
+        if (shippingDiscountVoucher != null)
+        {
+            discountFromVoucherAmount += shippingDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
+        }
+
+        var result = await mappingService.MapToResponse(shoppingCart, discountFromVoucherAmount);
 
         return result;
     }

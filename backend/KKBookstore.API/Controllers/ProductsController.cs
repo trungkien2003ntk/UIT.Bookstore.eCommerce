@@ -72,21 +72,10 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    //[HttpGet("recommend")]
-    //public async Task<IActionResult> GetRecommendedProducts(
-    //    [FromQuery]GetRecommendedProductListQuery query,
-    //    CancellationToken cancellationToken = default
-    //)
-    //{
-    //    var result = await mediator.Send(query, cancellationToken);
-
-    //    return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    //}
-
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync(
-        
-        )
+                
+    )
     {
 
         return Created();

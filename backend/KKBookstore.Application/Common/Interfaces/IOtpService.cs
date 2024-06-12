@@ -6,6 +6,6 @@ namespace KKBookstore.Application.Common.Interfaces;
 public interface IOtpService
 {
     Result<bool> VerifyOtp(VerifyOtpCommand request);
-    Task<Result> SendOtpAsync(string email, string otp);
-    Result<string> GenerateOtp(string email);
+    Task<Result> SendOtpAsync(string emailAddress, string otp);
+    Result<string> GenerateOtp(string emailAddress);
 }

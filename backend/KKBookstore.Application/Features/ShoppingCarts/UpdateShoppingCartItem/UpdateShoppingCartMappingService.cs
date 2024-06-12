@@ -1,9 +1,11 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Application.Common.Constants;
+using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse;
+using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.DiscountDetailDto;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.ShoppingCartItemDto;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
@@ -12,9 +14,27 @@ public class UpdateShoppingCartMappingService(
     IApplicationDbContext _dbContext
 ) : IUpdateShoppingCartMappingService
 {
-    public async Task<Result<UpdateShoppingCartResponse>> MapToResponse(ShoppingCart shoppingCart)
+    public async Task<Result<UpdateShoppingCartResponse>> MapToResponse(ShoppingCart shoppingCart, decimal discountFromVoucherAmount)
     {
         List<Product> neededProducts = await ExtractDistinctProductInCart(shoppingCart);
+
+        ICollection<DiscountForReason> breakdown = [
+            new() 
+            {
+                DiscountName = DiscountConstant.ProductDiscountLabel,
+                DiscountValue = shoppingCart.TotalSavedAmount
+            }
+        ];
+
+        if (discountFromVoucherAmount > 0)
+        {
+            breakdown.Add(new()
+            {
+                DiscountName = DiscountConstant.VoucherDiscountLabel,
+                DiscountValue = discountFromVoucherAmount
+            });
+        }
+
 
         var response = new UpdateShoppingCartResponse()
         {
@@ -26,11 +46,12 @@ public class UpdateShoppingCartMappingService(
                 return MapToShoppingCartItemDto(ci, product);
             }).ToList(),
 
-            DiscountDetail = new DiscountDetailDto()
+            DiscountDetail = new()
             {
                 Subtotal = shoppingCart.TotalRecommendedRetailPrice,
                 TotalSaved = shoppingCart.TotalSavedAmount,
-                Total = shoppingCart.TotalUnitPrice
+                Total = shoppingCart.TotalUnitPrice,
+                Breakdown = breakdown
             }
         };
 

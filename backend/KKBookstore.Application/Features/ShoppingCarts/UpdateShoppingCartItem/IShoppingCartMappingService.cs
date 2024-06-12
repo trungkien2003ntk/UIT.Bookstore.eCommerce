@@ -6,5 +6,5 @@ namespace KKBookstore.Application.Features.ShoppingCarts;
 
 public interface IUpdateShoppingCartMappingService
 {
-    Task<Result<UpdateShoppingCartResponse>> MapToResponse(ShoppingCart shoppingCart);
+    Task<Result<UpdateShoppingCartResponse>> MapToResponse(ShoppingCart shoppingCart, decimal discountFromVoucherAmount);
 }

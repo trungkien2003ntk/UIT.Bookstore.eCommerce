@@ -28,7 +28,8 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.MinUnitPrice, opt => opt.MapFrom(src => src.Skus.Count != 0 ? src.Skus.Min(s => s.UnitPrice) : 0))
             .ForMember(dest => dest.MinRecommendedRetailPrice, opt => opt.MapFrom(src => src.Skus.Count != 0 ? src.Skus.Min(s => s.RecommendedRetailPrice) : 0))
             .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.Ratings.Count != 0 ? src.Ratings.Average(s => s.RatingValue) : 0))
-            .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => MappingHelpers.GetProductThumbnailImageUrl(src)));
+            .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.DisplayName))
+            .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetFirstThumbnailImageUrl()));
 
         CreateMap<PaginatedResult<Product>, PaginatedResult<ProductSummary>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));

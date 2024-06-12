@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Infrastructure.Shipping;
 using KKBookstore.Infrastructure.Payment;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace KKBookstore.Infrastructure;
 
@@ -86,7 +88,19 @@ public static class DependencyInjection
 
         /// Config Shipping
         services.Configure<ShippingConfiguration>(configuration.GetSection(nameof(ShippingConfiguration)));
-        services.AddScoped<IShippingService, ShippingService>();
+        /// old way
+        //services.AddScoped<IShippingService, ShippingService>();
+
+        /// new way: added decorator
+        services.AddScoped<ShippingService>();
+        services.AddScoped<IShippingService>(provider =>
+        {
+            return new CachedShippingService(
+                provider.GetRequiredService<IMemoryCache>(),
+                provider.GetRequiredService<ShippingService>()
+            );
+        });
+
 
         /// Additional Config
         services.AddScoped<ICurrentUser, CurrentUser>();
@@ -96,7 +110,16 @@ public static class DependencyInjection
         /// Config VnPay Payment
         services.Configure<VnPayConfiguration>(configuration.GetSection(nameof(VnPayConfiguration)));
         services.AddScoped<IPaymentService, VnPayPaymentService>();
-        
+
+
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(configuration["StorageConnectionString:blob"]!, preferMsi: true);
+            clientBuilder.AddQueueServiceClient(configuration["StorageConnectionString:queue"]!, preferMsi: true);
+        });
+
+
+
         return services;
     }
 }

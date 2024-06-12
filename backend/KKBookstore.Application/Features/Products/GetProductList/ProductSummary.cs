@@ -6,6 +6,7 @@ public record ProductSummary : BaseDto
 {
     public string Name { get; set; }
     public int ProductTypeId { get; set; }
+    public string ProductTypeName { get; set; }
     public string Description { get; set; }
     public bool IsBook { get; set; }
     public string ThumbnailImageUrl { get; set; }
@@ -13,4 +14,5 @@ public record ProductSummary : BaseDto
     public decimal MinRecommendedRetailPrice { get; set; }
     public decimal MinDiscountRate => (MinRecommendedRetailPrice - MinUnitPrice) / MinRecommendedRetailPrice * 100;
     public decimal AverageRating { get; set; }
+    public int IsActive { get; set; }
 }

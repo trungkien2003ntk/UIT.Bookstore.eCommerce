@@ -25,6 +25,7 @@ public class GetProductDetailQueryHandler(
             .Include(p => p.ProductType)
             .Include(p => p.UnitMeasure)
             .Include(p => p.ProductImages)
+            .Include(p => p.Skus)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (product is null)
@@ -82,6 +83,7 @@ public class GetProductDetailQueryHandler(
 
         // Map to ProductDetailDto
         var productDto = mapper.Map<GetProductResponse>(product);
+
 
         productDto.productTypeAttributes = productTypeAttributeValues
             .Select(pav => new GetProductResponse.ProductTypeAttribute()

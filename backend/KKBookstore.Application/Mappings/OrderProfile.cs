@@ -30,6 +30,8 @@ public class OrderProfile : Profile
             .ForMember(dest => dest.DeliveryMethodName, opt => opt.MapFrom(src => src.DeliveryMethod.Name))
             .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod.Name))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.CalculateTotal()))
+            .ForMember(dest => dest.ShippingVoucherId, opt => opt.MapFrom(src => src.ShippingDiscountVoucherId))
             .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.OrderLines));
 
         CreateMap<OrderLine, OrderLineDto>()

@@ -13,7 +13,7 @@ public class OrderProfile : Profile
 {
     public OrderProfile()
     {
-        CreateMap<PaginatedResult<Order>, PaginatedResult<OrderSummary>>()
+        CreateMap<PaginatedResult<Order>, PaginatedResult<OrderGeneralInformation>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
         CreateMap<Order, GetOrderDetailResponse>()
@@ -26,10 +26,12 @@ public class OrderProfile : Profile
         CreateMap<ShippingAddress, ShippingAddressDto>()
             .ForMember(dest => dest.DetailedFullAddress, opt => opt.MapFrom(src => $"{src.DetailAddress}, {src.Commune}, {src.District}, {src.Province}")); ;
             
-        CreateMap<Order, OrderSummary>()
+        CreateMap<Order, OrderGeneralInformation>()
             .ForMember(dest => dest.DeliveryMethodName, opt => opt.MapFrom(src => src.DeliveryMethod.Name))
             .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod.Name))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.CalculateTotal()))
+            .ForMember(dest => dest.ShippingVoucherId, opt => opt.MapFrom(src => src.ShippingDiscountVoucherId))
             .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.OrderLines));
 
         CreateMap<OrderLine, OrderLineDto>()

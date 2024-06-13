@@ -34,12 +34,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
 
-        if (result.IsFailure)
-        {
-            return ToActionResult(result);
-        }
-
-        return Ok(result.Value);
+        return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 
     [AllowAnonymous]

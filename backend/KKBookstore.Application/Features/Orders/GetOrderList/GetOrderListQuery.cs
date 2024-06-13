@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace KKBookstore.Application.Features.Orders.GetOrderList;
 
-public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderSummary>>>
+public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderGeneralInformation>>>
 {
     public string SortBy { get; init; } = "CreatedWhen";
     public string SortDirection { get; init; } = "desc";
@@ -23,20 +23,28 @@ public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderSummary>>
 public class GetOrderListHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetOrderListQuery, Result<PaginatedResult<OrderSummary>>>
+) : IRequestHandler<GetOrderListQuery, Result<PaginatedResult<OrderGeneralInformation>>>
 {
-    public async Task<Result<PaginatedResult<OrderSummary>>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResult<OrderGeneralInformation>>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
     {
         var query = dbContext.Orders
             .Include(o => o.PaymentMethod)
             .Include(o => o.DeliveryMethod)
+            .Include(o => o.ShippingDiscountVoucher)
+            .Include(o => o.PriceDiscountVoucher)
             .Include(o => o.OrderLines)
                 .ThenInclude(ol => ol.Sku)
                     .ThenInclude(s => s.Product)
             .Include(o => o.OrderLines)
                 .ThenInclude(ol => ol.Sku)
                     .ThenInclude(s => s.SkuOptionValues)
-                        .ThenInclude(sov => sov.OptionValue)
+                        .ThenInclude(sov => sov.Option)
+                            .ThenInclude(o => o.OptionValues)
+            .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.Sku)
+                    .ThenInclude(s => s.SkuOptionValues)
+                            .ThenInclude(o => o.OptionValue)
+            .AsSplitQuery()
             .AsNoTracking();
 
         query = ApplyOrderStatusFilter(query, request);
@@ -58,10 +66,10 @@ public class GetOrderListHandler(
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return Result.Failure<PaginatedResult<OrderSummary>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
+            return Result.Failure<PaginatedResult<OrderGeneralInformation>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
         }
 
-        var result = mapper.Map<PaginatedResult<OrderSummary>>(paginatedOrders);
+        var result = mapper.Map<PaginatedResult<OrderGeneralInformation>>(paginatedOrders);
 
         return Result.Success(result);
     }

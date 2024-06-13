@@ -1,37 +1,39 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Application.Features.Products.GetProductDetail;
 
-public record GetProductDetailQuery(int ProductId) : IRequest<Result<ProductDetailDto>>;
+public record GetProductDetailQuery(int ProductId) : IRequest<Result<GetProductResponse>>;
 
 public class GetProductDetailQueryHandler(
-    IApplicationDbContext applicationDbContext,
+    IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetProductDetailQuery, Result<ProductDetailDto>>
+) : IRequestHandler<GetProductDetailQuery, Result<GetProductResponse>>
 {
+    private readonly IApplicationDbContext _dbContext = dbContext;
 
-    public async Task<Result<ProductDetailDto>> Handle(GetProductDetailQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetProductResponse>> Handle(GetProductDetailQuery request, CancellationToken cancellationToken)
     {
         // Query to fetch the product and related data
-        var product = await applicationDbContext.Products
+        var product = await _dbContext.Products
             .Where(p => p.IsActive && !p.IsDeleted && p.Id == request.ProductId)
             .Include(p => p.ProductType)
             .Include(p => p.UnitMeasure)
             .Include(p => p.ProductImages)
+            .Include(p => p.Skus)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (product is null)
         {
-            return Result.Failure<ProductDetailDto>(ProductErrors.NotFound);
+            return Result.Failure<GetProductResponse>(ProductErrors.NotFound);
         }
 
-        var skus = await applicationDbContext.Skus
+        var skus = await _dbContext.Skus
             .Where(s => s.ProductId == product.Id && s.IsActive)
             .Include(s => s.SkuOptionValues)
                 .ThenInclude(so => so.Option)
@@ -46,7 +48,7 @@ public class GetProductDetailQueryHandler(
         // Fetch Book Authors if the product is a book
         if (product.IsBook)
         {
-            var bookAuthors = await applicationDbContext.BookAuthors
+            var bookAuthors = await _dbContext.BookAuthors
                 .Include(ab => ab.Author)
                 .Where(wb => wb.ProductId == product.Id)
                 .ToListAsync(cancellationToken);
@@ -54,11 +56,47 @@ public class GetProductDetailQueryHandler(
             product.BookAuthors = bookAuthors;
         }
 
+        // fetch ProductTypeAttributes
+        var productTypeAttributeValues = await _dbContext.ProductTypeAttributeProductValues
+            .Where(apv => apv.ProductId == product.Id)
+            .Include(apv => apv.AttributeValue)
+                .ThenInclude(av => av.ProductTypeAttribute)
+            .Include(apv => apv.Product)
+            .Select(apv => new ProductTypeAttributeProductValue()
+            {
+                Product = new()
+                {
+                    ProductTypeId = apv.Product.ProductTypeId
+                },
+                AttributeValue = new()
+                {
+                    ProductTypeAttribute = new()
+                    {
+                        Id = apv.AttributeValue.ProductTypeAttribute.Id,
+                        Name = apv.AttributeValue.ProductTypeAttribute.Name
+                    },
+                    Value = apv.AttributeValue.Value
+                },
+                AttributeValueId = apv.AttributeValueId
+            })
+            .ToListAsync(cancellationToken);
+
         // Map to ProductDetailDto
-        var productDto = mapper.Map<ProductDetailDto>(product);
+        var productDto = mapper.Map<GetProductResponse>(product);
+
+
+        productDto.productTypeAttributes = productTypeAttributeValues
+            .Select(pav => new GetProductResponse.ProductTypeAttribute()
+            {
+                ProductTypeId = pav.Product.ProductTypeId,
+                AttributeValueId = pav.AttributeValueId,
+                AttributeId = pav.AttributeValue.ProductTypeAttribute.Id,
+                Name = pav.AttributeValue.ProductTypeAttribute.Name,
+                Value = pav.AttributeValue.Value
+            });
 
         // Calculate min and max prices
-        if (product.Skus.Any())
+        if (product.Skus.Count != 0)
         {
             productDto.MinUnitPrice = product.Skus.Min(s => s.UnitPrice);
             productDto.MaxUnitPrice = product.Skus.Max(s => s.UnitPrice);

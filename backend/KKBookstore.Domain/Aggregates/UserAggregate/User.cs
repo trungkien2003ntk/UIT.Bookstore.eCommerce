@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.Domain.Aggregates.UserAggregate;
 
@@ -16,6 +17,8 @@ public class User : IdentityUser<int>, ISoftDelete
 
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    [NotMapped]
+    public string FullName => $"{LastName} {FirstName}";
 
     public DateTimeOffset DateOfBirth { get; set; }
 

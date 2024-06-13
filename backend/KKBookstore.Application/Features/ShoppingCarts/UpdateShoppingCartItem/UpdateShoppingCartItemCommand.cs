@@ -3,95 +3,180 @@ using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 
-public record UpdateShoppingCartItemCommand : IRequest<Result<ShoppingCartUpdateSummary>>
+public record UpdateShoppingCartItemCommand : IRequest<Result<UpdateShoppingCartResponse>>
 {
     public int UserId { get; init; }
     public UpdateCartActionType ActionType { get; init; }
     public List<int> SelectedItemIds { get; init; } = [];
     public List<UpdateShoppingCartItemBriefDto> UpdateItems { get; init; } = [];
+    public int? OrderDiscountVoucherId { get; init; }
+    public int? ShippingDiscountVoucherId { get; init; }
+
+    public sealed record UpdateShoppingCartItemBriefDto
+    {
+        public int Id { get; init; }
+        public int SkuId { get; init; }
+        public int OldSkuId { get; init; }
+        public int Quantity { get; init; }
+        public int OldQuantity { get; init; }
+    }
 }
 
 public class UpdateShoppingCartItemCommandHandler(
     IApplicationDbContext dbContext,
-    IShoppingCartMappingService mappingService,
-    IShoppingCartService cartService
-) : IRequestHandler<UpdateShoppingCartItemCommand, Result<ShoppingCartUpdateSummary>>
+    IUpdateShoppingCartMappingService mappingService
+) : IRequestHandler<UpdateShoppingCartItemCommand, Result<UpdateShoppingCartResponse>>
 {
-    public async Task<Result<ShoppingCartUpdateSummary>> Handle(UpdateShoppingCartItemCommand request, CancellationToken cancellationToken)
+    private readonly IApplicationDbContext _dbContext = dbContext;
+
+    public async Task<Result<UpdateShoppingCartResponse>> Handle(UpdateShoppingCartItemCommand request, CancellationToken cancellationToken)
     {
-        var getShoppingCartResult = await cartService.GetShoppingCart(request.UserId, cancellationToken);
-        if (getShoppingCartResult.IsFailure)
+        var userId = request.UserId;
+        var orderDiscountVoucherId = request.OrderDiscountVoucherId;
+        var shippingDiscountVoucherId = request.ShippingDiscountVoucherId;
+        var updateActionType = request.ActionType;
+
+        var cartItems = await GetCartItems(userId, cancellationToken);
+        var createCartResult = ShoppingCart.Create(userId, cartItems);
+        if (createCartResult.IsFailure)
         {
-            return Result.Failure<ShoppingCartUpdateSummary>(getShoppingCartResult.Error);
+            return Result.Failure<UpdateShoppingCartResponse>(ShoppingCartError.Unknown);
         }
-        var shoppingCart = getShoppingCartResult.Value;
 
-        shoppingCart.Items
-                    .Where(sci => request.SelectedItemIds.Contains(sci.Id))
-                    .ToList()
-                    .ForEach(sci => sci.IsSelected = true);
+        var shoppingCart = createCartResult.Value;
+        shoppingCart.SelectItems(request.SelectedItemIds);
 
-        var itemIdsToUpdate = request.UpdateItems.Select(x => x.Id).ToList();
-
-        switch (request.ActionType)
+        switch (updateActionType)
         {
             case UpdateCartActionType.SelectForCheckout:
                 break;
 
             case UpdateCartActionType.UpdateQuantity:
-                foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
-                {
-                    var updateItem = request.UpdateItems.First(ui => ui.Id == item.Id);
-                    // todo: add a check to old quantity
-                    item.Quantity = updateItem.Quantity;
-                }
+                UpdateItemQuantities(shoppingCart, request.UpdateItems);
                 break;
 
             case UpdateCartActionType.UpdateSku:
-                foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
-                {
-                    var updateItem = request.UpdateItems.First(ui => ui.Id == item.Id);
-                    // todo: add a check to old skuId
-                    item.SkuId = updateItem.SkuId;
-                }
+                UpdateItemSkus(shoppingCart, request.UpdateItems);
                 break;
 
             case UpdateCartActionType.Remove:
-                foreach (var itemId in itemIdsToUpdate)
-                {
-                    var itemToRemove = shoppingCart.Items.FirstOrDefault(item => item.Id == itemId);
-                    if (itemToRemove != null)
-                    {
-                        dbContext.ShoppingCartItems.Remove(itemToRemove);
-                    }
-                }
-
+                DeleteItems(shoppingCart, request.UpdateItems);
                 break;
         }
 
         try
-        {   
-            await dbContext.SaveChangesAsync(cancellationToken);
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
         catch
         {
-            return Result.Failure<ShoppingCartUpdateSummary>(ShoppingCartError.Unknown);
+            return Result.Failure<UpdateShoppingCartResponse>(ShoppingCartError.Unknown);
         }
 
         // load the sku navigation property for the updated items, this is because the sku navigation property for the items that changed skuId
         // will be null after saving changes
+        
+        var itemIdsToUpdate = request.UpdateItems.Select(x => x.Id).ToList();
+        foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
+        {
+            await _dbContext.Entry(item).Reference(nameof(Sku)).LoadAsync(cancellationToken);
+        }
+
+
+        // Calculate discount from voucher
+        var orderDiscountVoucher = await _dbContext.DiscountVouchers
+            .FirstOrDefaultAsync(dv => dv.Id == orderDiscountVoucherId, cancellationToken);
+
+        var shippingDiscountVoucher = await _dbContext.DiscountVouchers
+            .FirstOrDefaultAsync(dv => dv.Id == shippingDiscountVoucherId, cancellationToken);
+
+        var discountFromVoucherAmount = 0m;
+        if (orderDiscountVoucher != null)
+        {
+            discountFromVoucherAmount += orderDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
+        }
+        
+        if (shippingDiscountVoucher != null)
+        {
+            discountFromVoucherAmount += shippingDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
+        }
+
+        List<ShoppingCartItem> updatedAndSelectedItems = shoppingCart.Items
+            .Where(item => item.IsSelected || itemIdsToUpdate.Contains(item.Id))
+            .ToList();
+
+        var createCartResponseResult = ShoppingCart.Create(userId, updatedAndSelectedItems);
+
+        if (createCartResponseResult.IsFailure)
+        {
+            return Result.Failure<UpdateShoppingCartResponse>(ShoppingCartError.Unknown);
+        }
+
+        var result = await mappingService.MapToResponse(createCartResponseResult.Value, discountFromVoucherAmount);
+
+        return result;
+    }
+
+    private async Task<List<ShoppingCartItem>> GetCartItems(int userId, CancellationToken cancellationToken)
+    {
+        return await _dbContext.ShoppingCartItems
+            .Where(sci => sci.CustomerId == userId)
+            .Include(sci => sci.Sku)
+            .ToListAsync(cancellationToken);
+    }
+
+    private List<ShoppingCartItem> UpdateItemQuantities(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    {
+        var updatedItems = new List<ShoppingCartItem>();
+
+        var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
 
         foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
         {
+            var updateItem = listItems.First(ui => ui.Id == item.Id);
+            // todo: add a check to old quantity
+            item.Quantity = updateItem.Quantity;
             
-            await dbContext.Entry(item).Reference(nameof(Sku)).LoadAsync(cancellationToken);
+            updatedItems.Add(item);
         }
-        
-        var result = await mappingService.MapToUpdateResponse(shoppingCart);
 
-        return result;
+        return updatedItems;
+    }
+
+    private List<ShoppingCartItem> UpdateItemSkus(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    {
+        List<ShoppingCartItem> updatedItems = [];
+        var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
+
+        foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
+        {
+            var updateItem = listItems.First(ui => ui.Id == item.Id);
+            // todo: add a check to old skuId
+            item.SkuId = updateItem.SkuId;
+
+            updatedItems.Add(item);
+        }
+
+        return updatedItems;
+    }
+
+    private void DeleteItems(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    {
+        var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
+
+        foreach (var itemId in itemIdsToUpdate)
+        {
+            var itemToRemove = shoppingCart.Items.FirstOrDefault(item => item.Id == itemId);
+            if (itemToRemove != null)
+            {
+                _dbContext.ShoppingCartItems.Remove(itemToRemove);
+            }
+        }
     }
 }

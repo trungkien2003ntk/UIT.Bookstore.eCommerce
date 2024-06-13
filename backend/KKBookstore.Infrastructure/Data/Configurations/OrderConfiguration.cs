@@ -32,18 +32,22 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithMany()
             .HasForeignKey(o => o.DeliveryMethodId);
 
-        builder.HasOne(o => o.DiscountVoucher)
+        builder.HasOne(o => o.PriceDiscountVoucher)
             .WithMany()
-            .HasForeignKey(o => o.DiscountVoucherId);
+            .HasForeignKey(o => o.PriceDiscountVoucherId);
+
+        builder.HasOne(o => o.ShippingDiscountVoucher)
+            .WithMany()
+            .HasForeignKey(o => o.ShippingDiscountVoucherId);
 
         builder.HasOne(o => o.Customer)
             .WithMany()
             .HasForeignKey(o => o.CustomerId);
 
-        builder.Property(o => o.Subtotal)
+        builder.Property(o => o.TaxRate)
             .HasPrecision(18, 2);
 
-        builder.Property(o => o.TaxRate)
+        builder.Property(o => o.ShippingFee)
             .HasPrecision(18, 2);
 
         builder.Property(o => o.Status)

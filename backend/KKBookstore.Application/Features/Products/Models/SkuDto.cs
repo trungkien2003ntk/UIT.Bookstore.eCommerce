@@ -7,9 +7,10 @@ public record SkuDto : BaseDto
     public string SkuValue { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
+    public decimal BasicDiscountRate { get; set; }
     public string Barcode { get; set; }
     public decimal Quantity { get; set; }
-    public decimal Status { get; set; }
+    public string Status { get; set; }
     public decimal Weight { get; set; }
     public decimal Width { get; set; }
     public decimal Height { get; set; }

@@ -2,7 +2,6 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
@@ -36,9 +35,7 @@ public class GetProductListQueryHandler(
     public async Task<Result<PaginatedResult<ProductSummary>>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
     {
         // Note: This query is not optimized, just need the first image in the sku images
-        IQueryable<Product> query = dbContext.Products
-            .Include(p => p.Skus)
-            .Include(p => p.Ratings);
+        IQueryable<Product> query = dbContext.Products;
 
         query = ApplyProductIdsFilter(query, request.ProductTypeIds);
         query = ApplyPriceRangeFilter(query, request.PriceRange);
@@ -50,7 +47,11 @@ public class GetProductListQueryHandler(
             return Result.Failure<PaginatedResult<ProductSummary>>(result.Error);
         }
 
-        query = result.Value;
+        query = result.Value
+            .Include(p => p.ProductImages)
+            .Include(p => p.Skus)
+            .Include(p => p.ProductType)
+            .Include(p => p.Ratings);
 
 
         // Apply sorting
@@ -80,6 +81,28 @@ public class GetProductListQueryHandler(
         }
 
         var mappedPaginatedProducts = mapper.Map<PaginatedResult<ProductSummary>>(paginatedProducts);
+
+        foreach (var product in mappedPaginatedProducts.Items)
+        {
+            if (string.IsNullOrEmpty(product.ThumbnailImageUrl))
+            {
+                try
+                {
+                    var productInDb = query
+                        .Where(p => p.Id == product.Id)
+                        .Include(p => p.Skus)
+                            .ThenInclude(s => s.SkuOptionValues)
+                                .ThenInclude(s => s.OptionValue)
+                        .FirstOrDefault();
+
+                    product.ThumbnailImageUrl = productInDb!.Skus.FirstOrDefault(s => !string.IsNullOrEmpty(s.GetThumbnailImageUrl()))?.GetThumbnailImageUrl();
+                }
+                catch
+                {
+                    product.ThumbnailImageUrl = "";
+                }
+            }
+        }
 
         return Result.Success(mappedPaginatedProducts);
 

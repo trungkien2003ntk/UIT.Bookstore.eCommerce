@@ -1,40 +1,76 @@
 ﻿using AutoMapper;
+using FluentValidation.Validators;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Products.Models;
+using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
+using static KKBookstore.Application.Features.Products.GetTrendyProductList.GetTrendyProductListResponse;
 
 namespace KKBookstore.Application.Features.Products.GetTrendyProductList;
 
-public record GetTrendyProductListQuery(int? ProductTypeId = default) : IRequest<Result<List<ProductSummary>>>;
+public record GetTrendyProductListQuery(int? ProductTypeId = default) : IRequest<Result<GetTrendyProductListResponse>>;
 
 // todo: considering merge this query with GetProductListQuery
 public class GetTrendyProductListQueryHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetTrendyProductListQuery, Result<List<ProductSummary>>>
+) : IRequestHandler<GetTrendyProductListQuery, Result<GetTrendyProductListResponse>>
 {
-    public async Task<Result<List<ProductSummary>>> Handle(GetTrendyProductListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetTrendyProductListResponse>> Handle(GetTrendyProductListQuery request, CancellationToken cancellationToken)
     {
         // now as initialize, return a list of random products
         var numberOfTrendyProducts = 12;
-        var productsQuery = dbContext.Products
-            .OrderBy(p => Guid.NewGuid())
+
+        var boughtProductIds = await dbContext.OrderLines
+            .Include(ol => ol.Sku)
+            .Select(ol => ol.Sku.ProductId)
+            .ToListAsync(cancellationToken);
+
+        var topMostPurchasedProductIds = boughtProductIds
+            .GroupBy(id => id)
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
             .Take(numberOfTrendyProducts)
-            .Include(p => p.Skus)
+            .ToList();
+
+        var productGeneralQueryable = dbContext.Products
+            .Where(p => topMostPurchasedProductIds.Contains(p.Id))
+            .Include(p => p.ProductImages)
+            .Include(p => p.ProductType)
             .Include(p => p.Ratings)
+            .Include(p => p.Skus)
+            .Select(p =>
+                new ProductSummary
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    ProductTypeId = p.ProductTypeId,
+                    ProductTypeName = p.ProductType.DisplayName,
+                    IsBook = p.IsBook,
+                    SoldCount = dbContext.OrderLines
+                        .Include(ol => ol.Sku)
+                        .Count(ol => ol.Sku.ProductId == p.Id),
+                    MinUnitPrice = p.Skus.Min(s => s.UnitPrice),
+                    MinRecommendedRetailPrice = p.Skus.Min(s => s.RecommendedRetailPrice),
+                    AverageRating = Convert.ToDecimal(p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0),
+                    IsActive = p.IsActive,
+                    ThumbnailImageUrl = p.GetFirstThumbnailImageUrl()
+                })
             .AsQueryable();
 
-        if (request.ProductTypeId.HasValue)
+
+        var productGeneralDtos = await productGeneralQueryable.ToListAsync(cancellationToken);
+
+        static int comparison(ProductSummary y, ProductSummary x) => x.SoldCount.CompareTo(y.SoldCount);
+        productGeneralDtos.Sort(comparison);
+
+        var response = new GetTrendyProductListResponse
         {
-            productsQuery = productsQuery.Where(p => p.ProductTypeId == request.ProductTypeId.Value);
-        }
+            Items = productGeneralDtos
+        };
 
-        var products = await productsQuery.ToListAsync(cancellationToken);
-
-        var productGeneralDtos = mapper.Map<List<ProductSummary>>(products);
-
-        return productGeneralDtos;
+        return response;
     }
 }

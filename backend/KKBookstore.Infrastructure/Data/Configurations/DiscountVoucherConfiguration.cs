@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.DiscountAggregate;
+﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -9,7 +9,7 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
 {
     public void Configure(EntityTypeBuilder<DiscountVoucher> builder)
     {
-        var converter = new EnumToStringConverter<DiscountType>();
+        var converter = new EnumToStringConverter<DiscountVoucherType>();
         
         builder.ToTable($"{nameof(DiscountVoucher)}s");
 
@@ -17,45 +17,41 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
             .HasColumnName($"{nameof(DiscountVoucher)}Id");
 
         builder.Property(dv => dv.Name)
-            .HasMaxLength(100)
+            .HasMaxLength(250)
+            .IsRequired();
+
+        builder.Property(dv => dv.Code)
+            .HasMaxLength(50)
             .IsRequired();
 
         builder.Property(dv => dv.Description)
-            .HasMaxLength(500)
+            .HasMaxLength(1000)
             .IsRequired();
 
         builder.Property(dv => dv.Value)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        builder.Property(dv => dv.MaximumDiscountValue)
+            .HasPrecision(18, 2);
+
+        builder.Property(dv => dv.MinimumSpend)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        builder.Property(dv => dv.UsageLimitOverall)
+            .IsRequired();
+
+        builder.Property(dv => dv.StartWhen)
             .IsRequired();
 
         builder.Property(dv => dv.EndWhen)
             .IsRequired();
 
-        builder.Property(dv => dv.DiscountType)
+        builder.Property(dv => dv.VoucherType)
             .IsRequired()
             .HasConversion(converter);
 
-        builder.Property(dv => dv.StartWhen)
-            .IsRequired();
-
-        builder.OwnsOne(dv => dv.QuantityRange)
-            .Property(qr => qr.MinApplyQuantity)
-            .IsRequired();
-
-        builder.OwnsOne(dv => dv.ValueRange)
-            .Property(dv => dv.MinValue)
-            .HasPrecision(18, 2);
-        
-        builder.OwnsOne(dv => dv.ValueRange)
-            .Property(dv => dv.MaxValue)
-            .HasPrecision(18, 2);
-
-        builder.OwnsOne(dv => dv.QuantityRange)
-            .Property(dv => dv.MinApplyQuantity)
-            .HasPrecision(18, 2);
-        
-        builder.OwnsOne(dv => dv.QuantityRange)
-            .Property(dv => dv.MaxApplyQuantity)
-            .HasPrecision(18, 2);
 
         builder.HasOne(t => t.LastEditedByUser)
             .WithMany()

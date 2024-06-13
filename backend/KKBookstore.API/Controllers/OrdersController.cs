@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.API.Abstractions;
+using KKBookstore.Application.Features.Checkout.PlaceOrder;
 using KKBookstore.Application.Features.Orders.GetOrderDetail;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -36,14 +37,13 @@ namespace KKBookstore.API.Controllers
             return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
         }
 
-        //// create order
-        //[HttpPost]
-        //public async Task<IActionResult> CreateOrderAsync(
-        //                          [FromBody] CreateOrderCommand command,
-        //                                                           CancellationToken cancellationToken = default
-        //                      )
+        //[HttpPost("place-order")]
+        //public async Task<IActionResult> PlaceOrderAsync(
+        //    [FromBody] PlaceOrderCommand command,
+        //    CancellationToken cancellationToken = default
+        //)
         //{
-        //    var result = await mediator.Send(command, cancellationToken);
+        //    var result = await Sender.Send(command, cancellationToken);
 
         //    return result.IsSuccess ? CreatedAtAction(nameof(GetOrderAsync), new { id = result.Value }, result.Value) : ToActionResult(result);
         //}

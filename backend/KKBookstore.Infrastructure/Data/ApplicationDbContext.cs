@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.DiscountAggregate;
+using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
@@ -12,7 +12,9 @@ using KKBookstore.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
 namespace KKBookstore.Infrastructure.Data
@@ -24,6 +26,7 @@ namespace KKBookstore.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
 
             builder.ApplyConfigurationsFromAssembly(typeof(ProductConfiguration).Assembly);
 
@@ -52,11 +55,28 @@ namespace KKBookstore.Infrastructure.Data
             return Expression.Lambda(newBody, newParam);
         }
 
+        public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            return await Database.BeginTransactionAsync(cancellationToken);
+        }
+
+        public async Task CommitAsync(CancellationToken cancellationToken = default)
+        {
+            await SaveChangesAsync(cancellationToken);
+            await Database.CommitTransactionAsync(cancellationToken);
+        }
+
+        public async Task RollbackAsync(CancellationToken cancellationToken = default)
+        {
+            await Database.RollbackTransactionAsync(cancellationToken);
+    }
+
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
         public DbSet<DiscountVoucher> DiscountVouchers { get; set; }
+        public DbSet<VoucherUsage> VoucherUsages { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderLine> OrderLines { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
@@ -77,6 +97,7 @@ namespace KKBookstore.Infrastructure.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Sku> Skus { get; set; }
         public DbSet<SkuOptionValue> SkuOptionValues { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
         public DbSet<UnitMeasure> UnitMeasures { get; set; }
     }
 }

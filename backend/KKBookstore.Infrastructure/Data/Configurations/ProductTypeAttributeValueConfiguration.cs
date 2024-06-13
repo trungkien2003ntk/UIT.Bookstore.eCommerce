@@ -19,8 +19,7 @@ internal class ProductTypeAttributeValueConfiguration : IEntityTypeConfiguration
             .IsRequired()
             .HasMaxLength(200);
 
-
-        builder.HasIndex(x => x.Value)
+        builder.HasIndex(x => new { x.ProductTypeAttributeId, x.Value })
             .IsUnique();
 
         builder.HasOne(x => x.ProductTypeAttribute)

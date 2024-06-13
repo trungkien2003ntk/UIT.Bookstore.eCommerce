@@ -1,5 +1,6 @@
 ﻿
 using KKBookstore.API.Abstractions;
+using KKBookstore.API.Contracts.Requests;
 using KKBookstore.Application.Features.Users.AddShippingAddress;
 using KKBookstore.Application.Features.Users.GetUser;
 using KKBookstore.Application.Features.Users.GetUserList;
@@ -102,43 +103,55 @@ namespace KKBookstore.API.Controllers
             return result.IsSuccess ? NoContent() : ToActionResult(result);
         }
 
-
-        [HttpGet("{userId}/shipping-addresses")]
+        [Authorize(Roles = Role.Customer)]
+        [HttpGet("addresses/get-address-list")]
         public async Task<IActionResult> GetUserShippingAddressesAsync(
-            int userId,
             CancellationToken cancellationToken = default
         )
         {
-            var result = await Sender.Send(new GetUserShippingAddressesRequest(userId), cancellationToken);
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+
+            var result = await Sender.Send(new GetUserShippingAddressesQuery(userId), cancellationToken);
 
             return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
         }
 
-        [HttpPost("{userId}/shipping-addresses")]
+        [Authorize(Roles = Role.Customer)]
+        [HttpPost("addresses/create-address")]
         public async Task<IActionResult> AddUserShippingAddressAsync(
-            int userId,
-            [FromBody] AddShippingAddressCommand command,
+            [FromBody] AddShippingAddressRequest request,
             CancellationToken cancellationToken = default
         )
         {
-            if (command.UserId != userId)
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+
+            var command = new AddShippingAddressCommand
             {
-                return BadRequest();
-            }
+                UserId = userId,
+                Province = request.Province,
+                District = request.District,
+                Commune = request.Commune,
+                IsDefault = request.IsDefault,
+                AddressType = request.AddressType,
+                ReceiverName = request.ReceiverName,
+                PhoneNumber = request.PhoneNumber,
+                DetailAddress = request.DetailAddress
+            };
 
             var result = await Sender.Send(command, cancellationToken);
 
             return result.IsSuccess ? CreatedAtAction(nameof(GetUserShippingAddressesAsync), new { userId }, result.Value) : ToActionResult(result);
         }
 
-        [HttpPut("{userId}/shipping-addresses/{id}")]
+        [HttpPut("addresses/{id}")]
         public async Task<IActionResult> UpdateUserShippingAddressAsync(
-            int userId,
             int id,
             [FromBody] UpdateShippingAddressCommand command,
             CancellationToken cancellationToken = default
         )
         {
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+
             if (command.UserId != userId || command.Id != id)
             {
                 return BadRequest();

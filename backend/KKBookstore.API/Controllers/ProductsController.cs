@@ -5,6 +5,7 @@ using KKBookstore.Application.Features.Products.GetProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.GetTrendyProductList;
+using KKBookstore.Application.Features.Products.SearchProducts;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -72,21 +73,21 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    //[HttpGet("recommend")]
-    //public async Task<IActionResult> GetRecommendedProducts(
-    //    [FromQuery]GetRecommendedProductListQuery query,
-    //    CancellationToken cancellationToken = default
-    //)
-    //{
-    //    var result = await mediator.Send(query, cancellationToken);
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchProducts(
+        [FromQuery]SearchProductsQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {   
+        var result = await Sender.Send(query, cancellationToken);
 
-    //    return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    //}
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
 
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync(
-        
-        )
+                
+    )
     {
 
         return Created();

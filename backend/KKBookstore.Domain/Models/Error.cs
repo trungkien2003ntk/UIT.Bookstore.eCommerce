@@ -27,9 +27,10 @@ public record Error
     public static Error Conflict(string code, string description) => new(code, description, ErrorType.Conflict);
     public static Error Failure(string code, string description) => new(code, description, ErrorType.Failure);
     public static Error Unauthorized(string code, string description) => new(code, description, ErrorType.Unauthorized);
+    public static Error Forbidden(string code, string description) => new(code, description, ErrorType.Forbidden);
     public static Error BusinessRuleViolation(string code, string description) => new(code, description, ErrorType.BusinessRuleViolation);
+    public static Error ServiceUnavaiable(string code, string description) => new(code, description, ErrorType.ServiceUnavailable);
     public static Error InvalidSortProperty(string sortProperty, string validProperties) => Validation("Application.InvalidSortProperty", $"Invalid sort property: {sortProperty}. Valid properties are: {validProperties}");
-
 }
 
 public enum ErrorType
@@ -38,6 +39,8 @@ public enum ErrorType
     Unauthorized,
     NotFound,
     Validation,
+    Forbidden,
     BusinessRuleViolation,
-    Conflict
+    Conflict,
+    ServiceUnavailable
 }

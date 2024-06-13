@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<InvariantGlobalization>false</InvariantGlobalization>
+		<UserSecretsId>44cb7408-c032-466d-9058-cb5947354fbb</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -40,8 +41,8 @@
 		<Content Include="appsettings.$(ASPNETCORE_ENVIRONMENT).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Contracts\Enums\" />
-	  <Folder Include="Contracts\Responses\" />
+		<Folder Include="Contracts\Enums\" />
+		<Folder Include="Contracts\Responses\" />
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
 		<EnvironmentName>Development</EnvironmentName>

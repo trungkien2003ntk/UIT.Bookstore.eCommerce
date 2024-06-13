@@ -1,77 +1,207 @@
 [
 	{
 		"Id": 1,
-		"ProductTypeAttributeId": 1,
-		"Value": "Bìa mềm"
+		"ProductTypeAttributeId": 2,
+		"Value": "Hội Nhà Văn"
 	},
 	{
 		"Id": 2,
-		"ProductTypeAttributeId": 2,
-		"Value": "Hà Nội"
+		"ProductTypeAttributeId": 5,
+		"Value": "144"
 	},
 	{
 		"Id": 3,
+		"ProductTypeAttributeId": 6,
+		"Value": "Bìa Mềm"
+	},
+	{
+		"Id": 4,
 		"ProductTypeAttributeId": 3,
 		"Value": "2019"
 	},
 	{
-		"Id": 4,
+		"Id": 5,
+		"ProductTypeAttributeId": 3,
+		"Value": "2022"
+	},
+	{
+		"Id": 6,
 		"ProductTypeAttributeId": 4,
 		"Value": "Tiếng Việt"
 	},
 	{
-		"Id": 5,
-		"ProductTypeAttributeId": 5,
-		"Value": "28"
-	},
-	{
-		"Id": 6,
-		"ProductTypeAttributeId": 2,
-		"Value": "Văn Học"
-	},
-	{
 		"Id": 7,
 		"ProductTypeAttributeId": 5,
-		"Value": "30"
+		"Value": "102"
 	},
 	{
 		"Id": 8,
 		"ProductTypeAttributeId": 2,
-		"Value": "Đại Học Quốc Gia Hà Nội"
+		"Value": "Báo Sinh Viên Việt Nam - Hoa Học Trò"
 	},
 	{
 		"Id": 9,
 		"ProductTypeAttributeId": 3,
-		"Value": "2024"
+		"Value": "2023"
 	},
 	{
 		"Id": 10,
 		"ProductTypeAttributeId": 5,
-		"Value": "178"
+		"Value": "100"
 	},
 	{
 		"Id": 11,
-		"ProductTypeAttributeId": 2,
-		"Value": "Giáo Dục Việt Nam"
+		"ProductTypeAttributeId": 7,
+		"Value": "WanLongDa"
 	},
 	{
 		"Id": 12,
-		"ProductTypeAttributeId": 3,
-		"Value": "2023"
+		"ProductTypeAttributeId": 8,
+		"Value": "Trung Quốc"
 	},
 	{
 		"Id": 13,
-		"ProductTypeAttributeId": 10,
-		"Value": "7"
+		"ProductTypeAttributeId": 9,
+		"Value": "Trung Quốc"
 	},
 	{
 		"Id": 14,
-		"ProductTypeAttributeId": 11,
-		"Value": "Cấp 2"
+		"ProductTypeAttributeId": 10,
+		"Value": "Nâu"
 	},
 	{
 		"Id": 15,
+		"ProductTypeAttributeId": 11,
+		"Value": "Bông"
+	},
+	{
+		"Id": 16,
+		"ProductTypeAttributeId": 10,
+		"Value": "Vàng"
+	},
+	{
+		"Id": 17,
+		"ProductTypeAttributeId": 11,
+		"Value": "Nhựa"
+	},
+	{
+		"Id": 18,
+		"ProductTypeAttributeId": 2,
+		"Value": "Thanh niên"
+	},
+	{
+		"Id": 19,
 		"ProductTypeAttributeId": 5,
-		"Value": "0"
+		"Value": "48"
+	},
+	{
+		"Id": 20,
+		"ProductTypeAttributeId": 2,
+		"Value": "Kim Đồng"
+	},
+	{
+		"Id": 21,
+		"ProductTypeAttributeId": 5,
+		"Value": "204"
+	},
+	{
+		"Id": 22,
+		"ProductTypeAttributeId": 2,
+		"Value": "Thế giới"
+	},
+	{
+		"Id": 23,
+		"ProductTypeAttributeId": 3,
+		"Value": "2021"
+	},
+	{
+		"Id": 24,
+		"ProductTypeAttributeId": 5,
+		"Value": "424"
+	},
+	{
+		"Id": 25,
+		"ProductTypeAttributeId": 5,
+		"Value": "344"
+	},
+	{
+		"Id": 26,
+		"ProductTypeAttributeId": 5,
+		"Value": "280"
+	},
+	{
+		"Id": 27,
+		"ProductTypeAttributeId": 2,
+		"Value": "Hồng Đức"
+	},
+	{
+		"Id": 29,
+		"ProductTypeAttributeId": 5,
+		"Value": "332"
+	},
+	{
+		"Id": 30,
+		"ProductTypeAttributeId": 5,
+		"Value": "200"
+	},
+	{
+		"Id": 31,
+		"ProductTypeAttributeId": 2,
+		"Value": "Tổng hợp TPHCM"
+	},
+	{
+		"Id": 32,
+		"ProductTypeAttributeId": 5,
+		"Value": "479"
+	},
+	{
+		"Id": 33,
+		"ProductTypeAttributeId": 7,
+		"Value": "Morning Glory"
+	},
+	{
+		"Id": 34,
+		"ProductTypeAttributeId": 8,
+		"Value": "Hàn Quốc"
+	},
+	{
+		"Id": 35,
+		"ProductTypeAttributeId": 9,
+		"Value": "Hàn Quốc"
+	},
+	{
+		"Id": 36,
+		"ProductTypeAttributeId": 11,
+		"Value": "Nhựa, Kim Loại"
+	},
+	{
+		"Id": 37,
+		"ProductTypeAttributeId": 7,
+		"Value": "OEM"
+	},
+	{
+		"Id": 38,
+		"ProductTypeAttributeId": 10,
+		"Value": "Trong suốt"
+	},
+	{
+		"Id": 39,
+		"ProductTypeAttributeId": 9,
+		"Value": "Việt Nam"
+	},
+	{
+		"Id": 40,
+		"ProductTypeAttributeId": 10,
+		"Value": "Đỏ - Đen"
+	},
+	{
+		"Id": 41,
+		"ProductTypeAttributeId": 7,
+		"Value": "Nano"
+	},
+	{
+		"Id": 42,
+		"ProductTypeAttributeId": 10,
+		"Value": "Đen"
 	}
 ]

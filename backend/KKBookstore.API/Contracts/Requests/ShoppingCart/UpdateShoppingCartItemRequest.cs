@@ -7,16 +7,16 @@ namespace KKBookstore.API.Contracts.Requests.ShoppingCart
         public UpdateCartActionType ActionType { get; init; }
         public List<int> SelectedItemIds { get; init; } = [];
         public List<UpdateShoppingCartItemBriefDto> UpdateItems { get; init; } = [];
-        
-        public UpdateShoppingCartItemCommand ToCommand(int userId)
+        public int? OrderDiscountVoucherId { get; init; }
+        public int? ShippingDiscountVoucherId { get; init; }
+
+        public sealed record UpdateShoppingCartItemBriefDto
         {
-            return new UpdateShoppingCartItemCommand
-            {
-                UserId = userId,
-                ActionType = ActionType,
-                SelectedItemIds = SelectedItemIds,
-                UpdateItems = UpdateItems
-            };
+            public int Id { get; init; }
+            public int SkuId { get; init; }
+            public int OldSkuId { get; init; }
+            public int Quantity { get; init; }
+            public int OldQuantity { get; init; }
         }
     }
 }

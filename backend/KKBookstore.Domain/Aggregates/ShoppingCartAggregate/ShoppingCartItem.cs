@@ -24,6 +24,12 @@ public class ShoppingCartItem : BaseAuditableEntity
     public int Quantity { get; set; }
     [NotMapped]
     public bool IsSelected { get; set; }
+    [NotMapped]
+    public decimal TotalUnitPrice => Sku.UnitPrice * Quantity;
+    [NotMapped]
+    public decimal TotalRecommendedRetailPrice => Sku.RecommendedRetailPrice * Quantity;
+    [NotMapped]
+    public decimal TotalSavedAmount => TotalRecommendedRetailPrice - TotalUnitPrice;
 
     // navigation properties
     public Sku Sku { get; set; }
@@ -44,28 +50,15 @@ public class ShoppingCartItem : BaseAuditableEntity
         return new ShoppingCartItem(customerId, skuId, quantity);
     }
 
-    public void AddQuantity(int quantity)
+    public Result UpdateQuantity(int newQuantity)
     {
-        Quantity += quantity;
-    }
-
-    public void SubtractQuantity(int quantity)
-    {
-        Quantity -= quantity;
-    }
-
-    public decimal GetTotalUnitPrice()
-    {
-        return Sku.UnitPrice * Quantity;
-    }
-
-    public decimal GetTotalRecommendedRetailPrice()
-    {
-        return Sku.RecommendedRetailPrice * Quantity;
-    }
-
-    public decimal GetTotalSavedAmount()
-    {
-        return GetTotalRecommendedRetailPrice() - GetTotalUnitPrice();
+        // validation
+        if (newQuantity <= 0)
+        {
+            return Result.Failure(ShoppingCartError.QuantityMustBePositive);
+        }
+        
+        Quantity = newQuantity;
+        return Result.Success();
     }
 }

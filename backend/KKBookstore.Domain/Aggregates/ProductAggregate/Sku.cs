@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Domain.Interfaces;
 using KKBookstore.Domain.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.Domain.Aggregates.ProductAggregate;
 
@@ -45,6 +46,8 @@ public class Sku : BaseAuditableEntity, ISoftDelete
     public int ProductId { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
     public decimal UnitPrice { get; set; }
+    [NotMapped]
+    public decimal BasicDiscountRate => (RecommendedRetailPrice - UnitPrice) / RecommendedRetailPrice * 100;
     public decimal TaxRate { get; set; }
     public string Comment { get; set; }
     public DateTimeOffset ValidFrom { get; set; }
@@ -93,5 +96,12 @@ public class Sku : BaseAuditableEntity, ISoftDelete
         var thumbnailImageUrl = SkuOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.ThumbnailImageUrl))?.OptionValue.ThumbnailImageUrl;
 
         return thumbnailImageUrl;
+    }
+
+    public string? GetLargeImageUrl()
+    {
+        var largeImageUrl = SkuOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.LargeImageUrl))?.OptionValue.LargeImageUrl;
+
+        return largeImageUrl;
     }
 }

@@ -14,21 +14,21 @@ public class OtpService(
     private readonly IMemoryCache _cache = cache;
     private readonly IEmailService _emailService = emailService;
 
-    public Result<string> GenerateOtp(string email)
+    public Result<string> GenerateOtp(string emailAddress)
     {
         var otp = new Random().Next(100000, 999999).ToString();
 
         // Store the OTP in cache for 3 minutes
-        _cache.Set(email, otp, TimeSpan.FromMinutes(3));
+        _cache.Set(emailAddress, otp, TimeSpan.FromMinutes(3));
 
         return otp;
     }
 
-    public async Task<Result> SendOtpAsync(string email, string otp)
+    public async Task<Result> SendOtpAsync(string emailAddress, string otp)
     {
         try
         {
-            await _emailService.SendOtp(email, otp);
+            await _emailService.SendOtp(emailAddress, otp);
         }
         catch
         {
@@ -44,7 +44,6 @@ public class OtpService(
         {
             if (!string.IsNullOrEmpty(existingOtp) && existingOtp == request.Otp)
             {
-                // OTP is correct, remove it from cache
                 _cache.Remove(request.Email);
 
                 return Result.Success(true);

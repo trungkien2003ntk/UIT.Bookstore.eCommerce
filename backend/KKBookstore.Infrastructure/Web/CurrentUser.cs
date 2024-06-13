@@ -13,6 +13,19 @@ public class CurrentUser : ICurrentUser
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public int Id => int.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+    public int? Id
+    {
+        get
+        {
+            var idString = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(idString) || int.TryParse(idString, out int id))
+            {
+                return null;
+            }
+
+            return id;
+        }
+    }
 
 }

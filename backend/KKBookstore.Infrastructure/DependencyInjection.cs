@@ -13,6 +13,11 @@ using KKBookstore.Infrastructure.Data.Interceptors;
 using KKBookstore.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Infrastructure.Shipping;
+using KKBookstore.Infrastructure.Payment;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Caching.Memory;
+using KKBookstore.Infrastructure.Search;
 
 namespace KKBookstore.Infrastructure;
 
@@ -82,11 +87,46 @@ public static class DependencyInjection
         services.Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)));
         services.AddTransient<IEmailService, EmailService>();
 
+        /// Config Shipping
+        services.Configure<ShippingConfiguration>(configuration.GetSection(nameof(ShippingConfiguration)));
+        /// old way
+        //services.AddScoped<IShippingService, ShippingService>();
+
+        /// new way: added decorator
+        services.AddScoped<ShippingService>();
+        services.AddScoped<IShippingService>(provider =>
+        {
+            return new CachedShippingService(
+                provider.GetRequiredService<IMemoryCache>(),
+                provider.GetRequiredService<ShippingService>()
+            );
+        });
+
 
         /// Additional Config
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddSingleton(TimeProvider.System);
-        
+        services.AddHttpClient();
+
+        /// Config VnPay Payment
+        services.Configure<VnPayConfiguration>(configuration.GetSection(nameof(VnPayConfiguration)));
+        services.AddScoped<IPaymentService, VnPayPaymentService>();
+
+
+        /// Config Azure Search
+        services.Configure<SearchConfiguration>(configuration.GetSection(nameof(SearchConfiguration)));
+        services.AddScoped<ISearchService, SearchService>();
+
+
+
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(configuration["StorageConnectionString:blob"]!, preferMsi: true);
+            clientBuilder.AddQueueServiceClient(configuration["StorageConnectionString:queue"]!, preferMsi: true);
+        });
+
+
+
         return services;
     }
 }

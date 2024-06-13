@@ -6,6 +6,9 @@ internal static class MappingHelpers
 {
     internal static string GetSkuThumbnailImageUrl(Sku src)
     {
+        if (src.SkuOptionValues is null || src.SkuOptionValues.Count == 0)
+            return string.Empty;
+
         var thumbnailImageUrl = src.SkuOptionValues
             .FirstOrDefault(sov => sov.Option.IsOptionWithImage)?.OptionValue?.ThumbnailImageUrl;
 
@@ -30,6 +33,11 @@ internal static class MappingHelpers
 
     public static string GetSkuOptionValuesString(Sku sku)
     {
+        if (sku.SkuOptionValues is null || sku.SkuOptionValues.Count == 0)
+        {
+            return string.Empty;
+        }
+
         return string.Join(" / ", sku.SkuOptionValues.Select(sov => sov.OptionValue.Value));
     }
 

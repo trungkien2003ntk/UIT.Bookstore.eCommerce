@@ -27,7 +27,7 @@ public class GetProvinceListHandler(
             Items = provinces.Select(p => new GetProvinceListResponse.ProvinceDto
             {
                 Id = p.Id,
-                Name = p.Name
+                Label = p.Name
             }).ToList()
         };
 

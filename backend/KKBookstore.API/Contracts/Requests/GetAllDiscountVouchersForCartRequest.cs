@@ -1,6 +1,6 @@
 ﻿namespace KKBookstore.API.Contracts.Requests;
 
-public class GetAllDiscountVouchersRequest
+public class GetAllDiscountVouchersForCartRequest
 {
     public List<int> SelectedItemIds { get; init; } = [];
 }

@@ -9,7 +9,7 @@ public record PlaceOrderRequest
     public decimal ShippingFee { get; init; }
     public DateTimeOffset ExpectedDeliveryWhen { get; init; }
     public int? OrderDiscountVoucherId { get; init; }
-    public int ShippingVoucherId { get; init; }
+    public int? ShippingVoucherId { get; init; }
     public string Note { get; init; }
 
     public string? PaymentReturnUrl { get; init; }

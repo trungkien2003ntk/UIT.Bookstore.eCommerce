@@ -22,7 +22,6 @@ public record GetAllDiscountVouchersResponse
         public int? UsageLimitPerUser { get; init; }
         public int UsageCount { get; init; }
         public decimal UsedPercentage { get; init; }
-        public bool IsRedeemable { get; init; }
         public string VoucherType { get; init; }
     }
 }

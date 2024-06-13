@@ -16,6 +16,7 @@ public class ProductProfile : Profile
         CreateMap<Product, GetProductResponse>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.ProductTypeId, opt => opt.MapFrom(src => src.ProductTypeId))
             .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.DisplayName))
             .ForMember(dest => dest.UnitMeasureName, opt => opt.MapFrom(src => src.UnitMeasure.Name))
             .ForMember(dest => dest.LargeImageUrls, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.LargeImageUrl)))

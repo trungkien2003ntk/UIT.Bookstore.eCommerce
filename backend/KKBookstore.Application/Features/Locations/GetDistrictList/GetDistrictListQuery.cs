@@ -30,7 +30,7 @@ public class GetDistrictListHandler(
             Items = districts.Select(d => new GetDistrictListResponse.DistrictDto
             {
                 Id = d.Id,
-                Name = d.Name
+                Label = d.Name
             }).ToList()
         };
 

@@ -161,6 +161,18 @@ public class ConfirmCheckoutHandler(
             Items = checkoutItems.Select(i =>
             {
                 var product = productsInCart.First(p => p.Id == i.Sku.ProductId);
+
+                string thumbnailImageUrl;
+                if (i.Sku.SkuOptionValues.Count == 0)
+                {
+                    // load sku's Product and ProductImages
+                    thumbnailImageUrl = product.GetFirstThumbnailImageUrl();
+                }
+                else
+                {
+                    thumbnailImageUrl = i.Sku.GetThumbnailImageUrl();
+                }
+
                 return new CheckoutItemDto()
                 {
                     Id = i.Id,
@@ -169,7 +181,7 @@ public class ConfirmCheckoutHandler(
                     SkuId = i.SkuId,
                     SkuName = i.Sku.SkuName,
                     Quantity = i.Quantity,
-                    ImageUrl = i.Sku.GetThumbnailImageUrl(),
+                    ImageUrl = thumbnailImageUrl,
                     UnitPrice = i.Sku.UnitPrice,
                     TotalPrice = i.TotalUnitPrice,
                 };

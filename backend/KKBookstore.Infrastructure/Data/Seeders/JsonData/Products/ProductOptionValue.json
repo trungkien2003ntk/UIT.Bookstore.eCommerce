@@ -2,57 +2,176 @@
 	{
 		"Id": 1,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và bố",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg"
+		"Value": "Tập 1",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/4/z4113307553305_aa5e027926d792b10f.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/z/4/z4113307553305_aa5e027926d792b10f.jpg"
 	},
 	{
 		"Id": 2,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và mẹ",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg"
+		"Value": "Tập 2",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap2-1165_1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap2-1165_1.jpg"
 	},
 	{
 		"Id": 3,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và ông",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg"
+		"Value": "Tập 3",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3.jpg"
 	},
 	{
 		"Id": 4,
 		"OptionId": 1,
-		"Value": "Một ngày của tớ và bà",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg"
+		"Value": "Tập 4",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_tap4.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_tap4.jpg"
 	},
 	{
 		"Id": 5,
-		"OptionId": 2,
-		"Value": "Tập 1 - Mùa Xuân",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg"
+		"OptionId": 1,
+		"Value": "Tập 5",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_bia_tap5.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_bia_tap5.jpg"
 	},
 	{
 		"Id": 6,
-		"OptionId": 2,
-		"Value": "Tập 2 - Mùa Hạ",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg"
+		"OptionId": 1,
+		"Value": "Tập 6",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap6-364.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap6-364.jpg"
 	},
 	{
 		"Id": 7,
 		"OptionId": 2,
-		"Value": "Tập 3 - Mùa Thu",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg"
+		"Value": "WHL202",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310124.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310124.jpg"
 	},
 	{
 		"Id": 8,
 		"OptionId": 2,
-		"Value": "Tập 4 - Mùa Đông",
-		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
-		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg"
+		"Value": "WHL201",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117.jpg"
+	},
+	{
+		"Id": 9,
+		"OptionId": 2,
+		"Value": "KSXST",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311008.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311008.jpg"
+	},
+	{
+		"Id": 10,
+		"OptionId": 2,
+		"Value": "MRTSST",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240318007.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240318007.jpg"
+	},
+	{
+		"Id": 11,
+		"OptionId": 2,
+		"Value": "KPBL",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311183.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311183.jpg"
+	},
+	{
+		"Id": 12,
+		"OptionId": 3,
+		"Value": "Bố Mẹ Luôn Yêu Con",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png"
+	},
+	{
+		"Id": 13,
+		"OptionId": 3,
+		"Value": "Con Từ Đâu Tới?",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png"
+	},
+	{
+		"Id": 14,
+		"OptionId": 3,
+		"Value": "Tớ Dũng Cảm Nói “Không\"",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___to_dung_cam_noi_khong/2023_04_05_15_26_30_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___to_dung_cam_noi_khong/2023_04_05_15_26_30_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU."
+	},
+	{
+		"Id": 15,
+		"OptionId": 3,
+		"Value": "Nguy Hiểm Đấy Mau Tránh Xa",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png"
+	},
+	{
+		"Id": 16,
+		"OptionId": 3,
+		"Value": "Không Được Chạm Vào Vùng Riêng Tư Của Tớ",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___khong_duoc_cham_vao_vung_rieng_tu_cua_to/2023_04_05_15_26_37_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___khong_duoc_cham_vao_vung_rieng_tu_cua_to/2023_04_05_15_26_37_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU."
+	},
+	{
+		"Id": 17,
+		"OptionId": 4,
+		"Value": "Tập 1",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-1_tb-2023.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-1_tb-2023.jpg"
+	},
+	{
+		"Id": 18,
+		"OptionId": 4,
+		"Value": "Tập 2",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-2---tb-2023.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-2---tb-2023.jpg"
+	},
+	{
+		"Id": 19,
+		"OptionId": 4,
+		"Value": "Tập 3",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-3---tb-2023.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-3---tb-2023.jpg"
+	},
+	{
+		"Id": 20,
+		"OptionId": 4,
+		"Value": "Tập 4",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-4_tb-2023.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-4_tb-2023.jpg"
+	},
+	{
+		"Id": 21,
+		"OptionId": 4,
+		"Value": "Tập 5",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935244890648_1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/9/8935244890648_1.jpg"
+	},
+	{
+		"Id": 22,
+		"OptionId": 4,
+		"Value": "Tập 6",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-6---tb-2023.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-6---tb-2023.jpg"
+	},
+	{
+		"Id": 23,
+		"OptionId": 5,
+		"Value": "Vàng",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg"
+	},
+	{
+		"Id": 24,
+		"OptionId": 5,
+		"Value": "Nâu",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau3.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau3.jpg"
+	},
+	{
+		"Id": 25,
+		"OptionId": 5,
+		"Value": "Trắng",
+		"ThumbnailImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg",
+		"LargeImageUrl": "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg"
 	}
 ]

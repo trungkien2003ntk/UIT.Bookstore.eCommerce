@@ -474,25 +474,6 @@ internal static class DataSeeder
             switch (sku.Id)
             {
                 case 1:
-                case 2:
-                case 3:
-                case 4:
-                    sku.Weight = 100;
-                    builder.Entity<Sku>()
-                        .OwnsOne(s => s.Dimension)
-                        .HasData(
-                        new
-                        {
-                            SkuId = sku.Id,
-                            Height = 25m,
-                            Width = 20.5m,
-                            Length = 0.2m,
-                        });
-                    break;
-                case 5:
-                case 6:
-                case 7:
-                case 8:
                     sku.Weight = 150;
                     builder.Entity<Sku>()
                         .OwnsOne(s => s.Dimension)
@@ -500,38 +481,156 @@ internal static class DataSeeder
                         new
                         {
                             SkuId = sku.Id,
-                            Height = 24.0m,
-                            Width = 16.0m,
+                            Height = 14m,
+                            Width = 20.5m,
+                            Length = 0.3m,
+                        });
+                    break;
+                case 2:
+                    sku.Weight = 130;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.5m,
+                            Width = 14.5m,
+                            Length = 0.5m,
+                        });
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    sku.Weight = 80;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 22.0m,
+                            Width = 12.0m,
                             Length = 0.5m,
                         });
                     break;
                 case 9:
-                    sku.Weight = 190;
+                    sku.Weight = 100;
                     builder.Entity<Sku>()
                         .OwnsOne(s => s.Dimension)
                         .HasData(
                         new
                         {
                             SkuId = sku.Id,
-                            Height = 24.0m,
-                            Width = 16.0m,
-                            Length = 0.5m,
+                            Height = 17.0m,
+                            Width = 9.0m,
+                            Length = 8m,
                         });
                     break;
                 case 10:
-                    sku.Weight = 1200;
+                    sku.Weight = 100;
                     builder.Entity<Sku>()
                         .OwnsOne(s => s.Dimension)
                         .HasData(
                         new
                         {
                             SkuId = sku.Id,
-                            Height = 24.0m,
-                            Width = 17.0m,
-                            Length = 3.0m,
+                            Height = 16.0m,
+                            Width = 8.0m,
+                            Length = 7m,
                         });
                     break;
                 case 11:
+                    sku.Weight = 55;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 12.0m,
+                            Width = 8.0m,
+                            Length = 8m,
+                        });
+                    break;
+                case 12:
+                    sku.Weight = 43;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 9.0m,
+                            Width = 9.0m,
+                            Length = 8m,
+                        });
+                    break;
+                case 13:
+                    sku.Weight = 26;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 1.0m,
+                            Width = 9.0m,
+                            Length = 3.5m,
+                        });
+                    break;
+                case 14:
+                    sku.Weight = 53;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 7.0m,
+                            Width = 7.0m,
+                            Length = 1m,
+                        });
+                    break;
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                    sku.Weight = 133;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.5m,
+                            Width = 18.5m,
+                            Length = 0.4m,
+                        });
+                    break;
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                    sku.Weight = 220;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 17.6m,
+                            Width = 11.3m,
+                            Length = 1m,
+                        });
+                    break;
+                case 26:
                     sku.Weight = 2500;
                     builder.Entity<Sku>()
                         .OwnsOne(s => s.Dimension)
@@ -542,6 +641,164 @@ internal static class DataSeeder
                             Height = 24.0m,
                             Width = 17.0m,
                             Length = 6.0m,
+                        });
+                    break;
+                case 27:
+                    sku.Weight = 450;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 24.0m,
+                            Width = 16.0m,
+                            Length = 2.1m,
+                        });
+                    break;
+                case 28:
+                    sku.Weight = 350;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.0m,
+                            Width = 14.5m,
+                            Length = 0.5m,
+                        });
+                    break;
+                case 29:
+                    sku.Weight = 300;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 24.0m,
+                            Width = 16.0m,
+                            Length = 1.4m,
+                        });
+                    break;
+                case 30:
+                    sku.Weight = 320;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.5m,
+                            Width = 14.5m,
+                            Length = 1.4m,
+                        });
+                    break;
+                case 31:
+                    sku.Weight = 340;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.0m,
+                            Width = 14.5m,
+                            Length = 1.6m,
+                        });
+                    break;
+                case 32:
+                    sku.Weight = 220;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.5m,
+                            Width = 14m,
+                            Length = 1m,
+                        });
+                    break;
+                case 33:
+                    sku.Weight = 415;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 20.5m,
+                            Width = 13.0m,
+                            Length = 2.5m,
+                        });
+                    break;
+                case 34:
+                case 35:
+                case 36:
+                    sku.Weight = 10;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 10.5m,
+                            Width = 5m,
+                            Length = 1.5m,
+                        });
+                    break;
+                case 37:
+                    sku.Weight = 195;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 5m,
+                            Width = 5m,
+                            Length = 2m,
+                        });
+                    break;
+                case 38:
+                    sku.Weight = 54;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 15m,
+                            Width = 2m,
+                            Length = 2m,
+                        });
+                    break;
+                case 39:
+                    sku.Weight = 55;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 6.5m,
+                            Width = 6.5m,
+                            Length = 2m,
+                        });
+                    break;
+                case 40:
+                    sku.Weight = 250;
+                    builder.Entity<Sku>()
+                        .OwnsOne(s => s.Dimension)
+                        .HasData(
+                        new
+                        {
+                            SkuId = sku.Id,
+                            Height = 8m,
+                            Width = 8m,
+                            Length = 8m,
                         });
                     break;
             }

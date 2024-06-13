@@ -6,7 +6,7 @@ public record GetCommuneListResponse
 
     public sealed record CommuneDto
     {
-        public string Code { get; init; }
-        public string Name { get; init; }
+        public string Id { get; init; }
+        public string Label { get; init; }
     }
 }

@@ -1,12 +1,12 @@
-Custom UserManager and RoleManager in ASP.NET Core Identity for auditing and logging
+﻿Custom UserManager and RoleManager in ASP.NET Core Identity for auditing and logging
 
 In this article, we will learn how to create a custom UserManager and RoleManager in ASP.NET Core Identity for auditing and logging. We will create a custom UserManager and RoleManager that will log all the operations performed on the user and role entities.
 
-First, let�s create a custom UserManager and RoleManager. We will inherit from the UserManager and RoleManager classes provided by ASP.NET Core Identity. We will override the methods that we want to log and call the base class method to perform the actual operation.
+First, let’s create a custom UserManager and RoleManager. We will inherit from the UserManager and RoleManager classes provided by ASP.NET Core Identity. We will override the methods that we want to log and call the base class method to perform the actual operation.
 
 Next, we will create a custom logger that will log the operations performed on the user and role entities. We will use the ILogger interface provided by ASP.NET Core to log the operations.
 
-Let�s create a custom UserManager and RoleManager.
+Let’s create a custom UserManager and RoleManager.
 
 public class CustomUserManager : UserManager<ApplicationUser>
 {
@@ -94,6 +94,14 @@ profit = subtotal - shippingDiscount - orderDiscount - funds
 income = sum of all orders
 
 
+// done add image to product type
+
+// Liệt kê số lượng đã bán
+
+filter rating
+
+
+
 Add Validations
 Implement Azure AI Search
 Implement Azure Function to reduce the image size and store to Azure Blob Storage
@@ -116,3 +124,6 @@ because the database operations often cost more than the application server oper
 
 
 -------- migrating to FastAPI to match with vsa
+
+
+Lazy DI

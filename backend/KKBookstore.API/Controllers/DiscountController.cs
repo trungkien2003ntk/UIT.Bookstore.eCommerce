@@ -22,16 +22,27 @@ namespace KKBookstore.API.Controllers;
 [Route("api/[controller]")]
 public class DiscountController(ISender sender) : ApiController(sender)
 {
-
-    [Authorize(Roles = $"{Role.Customer},{Role.Admin}")]
-    [HttpPost("get-vouchers")]
+    [HttpGet("get-vouchers")]
     public async Task<IActionResult> GetAllDiscountVouchersAsync(
-        [FromBody] GetAllDiscountVouchersRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetAllDiscountVouchersQuery();
+
+        var result = await Sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+
+    [Authorize(Roles = $"{Role.Customer}, {Role.Admin}")]
+    [HttpPost("get-vouchers-cart")]
+    public async Task<IActionResult> GetAllDiscountVouchersForCartAsync(
+        [FromBody] GetAllDiscountVouchersForCartRequest request,
         CancellationToken cancellationToken = default)
     {
         var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
 
-        var query = new GetAllDiscountVouchersQuery
+        var query = new GetAllDiscountVouchersForCartQuery
         {
             UserId = userId,
             SelectedItemIds = request.SelectedItemIds

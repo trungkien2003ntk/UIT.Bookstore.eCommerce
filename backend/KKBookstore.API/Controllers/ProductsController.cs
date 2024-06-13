@@ -5,6 +5,7 @@ using KKBookstore.Application.Features.Products.GetProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.GetTrendyProductList;
+using KKBookstore.Application.Features.Products.SearchProducts;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +68,17 @@ public class ProductsController(
 
         var query = mapper.Map<GetProductRatingListQuery>(request);
 
+        var result = await Sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchProducts(
+        [FromQuery]SearchProductsQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {   
         var result = await Sender.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);

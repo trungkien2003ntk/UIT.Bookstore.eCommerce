@@ -1,9 +1,5 @@
 [
 	{
-		"Id": 1,
-		"Name": "Hình thức bìa"
-	},
-	{
 		"Id": 2,
 		"Name": "NXB"
 	},
@@ -21,26 +17,30 @@
 	},
 	{
 		"Id": 6,
-		"Name": "Thương hiệu"
+		"Name": "Hình thức"
 	},
 	{
 		"Id": 7,
-		"Name": "Nơi sản xuất"
+		"Name": "Thương hiệu"
 	},
 	{
 		"Id": 8,
-		"Name": "Chất liệu"
+		"Name": "Xuất xứ thương hiệu"
 	},
 	{
 		"Id": 9,
-		"Name": "Độ tuổi"
+		"Name": "Nơi gia công & sản xuất"
 	},
 	{
 		"Id": 10,
-		"Name": "Lớp"
+		"Name": "Màu sắc"
 	},
 	{
 		"Id": 11,
-		"Name": "Cấp học"
+		"Name": "Chất liệu"
+	},
+	{
+		"Id": 12,
+		"Name": "Độ tuổi"
 	}
 ]

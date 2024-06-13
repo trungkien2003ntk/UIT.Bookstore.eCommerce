@@ -66,7 +66,7 @@ public abstract class OrderProcessor(
         {
             // todo: log exception
             await transaction.RollbackAsync(cancellationToken);
-            return Result.Failure<PlaceOrderResponse>(OrderErrors.OrderCreationFailed);
+            return Result.Failure<PlaceOrderResponse>(Error.Validation("erorr", ex.Message));
         }
     }
 

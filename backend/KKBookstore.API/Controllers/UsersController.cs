@@ -145,12 +145,13 @@ namespace KKBookstore.API.Controllers
 
         [HttpPut("addresses/{id}")]
         public async Task<IActionResult> UpdateUserShippingAddressAsync(
-            int userId,
             int id,
             [FromBody] UpdateShippingAddressCommand command,
             CancellationToken cancellationToken = default
         )
         {
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+
             if (command.UserId != userId || command.Id != id)
             {
                 return BadRequest();

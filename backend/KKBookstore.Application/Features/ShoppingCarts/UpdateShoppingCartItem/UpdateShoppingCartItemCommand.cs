@@ -25,17 +25,6 @@ public record UpdateShoppingCartItemCommand : IRequest<Result<UpdateShoppingCart
         public int OldSkuId { get; init; }
         public int Quantity { get; init; }
         public int OldQuantity { get; init; }
-
-        //ToEntity
-        public ShoppingCartItem ToEntity()
-        {
-            return new ShoppingCartItem
-            {
-                Id = Id,
-                SkuId = SkuId,
-                Quantity = Quantity
-            };
-        }
     }
 }
 
@@ -51,6 +40,7 @@ public class UpdateShoppingCartItemCommandHandler(
         var userId = request.UserId;
         var orderDiscountVoucherId = request.OrderDiscountVoucherId;
         var shippingDiscountVoucherId = request.ShippingDiscountVoucherId;
+        var updateActionType = request.ActionType;
 
         var cartItems = await GetCartItems(userId, cancellationToken);
         var createCartResult = ShoppingCart.Create(userId, cartItems);
@@ -62,7 +52,7 @@ public class UpdateShoppingCartItemCommandHandler(
         var shoppingCart = createCartResult.Value;
         shoppingCart.SelectItems(request.SelectedItemIds);
 
-        switch (request.ActionType)
+        switch (updateActionType)
         {
             case UpdateCartActionType.SelectForCheckout:
                 break;
@@ -98,6 +88,8 @@ public class UpdateShoppingCartItemCommandHandler(
             await _dbContext.Entry(item).Reference(nameof(Sku)).LoadAsync(cancellationToken);
         }
 
+
+        // Calculate discount from voucher
         var orderDiscountVoucher = await _dbContext.DiscountVouchers
             .FirstOrDefaultAsync(dv => dv.Id == orderDiscountVoucherId, cancellationToken);
 
@@ -115,7 +107,18 @@ public class UpdateShoppingCartItemCommandHandler(
             discountFromVoucherAmount += shippingDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
         }
 
-        var result = await mappingService.MapToResponse(shoppingCart, discountFromVoucherAmount);
+        List<ShoppingCartItem> updatedAndSelectedItems = shoppingCart.Items
+            .Where(item => item.IsSelected || itemIdsToUpdate.Contains(item.Id))
+            .ToList();
+
+        var createCartResponseResult = ShoppingCart.Create(userId, updatedAndSelectedItems);
+
+        if (createCartResponseResult.IsFailure)
+        {
+            return Result.Failure<UpdateShoppingCartResponse>(ShoppingCartError.Unknown);
+        }
+
+        var result = await mappingService.MapToResponse(createCartResponseResult.Value, discountFromVoucherAmount);
 
         return result;
     }
@@ -128,8 +131,10 @@ public class UpdateShoppingCartItemCommandHandler(
             .ToListAsync(cancellationToken);
     }
 
-    private void UpdateItemQuantities(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    private List<ShoppingCartItem> UpdateItemQuantities(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
     {
+        var updatedItems = new List<ShoppingCartItem>();
+
         var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
 
         foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
@@ -137,11 +142,16 @@ public class UpdateShoppingCartItemCommandHandler(
             var updateItem = listItems.First(ui => ui.Id == item.Id);
             // todo: add a check to old quantity
             item.Quantity = updateItem.Quantity;
+            
+            updatedItems.Add(item);
         }
+
+        return updatedItems;
     }
 
-    private void UpdateItemSkus(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    private List<ShoppingCartItem> UpdateItemSkus(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
     {
+        List<ShoppingCartItem> updatedItems = [];
         var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
 
         foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
@@ -149,7 +159,11 @@ public class UpdateShoppingCartItemCommandHandler(
             var updateItem = listItems.First(ui => ui.Id == item.Id);
             // todo: add a check to old skuId
             item.SkuId = updateItem.SkuId;
+
+            updatedItems.Add(item);
         }
+
+        return updatedItems;
     }
 
     private void DeleteItems(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
@@ -165,7 +179,4 @@ public class UpdateShoppingCartItemCommandHandler(
             }
         }
     }
-
-
-    
 }

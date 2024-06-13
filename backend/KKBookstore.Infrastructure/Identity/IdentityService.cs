@@ -349,7 +349,7 @@ public class IdentityService(
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Value.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings.Value.AccessExpirationInMinutes));
+        var expires = DateTime.Now.AddDays(Convert.ToDouble(_jwtSettings.Value.AccessExpirationInDays));
 
         var token = new JwtSecurityToken(
             _jwtSettings.Value.Issuer,

@@ -1,13 +1,14 @@
 ﻿using KKBookstore.Application.Extensions;
 using KKBookstore.Domain.Aggregates.OrderAggregate;
+using System.Reflection;
 using System.Text;
 
 namespace KKBookstore.Infrastructure.Email.EmailTemplates;
 
 internal static class EmailBodyHelper
 {
-    private static readonly string _orderConfirmationTemplate = "../KKBookstore.Infrastructure/Email/EmailTemplates/OrderConfirmationTemplate.html";
-    private static readonly string _orderItemTemplate = "../KKBookstore.Infrastructure/Email/EmailTemplates/OrderItemTemplate.html";
+    //private static readonly string _orderConfirmationTemplate = "../KKBookstore.Infrastructure/Email/EmailTemplates/OrderConfirmationTemplate.html";
+    //private static readonly string _orderItemTemplate = "../KKBookstore.Infrastructure/Email/EmailTemplates/OrderItemTemplate.html";
     private static readonly string _deliveryTimePlaceholder = "{{DeliveryTime}}";
     private static readonly string _orderTimePlaceholder = "{{OrderTime}}";
     private static readonly string _orderItemImageSourcePlaceholder = "{{OrderItemImageSource}}";
@@ -24,8 +25,24 @@ internal static class EmailBodyHelper
     {
         var order = orderWithItemsWithSkuWithProductWithProductImagesAndBothVouchers;
 
-        var orderConfirmationTemplate = File.ReadAllText(_orderConfirmationTemplate);
-        var orderItemTemplate = File.ReadAllText(_orderItemTemplate);
+        string orderConfirmationTemplate;
+        var assembly = Assembly.GetExecutingAssembly();
+        using (var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderConfirmationTemplate.html"))
+        using (var reader = new StreamReader(stream))
+        {
+            orderConfirmationTemplate = reader.ReadToEnd();
+        }
+
+        string orderItemTemplate;
+        using (var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderItemTemplate.html"))
+        using (var reader = new StreamReader(stream))
+        {
+            orderItemTemplate = reader.ReadToEnd();
+        }
+
+
+        //var orderConfirmationTemplate = File.ReadAllText(_orderConfirmationTemplate);
+        //var  = File.ReadAllText(_orderItemTemplate);
         var orderItemCellContent = new StringBuilder();
 
         orderItemCellContent.Append(string.Join("\n", order.OrderLines.Select(ol =>

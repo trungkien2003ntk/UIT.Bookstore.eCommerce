@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static KKBookstore.Application.Features.ProductTypes.GetProductTypeList.GetProductTypeListResponse;
 
 namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
 
-public record GetProductTypeListQuery : IRequest<Result<List<ProductTypeGeneralDto>>>
+public record GetProductTypeListQuery : IRequest<Result<GetProductTypeListResponse>>
 {
     // filter properties
     public bool Flatten { get; set; } = false;
@@ -17,26 +17,43 @@ public record GetProductTypeListQuery : IRequest<Result<List<ProductTypeGeneralD
 public class GetProductTypeListQueryHandler(
     IApplicationDbContext _context,
     IMapper _mapper
-) : IRequestHandler<GetProductTypeListQuery, Result<List<ProductTypeGeneralDto>>>
+) : IRequestHandler<GetProductTypeListQuery, Result<GetProductTypeListResponse>>
 {
-    public async Task<Result<List<ProductTypeGeneralDto>>> Handle(GetProductTypeListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetProductTypeListResponse>> Handle(GetProductTypeListQuery request, CancellationToken cancellationToken)
     {
+        var defaultThumbnailImage = "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color-round/3/05-512.png";
+
+        var productTypes = await _context.ProductTypes
+            .Select(pt =>
+                new ProductTypeGeneralDto
+                {
+                    Id = pt.Id,
+                    ProductTypeCode = pt.ProductTypeCode,
+                    Level = pt.Level,
+                    ThumbnailImageUrl = _context.ProductImages
+                        .Include(pi => pi.Product)
+                        .Where(pi => pi.Product.ProductTypeId == pt.Id)
+                        .Select(pi => pi.ThumbnailImageUrl)
+                        .FirstOrDefault() ?? defaultThumbnailImage,
+                    DisplayName = pt.DisplayName,
+                    Description = pt.Description,
+                    ParentProductTypeId = pt.ParentProductTypeId,
+                    ChildProductTypes = new()
+                })
+            .ToListAsync(cancellationToken);
+
+
         if (request.Flatten)
         {
-            // Fetch all product types from the database
-            var productTypes = await _context.ProductTypes
-                .ProjectTo<ProductTypeGeneralDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+            var response = new GetProductTypeListResponse
+            {
+                ListItem = productTypes
+            };
 
-            return productTypes;
+            return response;
         }
         else
         {
-            // Fetch all product types from the database
-            var productTypes = await _context.ProductTypes
-                .ProjectTo<ProductTypeGeneralDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
-
             // Build a lookup table to find children for each product type
             var lookup = productTypes.ToLookup(p => p.ParentProductTypeId);
 
@@ -49,7 +66,12 @@ public class GetProductTypeListQueryHandler(
             // Filter to get only root product types (those without a parent)
             var rootProductTypes = productTypes.Where(p => p.ParentProductTypeId == null).ToList();
 
-            return rootProductTypes;
+            var response = new GetProductTypeListResponse
+            {
+                ListItem = rootProductTypes
+            };
+
+            return response;
         }
     }
 }

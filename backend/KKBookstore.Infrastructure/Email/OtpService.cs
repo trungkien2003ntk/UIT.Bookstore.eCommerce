@@ -44,7 +44,6 @@ public class OtpService(
         {
             if (!string.IsNullOrEmpty(existingOtp) && existingOtp == request.Otp)
             {
-                // OTP is correct, remove it from cache
                 _cache.Remove(request.Email);
 
                 return Result.Success(true);

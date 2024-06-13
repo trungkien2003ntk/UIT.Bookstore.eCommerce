@@ -87,6 +87,7 @@ public class UpdateShoppingCartMappingService(
             Id = ci.Id,
             ProductId = ci.Sku.ProductId,
             SkuId = ci.SkuId,
+            IsSelected = ci.IsSelected,
             SkuName = ci.Sku.SkuName,
             ProductName = product.Name,
             ProductTypeId = product.ProductTypeId,

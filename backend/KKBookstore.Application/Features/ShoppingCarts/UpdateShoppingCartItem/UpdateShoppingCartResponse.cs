@@ -3,6 +3,7 @@ using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 
@@ -17,11 +18,13 @@ public record UpdateShoppingCartResponse
     {
         public int ProductId { get; init; }
         public int SkuId { get; init; }
+        public bool IsSelected { get; init; }
         public string SkuName { get; init; }
         public string ProductName { get; init; }
         public int ProductTypeId { get; init; }
         public decimal UnitPrice { get; init; }
         public decimal RecommendedRetailPrice { get; init; }
+        public decimal TotalPrice => UnitPrice * Quantity;
         public int Quantity { get; init; }
         // todo: Currently, the available quantity is the same as total quantity
         // think about implement this later
@@ -50,6 +53,7 @@ public record UpdateShoppingCartResponse
 
             public SkuForCartDto PopulateIndex(List<ProductOptionAttributeDto> productOptions)
             {
+                Console.WriteLine(OptionNames);
                 if (OptionNames.Count == 0)
                 {
                     return this;

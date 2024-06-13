@@ -12,6 +12,7 @@ public record GetProductResponse : BaseDto
     public decimal MaxRecommendedRetailPrice { get; set; }
     public string UnitMeasureName { get; set; }
     public string Description { get; set; }
+    public int ProductTypeId { get; set; }
     public string ProductTypeName { get; set; }
     public bool IsBook { get; set; }
     public IEnumerable<string> ThumbnailImageUrls { get; set; } = [];

@@ -17,6 +17,7 @@ using KKBookstore.Infrastructure.Shipping;
 using KKBookstore.Infrastructure.Payment;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Caching.Memory;
+using KKBookstore.Infrastructure.Search;
 
 namespace KKBookstore.Infrastructure;
 
@@ -110,6 +111,12 @@ public static class DependencyInjection
         /// Config VnPay Payment
         services.Configure<VnPayConfiguration>(configuration.GetSection(nameof(VnPayConfiguration)));
         services.AddScoped<IPaymentService, VnPayPaymentService>();
+
+
+        /// Config Azure Search
+        services.Configure<SearchConfiguration>(configuration.GetSection(nameof(SearchConfiguration)));
+        services.AddScoped<ISearchService, SearchService>();
+
 
 
         services.AddAzureClients(clientBuilder =>

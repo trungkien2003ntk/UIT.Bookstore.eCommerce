@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Email\EmailTemplates\OrderConfirmationTemplate.html" />
+    <None Remove="Email\EmailTemplates\OrderItemTemplate.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Email\EmailTemplates\OrderConfirmationTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Email\EmailTemplates\OrderItemTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Search.Documents" Version="11.5.1" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.20.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.18.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.18.0" />
@@ -26,6 +41,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.7.3" />
     <PackageReference Include="MimeKit" Version="4.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,12 +100,6 @@
     </None>
     <None Update="Data\Seeders\JsonData\Products\UnitMeasure.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Email\EmailTemplates\OrderConfirmationTemplate.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Email\EmailTemplates\OrderItemTemplate.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

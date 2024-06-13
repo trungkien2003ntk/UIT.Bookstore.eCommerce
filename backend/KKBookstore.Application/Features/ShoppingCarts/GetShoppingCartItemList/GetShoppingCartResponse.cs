@@ -19,6 +19,7 @@ public record GetShoppingCartResponse
         public int ProductTypeId { get; init; }
         public decimal UnitPrice { get; init; }
         public decimal RecommendedRetailPrice { get; init; }
+        public decimal TotalPrice => UnitPrice * Quantity;
         public decimal BasicDiscountRate { get; init; }
         public int Quantity { get; init; }
         // todo: Currently, the available quantity is the same as total quantity
@@ -54,6 +55,12 @@ public record GetShoppingCartResponse
 
                 var skuOptionValues = SkuName.Split(',').Select(sv => sv.Trim()).ToList();
                 var optionValueDictionary = new Dictionary<string, string>();
+
+                if (skuOptionValues.Count > OptionNames.Count)
+                {
+                    // if the SkuName contain comma in the name, but not separator for multiple options
+
+                }
 
                 for (int i = 0; i < skuOptionValues.Count; i++)
                 {

@@ -2,6 +2,6 @@
 
 public enum AddressType
 {
-    Home,
-    Office
+    Home = 1,
+    Office = 2
 }

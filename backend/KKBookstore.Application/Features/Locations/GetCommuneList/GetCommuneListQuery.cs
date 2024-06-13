@@ -29,8 +29,8 @@ public class GetCommuneListHandler(
         {
             Items = communes.Select(c => new GetCommuneListResponse.CommuneDto
             {
-                Code = c.Code,
-                Name = c.Name
+                Id = c.Code,
+                Label = c.Name
             }).ToList()
         };
 

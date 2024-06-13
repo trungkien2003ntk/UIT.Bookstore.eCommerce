@@ -7,6 +7,6 @@ public record GetDistrictListResponse
     public sealed record DistrictDto
     {
         public int Id { get; init; }
-        public string Name { get; init; }
+        public string Label { get; init; }
     }
 }

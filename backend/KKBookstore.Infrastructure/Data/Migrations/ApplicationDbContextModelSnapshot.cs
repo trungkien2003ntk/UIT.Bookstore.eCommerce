@@ -17,79 +17,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("KKBookstore.Domain.Discounts.DiscountVoucher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DiscountVoucherId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("DiscountType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("EndWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPercentage")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastEditedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("StartWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastEditedBy");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("DiscountVouchers", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Orders.DeliveryMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DeliveryMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,27 +75,244 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5955), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 130, DateTimeKind.Unspecified).AddTicks(7995), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao hàng tiêu chuẩn",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5983), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 130, DateTimeKind.Unspecified).AddTicks(8028), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Giao hàng tiêu chuẩn"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5986), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 130, DateTimeKind.Unspecified).AddTicks(8031), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao hàng nhanh",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(5987), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 130, DateTimeKind.Unspecified).AddTicks(8032), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Giao hàng nhanh"
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.Order", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountApplyToProductType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("DiscountVoucherId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DiscountVoucherId1")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ProductTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("DiscountApplyToProductTypeId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DiscountVoucherId");
+
+                    b.HasIndex("DiscountVoucherId1");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.ToTable("DiscountApplyToProductTypes", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("DiscountVoucherId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTimeOffset>("EndWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal?>("MaximumDiscountValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinimumSpend")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTimeOffset>("StartWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("UsageLimitOverall")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsageLimitPerUser")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Value")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ValueType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VoucherType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.ToTable("DiscountVouchers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "VOUCHER15P500K1",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Nhận giảm giá 15%, tối đa ₫500k cho tổng giá trị đơn hàng của bạn.",
+                            EndWhen = new DateTimeOffset(new DateTime(2024, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            MaximumDiscountValue = 500000m,
+                            MinimumSpend = 100000m,
+                            Name = "Giảm giá 15%, tối đa ₫500k",
+                            StartWhen = new DateTimeOffset(new DateTime(2024, 6, 1, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            UsageLimitOverall = 100,
+                            UsageLimitPerUser = 1,
+                            Value = 0.15m,
+                            ValueType = 1,
+                            VoucherType = "Order"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "VOUCHER50K1",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Nhận giảm giá ₫50k cho tổng giá trị đơn hàng của bạn.",
+                            EndWhen = new DateTimeOffset(new DateTime(2024, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            MinimumSpend = 500000m,
+                            Name = "Giảm giá ₫50k",
+                            StartWhen = new DateTimeOffset(new DateTime(2024, 6, 1, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            UsageLimitOverall = 200,
+                            UsageLimitPerUser = 1,
+                            Value = 50000m,
+                            ValueType = 0,
+                            VoucherType = "Order"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "SHIP10P100K1",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Nhận giảm giá 80%, tối đa ₫30k cho phí vận chuyển.",
+                            EndWhen = new DateTimeOffset(new DateTime(2024, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            MaximumDiscountValue = 30000m,
+                            MinimumSpend = 59000m,
+                            Name = "Giảm giá 80%, tối đa ₫30k",
+                            StartWhen = new DateTimeOffset(new DateTime(2024, 6, 1, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            UsageLimitOverall = 150,
+                            UsageLimitPerUser = 1,
+                            Value = 0.8m,
+                            ValueType = 1,
+                            VoucherType = "Shipping"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "SHIP50K1",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Nhận giảm giá ₫15k cho phí vận chuyển.",
+                            EndWhen = new DateTimeOffset(new DateTime(2024, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            MinimumSpend = 50000m,
+                            Name = "Giảm giá ₫15k phí vận chuyển",
+                            StartWhen = new DateTimeOffset(new DateTime(2024, 6, 1, 7, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 7, 0, 0, 0)),
+                            UsageLimitOverall = 300,
+                            UsageLimitPerUser = 2,
+                            Value = 15000m,
+                            ValueType = 0,
+                            VoucherType = "Shipping"
+                        });
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,9 +345,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<int>("DeliveryMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DiscountVoucherId")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset?>("DueWhen")
                         .HasColumnType("datetimeoffset");
 
@@ -226,16 +373,22 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset?>("PickingCompletedWhen")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("PriceDiscountVoucherId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ShippingAddressId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("ShippingDiscountVoucherId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ShippingFee")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Subtotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TaxRate")
                         .HasPrecision(18, 2)
@@ -249,13 +402,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasIndex("DeliveryMethodId");
 
-                    b.HasIndex("DiscountVoucherId");
-
                     b.HasIndex("LastEditedBy");
 
                     b.HasIndex("PaymentMethodId");
 
+                    b.HasIndex("PriceDiscountVoucherId");
+
                     b.HasIndex("ShippingAddressId");
+
+                    b.HasIndex("ShippingDiscountVoucherId");
 
                     b.ToTable("Orders", (string)null);
 
@@ -277,9 +432,10 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2023, 2, 21, 20, 4, 55, 286, DateTimeKind.Unspecified).AddTicks(4440), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 2, 22, 20, 4, 55, 286, DateTimeKind.Unspecified).AddTicks(4440), new TimeSpan(0, 7, 0, 0, 0)),
+                            PriceDiscountVoucherId = 1,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Delivered",
-                            Subtotal = 126000m,
                             TaxRate = 0m
                         },
                         new
@@ -301,8 +457,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 8, 15, 5, 27, 0, 814, DateTimeKind.Unspecified).AddTicks(810), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingDiscountVoucherId = 4,
+                            ShippingFee = 15000m,
                             Status = "Received",
-                            Subtotal = 18000m,
                             TaxRate = 0m
                         },
                         new
@@ -322,9 +479,10 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2022, 12, 16, 23, 8, 22, 354, DateTimeKind.Unspecified).AddTicks(9620), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 12, 17, 23, 8, 22, 354, DateTimeKind.Unspecified).AddTicks(9620), new TimeSpan(0, 7, 0, 0, 0)),
+                            PriceDiscountVoucherId = 2,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Delivered",
-                            Subtotal = 301500m,
                             TaxRate = 0m
                         },
                         new
@@ -345,8 +503,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 4, 14, 4, 51, 18, 409, DateTimeKind.Unspecified).AddTicks(1730), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingDiscountVoucherId = 3,
+                            ShippingFee = 6000m,
                             Status = "Delivered",
-                            Subtotal = 754800m,
                             TaxRate = 0m
                         },
                         new
@@ -367,8 +526,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 12, 12, 18, 26, 47, 381, DateTimeKind.Unspecified).AddTicks(7680), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Shipped",
-                            Subtotal = 541600m,
                             TaxRate = 0m
                         },
                         new
@@ -387,8 +546,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2022, 2, 27, 11, 53, 20, 558, DateTimeKind.Unspecified).AddTicks(7420), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 1,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Pending",
-                            Subtotal = 198000m,
                             TaxRate = 0m
                         },
                         new
@@ -410,8 +569,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 9, 26, 21, 59, 50, 477, DateTimeKind.Unspecified).AddTicks(9000), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Received",
-                            Subtotal = 286200m,
                             TaxRate = 0m
                         },
                         new
@@ -432,8 +591,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 1, 27, 5, 52, 51, 821, DateTimeKind.Unspecified).AddTicks(5390), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Delivered",
-                            Subtotal = 1020000m,
                             TaxRate = 0m
                         },
                         new
@@ -452,8 +611,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2024, 2, 15, 9, 36, 58, 867, DateTimeKind.Unspecified).AddTicks(390), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 1,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Processing",
-                            Subtotal = 499500m,
                             TaxRate = 0m
                         },
                         new
@@ -474,8 +633,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 2, 29, 4, 17, 18, 577, DateTimeKind.Unspecified).AddTicks(9090), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Delivered",
-                            Subtotal = 171000m,
                             TaxRate = 0m
                         },
                         new
@@ -496,8 +655,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 7, 10, 4, 53, 34, 917, DateTimeKind.Unspecified).AddTicks(4990), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Shipped",
-                            Subtotal = 1461000m,
                             TaxRate = 0m
                         },
                         new
@@ -516,8 +675,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2024, 2, 18, 20, 41, 11, 372, DateTimeKind.Unspecified).AddTicks(2310), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 2,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Processing",
-                            Subtotal = 2157900m,
                             TaxRate = 0m
                         },
                         new
@@ -538,8 +697,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 6, 20, 3, 37, 6, 285, DateTimeKind.Unspecified).AddTicks(6660), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Shipped",
-                            Subtotal = 94500m,
                             TaxRate = 0m
                         },
                         new
@@ -558,8 +717,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2022, 2, 6, 20, 54, 18, 599, DateTimeKind.Unspecified).AddTicks(7440), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 2,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Pending",
-                            Subtotal = 1190000m,
                             TaxRate = 0m
                         },
                         new
@@ -581,8 +740,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 6, 20, 14, 47, 8, 989, DateTimeKind.Unspecified).AddTicks(8270), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Received",
-                            Subtotal = 63000m,
                             TaxRate = 0m
                         },
                         new
@@ -604,8 +763,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 3, 28, 3, 2, 10, 276, DateTimeKind.Unspecified).AddTicks(8450), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Received",
-                            Subtotal = 189000m,
                             TaxRate = 0m
                         },
                         new
@@ -627,8 +786,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 1, 13, 12, 23, 40, 995, DateTimeKind.Unspecified).AddTicks(4620), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Received",
-                            Subtotal = 311400m,
                             TaxRate = 0m
                         },
                         new
@@ -647,8 +806,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             OrderWhen = new DateTimeOffset(new DateTime(2023, 10, 13, 5, 51, 13, 33, DateTimeKind.Unspecified).AddTicks(9820), new TimeSpan(0, 7, 0, 0, 0)),
                             PaymentMethodId = 2,
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Processing",
-                            Subtotal = 144000m,
                             TaxRate = 0m
                         },
                         new
@@ -669,8 +828,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 9, 1, 0, 34, 46, 300, DateTimeKind.Unspecified).AddTicks(3010), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Delivered",
-                            Subtotal = 220500m,
                             TaxRate = 0m
                         },
                         new
@@ -691,13 +850,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PaymentMethodId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 12, 3, 12, 26, 52, 244, DateTimeKind.Unspecified).AddTicks(2840), new TimeSpan(0, 7, 0, 0, 0)),
                             ShippingAddressId = 1,
+                            ShippingFee = 30000m,
                             Status = "Shipped",
-                            Subtotal = 283500m,
                             TaxRate = 0m
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.OrderLine", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.OrderLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -711,10 +870,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<DateTimeOffset>("CreatedWhen")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DiscountVoucherId")
                         .HasColumnType("int");
@@ -761,13 +916,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 1,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 2, 22, 20, 4, 55, 286, DateTimeKind.Unspecified).AddTicks(4440), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 3,
-                            SkuId = 4,
+                            SkuId = 11,
                             UnitPrice = 31500m
                         },
                         new
@@ -775,13 +929,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 2,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 1,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 2, 22, 20, 4, 55, 286, DateTimeKind.Unspecified).AddTicks(4440), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 1,
-                            SkuId = 2,
+                            SkuId = 39,
                             UnitPrice = 31500m
                         },
                         new
@@ -789,13 +942,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 3,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 2,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 8, 15, 5, 27, 0, 814, DateTimeKind.Unspecified).AddTicks(810), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 1,
-                            SkuId = 8,
+                            SkuId = 29,
                             UnitPrice = 18000m
                         },
                         new
@@ -803,13 +955,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 4,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 3,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 12, 17, 23, 8, 22, 354, DateTimeKind.Unspecified).AddTicks(9620), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 8,
-                            SkuId = 8,
+                            SkuId = 29,
                             UnitPrice = 18000m
                         },
                         new
@@ -817,13 +968,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 5,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 3,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 12, 17, 23, 8, 22, 354, DateTimeKind.Unspecified).AddTicks(9620), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 5,
-                            SkuId = 2,
+                            SkuId = 9,
                             UnitPrice = 31500m
                         },
                         new
@@ -831,13 +981,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 6,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 4,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 4, 14, 4, 51, 18, 409, DateTimeKind.Unspecified).AddTicks(1730), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 6,
-                            SkuId = 2,
+                            SkuId = 13,
                             UnitPrice = 31500m
                         },
                         new
@@ -845,13 +994,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 7,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 4,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 4, 14, 4, 51, 18, 409, DateTimeKind.Unspecified).AddTicks(1730), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 2,
-                            SkuId = 9,
+                            SkuId = 34,
                             UnitPrice = 27900m
                         },
                         new
@@ -859,13 +1007,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 8,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 4,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 4, 14, 4, 51, 18, 409, DateTimeKind.Unspecified).AddTicks(1730), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 3,
-                            SkuId = 10,
+                            SkuId = 20,
                             UnitPrice = 170000m
                         },
                         new
@@ -873,13 +1020,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 9,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 5,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 12, 12, 18, 26, 47, 381, DateTimeKind.Unspecified).AddTicks(7680), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 2,
-                            SkuId = 10,
+                            SkuId = 30,
                             UnitPrice = 170000m
                         },
                         new
@@ -887,13 +1033,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 10,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 5,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 12, 12, 18, 26, 47, 381, DateTimeKind.Unspecified).AddTicks(7680), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 4,
-                            SkuId = 9,
+                            SkuId = 37,
                             UnitPrice = 27900m
                         },
                         new
@@ -901,7 +1046,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 11,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 5,
@@ -915,12 +1059,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 12,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 6,
                             Quantity = 5,
-                            SkuId = 8,
+                            SkuId = 27,
                             UnitPrice = 18000m
                         },
                         new
@@ -928,12 +1071,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 13,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 6,
                             Quantity = 6,
-                            SkuId = 5,
+                            SkuId = 24,
                             UnitPrice = 18000m
                         },
                         new
@@ -941,13 +1083,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 14,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 7,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 9, 26, 21, 59, 50, 477, DateTimeKind.Unspecified).AddTicks(9000), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 2,
-                            SkuId = 1,
+                            SkuId = 25,
                             UnitPrice = 31500m
                         },
                         new
@@ -955,13 +1096,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 15,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 7,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 9, 26, 21, 59, 50, 477, DateTimeKind.Unspecified).AddTicks(9000), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 8,
-                            SkuId = 9,
+                            SkuId = 23,
                             UnitPrice = 27900m
                         },
                         new
@@ -969,13 +1109,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 16,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 8,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 1, 27, 5, 52, 51, 821, DateTimeKind.Unspecified).AddTicks(5390), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 6,
-                            SkuId = 10,
+                            SkuId = 14,
                             UnitPrice = 170000m
                         },
                         new
@@ -983,12 +1122,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 17,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 9,
                             Quantity = 5,
-                            SkuId = 6,
+                            SkuId = 23,
                             UnitPrice = 18000m
                         },
                         new
@@ -996,12 +1134,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 18,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 9,
                             Quantity = 6,
-                            SkuId = 4,
+                            SkuId = 33,
                             UnitPrice = 31500m
                         },
                         new
@@ -1009,12 +1146,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 19,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 9,
                             Quantity = 7,
-                            SkuId = 3,
+                            SkuId = 12,
                             UnitPrice = 31500m
                         },
                         new
@@ -1022,13 +1158,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 20,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 10,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 2, 29, 4, 17, 18, 577, DateTimeKind.Unspecified).AddTicks(9090), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 6,
-                            SkuId = 7,
+                            SkuId = 16,
                             UnitPrice = 18000m
                         },
                         new
@@ -1036,13 +1171,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 21,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 10,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 2, 29, 4, 17, 18, 577, DateTimeKind.Unspecified).AddTicks(9090), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 2,
-                            SkuId = 4,
+                            SkuId = 16,
                             UnitPrice = 31500m
                         },
                         new
@@ -1050,13 +1184,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 22,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 11,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 7, 10, 4, 53, 34, 917, DateTimeKind.Unspecified).AddTicks(4990), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 6,
-                            SkuId = 10,
+                            SkuId = 37,
                             UnitPrice = 170000m
                         },
                         new
@@ -1064,13 +1197,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 23,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 11,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 7, 10, 4, 53, 34, 917, DateTimeKind.Unspecified).AddTicks(4990), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 10,
-                            SkuId = 3,
+                            SkuId = 23,
                             UnitPrice = 31500m
                         },
                         new
@@ -1078,13 +1210,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 24,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 11,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 7, 10, 4, 53, 34, 917, DateTimeKind.Unspecified).AddTicks(4990), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 7,
-                            SkuId = 8,
+                            SkuId = 34,
                             UnitPrice = 18000m
                         },
                         new
@@ -1092,12 +1223,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 25,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 12,
                             Quantity = 9,
-                            SkuId = 11,
+                            SkuId = 33,
                             UnitPrice = 180000m
                         },
                         new
@@ -1105,12 +1235,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 26,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 12,
                             Quantity = 3,
-                            SkuId = 10,
+                            SkuId = 40,
                             UnitPrice = 170000m
                         },
                         new
@@ -1118,12 +1247,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 27,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 12,
                             Quantity = 1,
-                            SkuId = 9,
+                            SkuId = 36,
                             UnitPrice = 27900m
                         },
                         new
@@ -1131,13 +1259,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 28,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 13,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 6, 20, 3, 37, 6, 285, DateTimeKind.Unspecified).AddTicks(6660), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 3,
-                            SkuId = 2,
+                            SkuId = 28,
                             UnitPrice = 31500m
                         },
                         new
@@ -1145,12 +1272,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 29,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 14,
                             Quantity = 7,
-                            SkuId = 10,
+                            SkuId = 38,
                             UnitPrice = 170000m
                         },
                         new
@@ -1158,13 +1284,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 30,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 15,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 6, 20, 14, 47, 8, 989, DateTimeKind.Unspecified).AddTicks(8270), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 2,
-                            SkuId = 4,
+                            SkuId = 11,
                             UnitPrice = 31500m
                         },
                         new
@@ -1172,13 +1297,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 31,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 16,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2024, 3, 28, 3, 2, 10, 276, DateTimeKind.Unspecified).AddTicks(8450), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 6,
-                            SkuId = 2,
+                            SkuId = 34,
                             UnitPrice = 31500m
                         },
                         new
@@ -1186,13 +1310,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 32,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 17,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 1, 13, 12, 23, 40, 995, DateTimeKind.Unspecified).AddTicks(4620), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 4,
-                            SkuId = 3,
+                            SkuId = 7,
                             UnitPrice = 31500m
                         },
                         new
@@ -1200,13 +1323,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 33,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 17,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 1, 13, 12, 23, 40, 995, DateTimeKind.Unspecified).AddTicks(4620), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 6,
-                            SkuId = 9,
+                            SkuId = 20,
                             UnitPrice = 27900m
                         },
                         new
@@ -1214,13 +1336,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 34,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 17,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2022, 1, 13, 12, 23, 40, 995, DateTimeKind.Unspecified).AddTicks(4620), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 1,
-                            SkuId = 6,
+                            SkuId = 30,
                             UnitPrice = 18000m
                         },
                         new
@@ -1228,12 +1349,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 35,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 18,
                             Quantity = 5,
-                            SkuId = 5,
+                            SkuId = 6,
                             UnitPrice = 18000m
                         },
                         new
@@ -1241,12 +1361,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 36,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 18,
                             Quantity = 3,
-                            SkuId = 7,
+                            SkuId = 29,
                             UnitPrice = 18000m
                         },
                         new
@@ -1254,13 +1373,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 37,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 19,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 9, 1, 0, 34, 46, 300, DateTimeKind.Unspecified).AddTicks(3010), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 7,
-                            SkuId = 4,
+                            SkuId = 27,
                             UnitPrice = 31500m
                         },
                         new
@@ -1268,18 +1386,17 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 38,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OrderId = 20,
                             PickingCompletedWhen = new DateTimeOffset(new DateTime(2023, 12, 3, 12, 26, 52, 244, DateTimeKind.Unspecified).AddTicks(2840), new TimeSpan(0, 7, 0, 0, 0)),
                             Quantity = 9,
-                            SkuId = 3,
+                            SkuId = 26,
                             UnitPrice = 31500m
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.PaymentMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.PaymentMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1332,27 +1449,27 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8280), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(368), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Thanh toán khi nhận hàng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8287), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(376), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Thanh toán khi nhận hàng"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8290), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(379), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Thanh toán qua thẻ",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(8291), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(380), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Thanh toán qua thẻ"
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.RefAddressType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.RefAddressType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1405,1249 +1522,145 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9592), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(1825), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Nhà riêng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9599), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(1833), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Nhà riêng"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9602), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(1836), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Văn phòng",
                             IsDeleted = false,
                             LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 860, DateTimeKind.Unspecified).AddTicks(9603), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 10, 131, DateTimeKind.Unspecified).AddTicks(1837), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Văn phòng"
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ProductTypeId");
+                        .HasColumnName("TransactionId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedBy")
+                    b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
+                    b.Property<string>("BankCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("BankTranNo")
+                        .IsRequired()
+                        .HasColumnType("varchar(260)");
+
+                    b.Property<string>("CardType")
+                        .IsRequired()
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrderInfo")
+                        .IsRequired()
+                        .HasColumnType("varchar(260)");
+
+                    b.Property<DateTimeOffset>("PayDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("ResponseCode")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastEditedBy")
+                    b.Property<int>("TransactionNo")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentProductTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductTypeCode")
+                    b.Property<string>("TransactionStatus")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex("DisplayName")
-                        .IsUnique();
+                    b.ToTable("Transactions", (string)null);
+                });
 
-                    b.HasIndex("LastEditedBy");
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.VoucherUsage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasIndex("ParentProductTypeId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.ToTable("ProductTypes", (string)null);
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UsedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VoucherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("VoucherUsageId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VoucherId");
+
+                    b.ToTable("VoucherUsages", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách viết bằng tiếng Việt",
-                            DisplayName = "Sách Tiếng Việt",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 1,
-                            ProductTypeCode = "sach-tieng-viet"
+                            OrderId = 1,
+                            UsedWhen = new DateTimeOffset(new DateTime(2023, 2, 21, 20, 4, 55, 286, DateTimeKind.Unspecified).AddTicks(4440), new TimeSpan(0, 0, 0, 0, 0)),
+                            UserId = 5,
+                            VoucherId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại văn phòng phẩm như bút, viết, tập vở",
-                            DisplayName = "Văn Phòng Phẩm",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 1,
-                            ProductTypeCode = "van-phong-pham"
+                            OrderId = 2,
+                            UsedWhen = new DateTimeOffset(new DateTime(2023, 8, 14, 5, 27, 0, 814, DateTimeKind.Unspecified).AddTicks(810), new TimeSpan(0, 0, 0, 0, 0)),
+                            UserId = 1,
+                            VoucherId = 4
                         },
                         new
                         {
                             Id = 3,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Đồ chơi các loại",
-                            DisplayName = "Đồ Chơi",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 1,
-                            ProductTypeCode = "do-choi"
+                            OrderId = 3,
+                            UsedWhen = new DateTimeOffset(new DateTime(2022, 12, 16, 23, 8, 22, 354, DateTimeKind.Unspecified).AddTicks(9620), new TimeSpan(0, 0, 0, 0, 0)),
+                            UserId = 1,
+                            VoucherId = 2
                         },
                         new
                         {
                             Id = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách Thiếu Nhi",
-                            DisplayName = "Thiếu Nhi",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 1,
-                            ProductTypeCode = "thieu-nhi"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại SGK và sách tham khảo",
-                            DisplayName = "Giáo Khoa - Tham Khảo",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 1,
-                            ProductTypeCode = "giao-khoa-tham-khao"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách Manga và Comic",
-                            DisplayName = "Manga - Comic",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 1,
-                            ProductTypeCode = "manga-comic"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại bút viết",
-                            DisplayName = "Bút - Viết",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 2,
-                            ProductTypeCode = "but-viet"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại dụng cụ học sinh dùng ở trường",
-                            DisplayName = "Dụng Cụ Học Sinh",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 2,
-                            ProductTypeCode = "dung-cu-hoc-sinh"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại bút viết",
-                            DisplayName = "Sản Phẩm Về Giấy",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 2,
-                            ProductTypeCode = "san-pham-ve-giay"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại thú bông và búp bê",
-                            DisplayName = "Búp Bê - Thú Bông",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 3,
-                            ProductTypeCode = "bup-be-thu-bong"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại mô hình lắp ghép",
-                            DisplayName = "Mô Hình",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 3,
-                            ProductTypeCode = "mo-hinh"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại board game",
-                            DisplayName = "Board Game",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 2,
-                            ParentProductTypeId = 3,
-                            ProductTypeCode = "board-game"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại truyện thiếu nhi",
-                            DisplayName = "Truyện Thiếu Nhi",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 4,
-                            ProductTypeCode = "truyen-thieu-nhi"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách tô màu và luyện chữ cho trẻ em",
-                            DisplayName = "Tô Màu - Luyện Chữ",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 4,
-                            ProductTypeCode = "to-mau-luyen-chu"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách tham khảo dành cho học sinh, sinh viên",
-                            DisplayName = "Sách Tham Khảo",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 5,
-                            ProductTypeCode = "sach-tham-khao"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách giáo khoa dành cho học sinh",
-                            DisplayName = "Sách Giáo Khoa",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 5,
-                            ProductTypeCode = "sach-giao-khoa"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách Manga",
-                            DisplayName = "Manga",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 6,
-                            ProductTypeCode = "manga"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại sách Comic",
-                            DisplayName = "Comic",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 6,
-                            ProductTypeCode = "comic"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại bút chì",
-                            DisplayName = "Bút Chì",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 7,
-                            ProductTypeCode = "but-chi"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại bút mực và bút máy",
-                            DisplayName = "Bút Mực - Bút Máy",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 7,
-                            ProductTypeCode = "but-muc-but-may"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại gôm và tẩy",
-                            DisplayName = "Gôm - Tẩy",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 8,
-                            ProductTypeCode = "gom-tay"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại thú bông",
-                            DisplayName = "Thú Bông",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 10,
-                            ProductTypeCode = "thu-bong"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Các loại búp bê",
-                            DisplayName = "Búp Bê",
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Level = 3,
-                            ParentProductTypeId = 10,
-                            ProductTypeCode = "bup-be"
+                            OrderId = 4,
+                            UsedWhen = new DateTimeOffset(new DateTime(2024, 4, 13, 4, 51, 18, 409, DateTimeKind.Unspecified).AddTicks(1730), new TimeSpan(0, 0, 0, 0, 0)),
+                            UserId = 1,
+                            VoucherId = 3
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastEditedBy");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("ProductTypeAttributes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Hình thức bìa"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "NXB"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Năm xuất bản"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Ngôn ngữ"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Số trang"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Thương hiệu"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Nơi sản xuất"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Chất liệu"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Độ tuổi"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Lớp"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Cấp học"
-                        });
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeMappingId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastEditedBy");
-
-                    b.HasIndex("ProductAttributeId");
-
-                    b.HasIndex("ProductTypeId");
-
-                    b.ToTable("ProductTypeAttributeMappings", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 1,
-                            ProductTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 2,
-                            ProductTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 3,
-                            ProductTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 4,
-                            ProductTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 5,
-                            ProductTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 6,
-                            ProductTypeId = 2
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 7,
-                            ProductTypeId = 2
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 8,
-                            ProductTypeId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 6,
-                            ProductTypeId = 3
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 7,
-                            ProductTypeId = 3
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 8,
-                            ProductTypeId = 3
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 9,
-                            ProductTypeId = 3
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 10,
-                            ProductTypeId = 16
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductAttributeId = 11,
-                            ProductTypeId = 16
-                        });
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeProductValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeProductValueId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AttributeValueId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttributeValueId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastEditedBy");
-
-                    b.HasIndex("ProductId", "AttributeValueId")
-                        .IsUnique();
-
-                    b.ToTable("ProductTypeAttributeProductValues", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AttributeValueId = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AttributeValueId = 2,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AttributeValueId = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AttributeValueId = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AttributeValueId = 5,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AttributeValueId = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            Id = 7,
-                            AttributeValueId = 6,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            Id = 8,
-                            AttributeValueId = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            AttributeValueId = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            Id = 10,
-                            AttributeValueId = 7,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            Id = 11,
-                            AttributeValueId = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 3
-                        },
-                        new
-                        {
-                            Id = 12,
-                            AttributeValueId = 8,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 3
-                        },
-                        new
-                        {
-                            Id = 13,
-                            AttributeValueId = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 3
-                        },
-                        new
-                        {
-                            Id = 14,
-                            AttributeValueId = 10,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 3
-                        },
-                        new
-                        {
-                            Id = 15,
-                            AttributeValueId = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 16,
-                            AttributeValueId = 11,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 17,
-                            AttributeValueId = 13,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 18,
-                            AttributeValueId = 14,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 19,
-                            AttributeValueId = 12,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 20,
-                            AttributeValueId = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 21,
-                            AttributeValueId = 15,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4
-                        },
-                        new
-                        {
-                            Id = 22,
-                            AttributeValueId = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        },
-                        new
-                        {
-                            Id = 23,
-                            AttributeValueId = 11,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        },
-                        new
-                        {
-                            Id = 24,
-                            AttributeValueId = 13,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        },
-                        new
-                        {
-                            Id = 25,
-                            AttributeValueId = 14,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        },
-                        new
-                        {
-                            Id = 26,
-                            AttributeValueId = 12,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        },
-                        new
-                        {
-                            Id = 27,
-                            AttributeValueId = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        },
-                        new
-                        {
-                            Id = 28,
-                            AttributeValueId = 15,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5
-                        });
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeValueId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ProductTypeAttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastEditedBy");
-
-                    b.HasIndex("ProductTypeAttributeId");
-
-                    b.HasIndex("Value")
-                        .IsUnique();
-
-                    b.ToTable("ProductTypeAttributeValues", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 1,
-                            Value = "Bìa mềm"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 2,
-                            Value = "Hà Nội"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 3,
-                            Value = "2019"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 4,
-                            Value = "Tiếng Việt"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 5,
-                            Value = "28"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 2,
-                            Value = "Văn Học"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 5,
-                            Value = "30"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 2,
-                            Value = "Đại Học Quốc Gia Hà Nội"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 3,
-                            Value = "2024"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 5,
-                            Value = "178"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 2,
-                            Value = "Giáo Dục Việt Nam"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 3,
-                            Value = "2023"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 10,
-                            Value = "7"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 11,
-                            Value = "Cấp 2"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductTypeAttributeId = 5,
-                            Value = "0"
-                        });
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Products.Author", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2698,70 +1711,169 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 1,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Alison Ritchie",
+                            Description = "Tác giả Luis Sepúlveda",
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Alison Ritchie"
+                            Name = "Luis Sepúlveda"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Alison Edgson",
+                            Description = "Tác giả Antoine De Saint-Exupéry",
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Alison Edgson"
+                            Name = "Antoine De Saint-Exupéry"
                         },
                         new
                         {
                             Id = 3,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Phan Thị",
+                            Description = "Tác giả B R O Group",
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Phan Thị"
+                            Name = "B R O Group"
                         },
                         new
                         {
                             Id = 4,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Alison Edgson",
+                            Description = "Tác giả Hồ Tâm",
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Alison Edgson"
+                            Name = "Hồ Tâm"
                         },
                         new
                         {
                             Id = 5,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Nhiều tác giả",
+                            Description = "Tác giả Fujiko F Fujio",
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Nhiều tác giả"
+                            Name = "Fujiko F Fujio"
                         },
                         new
                         {
                             Id = 6,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Bộ Giáo Dục Và Đào Tạo",
+                            Description = "Tác giả Yukihiro Mitani",
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Bộ Giáo Dục Và Đào Tạo"
+                            Name = "Yukihiro Mitani"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả Miyazaki Masaru",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Miyazaki Masaru"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả Cao Minh",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Cao Minh"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả Miyazaki Masaru",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Miyazaki Masaru"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả Diệp Hồng Vũ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Diệp Hồng Vũ"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả 	Từ Thính Phong",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "	Từ Thính Phong"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả 	J Krishnamurti",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "	J Krishnamurti"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả Vãn Tình",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Vãn Tình"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả 	Roxie Nafousi",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "	Roxie Nafousi"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Tác giả 	Minh Niệm",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "	Minh Niệm"
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.BookAuthor", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.BookAuthor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2832,13 +1944,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1,
+                            ProductId = 2,
                             WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = 3,
-                            AuthorId = 5,
+                            AuthorId = 3,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
@@ -2850,30 +1962,150 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 4,
-                            AuthorId = 6,
+                            AuthorId = 4,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4,
+                            ProductId = 6,
                             WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = 5,
+                            AuthorId = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 6,
                             AuthorId = 6,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 5,
+                            ProductId = 7,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AuthorId = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AuthorId = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AuthorId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AuthorId = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AuthorId = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AuthorId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AuthorId = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 14,
+                            AuthorId = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14,
+                            WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 15,
+                            AuthorId = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15,
                             WrittenWhen = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Product", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2942,14 +2174,14 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 1,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Gia Đình Thương Yêu - Một Ngày Của Tớ Và Bà\r\n\r\nBộ sách Gia đình thương yêu, với lời thơ hết sức ngọt ngào, tình cảm và đáng yêu không chỉ giúp các bạn nhỏ mở rộng từ vựng, biết cách diễn đạt câu mà còn học được cách yêu thương, thể hiện tình cảm đối với ông bà, bố mẹ của mình.\r\n\r\nGia đình thương yêu gồm 4 tập:\r\n\r\n- Một ngày của tớ và bố\r\n\r\n- Một ngày của tớ và mẹ\r\n\r\n- Một ngày của tớ và ông\r\n\r\n- Một ngày của tớ và bà\r\n\r\nMỗi tập kể về câu chuyện của bạn Gấu Con với những trải nghiệm đáng nhớ cũng gia đình của mình. Bên cạnh vần thơ đáng yêu, bộ sách cũng gây ấn tượng bởi hình ảnh minh hoạ đẹp, kích thích thị giác và trí tưởng tượng cho trẻ.\r\n\r\nMã hàng	8935212367677\r\nNgày Dự Kiến Phát Hành	20/05/2024\r\nTên Nhà Cung Cấp	Đinh Tị\r\nTác giả	Alison Ritchie, Alison Edgson\r\nNgười Dịch	Thành Đạt\r\nNXB	Hà Nội\r\nNăm XB	2024\r\nTrọng lượng (gr)	100\r\nKích Thước Bao Bì	25 x 20.5 x 0.2 cm\r\nSố trang	28\r\nHình thức	Bìa Mềm\r\nSản phẩm bán chạy nhất	Top 100 sản phẩm Truyện Đọc Thiếu Nhi bán chạy của tháng\r\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\r\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\r\nGia Đình Thương Yêu - Một Ngày Của Tớ Và Bà\r\n\r\nBộ sách Gia đình thương yêu, với lời thơ hết sức ngọt ngào, tình cảm và đáng yêu không chỉ giúp các bạn nhỏ mở rộng từ vựng, biết cách diễn đạt câu mà còn học được cách yêu thương, thể hiện tình cảm đối với ông bà, bố mẹ của mình.\r\n\r\nGia đình thương yêu gồm 4 tập:\r\n\r\n- Một ngày của tớ và bố\r\n\r\n- Một ngày của tớ và mẹ\r\n\r\n- Một ngày của tớ và ông\r\n\r\n- Một ngày của tớ và bà\r\n\r\nMỗi tập kể về câu chuyện của bạn Gấu Con với những trải nghiệm đáng nhớ cũng gia đình của mình. Bên cạnh vần thơ đáng yêu, bộ sách cũng gây ấn tượng bởi hình ảnh minh hoạ đẹp, kích thích thị giác và trí tưởng tượng cho trẻ.",
+                            Description = "Cô hải âu Kengah bị nhấn chìm trong váng dầu – thứ chất thải nguy hiểm mà những con người xấu xa bí mật đổ ra đại dương. Với nỗ lực đầy tuyệt vọng, cô bay vào bến cảng Hamburg và rơi xuống ban công của con mèo mun, to đùng, mập ú Zorba. Trong phút cuối cuộc đời, cô sinh ra một quả trứng và con mèo mun hứa với cô sẽ thực hiện ba lời hứa chừng như không tưởng với loài mèo:\n\nKhông ăn quả trứng.\nChăm sóc cho tới khi nó nở.\nDạy cho con hải âu bay.\n\nLời hứa của một con mèo cũng là trách nhiệm của toàn bộ mèo trên bến cảng, bởi vậy bè bạn của Zorba bao gồm ngài mèo Đại Tá đầy uy tín, mèo Secretario nhanh nhảu, mèo Einstein uyên bác, mèo Bốn Biển đầy kinh nghiệm đã chung sức giúp nó hoàn thành trách nhiệm. Tuy nhiên, việc chăm sóc, dạy dỗ một con hải âu đâu phải chuyện đùa, sẽ có hàng trăm rắc rối nảy sinh và cần có những kế hoạch đầy linh hoạt được bàn bạc kỹ càng…\n\nChuyện con mèo dạy hải âu bay là kiệt tác dành cho thiếu nhi của nhà văn Chi Lê nổi tiếng Luis Sepúlveda – tác giả của cuốn Lão già mê đọc truyện tình đã bán được 18 triệu bản khắp thế giới. Tác phẩm không chỉ là một câu chuyện ấm áp, trong sáng, dễ thương về loài vật mà còn chuyển tải thông điệp về trách nhiệm với môi trường, về sự sẻ chia và yêu thương cũng như ý nghĩa của những nỗ lực – “Chỉ những kẻ dám mới có thể bay”.\n\nCuốn sách mở đầu cho mùa hè với minh họa dễ thương, hài hước là món quà dành cho mọi trẻ em và người lớn.\n\nMã hàng	8935235222113\nTên Nhà Cung Cấp	Nhã Nam\nTác giả	Luis Sepúlveda\nNgười Dịch	Phương Huyên\nNXB	NXB Hội Nhà Văn\nNăm XB	2019\nTrọng lượng (gr)	150\nKích Thước Bao Bì	14 x 20.5\nSố trang	144\nHình thức	Bìa Mềm\nSản phẩm hiển thị trong	\nTuyển Tập Sách Tác Giả Luis Sepúlveda\nVNPAY\nSản phẩm bán chạy nhất	Top 100 sản phẩm Truyện Đọc Thiếu Nhi bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nCô hải âu Kengah bị nhấn chìm trong váng dầu – thứ chất thải nguy hiểm mà những con người xấu xa bí mật đổ ra đại dương. Với nỗ lực đầy tuyệt vọng, cô bay vào bến cảng Hamburg và rơi xuống ban công của con mèo mun, to đùng, mập ú Zorba. Trong phút cuối cuộc đời, cô sinh ra một quả trứng và con mèo mun hứa với cô sẽ thực hiện ba lời hứa chừng như không tưởng với loài mèo:\n\nKhông ăn quả trứng.\nChăm sóc cho tới khi nó nở.\nDạy cho con hải âu bay.\n\nLời hứa của một con mèo cũng là trách nhiệm của toàn bộ mèo trên bến cảng, bởi vậy bè bạn của Zorba bao gồm ngài mèo Đại Tá đầy uy tín, mèo Secretario nhanh nhảu, mèo Einstein uyên bác, mèo Bốn Biển đầy kinh nghiệm đã chung sức giúp nó hoàn thành trách nhiệm. Tuy nhiên, việc chăm sóc, dạy dỗ một con hải âu đâu phải chuyện đùa, sẽ có hàng trăm rắc rối nảy sinh và cần có những kế hoạch đầy linh hoạt được bàn bạc kỹ càng…\n\nChuyện con mèo dạy hải âu bay là kiệt tác dành cho thiếu nhi của nhà văn Chi Lê nổi tiếng Luis Sepúlveda – tác giả của cuốn Lão già mê đọc truyện tình đã bán được 18 triệu bản khắp thế giới. Tác phẩm không chỉ là một câu chuyện ấm áp, trong sáng, dễ thương về loài vật mà còn chuyển tải thông điệp về trách nhiệm với môi trường, về sự sẻ chia và yêu thương cũng như ý nghĩa của những nỗ lực – “Chỉ những kẻ dám mới có thể bay”.\n\nCuốn sách mở đầu cho mùa hè với minh họa dễ thương, hài hước là món quà dành cho mọi trẻ em và người lớn.",
                             IsActive = true,
                             IsBook = true,
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Gia Đình Thương Yêu",
-                            ProductTypeId = 13,
+                            Name = "Chuyện Con Mèo Dạy Hải Âu Bay (Tái Bản 2019)",
+                            ProductTypeId = 3,
                             UnitMeasureId = 1
                         },
                         new
@@ -2957,14 +2189,14 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 2,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Tô Màu Bốn Mùa - Xuân - Tập 1\r\n\r\nSách Tô Màu Bốn Mùa giúp bé thỏa sức sáng tạo, tô màu để tạo nên những sắc màu bốn mùa Xuân - Hạ - Thu - Đông sinh động, vui tươi theo sở thích và hiểu biết của riêng mình.\r\n\r\nCác tranh trong sách được tô sẵn một số chi tiết để khơi gợi cảm hứng, tư duy mỹ thuật, phát huy trí tưởng tượng của các em. Không chỉ là sách tô màu, các hình ảnh sinh động trong sách còn giúp các em nhận biết, quan sát các hiện tượng, sự việc, sự kiện xảy ra trong từng mùa như:\r\n\r\n- Mùa xuân hoa lá đâm chồi nảy lộc\r\n\r\n- Mùa hè toả nắng yêu thương\r\n\r\n- Mùa thu lá vàng ánh lên niềm hạnh phúc\r\n\r\n- Mùa đông sắc màu giáng sinh\r\n\r\nĐồng thời tô màu là hoạt động tăng khả năng biểu đạt cảm xúc của trẻ thông qua các màu sắc từ những tập sách tô màu. Vì vậy, tô màu không chỉ là một trò chơi mà còn là môn học cần thiết dành cho bé.\r\n\r\nMã hàng	8936071294357\r\nTên Nhà Cung Cấp	Cty Phan Thị\r\nTác giả	Phan Thị\r\nNXB	Văn Học\r\nNăm XB	2024\r\nTrọng lượng (gr)	150\r\nKích Thước Bao Bì	24 x 16 x 0.5 cm\r\nSố trang	30\r\nHình thức	Bìa Mềm\r\nSản phẩm bán chạy nhất	Top 100 sản phẩm Tô màu, luyện chữ bán chạy của tháng\r\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\r\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\r\nTô Màu Bốn Mùa - Xuân - Tập 1\r\n\r\nSách Tô Màu Bốn Mùa giúp bé thỏa sức sáng tạo, tô màu để tạo nên những sắc màu bốn mùa Xuân - Hạ - Thu - Đông sinh động, vui tươi theo sở thích và hiểu biết của riêng mình.\r\n\r\nCác tranh trong sách được tô sẵn một số chi tiết để khơi gợi cảm hứng, tư duy mỹ thuật, phát huy trí tưởng tượng của các em. Không chỉ là sách tô màu, các hình ảnh sinh động trong sách còn giúp các em nhận biết, quan sát các hiện tượng, sự việc, sự kiện xảy ra trong từng mùa như:\r\n\r\n- Mùa xuân hoa lá đâm chồi nảy lộc\r\n\r\n- Mùa hè toả nắng yêu thương\r\n\r\n- Mùa thu lá vàng ánh lên niềm hạnh phúc\r\n\r\n- Mùa đông sắc màu giáng sinh\r\n\r\nĐồng thời tô màu là hoạt động tăng khả năng biểu đạt cảm xúc của trẻ thông qua các màu sắc từ những tập sách tô màu. Vì vậy, tô màu không chỉ là một trò chơi mà còn là môn học cần thiết dành cho bé.",
+                            Description = "LẦN ĐẦU TIÊN CÓ BẢN QUYỀN CHÍNH THỨC TẠI VIỆT NAM\n\nHoàng tử bé được viết ở New York trong những ngày tác giả sống lưu vong và được xuất bản lần đầu tiên tại New York vào năm 1943, rồi đến năm 1946 mới được xuất bản tại Pháp. Không nghi ngờ gì, đây là tác phẩm nổi tiếng nhất, được đọc nhiều nhất và cũng được yêu mến nhất của Saint-Exupéry. Cuốn sách được bình chọn là tác phẩm hay nhất thế kỉ 20 ở Pháp, đồng thời cũng là cuốn sách Pháp được dịch và được đọc nhiều nhất trên thế giới. Với 250 ngôn ngữ dịch khác nhau kể cả phương ngữ cùng hơn 200 triệu bản in trên toàn thế giới, Hoàng tử bé được coi là một trong những tác phẩm bán chạy nhất của nhân loại. \n\nỞ Việt Nam, Hoàng tử bé được dịch và xuất bản khá sớm. Từ năm 1966 đã có  đồng thời hai bản dịch: Hoàng tử bé của Bùi Giáng do An Tiêm xuất bản và Cậu hoàng con của Trần Thiện Đạo do Khai Trí xuất bản. Từ đó đến nay đã có thêm nhiều bản dịch Hoàng tử bé mới của các dịch giả khác nhau. Bản dịch Hoàng tử bé lần này, xuất bản nhân dịp kỷ niệm 70 năm Hoàng tử bé ra đời, cũng là ấn bản đầu tiên được Gallimard chính thức chuyển nhượng bản quyền tại Việt Nam, hy vọng sẽ góp phần làm phong phú thêm việc dịch và tiếp nhận tác phẩm quan trọng này với các thế hệ độc giả. \n\nTôi cứ sống cô độc như vậy, chẳng có một ai để chuyện trò thật sự, cho tới một lần gặp nạn ở sa mạc Sahara cách đây sáu năm. Có thứ gì đó bị vỡ trong động cơ máy bay. Và vì ở bên cạnh chẳng có thợ máy cũng như hành khách nào nên một mình tôi sẽ phải cố mà sửa cho bằng được vụ hỏng hóc nan giải này. Với tôi đó thật là một việc sống còn. Tôi chỉ có vừa đủ nước để uống trong tám ngày.\n\nThế là đêm đầu tiên tôi ngủ trên cát, cách mọi chốn có người ở cả nghìn dặm xa. Tôi cô đơn hơn cả một kẻ đắm tàu sống sót trên bè giữa đại dương. Thế nên các bạn cứ tưởng tượng tôi đã ngạc nhiên làm sao, khi ánh ngày vừa rạng, thì một giọng nói nhỏ nhẹ lạ lùng đã đánh thức tôi. Giọng ấy nói:\n\n“Ông làm ơn… vẽ cho tôi một con cừu!”\n\n- Trích \"Hoàng tử bé\"\n\nNhận định\n\n“Đây là một câu chuyện tự nó đã rất đáng yêu, ẩn giấu một triết lý quá đỗi nhẹ nhàng và thi vị.”\n\n- The New York Times\n\nMã hàng	8935235221734\nTên Nhà Cung Cấp	Nhã Nam\nTác giả	Antoine De Saint-Exupéry\nNgười Dịch	Trác Phong\nNXB	Hội Nhà Văn\nNăm XB	2022\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	120\nKích Thước Bao Bì	23 x 15 cm\nSố trang	102\nHình thức	Bìa Mềm\nSản phẩm hiển thị trong	\nTop sách được phiên dịch nhiều nhất\nVNPAY\nSản phẩm bán chạy nhất	Top 100 sản phẩm Truyện Đọc Thiếu Nhi bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nLẦN ĐẦU TIÊN CÓ BẢN QUYỀN CHÍNH THỨC TẠI VIỆT NAM\n\nHoàng tử bé được viết ở New York trong những ngày tác giả sống lưu vong và được xuất bản lần đầu tiên tại New York vào năm 1943, rồi đến năm 1946 mới được xuất bản tại Pháp. Không nghi ngờ gì, đây là tác phẩm nổi tiếng nhất, được đọc nhiều nhất và cũng được yêu mến nhất của Saint-Exupéry. Cuốn sách được bình chọn là tác phẩm hay nhất thế kỉ 20 ở Pháp, đồng thời cũng là cuốn sách Pháp được dịch và được đọc nhiều nhất trên thế giới. Với 250 ngôn ngữ dịch khác nhau kể cả phương ngữ cùng hơn 200 triệu bản in trên toàn thế giới, Hoàng tử bé được coi là một trong những tác phẩm bán chạy nhất của nhân loại. \n\nỞ Việt Nam, Hoàng tử bé được dịch và xuất bản khá sớm. Từ năm 1966 đã có  đồng thời hai bản dịch: Hoàng tử bé của Bùi Giáng do An Tiêm xuất bản và Cậu hoàng con của Trần Thiện Đạo do Khai Trí xuất bản. Từ đó đến nay đã có thêm nhiều bản dịch Hoàng tử bé mới của các dịch giả khác nhau. Bản dịch Hoàng tử bé lần này, xuất bản nhân dịp kỷ niệm 70 năm Hoàng tử bé ra đời, cũng là ấn bản đầu tiên được Gallimard chính thức chuyển nhượng bản quyền tại Việt Nam, hy vọng sẽ góp phần làm phong phú thêm việc dịch và tiếp nhận tác phẩm quan trọng này với các thế hệ độc giả. \n\nTôi cứ sống cô độc như vậy, chẳng có một ai để chuyện trò thật sự, cho tới một lần gặp nạn ở sa mạc Sahara cách đây sáu năm. Có thứ gì đó bị vỡ trong động cơ máy bay. Và vì ở bên cạnh chẳng có thợ máy cũng như hành khách nào nên một mình tôi sẽ phải cố mà sửa cho bằng được vụ hỏng hóc nan giải này. Với tôi đó thật là một việc sống còn. Tôi chỉ có vừa đủ nước để uống trong tám ngày.\n\nThế là đêm đầu tiên tôi ngủ trên cát, cách mọi chốn có người ở cả nghìn dặm xa. Tôi cô đơn hơn cả một kẻ đắm tàu sống sót trên bè giữa đại dương. Thế nên các bạn cứ tưởng tượng tôi đã ngạc nhiên làm sao, khi ánh ngày vừa rạng, thì một giọng nói nhỏ nhẹ lạ lùng đã đánh thức tôi. Giọng ấy nói:\n\n“Ông làm ơn… vẽ cho tôi một con cừu!”\n\n- Trích \"Hoàng tử bé\"\n\nNhận định\n\n“Đây là một câu chuyện tự nó đã rất đáng yêu, ẩn giấu một triết lý quá đỗi nhẹ nhàng và thi vị.”\n\n- The New York Times",
                             IsActive = true,
                             IsBook = true,
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Tô Màu Bốn Mùa",
-                            ProductTypeId = 14,
+                            Name = "Hoàng Tử Bé (Tái Bản)",
+                            ProductTypeId = 3,
                             UnitMeasureId = 1
                         },
                         new
@@ -2972,14 +2204,14 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 3,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Atlat Địa lí Việt Nam (Theo Chương Trình Giáo Dục Phổ Thông 2118)\r\n\r\nBản đồ là phương tiện giảng dạy và học tập điạ lý không thể thiếu trong nhà trường phổ thông. Cùng với sách giáo khoa, Atlat địa lí Việt Nam là nguồn cung cấp kiến thức, thông tin tổng hợp và hệ thống giúp giáo viên đổi mới phương pháp dạy học, hỗ trợ học.\r\n\r\nĐể đáp ứng nhu cầu bức thiết đó, NXB Giáo dục Việt Nam trân trọng giới thiệu tập Atlat địa lý Việt Nam gồm 21 bản đồ, được in màu rõ nét, liên quan đến các lĩnh vực kinh tế - xã hội. Các bản đồ được xây dựng theo nguồn số liệu của Nhà xuất bản thống kê - Tổng cục thống kê. Đây là tài liệu được phép mang vào phòng thi tốt nghiệp THPT môn Địa lý do Bộ Giáo dục và Đào tạo quy định.\r\n\r\nNội dung gồm có:\r\n\r\n1. Kí hiệu chung\r\n\r\n2. Hành chính 4. Hình thể\r\n\r\n4. Địa khoáng sản\r\n\r\n5. Khí hậu\r\n\r\n6. Các hệ thống sông\r\n\r\n7. Các nhóm và các loại đât chính\r\n\r\n8. Thực vật và động vật\r\n\r\n9. Các miền tự nhiên\r\n\r\n11. Dân số\r\n\r\n11. Dân tộc\r\n\r\n12. Kinh tế chung\r\n\r\n14. Nông nghiệp chung\r\n\r\n14. Lâm nông và thuỷ sản\r\n\r\n15. Công nghiệp chung\r\n\r\n16. Các ngành công nghiệp trọng điểm\r\n\r\n17. Giao thông\r\n\r\n18. Thương mại\r\n\r\n19. Du lịch\r\n\r\n21. Vùng trunh du và miền núi Bắc Bộ, vùn Đồng Bằng Sông Hồng\r\n\r\n21. Vùng Bắc Trung Bộ\r\n\r\n22. Vùng Duyên Hải Nam Trung Bộ, Vùng Tây Nguyên\r\n\r\n24. Vùng Đông Nam Bộ, Vùng Đồng Bằng Sông Cửu Long\r\n\r\n25. Các vùng kinh tế trọng điểm\r\n\r\nNgoài ra, NXB Giáo dục Việt Nam đã biên soạn cuốn “Hướng dẫn sử dụng Atlat Địa lý Việt Nam” dùng cho học sinh THCS và THPT, ôn tập thi tốt nghiệp THPT, thi ĐH, CĐ và ôn luyện thi học sinh giỏi quốc gia.\r\n\r\nNội dung sách gồm ba phần:\r\n\r\nPhần 1: Một số kiến thức về phương pháp sử dụng bản đồ giáo khoa;\r\n\r\nPhần 2: Giới thiệu về Atlat Địa lý Việt Nam.\r\n\r\nPhần 4: Hướng dẫn sử dụng Atlat Địa lý Việt Nam.",
+                            Description = "LỚP HỌC MẬT NGỮ\n\nPHIÊN BẢN NHỎ MÀ CÓ VÕ!\n\nChào năm mới, Lớp Học Mật Ngữ sẽ trình làng một phiên bản siêu xịn sò: Nhẹ ví hơn, phát hành đều đặn hơn và gay cấn hơn, cùng khám phá nhé!\n\nThì ra mùa Xuân hoa nở là vì Lớp Học Mật Ngữ MỚI\n\nNếu trước đây cứ phải “cồn cào” đợi Lớp Học Mật Ngữ phát hành 2-3 tháng một lần, thì từ sau Tết Quý Mão, bạn sẽ được gặp bộ truyện tranh best seller này HẰNG THÁNG.\n\nPhải rồi, bạn không đọc nhầm đâu! Cứ mỗi giữa tháng chúng ta sẽ có cuộc hẹn với các cung hoàng đạo nhé! Số này là ngày 15/2, thì đến 15/3 chúng ta lại tay bắt mặt mừng nè.\n\nPhiên bản này cũng rất đáng yêu vì giá bìa nhẹ xiều chỉ 25 “con cá”, quá đã!\n\nÚ òa! Trở thành chiến thần “tay hòm chìa khóa”\n\nMời bạn đến với truyện tranh mới Hiệp hội viêm màng túi.\n\nĐang buồn vì bị bố mẹ cắt giảm tiền tiêu vặt, ấy vậy mà Song Tử nam còn vào lớp thông báo rằng “Ngân Hà luxury rồi”, giờ cái gì cũng lên giá, cũng đắt hết trơn... Biết bao giờ mới đủ tiền mua truyện, đồ chơi đây? Trong khi cả lớp “lan toả năng lượng” u ám thì Kim Ngưu nam vẫn bình thản ăn đùi gà chiên nước mắm. Các bạn đánh giá món này bây giờ rất đắt! Sao Kim Ngưu có tiền mua ăn sáng? Thế là mọi người nhờ vả Kim Ngưu chia sẻ bí quyết giàu sang, giúp các bạn vượt qua cuộc “khủng hoảng kinh tế” này...\n\nGét gô đến thế giới game siêu trí tuệ\n\nTập này không chỉ được học cách tiết kiệm và quản lý tiền, bạn còn có thể chơi game vui tẹt ga với hội cạ hoặc cả nhà tại “khu vui chơi” mang chủ đề của truyện. Nào là truy tìm từ vựng tiếng Anh, phân công nhiệm vụ cho heo đất rồi tham dự cuộc đua rinh Lớp Học Mật Ngữ nữa.\n\nChưa kể tập này còn được lì xì kèm phụ kiện mới siêu hot: Standee Lớp Học Mật Ngữ.\n\nMã hàng	8938507003304\nNhà Cung Cấp	BÁO TIỀN PHONG\nTác giả	B R O Group\nNXB	Báo Sinh Viên Việt Nam - Hoa Học Trò\nNăm XB	2023\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	80\nKích Thước Bao Bì	22 x 15 x 0.5 cm\nSố trang	100\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Truyện Tranh Thiếu Nhi bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nLỚP HỌC MẬT NGỮ\n\nPHIÊN BẢN NHỎ MÀ CÓ VÕ!\n\nChào năm mới, Lớp Học Mật Ngữ sẽ trình làng một phiên bản siêu xịn sò: Nhẹ ví hơn, phát hành đều đặn hơn và gay cấn hơn, cùng khám phá nhé!\n\nThì ra mùa Xuân hoa nở là vì Lớp Học Mật Ngữ MỚI\n\nNếu trước đây cứ phải “cồn cào” đợi Lớp Học Mật Ngữ phát hành 2-3 tháng một lần, thì từ sau Tết Quý Mão, bạn sẽ được gặp bộ truyện tranh best seller này HẰNG THÁNG.\n\nPhải rồi, bạn không đọc nhầm đâu! Cứ mỗi giữa tháng chúng ta sẽ có cuộc hẹn với các cung hoàng đạo nhé! Số này là ngày 15/2, thì đến 15/3 chúng ta lại tay bắt mặt mừng nè.\n\nPhiên bản này cũng rất đáng yêu vì giá bìa nhẹ xiều chỉ 25 “con cá”, quá đã!\n\nÚ òa! Trở thành chiến thần “tay hòm chìa khóa”\n\nMời bạn đến với truyện tranh mới Hiệp hội viêm màng túi.\n\nĐang buồn vì bị bố mẹ cắt giảm tiền tiêu vặt, ấy vậy mà Song Tử nam còn vào lớp thông báo rằng “Ngân Hà luxury rồi”, giờ cái gì cũng lên giá, cũng đắt hết trơn... Biết bao giờ mới đủ tiền mua truyện, đồ chơi đây? Trong khi cả lớp “lan toả năng lượng” u ám thì Kim Ngưu nam vẫn bình thản ăn đùi gà chiên nước mắm. Các bạn đánh giá món này bây giờ rất đắt! Sao Kim Ngưu có tiền mua ăn sáng? Thế là mọi người nhờ vả Kim Ngưu chia sẻ bí quyết giàu sang, giúp các bạn vượt qua cuộc “khủng hoảng kinh tế” này...\n\nGét gô đến thế giới game siêu trí tuệ\n\nTập này không chỉ được học cách tiết kiệm và quản lý tiền, bạn còn có thể chơi game vui tẹt ga với hội cạ hoặc cả nhà tại “khu vui chơi” mang chủ đề của truyện. Nào là truy tìm từ vựng tiếng Anh, phân công nhiệm vụ cho heo đất rồi tham dự cuộc đua rinh Lớp Học Mật Ngữ nữa.\n\nChưa kể tập này còn được lì xì kèm phụ kiện mới siêu hot: Standee Lớp Học Mật Ngữ.",
                             IsActive = true,
                             IsBook = true,
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Atlat Địa lí Việt Nam (Theo Chương Trình Giáo Dục Phổ Thông 2118)",
-                            ProductTypeId = 15,
+                            Name = "Lớp Học Mật Ngữ Phiên Bản Mới",
+                            ProductTypeId = 3,
                             UnitMeasureId = 1
                         },
                         new
@@ -2987,34 +2219,259 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 4,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Sách Giáo Khoa Bộ Lớp 7 - Chân Trời Sáng Tạo - Sách Bài Tập (Bộ 12 Cuốn) (2023)\r\n\r\nSTT	Tên hàng\r\n1	Bài tập Mĩ thuật 7 (Bản 1) (Chân Trời Sáng Tạo) (2023)\r\n2	Bài tập Hoạt động trải nghiệm, hướng nghiệp 7 (Bản 1) (Chân Trời Sáng Tạo) (2023)\r\n3	Bài tập Công nghệ 7 (Chân Trời Sáng Tạo) (2023)\r\n4	Bài tập Lịch sử và Địa lí 7 (Phần Địa lí) (Chân Trời Sáng Tạo) (2023)\r\n5	Bài tập Giáo dục công dân 7 (Chân Trời Sáng Tạo) (2023)\r\n6	Bài tập Khoa học tự nhiên 7 (Chân Trời Sáng Tạo) (2023)\r\n7	Bài tập Âm nhạc 7 (Chân Trời Sáng Tạo) (2023)\r\n8	Bài tập Lịch sử và Địa lí 7 (Phần Lịch sử) (Chân Trời Sáng Tạo) (2023)\r\n9	Bài tập Toán 7/1 (Chân Trời Sáng Tạo) (2023)\r\n10	Bài tập Toán 7/2 (Chân Trời Sáng Tạo) (2023)\r\n11	Bài tập Ngữ văn 7/1 (Chân Trời Sáng Tạo) (2023)\r\n12	Bài tập Ngữ văn 7/2 (Chân Trời Sáng Tạo) (2023)\r\nMã hàng	3300000027357\r\nCấp Độ/ Lớp	Lớp 7\r\nCấp Học	Cấp 2\r\nNhà Cung Cấp	Nhà xuất bản Giáo Dục\r\nTác giả	Bộ Giáo Dục Và Đào Tạo\r\nNXB	Giáo Dục Việt Nam\r\nNăm XB	2023\r\nNgôn Ngữ	Tiếng Việt\r\nTrọng lượng (gr)	1200\r\nKích Thước Bao Bì	24 x 17 x 3 cm\r\nHình thức	Bìa Mềm\r\nSản phẩm bán chạy nhất	Top 100 sản phẩm Giáo Khoa Lớp 7 bán chạy của tháng\r\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\r\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\r\nSách Giáo Khoa Bộ Lớp 7 - Chân Trời Sáng Tạo - Sách Bài Tập (Bộ 12 Cuốn) (2023)\r\n\r\nSTT	Tên hàng\r\n1	Bài tập Mĩ thuật 7 (Bản 1) (Chân Trời Sáng Tạo) (2023)\r\n2	Bài tập Hoạt động trải nghiệm, hướng nghiệp 7 (Bản 1) (Chân Trời Sáng Tạo) (2023)\r\n3	Bài tập Công nghệ 7 (Chân Trời Sáng Tạo) (2023)\r\n4	Bài tập Lịch sử và Địa lí 7 (Phần Địa lí) (Chân Trời Sáng Tạo) (2023)\r\n5	Bài tập Giáo dục công dân 7 (Chân Trời Sáng Tạo) (2023)\r\n6	Bài tập Khoa học tự nhiên 7 (Chân Trời Sáng Tạo) (2023)\r\n7	Bài tập Âm nhạc 7 (Chân Trời Sáng Tạo) (2023)\r\n8	Bài tập Lịch sử và Địa lí 7 (Phần Lịch sử) (Chân Trời Sáng Tạo) (2023)\r\n9	Bài tập Toán 7/1 (Chân Trời Sáng Tạo) (2023)\r\n10	Bài tập Toán 7/2 (Chân Trời Sáng Tạo) (2023)\r\n11	Bài tập Ngữ văn 7/1 (Chân Trời Sáng Tạo) (2023)\r\n12	Bài tập Ngữ văn 7/2 (Chân Trời Sáng Tạo) (2023)",
+                            Description = "Sản phẩm được làm từ chất liệu an toàn cho người sử dụng.\n\nMóc khóa có kích thước vừa vặn đáng yêu, có thể cho vào balo hoặc túi xách dễ dàng.\n\nSản phẩm được thiết kế hình Capybara nổi tiếng vô cùng dễ thương.\n\nMóc khóa giúp bạn bảo quản và cất giữ chìa khóa dễ dàng, không lo rơi rớt, thất lạc.\n\nBộ móc khóa không chỉ giữ chìa khóa mà còn có thể trang trí, tạo không khí tươi mới hơn.",
                             IsActive = true,
-                            IsBook = true,
+                            IsBook = false,
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Sách Giáo Khoa Bộ Lớp 7 - Chân Trời Sáng Tạo - Sách Bài Tập (Bộ 12 Cuốn) (Chuẩn)",
-                            ProductTypeId = 16,
-                            UnitMeasureId = 1
+                            Name = "Móc Khóa Capybara",
+                            ProductTypeId = 108,
+                            UnitMeasureId = 2
                         },
                         new
                         {
                             Id = 5,
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Sách Giáo Khoa Bộ Lớp 7 - Chân Trời Sáng Tạo - Sách Bài Học (Bộ 12 Cuốn) (2023) (Không Tin Học)\r\n\r\nBao gồm:\r\n\r\nSTT	Tên hàng\r\n1	Công nghệ 7 (Chân Trời Sáng Tạo) (2023)\r\n2	Giáo dục thể chất 7 (Chân Trời Sáng Tạo) (2023)\r\n3	Giáo dục công dân 7 (Chân Trời Sáng Tạo) (2023)\r\n4	Hoạt động trải nghiệm, hướng nghiệp 7 (Bản 1) (Chân Trời Sáng Tạo) (2023)\r\n5	Khoa học tự nhiên 7 (Chân Trời Sáng Tạo) (2023)\r\n6	Âm nhạc 7 (Chân Trời Sáng Tạo) (2023)\r\n7	Toán 7/1 (Chân Trời Sáng Tạo) (2023)\r\n8	Toán 7/2 (Chân Trời Sáng Tạo) (2023)\r\n9	Lịch sử và Địa lí 7 (Chân Trời Sáng Tạo) (2023)\r\n10	Ngữ văn 7/1 (Chân Trời Sáng Tạo) (2023)\r\n11	Ngữ văn 7/2 (Chân Trời Sáng Tạo) (2023)\r\n12	Mĩ thuật 7 (bản 1) (Chân Trời Sáng Tạo) (2023)\r\nMã hàng	3300000027333\r\nCấp Độ/ Lớp	Lớp 7\r\nCấp Học	Cấp 2\r\nNhà Cung Cấp	Nhà xuất bản Giáo Dục\r\nTác giả	Bộ Giáo Dục Và Đào Tạo\r\nNXB	Giáo Dục Việt Nam\r\nNăm XB	2023\r\nNgôn Ngữ	Tiếng Việt\r\nTrọng lượng (gr)	2500\r\nKích Thước Bao Bì	24 x 17 x 6 cm\r\nHình thức	Bìa Mềm\r\nSản phẩm bán chạy nhất	Top 100 sản phẩm Giáo Khoa Lớp 7 bán chạy của tháng\r\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\r\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\r\nSách Giáo Khoa Bộ Lớp 7 - Chân Trời Sáng Tạo - Sách Bài Học (Bộ 12 Cuốn) (2023) (Không Tin Học)\r\n\r\nBao gồm:\r\n\r\nSTT	Tên hàng\r\n1	Công nghệ 7 (Chân Trời Sáng Tạo) (2023)\r\n2	Giáo dục thể chất 7 (Chân Trời Sáng Tạo) (2023)\r\n3	Giáo dục công dân 7 (Chân Trời Sáng Tạo) (2023)\r\n4	Hoạt động trải nghiệm, hướng nghiệp 7 (Bản 1) (Chân Trời Sáng Tạo) (2023)\r\n5	Khoa học tự nhiên 7 (Chân Trời Sáng Tạo) (2023)\r\n6	Âm nhạc 7 (Chân Trời Sáng Tạo) (2023)\r\n7	Toán 7/1 (Chân Trời Sáng Tạo) (2023)\r\n8	Toán 7/2 (Chân Trời Sáng Tạo) (2023)\r\n9	Lịch sử và Địa lí 7 (Chân Trời Sáng Tạo) (2023)\r\n10	Ngữ văn 7/1 (Chân Trời Sáng Tạo) (2023)\r\n11	Ngữ văn 7/2 (Chân Trời Sáng Tạo) (2023)\r\n12	Mĩ thuật 7 (bản 1) (Chân Trời Sáng Tạo) (2023)",
+                            Description = "Gương Mini Cầm Tay 2 Mặt Hình Capybara - WanLongDa ZT185-2549A1-3với bề mặt hình tròn, sáng, rõ nét được bao quanh bởi lớp inox chắc chắn, có độ bền cao giúp giữ cho gương không bị vỡ khi rơi.\n\nSản phẩm là một trong những vật dụng không thể thiếu của các bạn gái hiện đại. Một chiếc gương nhỏ xinh sẽ giúp các cô gái tự tin hơn để thể hiện bản thân.\n\nNgoài ra, có thể sử dụng sản phẩm để làm quà tặng cho bạn bè, người thân trong các dịp đặc biệt.",
+                            IsActive = true,
+                            IsBook = false,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Gương Mini Cầm Tay 2 Mặt Hình Capybara  - WanLongDa ZT185-2549A1-3 - Hình Tròn Vàng",
+                            ProductTypeId = 107,
+                            UnitMeasureId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Trong xã hội ngày nay, việc trang bị cho trẻ em những kiến thức an toàn để tự bảo vệ bản thân là điều hết sức cần thiết. Thấu hiểu điều này, bộ sách Giáo dục đầu đời cho trẻ - Những bài học tự bảo vệ bản thân đã ra đời nhằm giúp các em nhận thức rõ về cơ thể mình, bồi dưỡng những quan niệm đúng đắn về giới tính, đồng thời nắm được những nguy cơ tiềm tàng trong cuộc sống, tránh xa mọi hiểm nguy.\n\nVới nội dung được lồng ghép tinh tế kèm tranh minh họa sinh động, chắc chắn các em sẽ tiếp thu những điều bổ ích trong sách rất nhanh và dễ dàng áp dụng vào cuộc sống đấy! Hãy mở sách và khám phá nhé!\n\nMã hàng	8935212362450\nTên Nhà Cung Cấp	Đinh Tị\nTác giả	Hồ Tâm\nNgười Dịch	Nguyễn Đức Vịnh\nNXB	Thanh Niên\nNăm XB	2023\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	133\nKích Thước Bao Bì	20.5 x 18.5 x 0.4 cm\nSố trang	48\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Sách Tranh Kỹ Năng Sống Cho Trẻ bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nGiáo Dục Đầu Đời Cho Trẻ - Những Bài Học Tự Bảo Vệ Bản Thân - Bố Mẹ Luôn Yêu Con\n\nTrong xã hội ngày nay, việc trang bị cho trẻ em những kiến thức an toàn để tự bảo vệ bản thân là điều hết sức cần thiết. Thấu hiểu điều này, bộ sách Giáo dục đầu đời cho trẻ - Những bài học tự bảo vệ bản thân đã ra đời nhằm giúp các em nhận thức rõ về cơ thể mình, bồi dưỡng những quan niệm đúng đắn về giới tính, đồng thời nắm được những nguy cơ tiềm tàng trong cuộc sống, tránh xa mọi hiểm nguy.\n\nVới nội dung được lồng ghép tinh tế kèm tranh minh họa sinh động, chắc chắn các em sẽ tiếp thu những điều bổ ích trong sách rất nhanh và dễ dàng áp dụng vào cuộc sống đấy! Hãy mở sách và khám phá nhé!",
                             IsActive = true,
                             IsBook = true,
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Sách Giáo Khoa Bộ Lớp 7 - Chân Trời Sáng Tạo - Sách Bài Học (Bộ 12 Cuốn) (Chuẩn) (Không Tin Học)",
+                            Name = "Giáo Dục Đầu Đời Cho Trẻ - Những Bài Học Tự Bảo Vệ Bản Thân",
+                            ProductTypeId = 4,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Vua của thế giới yêu ma gửi thư tuyên chiến đến toàn nhân loại!\n\nĐội quân Doraemon quyết tâm xâm nhập vào tận hang ổ của kẻ địch!",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Đội Quân Doraemon Đặc Biệt",
+                            ProductTypeId = 20,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Thiên Tài Bên Trái, Kẻ Điên Bên Phải\n\nNẾU MỘT NGÀY ANH THẤY TÔI ĐIÊN, THỰC RA CHÍNH LÀ ANH ĐIÊN ĐẤY!\n\nHỡi những con người đang oằn mình trong cuộc sống, bạn biết gì về thế giới của mình? Là vô vàn thứ lý thuyết được các bậc vĩ nhân kiểm chứng, là luật lệ, là cả nghìn thứ sự thật bọc trong cái lốt hiển nhiên, hay những triết lý cứng nhắc của cuộc đời?\n\nLại đây, vượt qua thứ nhận thức tẻ nhạt bị đóng kín bằng con mắt trần gian, khai mở toàn bộ suy nghĩ, để dòng máu trong bạn sục sôi trước những điều kỳ vĩ, phá vỡ mọi quy tắc. Thế giới sẽ gọi bạn là kẻ điên, nhưng vậy thì có sao? Ranh giới duy nhất giữa kẻ điên và thiên tài chẳng qua là một sợi chỉ mỏng manh: Thiên tài chứng minh được thế giới của mình, còn kẻ điên chưa kịp làm điều đó. Chọn trở thành một kẻ điên để vẫy vùng giữa nhân gian loạn thế hay khóa hết chúng lại, sống mãi một cuộc đời bình thường khiến bạn cảm thấy hạnh phúc hơn?\n\nThiên tài bên trái, kẻ điên bên phải là cuốn sách dành cho những người điên rồ, những kẻ gây rối, những người chống đối, những mảnh ghép hình tròn trong những ô vuông không vừa vặn… những người nhìn mọi thứ khác biệt, không quan tâm đến quy tắc. Bạn có thể đồng ý, có thể phản đối, có thể vinh danh hay lăng mạ họ, nhưng điều duy nhất bạn không thể làm là phủ nhận sự tồn tại của họ. Đó là những người luôn tạo ra sự thay đổi trong khi hầu hết con người chỉ sống rập khuôn như một cái máy. Đa số đều nghĩ họ thật điên rồ nhưng nếu nhìn ở góc khác, ta lại thấy họ thiên tài. Bởi chỉ những người đủ điên nghĩ rằng họ có thể thay đổi thế giới mới là những người làm được điều đó. \n\nChào mừng đến với thế giới của những kẻ điên.\n\nMã hàng	8936186546815\nTên Nhà Cung Cấp	AZ Việt Nam\nTác giả	Cao Minh\nNgười Dịch	Thu Hương\nNXB	NXB Thế Giới\nNăm XB	2021\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	450\nKích Thước Bao Bì	24 x 16 x 2.1 cm\nSố trang	424\nHình thức	Bìa Mềm\nSản phẩm hiển thị trong	\nAZ Việt Nam\nĐồ Chơi Cho Bé - Giá Cực Tốt\nTủ Sách Tâm Lý Kỹ Năng\nSản phẩm bán chạy nhất	Top 100 sản phẩm Tâm lý bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nThiên Tài Bên Trái, Kẻ Điên Bên Phải\n\nNẾU MỘT NGÀY ANH THẤY TÔI ĐIÊN, THỰC RA CHÍNH LÀ ANH ĐIÊN ĐẤY!\n\nHỡi những con người đang oằn mình trong cuộc sống, bạn biết gì về thế giới của mình? Là vô vàn thứ lý thuyết được các bậc vĩ nhân kiểm chứng, là luật lệ, là cả nghìn thứ sự thật bọc trong cái lốt hiển nhiên, hay những triết lý cứng nhắc của cuộc đời?\n\nLại đây, vượt qua thứ nhận thức tẻ nhạt bị đóng kín bằng con mắt trần gian, khai mở toàn bộ suy nghĩ, để dòng máu trong bạn sục sôi trước những điều kỳ vĩ, phá vỡ mọi quy tắc. Thế giới sẽ gọi bạn là kẻ điên, nhưng vậy thì có sao? Ranh giới duy nhất giữa kẻ điên và thiên tài chẳng qua là một sợi chỉ mỏng manh: Thiên tài chứng minh được thế giới của mình, còn kẻ điên chưa kịp làm điều đó. Chọn trở thành một kẻ điên để vẫy vùng giữa nhân gian loạn thế hay khóa hết chúng lại, sống mãi một cuộc đời bình thường khiến bạn cảm thấy hạnh phúc hơn?\n\nThiên tài bên trái, kẻ điên bên phải là cuốn sách dành cho những người điên rồ, những kẻ gây rối, những người chống đối, những mảnh ghép hình tròn trong những ô vuông không vừa vặn… những người nhìn mọi thứ khác biệt, không quan tâm đến quy tắc. Bạn có thể đồng ý, có thể phản đối, có thể vinh danh hay lăng mạ họ, nhưng điều duy nhất bạn không thể làm là phủ nhận sự tồn tại của họ. Đó là những người luôn tạo ra sự thay đổi trong khi hầu hết con người chỉ sống rập khuôn như một cái máy. Đa số đều nghĩ họ thật điên rồ nhưng nếu nhìn ở góc khác, ta lại thấy họ thiên tài. Bởi chỉ những người đủ điên nghĩ rằng họ có thể thay đổi thế giới mới là những người làm được điều đó. \n\nChào mừng đến với thế giới của những kẻ điên.",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Thiên Tài Bên Trái, Kẻ Điên Bên Phải (Tái Bản 2021)",
+                            ProductTypeId = 17,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Thuật Thao Túng\n\nBạn có muốn giành phần thắng cuối cùng trong các cuộc tranh luận?\n\nBạn có muốn dẹp đi bộ mặt kiêu ngạo của các đồng nghiệp xung quanh mình?\n\nBạn có muốn chứng minh rằng bạn đã đúng về mọi thứ?\n\nĐây là quyển sách chứa đựng đáp án mà bạn mong muốn. Thuật thao túng sẽ giúp bạn thuần thục các kỹ năng thuộc bộ môn “nghệ thuật” làm chủ cảm xúc, làm chủ vận mệnh, điều chỉnh tâm lý và đạt được thứ bạn muốn một cách tinh vi: thao túng tâm lý người đối diện, khiến họ hành động theo hướng ta mong đợi. Không những vậy, quyển sách còn giúp bạn nhìn nhận lại về định nghĩa thao túng, những tốt-xấu ẩn giấu đằng sau và giải đáp vấn đề đạo đức con người mà bạn luôn trăn trở khi thực hiện những hành vi này. Bật mí, con người khi vừa sinh ra đã làm một thao tác thao túng tâm lý người khác rồi đấy!\n\nCó thể bạn chưa biết, bạn đã và đang thao túng người khác hoặc bị người khác thao túng thông qua cử chỉ ngôn hành mỗi ngày, như-một-trò-đùa.\n\nCó thể bạn chưa biết, nạn nhân bị thao túng chưa chắc đã rơi vào tình thế bất lợi, nhưng rơi vào tình thế bất lợi chắc chắn đã bị thao túng.\n\nCó thể bạn chưa biết, người có đạo đức chắc chắn không thao túng người khác, nhưng kẻ thao túng người khác chưa chắc đã vô đạo đức.\n\nVới 10 kỹ năng và 37 thủ thuật, Thuật thao túng sẽ giúp bạn nhận ra và thoát khỏi những suy nghĩ xấu xa nơi tiềm thức của chính mình, đồng thời vạch trần góc tối ẩn giấu sau mỗi câu nói của đối phương, đưa những chiêu trò thao túng ấy ra ánh sáng để mọi người không lần nữa rơi vào cạm bẫy. Hơn cả, quyển sách này sẽ dẫn lối bạn trở thành một “nghệ nhân” thao túng có đạo đức.\n\nVề tác giả\n\nTác giả người Đức Wladislaw Jachtchenko - diễn giả hàng đầu châu Âu, người sáng lập Học viện Argumentorik giảng dạy về giao tiếp - dạy bạn cách giao tiếp phù hợp để đạt được điều bạn muốn.\n\nMã hàng	8935325009006\nTên Nhà Cung Cấp	AZ Việt Nam\nTác giả	Wladislaw Jachtchenko\nNgười Dịch	Vũ Trung Phi Yến\nNXB	Thế Giới\nNăm XB	2022\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	350\nKích Thước Bao Bì	20 x 14.5 cm\nSố trang	344\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Tâm lý bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nThuật Thao Túng\n\nBạn có muốn giành phần thắng cuối cùng trong các cuộc tranh luận?\n\nBạn có muốn dẹp đi bộ mặt kiêu ngạo của các đồng nghiệp xung quanh mình?\n\nBạn có muốn chứng minh rằng bạn đã đúng về mọi thứ?\n\nĐây là quyển sách chứa đựng đáp án mà bạn mong muốn. Thuật thao túng sẽ giúp bạn thuần thục các kỹ năng thuộc bộ môn “nghệ thuật” làm chủ cảm xúc, làm chủ vận mệnh, điều chỉnh tâm lý và đạt được thứ bạn muốn một cách tinh vi: thao túng tâm lý người đối diện, khiến họ hành động theo hướng ta mong đợi. Không những vậy, quyển sách còn giúp bạn nhìn nhận lại về định nghĩa thao túng, những tốt-xấu ẩn giấu đằng sau và giải đáp vấn đề đạo đức con người mà bạn luôn trăn trở khi thực hiện những hành vi này. Bật mí, con người khi vừa sinh ra đã làm một thao tác thao túng tâm lý người khác rồi đấy!\n\nCó thể bạn chưa biết, bạn đã và đang thao túng người khác hoặc bị người khác thao túng thông qua cử chỉ ngôn hành mỗi ngày, như-một-trò-đùa.\n\nCó thể bạn chưa biết, nạn nhân bị thao túng chưa chắc đã rơi vào tình thế bất lợi, nhưng rơi vào tình thế bất lợi chắc chắn đã bị thao túng.\n\nCó thể bạn chưa biết, người có đạo đức chắc chắn không thao túng người khác, nhưng kẻ thao túng người khác chưa chắc đã vô đạo đức.\n\nVới 10 kỹ năng và 37 thủ thuật, Thuật thao túng sẽ giúp bạn nhận ra và thoát khỏi những suy nghĩ xấu xa nơi tiềm thức của chính mình, đồng thời vạch trần góc tối ẩn giấu sau mỗi câu nói của đối phương, đưa những chiêu trò thao túng ấy ra ánh sáng để mọi người không lần nữa rơi vào cạm bẫy. Hơn cả, quyển sách này sẽ dẫn lối bạn trở thành một “nghệ nhân” thao túng có đạo đức.\n\nVề tác giả\n\nTác giả người Đức Wladislaw Jachtchenko - diễn giả hàng đầu châu Âu, người sáng lập Học viện Argumentorik giảng dạy về giao tiếp - dạy bạn cách giao tiếp phù hợp để đạt được điều bạn muốn.",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Thuật Thao Túng - Góc Tối Ẩn Sau Mỗi Câu Nói",
+                            ProductTypeId = 17,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "TÂM LÝ HỌC TỘI PHẠM - PHÁC HỌA CHÂN DUNG KẺ PHẠM TỘI\n\nTội phạm, nhất là những vụ án mạng, luôn là một chủ đề thu hút sự quan tâm của công chúng, khơi gợi sự hiếu kỳ của bất cứ ai. Một khi đã bắt đầu theo dõi vụ án, hẳn bạn không thể không quan tâm tới kết cục, đặc biệt là cách thức và động cơ của kẻ sát nhân, từ những vụ án phạm vi hẹp cho đến những vụ án làm rúng động cả thế giới.\n\nLấy 36 vụ án CÓ THẬT kinh điển nhất trong hồ sơ tội phạm của FBI, “Tâm lý học tội phạm - phác họa chân dung kẻ phạm tội” mang đến cái nhìn toàn cảnh của các chuyên gia về chân dung tâm lý tội phạm. Trả lời cho câu hỏi: Làm thế nào phân tích được tâm lý và hành vi tội phạm, từ đó khôi phục sự thật thông qua các manh mối, từ hiện trường vụ án, thời gian, dấu tích,… để tìm ra kẻ sát nhân thực sự. \n\nĐằng sau máu và nước mắt là các câu chuyện rợn tóc gáy về tội ác, góc khuất xã hội và những màn đấu trí đầy gay cấn giữa điều tra viên và kẻ phạm tội. Trong số đó có những con quỷ ăn thịt người; những cô gái xinh đẹp nhưng xảo quyệt; và cả cách trả thù đầy man rợ của các nhà khoa học,… Một số đã sa vào lưới pháp luật ngay khi chúng vừa ra tay, nhưng cũng có những kẻ cứ vậy ngủ yên hơn hai mươi năm. \n\nBằng giọng văn sắc bén, “Tâm lý học tội phạm - phác họa chân dung kẻ phạm tội” hứa hẹn dẫn dắt người đọc đi qua các cung bậc cảm xúc từ tò mò, ngạc nhiên đến sợ hãi, hoang mang tận cùng. Chúng ta sẽ lần tìm về quá khứ để từng bước gỡ những nút thắt chưa được giải, khiến ta \"ngạt thở\" đọc tới tận trang cuối cùng. \n\nHy vọng cuốn sách sẽ giúp bạn có cái nhìn sâu sắc, rõ ràng hơn về bộ môn tâm lý học tội phạm và có thể rèn luyện thêm sự tư duy, nhạy bén.\n\nMã hàng	8935325001819\nTên Nhà Cung Cấp	AZ Việt Nam\nTác giả	Diệp Hồng Vũ\nNgười Dịch	Đỗ Ái Nhi\nNXB	NXB Thanh Niên\nNăm XB	2021\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	300\nKích Thước Bao Bì	24 x 16 cm x 1.4\nSố trang	280\nHình thức	Bìa Mềm\nSản phẩm hiển thị trong	\nAZ Việt Nam\nĐồ Chơi Cho Bé - Giá Cực Tốt\nTủ Sách Tâm Lý Kỹ Năng\nSản phẩm bán chạy nhất	Top 100 sản phẩm Tâm lý bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nTÂM LÝ HỌC TỘI PHẠM - PHÁC HỌA CHÂN DUNG KẺ PHẠM TỘI\n\nTội phạm, nhất là những vụ án mạng, luôn là một chủ đề thu hút sự quan tâm của công chúng, khơi gợi sự hiếu kỳ của bất cứ ai. Một khi đã bắt đầu theo dõi vụ án, hẳn bạn không thể không quan tâm tới kết cục, đặc biệt là cách thức và động cơ của kẻ sát nhân, từ những vụ án phạm vi hẹp cho đến những vụ án làm rúng động cả thế giới.\n\nLấy 36 vụ án CÓ THẬT kinh điển nhất trong hồ sơ tội phạm của FBI, “Tâm lý học tội phạm - phác họa chân dung kẻ phạm tội” mang đến cái nhìn toàn cảnh của các chuyên gia về chân dung tâm lý tội phạm. Trả lời cho câu hỏi: Làm thế nào phân tích được tâm lý và hành vi tội phạm, từ đó khôi phục sự thật thông qua các manh mối, từ hiện trường vụ án, thời gian, dấu tích,… để tìm ra kẻ sát nhân thực sự. \n\nĐằng sau máu và nước mắt là các câu chuyện rợn tóc gáy về tội ác, góc khuất xã hội và những màn đấu trí đầy gay cấn giữa điều tra viên và kẻ phạm tội. Trong số đó có những con quỷ ăn thịt người; những cô gái xinh đẹp nhưng xảo quyệt; và cả cách trả thù đầy man rợ của các nhà khoa học,… Một số đã sa vào lưới pháp luật ngay khi chúng vừa ra tay, nhưng cũng có những kẻ cứ vậy ngủ yên hơn hai mươi năm. \n\nBằng giọng văn sắc bén, “Tâm lý học tội phạm - phác họa chân dung kẻ phạm tội” hứa hẹn dẫn dắt người đọc đi qua các cung bậc cảm xúc từ tò mò, ngạc nhiên đến sợ hãi, hoang mang tận cùng. Chúng ta sẽ lần tìm về quá khứ để từng bước gỡ những nút thắt chưa được giải, khiến ta \"ngạt thở\" đọc tới tận trang cuối cùng. \n\nHy vọng cuốn sách sẽ giúp bạn có cái nhìn sâu sắc, rõ ràng hơn về bộ môn tâm lý học tội phạm và có thể rèn luyện thêm sự tư duy, nhạy bén.",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Tâm Lý Học Tội Phạm - Phác Họa Chân Dung Kẻ Phạm Tội",
+                            ProductTypeId = 17,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Định Luật Murphy – Mọi Bí Mật Tâm Lý Thao Túng Cuộc Đời Bạn\n\nNếu một điều tồi tệ có thể xảy ra, nó sẽ xảy ra!\n\nKhi một món đồ quan trọng bị rơi, nó có xu hướng lăn tới dưới ngăn tủ nặng nhất.\n\nKhi hai tay bạn cầm đầy đồ đạc, mũi bạn bắt đầu ngứa. \n\nKhi bạn sợ gặp một người nào đó ở bên ngoài, bạn luôn vô tình gặp phải người đó.\n\n…\n\nCó phải hằng ngày bạn hay gặp những chuyện dở khóc dở cười tương tự như vậy? Những hiện tượng này đều có thể giải thích bằng một khái niệm tâm lý học thú vị: Định luật Murphy. Nó nhắc nhở chúng ta rằng việc xấu luôn có “cơ may” cao hơn và sai lầm luôn là một phần của thế giới này. Dù cho mỗi chúng ta đều cố gắng hết sức để tránh khỏi sai lầm, nhưng trên thực tế đó là điều bất khả thi.\n\nTuy nhiên, định luật Murphy mang tính cảnh tỉnh và dẫn dắt rất lớn trong cuộc sống hằng ngày. Cuốn sách này giới thiệu đến với bạn đọc về kiến thức cơ bản, hiện tượng thường gặp cùng với các hiệu ứng tâm lý học biểu hiện trong ý thức cá nhân, tính cạnh tranh, quan hệ xã hội,… của định luật Murphy thông qua góc nhìn thực tiễn. Từ đó giúp bạn đọc hiểu được bản chất con người, bản chất xã hội rồi ứng dụng nó vào giải quyết các vấn đề gặp phải trong cuộc sống.\n\nMã hàng	8935325009600\nTên Nhà Cung Cấp	AZ Việt Nam\nTác giả	Từ Thính Phong\nNgười Dịch	Hà Dung\nNXB	Thế Giới\nNăm XB	2022\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	300\nKích Thước Bao Bì	20.5 x 14 cm\nSố trang	280\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Tâm lý bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nĐịnh Luật Murphy – Mọi Bí Mật Tâm Lý Thao Túng Cuộc Đời Bạn\n\nNếu một điều tồi tệ có thể xảy ra, nó sẽ xảy ra!\n\nKhi một món đồ quan trọng bị rơi, nó có xu hướng lăn tới dưới ngăn tủ nặng nhất.\n\nKhi hai tay bạn cầm đầy đồ đạc, mũi bạn bắt đầu ngứa. \n\nKhi bạn sợ gặp một người nào đó ở bên ngoài, bạn luôn vô tình gặp phải người đó.\n\n…\n\nCó phải hằng ngày bạn hay gặp những chuyện dở khóc dở cười tương tự như vậy? Những hiện tượng này đều có thể giải thích bằng một khái niệm tâm lý học thú vị: Định luật Murphy. Nó nhắc nhở chúng ta rằng việc xấu luôn có “cơ may” cao hơn và sai lầm luôn là một phần của thế giới này. Dù cho mỗi chúng ta đều cố gắng hết sức để tránh khỏi sai lầm, nhưng trên thực tế đó là điều bất khả thi.\n\nTuy nhiên, định luật Murphy mang tính cảnh tỉnh và dẫn dắt rất lớn trong cuộc sống hằng ngày. Cuốn sách này giới thiệu đến với bạn đọc về kiến thức cơ bản, hiện tượng thường gặp cùng với các hiệu ứng tâm lý học biểu hiện trong ý thức cá nhân, tính cạnh tranh, quan hệ xã hội,… của định luật Murphy thông qua góc nhìn thực tiễn. Từ đó giúp bạn đọc hiểu được bản chất con người, bản chất xã hội rồi ứng dụng nó vào giải quyết các vấn đề gặp phải trong cuộc sống.",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Định Luật Murphy - Mọi Bí Mật Tâm Lý Thao Túng Cuộc Đời Bạn",
+                            ProductTypeId = 17,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Bạn có biết cuộc đời là gì không? Cuộc đời của chúng ta kéo dài từ khoảnh khắc ta được sinh ra cho đến khoảnh khắc ta chết đi, và có lẽ còn hơn thế nữa. Bạn đang nghịch gì với đời mình do triết gia Jiddu Krishnamurti viết giúp bạn hiểu và đi tìm ý nghĩa - mục đích của cuộc sống. \n \nBạn đang nghịch gì với đời mình xoay quanh những suy nghĩ của J.Krishnamurti về nhiều vấn đề trong cuộc sống của các bạn trẻ là những ý kiến đóng góp độc đáo và chân thực nhất cho tư tưởng giáo dục thế kỷ 21. Những điều mà ông cố gắng truyền tải không can dự gì đến triết lý cuộc đời, chúng là nghệ thuật khám phá cả thế giới bên ngoài lẫn những suy nghĩ và hành vi bên trong mỗi chúng ta;  là sự hiểu biết về tâm trí và trái tim, cũng như về tính toàn thể, vẹn tròn của cuộc sống. \n\nKhi còn trẻ, bạn hay tôi thật khó để biết mình yêu thích công việc gì, bởi vì chúng ta muốn làm rất nhiều thứ. Bạn muốn trở thành một kỹ sư, một người lái tàu, một phi công mang mơ ước bay vào trời xanh; hoặc có thể bạn muốn trở thành một nhà hùng biện hay một chính khách nổi tiếng. Bạn cũng có thể muốn trở thành một nghệ sĩ, một nhà hóa học, một nhà thơ, hay một thợ mộc. Bạn có thể muốn làm việc trí óc hay làm việc chân tay. Liệu những công việc này có phải là những việc mà bạn thực sự yêu thích, hay sự hứng thú với chúng chỉ đến từ phản ứng trước áp lực của xã hội? Làm thế nào để có thể tìm thấy công việc mình yêu thích? \n\nBạn đang nghịch gì với đời mình bao gồm bốn phần – Bản ngã và cuộc đời của bạn – Hiểu biết bản thân, chìa khóa của tự do – Giáo dục công việc và tiền bạc – những mối tương quan. Qua mỗi phần sẽ có nhiều chương nhỏ để triết gia J. Krishnamurti dẫn dắt người đọc đến những vấn đề thực tiễn từ suy nghĩ, thấu thị, hiểu biết, đến hành động cụ thể. Ông chỉ ra rằng ngay với cả nỗi sợ hãi, sự buồn chán, hạnh phúc hay đau khổ, thành công thất bại đều có thể hòa giải trong ý nghĩ của một tâm hồn biết tĩnh lặng.\n\nBạn sao, thế giới vậy, và vấn đề của bạn là vấn đề của thế giới, thế nhưng bằng một cách nào đó chúng ta dường như luôn lãng quên điều này. Vậy thì hãy bắt đầu học cách tĩnh lặng trong phạm vi gần gũi thôi, hãy lưu tâm đến sự hiện hữu hằng ngày của chính mình, từ ý nghĩ, cảm xúc cho đến những hành vi, hoạt động sống cơ bản, cũng như lưu tâm đến mối tương quan giữa chúng ta và các ý tưởng hay niềm tin.\n\nĐọc Bạn đang nghịch gì với đời mình - bạn sẽ khám phá được rằng những ai phải đủ thông minh, sự khôn ngoan, không sợ hãi và từ chối bước trên lối mòn truyền thống của xã hội mới tìm thấy điều mình yêu thích. \n\nCuộc sống là một nguồn nước sâu. Người ta có thể đến với nó với những cái xô nhỏ và chỉ múc được một ít nước, hoặc người ta có thể đến với nó với những cái thùng lớn, múc nhiều nước để sinh hoạt và dự trữ. Thời trẻ là quãng thời gian lý tưởng để người ta tìm tòi và trải nghiệm mọi thứ. Chúc bạn thành công.\n\nĐôi nét về tác giả\n\nJiddu Krishnamurti (1895 – 1986) là một triết gia và nhà diễn thuyết nổi tiếng về các vấn đề triết học và tinh thần, các chủ đề bao gồm: mục đích của thiền định, mối quan hệ giữa con người và phương cách để tạo nên sự thay đổi tích cực cho xã hội.\n\nĐược sinh ra trong một gia đình thuộc tầng lớp Brahmin tại Ấn Độ, nhưng Krishnamurti khẳng định rằng mình không thuộc bất cứ quốc tịch, tầng lớp, tôn giáo hay trường phái triết học nào. Ông dành suốt quãng đời còn lại của mình đi khắp thế giới như một nhà diễn thuyết độc lập. \n\nMã hàng	8935086856000\nTên Nhà Cung Cấp	FIRST NEWS\nTác giả	J Krishnamurti\nNgười Dịch	Huỳnh Hiếu Thuận\nNXB	Hồng Đức\nNăm XB	2022\nTrọng lượng (gr)	320\nKích Thước Bao Bì	20.5 x 14.5 x 1.4\nSố trang	304\nHình thức	Bìa Mềm\nSản phẩm hiển thị trong	\nFIRST NEWS\nSản phẩm bán chạy nhất	Top 100 sản phẩm Kỹ năng sống bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nBạn có biết cuộc đời là gì không? Cuộc đời của chúng ta kéo dài từ khoảnh khắc ta được sinh ra cho đến khoảnh khắc ta chết đi, và có lẽ còn hơn thế nữa. Bạn đang nghịch gì với đời mình do triết gia Jiddu Krishnamurti viết giúp bạn hiểu và đi tìm ý nghĩa - mục đích của cuộc sống. \n \nBạn đang nghịch gì với đời mình xoay quanh những suy nghĩ của J.Krishnamurti về nhiều vấn đề trong cuộc sống của các bạn trẻ là những ý kiến đóng góp độc đáo và chân thực nhất cho tư tưởng giáo dục thế kỷ 21. Những điều mà ông cố gắng truyền tải không can dự gì đến triết lý cuộc đời, chúng là nghệ thuật khám phá cả thế giới bên ngoài lẫn những suy nghĩ và hành vi bên trong mỗi chúng ta;  là sự hiểu biết về tâm trí và trái tim, cũng như về tính toàn thể, vẹn tròn của cuộc sống. \n\nKhi còn trẻ, bạn hay tôi thật khó để biết mình yêu thích công việc gì, bởi vì chúng ta muốn làm rất nhiều thứ. Bạn muốn trở thành một kỹ sư, một người lái tàu, một phi công mang mơ ước bay vào trời xanh; hoặc có thể bạn muốn trở thành một nhà hùng biện hay một chính khách nổi tiếng. Bạn cũng có thể muốn trở thành một nghệ sĩ, một nhà hóa học, một nhà thơ, hay một thợ mộc. Bạn có thể muốn làm việc trí óc hay làm việc chân tay. Liệu những công việc này có phải là những việc mà bạn thực sự yêu thích, hay sự hứng thú với chúng chỉ đến từ phản ứng trước áp lực của xã hội? Làm thế nào để có thể tìm thấy công việc mình yêu thích? ",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Bạn Đang Nghịch Gì Với Đời Mình?",
                             ProductTypeId = 16,
                             UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Một Đời Được Mất\n\n- Mọi vấn đề khó quyết định trong cuộc đời này, đều có thể suy xét dưới góc nhìn “Được” và “Mất”.\n\n- Có những thứ bạn nghĩ mình “được”, nhưng thực chất chỉ là ảo mộng hão huyền. Cũng có những thứ bạn nghĩ mình “mất”, nhưng cuộc sống chắc chắn sẽ “trả lại” cho bạn dưới một hình thức khác.\n\n- Tất cả những điều ấy – đều không thể đoán trước được.\n\nBạn chỉ cần sống hiên ngang, tự tin – không thẹn với lòng mà thôi!\n\nĐó là những lời nhắn gửi chân thành và tinh túy được đúc rút từ cuốn sách mới nhất của Vãn Tình – Một đời được mất. Đây là cuốn sách thứ chín của cô xuất bản tại thị trường Việt Nam bởi thương hiệu Bloom Books, đánh dấu son rực rỡ trên hành trình phấn đấu và trưởng thành của nữ tác giả đầu sách best seller Bạn đắt giá bao nhiêu? và Khí chất bao nhiêu, hạnh phúc bấy nhiêu.\n\nNăm tháng không lấy đi nhiệt huyết của cô mà còn ban tặng cho cô những kinh nghiệm vô cùng quý giá - dưới góc nhìn của một người phụ nữ đã đi qua bóng tối cuộc đời, cũng đã chạm đến đỉnh cao danh vọng, sống một đời phong phú, viên mãn. Những câu chuyện trong Một đời được mất vẫn được “mổ xẻ” một cách sắc bén, trực diện – nhưng có sự suy xét tinh tế hơn cả về lý lẽ và tình cảm, điều mà hiếm ai có thể làm được nếu chưa trải qua đủ những cung bậc thăng trầm của cuộc đời, gặp đủ nhiều người và trò chuyện đủ lâu với họ để soi thấu những điều cần tỏ tường.\n\nLần trở lại này, Một đời được mất đem đến hơn bốn mươi câu chuyện xoay quanh những vấn đề cơ bản của cuộc sống: đi làm, thăng tiến, hôn nhân, gia đình, quan hệ mẹ chồng – nàng dâu, quan hệ bạn bè,... với tâm thế:\n\nPhụ nữ mạnh mẽ, là người có khả năng cầm lên được, bỏ xuống được\n\nTrích dẫn hay của Vãn Tình trong Một đời được mất:\n\n1. Con người ta sống trên đời, nhiều khi chỉ muốn “nhận được”, mà không nỡ “bỏ đi” – thực ra cũng là lẽ thường tình, nhưng sự đời thường là: Phải có dũng khí “bỏ đi” thì mới “nhận được” thành quả. Người cái gì cũng muốn, cuối cùng lại thường mất đi tất cả. Khi bạn đã hiểu được đạo lý này, bạn sẽ biết mình nên lựa chọn ra sao.\n\n2. Nỗi đau mà đàn ông gây ra không phải là đau khổ thực sự mà chỉ là cảm xúc nhất thời. Phụ nữ mà không có khả năng nuôi sống bản thân mới thực sự là đau khổ. Phụ nữ không có tiền mà ly hôn mới gọi là “ly hôn”, phụ nữ có tiền mà ly hôn thì được gọi là “trở lại trạng thái độc thân”. Phụ nữ không có tiền kết hôn gọi là tìm kiếm “phiếu cơm dài hạn”, phụ nữ có tiền kết hôn gọi là “theo đuổi tình yêu đích thực”.\n\n3. Khi một mối quan hệ cần bạn nhẫn nhịn chịu đựng để duy trì, buộc bạn không ngừng hy sinh lợi ích của mình để gìn giữ, thì thực ra nó nên chấm dứt từ lâu lắm rồi.\n\n4. Những cô gái sống có cá tính thường nghe theo tiếng gọi của trái tim, nên luôn tạo cho người ta cảm giác chân thực, không làm bộ, không giả dối. Thế nên chúng ta hãy cứ sống thật với chính mình, những người có tư tưởng tương đồng sẽ dần dần tới bên chúng ta.\n\n5. Khi bước qua tuổi ba mươi, tôi thấy phụ nữ nên sống thế này:\n\nCó người thương biết chở che ấm lạnh, không có phản bội và lừa dối, xứng đáng để chúng ta trao gửi tấm chân tình, nếu không, cứ sống độc thân vui vẻ cũng chẳng sao. Ít nhất chúng ta không phải sống trong đau khổ và dằn vặt.\n\nCó sự nghiệp mà mình yêu quý, dù không kiếm ra nhiều tiền, thậm chí vô cùng cực khổ, nhưng còn tốt hơn là ngày ngày đi làm mà như đi “thăm mả”. Đừng ép bản thân phải làm những chuyện mà mình không thích, nếu không bạn sẽ thấy mình ngày càng u uất chán nản, mệt mỏi ủ ê.\n\nCó vài người bạn tâm giao, không cần “tám” chuyện suốt ngày, không cần tụ tập mọi lúc, nhưng tâm ý luôn tương thông, quan trọng là không thấy mệt mỏi khi ở bên nhau. Đừng ép bản thân phải giao du với những người có tư tưởng khác mình, nếu không người chịu khổ là chính bạn đấy.\n\nVề tác giả:\n\nVãn Tình là nhà biên kịch - tác giả của những đầu sách bán chạy tại Trung Quốc. Các tác phẩm của cô đều thẳng thắn, trực diện, đánh trúng tâm lý các cô gái.\n\nỞ Việt Nam, Vãn Tình được coi như “nữ hoàng” của dòng sách cảm hứng sống dành cho phái nữ. Cuốn sách Bạn đắt giá bao nhiêu? của cô trở thành cuốn sách Bán chạy nhất trên nền tảng Tiki (2019), tạo nên một làn sóng mạnh mẽ nhằm cổ vũ tinh thần, thay đổi quan điểm hạnh phúc của bất kỳ ai từng đọc cuốn sách.\n\nMã hàng	8935325017353\nTên Nhà Cung Cấp	AZ Việt Nam\nTác giả	Vãn Tình\nNgười Dịch	Mỹ Linh\nNXB	Thế Giới\nNăm XB	2023\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	340\nKích Thước Bao Bì	20 x 14.5 x 1.6 cm\nSố trang	322\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Kỹ năng sống bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nMột Đời Được Mất\n\n- Mọi vấn đề khó quyết định trong cuộc đời này, đều có thể suy xét dưới góc nhìn “Được” và “Mất”.\n\n- Có những thứ bạn nghĩ mình “được”, nhưng thực chất chỉ là ảo mộng hão huyền. Cũng có những thứ bạn nghĩ mình “mất”, nhưng cuộc sống chắc chắn sẽ “trả lại” cho bạn dưới một hình thức khác.\n\n- Tất cả những điều ấy – đều không thể đoán trước được.\n\nBạn chỉ cần sống hiên ngang, tự tin – không thẹn với lòng mà thôi!\n\nĐó là những lời nhắn gửi chân thành và tinh túy được đúc rút từ cuốn sách mới nhất của Vãn Tình – Một đời được mất. Đây là cuốn sách thứ chín của cô xuất bản tại thị trường Việt Nam bởi thương hiệu Bloom Books, đánh dấu son rực rỡ trên hành trình phấn đấu và trưởng thành của nữ tác giả đầu sách best seller Bạn đắt giá bao nhiêu? và Khí chất bao nhiêu, hạnh phúc bấy nhiêu.\n\nNăm tháng không lấy đi nhiệt huyết của cô mà còn ban tặng cho cô những kinh nghiệm vô cùng quý giá - dưới góc nhìn của một người phụ nữ đã đi qua bóng tối cuộc đời, cũng đã chạm đến đỉnh cao danh vọng, sống một đời phong phú, viên mãn. Những câu chuyện trong Một đời được mất vẫn được “mổ xẻ” một cách sắc bén, trực diện – nhưng có sự suy xét tinh tế hơn cả về lý lẽ và tình cảm, điều mà hiếm ai có thể làm được nếu chưa trải qua đủ những cung bậc thăng trầm của cuộc đời, gặp đủ nhiều người và trò chuyện đủ lâu với họ để soi thấu những điều cần tỏ tường.\n\nLần trở lại này, Một đời được mất đem đến hơn bốn mươi câu chuyện xoay quanh những vấn đề cơ bản của cuộc sống: đi làm, thăng tiến, hôn nhân, gia đình, quan hệ mẹ chồng – nàng dâu, quan hệ bạn bè,... với tâm thế:\n\nPhụ nữ mạnh mẽ, là người có khả năng cầm lên được, bỏ xuống được",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Một Đời Được Mất",
+                            ProductTypeId = 16,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Manifest - 7 Bước Để Thay Đổi Cuộc Đời Bạn Mãi Mãi\n\n“Ai đã từng nói với bạn rằng bạn không thể có tất cả.\n\nTôi ở đây để nói với bạn rằng bạn có thể.”\n\n_ Roxie Nafousi _\n\nMở ra cánh cửa Manifest và giải phóng tiềm năng vô hạn của chính mình cùng cuốn sách MANIFEST – 7 bước để thay đổi cuộc đời bạn mãi mãi.\n\nCuốn sách này là một chỉ dẫn cần thiết cho bất kỳ ai muốn tự làm chủ cuộc đời mình. Chỉ với 7 bước cơ bản, bạn có thể hoàn toàn hiểu được Manifest thực sự là gì và tạo ra một cuộc sống mà bạn hằng mong ước.\n\nLà một sự giao thoa giữa khoa học và sự thông thái, Manifest là một dạng rèn luyện phát triển bản thân, học cách yêu bản thân, giúp bạn vươn tới mục tiêu và sống một cuộc sống viên mãn nhất.\n\nMANIFEST – 7 bước để thay đổi cuộc đời bạn mãi mãi được in bằng chất liệu giấy in cao cấp; bìa cán mờ, được tặng kèm 1 bookmark.\n\nMã hàng	8935325016325\nTên Nhà Cung Cấp	AZ Việt Nam\nTác giả	Roxie Nafousi\nNgười Dịch	Bạc Hà\nNXB	Thế Giới\nNăm XB	2023\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	220\nKích Thước Bao Bì	20.5 x 14 x 1 cm\nSố trang	200\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Kỹ năng sống bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nManifest - 7 Bước Để Thay Đổi Cuộc Đời Bạn Mãi Mãi\n\n“Ai đã từng nói với bạn rằng bạn không thể có tất cả.\n\nTôi ở đây để nói với bạn rằng bạn có thể.”\n\n_ Roxie Nafousi _\n\nMở ra cánh cửa Manifest và giải phóng tiềm năng vô hạn của chính mình cùng cuốn sách MANIFEST – 7 bước để thay đổi cuộc đời bạn mãi mãi.\n\nCuốn sách này là một chỉ dẫn cần thiết cho bất kỳ ai muốn tự làm chủ cuộc đời mình. Chỉ với 7 bước cơ bản, bạn có thể hoàn toàn hiểu được Manifest thực sự là gì và tạo ra một cuộc sống mà bạn hằng mong ước.\n\nLà một sự giao thoa giữa khoa học và sự thông thái, Manifest là một dạng rèn luyện phát triển bản thân, học cách yêu bản thân, giúp bạn vươn tới mục tiêu và sống một cuộc sống viên mãn nhất.",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Manifest - 7 Bước Để Thay Đổi Cuộc Đời Bạn Mãi Mãi",
+                            ProductTypeId = 16,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "HIỂU VỀ TRÁI TIM – CUỐN SÁCH MỞ CỬA THẾ GIỚI CẢM XÚC CỦA MỖI NGƯỜI  \n\n“Hiểu về trái tim” là một cuốn sách đặc biệt được viết bởi thiền sư Minh Niệm. Với phong thái và lối hành văn gần gũi với những sinh hoạt của người Việt, thầy Minh Niệm đã thật sự thổi hồn Việt vào cuốn sách nhỏ này.\n\nXuất bản lần đầu tiên vào năm 2011, Hiểu Về Trái Tim trình làng cũng lúc với kỷ lục: cuốn sách có số lượng in lần đầu lớn nhất: 10000 bản. Trung tâm sách kỷ lục Việt Nam công nhận kỳ tích ấy nhưng đến nay, con số phát hành của Hiểu về trái tim vẫn chưa có dấu hiệu chậm lại.\n\nLà tác phẩm đầu tay của nhà sư Minh Niệm, người sáng lập dòng thiền hiểu biết (Understanding Meditation), kết hợp giữa tư tưởng Phật giáo Đại thừa và Thiền nguyên thủy Vipassana, nhưng Hiểu Về Trái Tim không phải tác phẩm thuyết giáo về Phật pháp. Cuốn sách rất “đời” với những ưu tư của một người tu nhìn về cõi thế. Ở đó, có hạnh phúc, có đau khổ, có tình yêu, có cô đơn, có tuyệt vọng, có lười biếng, có yếu đuối, có buông xả… Nhưng, tất cả những hỉ nộ ái ố ấy đều được khoác lên tấm áo mới, một tấm áo tinh khiết và xuyên suốt, khiến người đọc khi nhìn vào, đều thấy mọi sự như nhẹ nhàng hơn…\n\nTrong dòng chảy tất bật của cuộc sống, có bao giờ chúng ta dừng lại và tự hỏi: Tại sao ta giận? Tại sao ta buồn? Tại sao ta hạnh phúc? Tại sao ta cô đơn?... Tất cả những hiện tượng tâm lý ấy không ngừng biến hóa trong ta và tác động lên đời sống của ta, nhưng ta lại biết rất ít về nguồn gốc và sự vận hành của nó. Chỉ cần một cơn giận, hay một ý niệm nghi ngờ, cũng có thể quét sạch năng lượng bình yên trong ta và khiến ta nhìn mọi thứ đều sai lệch. Từ thất bại này đến đổ vỡ khác mà ta không lý giải nổi, chỉ biết dùng ý chí để tự nhắc nhở mình cố gắng tiến bộ hơn. Cho nên, hiểu về trái tim chính là nhu cầu căn bản nhất của con người.\n\nHiểu về trái tim là thái độ trở về tiếp nhận và làm mới lại tâm hồn mình. Bởi hiểu được chính mình, ta sẽ dễ dàng hiểu được người khác, để ta có thể thương nhau chân thật.\n\nXuyên suốt cuốn sách, tác giả đã đưa ra 50 khái niệm trong cuộc sống, 50 bài viết tâm lý trị liệu, được trình bày rất chân phương, dễ hiểu, thực tế,  vốn dĩ rất đời thường nhưng nếu suy ngẫm một chút chúng ta sẽ thấy thật sâu sắc như Khổ đau, Hạnh phúc, Tình yêu, Tức giận, Ghen tuông, Ích kỷ, Tham vọng, Thành thật, Nghi ngờ, Lo lắng, Do dự, Buông xả, Thảnh thơi, Bình yên, Cô đơn, Ái ngữ, Lắng nghe… Đúng như tựa đề sách, sách sẽ giúp ta hiểu về trái tim, hiểu về những tâm trạng, tính cách sâu thẳm trong trái tim ta.\n\nLúc sinh thời cố Giáo sư, Tiến sĩ Trần Văn Khuê, có dịp tiếp cận với Hiểu Về Trái Tim. Ông nhận xét, như một cuốn sách đầu tiên thuộc chủ đề Hạt Giống Tâm Hồn do một tác giả Việt Nam viết, cuốn sách sẽ giúp người đọc hiểu được cảm xúc của tâm hồn, trái tim của chính mình và của người khác. Để, tận cùng là loại bỏ nỗi buồn, tổn thương và tìm được hạnh phúc trong cuộc sống. Có lẽ, vì điều này mà hơn 10 năm qua, Hiểu về trái tim vẫn là cuốn sách liên tục được tái bản và chưa có dấu hiệu “hạ nhiệt”, nhiều năm trời liên tục nằm trong top sách bán chạy nhất tại Việt Nam.\n\nĐáng quý hơn, tòan bộ lợi nhuận thu được từ việc phát hành cuốn sách này đều được chuyển về quỹ từ thiện cùng tên “Hiểu về trái tim” để giúp đỡ trẻ em có hoàn cảnh khó khăn, bất hạnh tại Việt Nam. Và đây cũng chính là niềm hạnh phúc cũng như ý nghĩa nhân ái lớn nhất mà cuốn sách đã mang lại, đặc biệt là khi tất cả hành trình này còn có sự đồng hành và góp sức của hàng trăm nghìn bản đọc trên khắp cả nước Việt Nam.\n\nNgười nổi tiếng nói về cuốn sách:\n\n“Để chữa lành những tổn thương và nổi đau, cách tốt nhứt và hữu hiệu nhất là cần hiểu rõ được trái tim, tâm hồn của mình, và của người khác, cuốn sách Hiểu về Trái Tim chính là cuốn sách giúp bạn đọc làm được điều đó: Hiểu rõ và chữa lành trái tim, tâm hồn của mình và của những người xung quanh, để mọi người cùng được sống trong hạnh phúc và yêu thương. Với cuốn sách này, chúc bạn đọc sẽ luôn hạnh phúc và không bao giờ phải sống với một trái tim tan vỡ hay một tâm hồn tổn thương”  - Giáo sư – Tiến sĩ Trần Văn Khê\n\n\"Cuốn sách Hiểu về trái tim được viết ra với những trải nghiệm sâu sắc, nhằm giúp con người hiểu rõ và lý giải những cảm xúc của chính mình để tìm được sự bình an và hạnh phúc thật sự”. - Anh hùng Lao động, Thầy thuốc nhân dân, GS Bác sĩ Nguyễn Thị Ngọc Phượng\n\n\"Đây chính là con đường của đạo Tâm, với những nguyên tắc sống hạnh phúc – một thứ “an lạc hạnh” – từ những sẻ chia chân thành của tác giả. Con đường hạnh phúc đó đòi hỏi sự khổ luyện, chứng nghiệm qua quán chiếu bản thân, từ đó thấy biết bản chất của khổ đau, phiền não, và, vượt thoát…” - Bác sĩ Đỗ Hồng Ngọc. Nguyên Giám Đốc Trung Tâm Truyền Thông – Giáo Dục Sức Khoẻ TP.HCM\n\n\"Một cuốn sách hay, thực tế và rất hữu ích cho mọi người, đặc biệt đối với thanh thiếu niên và các bạn trẻ. Nếu rèn luyện được theo những điều hay như thế thì cuộc sống sẽ tốt đẹp hơn rất nhiều\". - Tạ Bích Loan, Trưởng Ban Thanh thiếu niên Đài truyền hình Việt Nam\n\n\"Đây là một cuốn sách đặc biệt, có tính giáo dục, tự nhận thức cao, được viết từ trái tim để chữa lành những trái tim. Một cuốn sách rất ý nghĩa!”. - Nhà báo Trần Tử Văn, Phó Tổng biên tập Báo Công an TP.HCM\n\n\"Hiểu về trái tim là cuốn sách thứ 180 của Tủ sách Hạt giống tâm hồn mà First News đã xuất bản, nhưng đây là cuốn sách của một tác giả Việt Nam đã để lại trong tôi những cảm xúc đặc biệt nhất. Với những trải nghiệm sâu sắc và tâm huyết mà tác giả đã viết trong 8 năm chắc chắn sẽ mang đến cho bạn đọc những khám phá mới mẻ và thú vị. Một cánh cửa rộng mở đang chờ đón bạn”. - Nguyễn Văn Phước, Giám đốc First News - Trí Việt\n\nBáo chí nói gì về “Hiểu về trái tim”:\n\n“'Hiểu về trái tim' là một cuốn sách đặc biệt, được viết nên từ tâm huyết của một nhà thiền sư mang tên Minh Niệm. Đã bao giờ giữa cuộc đời hối hả, bạn chợt dừng lại và tự hỏi mình rằng ' hạnh phúc là gì?' , '' khổ đau là gì?' hay chưa? Vâng, cuốn sách này sẽ giải đáp cho bạn tất cả những băn khoăn đó.” – baomoi.vn\n\nVề tác giả:\n\nSinh tại Châu Thành, Tiền Giang, xuất gia tại Phật Học Viện Huệ Nghiêm – Sài Gòn, Minh Niệm từng thọ giáo thiền sư Thích Nhất Hạnh tại Pháp và thiền sư Tejaniya tại Mỹ. Kết quả sau quá trình tu tập, lĩnh hội kiến thức… Ông quyết định chọn con đường hướng dẫn thiền và khai triển tâm lý trị liệu cho giới trẻ làm Phật sự của mình. Tiếp cận với nhiều người trẻ, lắng nghe thế giới quan của họ và quan sát những đổi thay trong đời sống hiện đại, ông phát hiện có rất nhiều vấn đề của cuộc sống. Nhưng, tất cả, chỉ xuất phát từ một nguyên nhân: Chúng ta chưa hiểu, và chưa hiểu đúng về trái tim mình là chưa cơ chế vận động của những hỉ, nộ, ái, ố trong mỗi con người.\n\n“Tôi đã từng quyết lòng ra đi tìm hạnh phúc chân thật. Dù thời điểm ấy, ý niệm về hạnh phúc chân thật trong tôi rất mơ hồ nhưng tôi vẫn tin rằng nó có thật và luôn hiện hữu trong thực tại. Hơn mười năm sau, tôi mới thấy con đường. Và cũng chừng ấy năm nữa, tôi mới tự tin đặt bút viết về những điều mình đã khám phá và trải nghiệm…”, tác giả chia sẻ.\n\n \n\n\nMã hàng	8935086857366\nTên Nhà Cung Cấp	FIRST NEWS\nTác giả	Minh Niệm\nNXB	Tổng Hợp TPHCM\nNăm XB	2023\nNgôn Ngữ	Tiếng Việt\nTrọng lượng (gr)	415\nKích Thước Bao Bì	20.5 x 13 x 2.5 cm\nSố trang	479\nHình thức	Bìa Mềm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Kỹ năng sống bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nHIỂU VỀ TRÁI TIM – CUỐN SÁCH MỞ CỬA THẾ GIỚI CẢM XÚC CỦA MỖI NGƯỜI  \n\n“Hiểu về trái tim” là một cuốn sách đặc biệt được viết bởi thiền sư Minh Niệm. Với phong thái và lối hành văn gần gũi với những sinh hoạt của người Việt, thầy Minh Niệm đã thật sự thổi hồn Việt vào cuốn sách nhỏ này.\n\nXuất bản lần đầu tiên vào năm 2011, Hiểu Về Trái Tim trình làng cũng lúc với kỷ lục: cuốn sách có số lượng in lần đầu lớn nhất: 10000 bản. Trung tâm sách kỷ lục Việt Nam công nhận kỳ tích ấy nhưng đến nay, con số phát hành của Hiểu về trái tim vẫn chưa có dấu hiệu chậm lại.\n\nLà tác phẩm đầu tay của nhà sư Minh Niệm, người sáng lập dòng thiền hiểu biết (Understanding Meditation), kết hợp giữa tư tưởng Phật giáo Đại thừa và Thiền nguyên thủy Vipassana, nhưng Hiểu Về Trái Tim không phải tác phẩm thuyết giáo về Phật pháp. Cuốn sách rất “đời” với những ưu tư của một người tu nhìn về cõi thế. Ở đó, có hạnh phúc, có đau khổ, có tình yêu, có cô đơn, có tuyệt vọng, có lười biếng, có yếu đuối, có buông xả… Nhưng, tất cả những hỉ nộ ái ố ấy đều được khoác lên tấm áo mới, một tấm áo tinh khiết và xuyên suốt, khiến người đọc khi nhìn vào, đều thấy mọi sự như nhẹ nhàng hơn…\n\nTrong dòng chảy tất bật của cuộc sống, có bao giờ chúng ta dừng lại và tự hỏi: Tại sao ta giận? Tại sao ta buồn? Tại sao ta hạnh phúc? Tại sao ta cô đơn?... Tất cả những hiện tượng tâm lý ấy không ngừng biến hóa trong ta và tác động lên đời sống của ta, nhưng ta lại biết rất ít về nguồn gốc và sự vận hành của nó. Chỉ cần một cơn giận, hay một ý niệm nghi ngờ, cũng có thể quét sạch năng lượng bình yên trong ta và khiến ta nhìn mọi thứ đều sai lệch. Từ thất bại này đến đổ vỡ khác mà ta không lý giải nổi, chỉ biết dùng ý chí để tự nhắc nhở mình cố gắng tiến bộ hơn. Cho nên, hiểu về trái tim chính là nhu cầu căn bản nhất của con người.",
+                            IsActive = true,
+                            IsBook = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Hiểu Về Trái Tim (Tái Bản 2023)",
+                            ProductTypeId = 16,
+                            UnitMeasureId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Bút Chì Bấm Jedo Bium 0.5 mm - Morning Glory 32000-89749\n\nSản phẩm thuộc dòng chì bấm kim thông dụng phù hợp với đối tượng học sinh - sinh viên.\n\nThiết kế phần thân màu sắc bắt mắt, hiện đại.\n\nĐầu bấm rất êm dễ dàng thao tác.\n\nNgòi ít bị gãy vụn, dễ xoá sạch, vừa tiết kiệm, vừa tránh được khả năng đi sai nét.\n\nNét ngòi 0.5mm rõ, mịn và đẹp sẽ khiến các tác phẩm vẽ, các bài viết của bạn trông sạch và gọn mắt hơn rất nhiều.\n\nMã hàng	8801237897492-mau3\nTên Nhà Cung Cấp	Morning Glory Corp\nThương Hiệu	Morning Glory\nXuất Xứ Thương Hiệu	Thương Hiệu Hàn Quốc\nNơi Gia Công & Sản Xuất	Hàn Quốc\nMàu sắc	Nâu\nChất liệu	Nhựa, Kim Loại\nTrọng lượng (gr)	10\nKích Thước Bao Bì	10.5 x 5 x 1.5 cm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Bút Chì Bấm bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nBút Chì Bấm Jedo Bium 0.5 mm - Morning Glory 32000-89749\n\nSản phẩm thuộc dòng chì bấm kim thông dụng phù hợp với đối tượng học sinh - sinh viên.\n\nThiết kế phần thân màu sắc bắt mắt, hiện đại.\n\nĐầu bấm rất êm dễ dàng thao tác.\n\nNgòi ít bị gãy vụn, dễ xoá sạch, vừa tiết kiệm, vừa tránh được khả năng đi sai nét.\n\nNét ngòi 0.5mm rõ, mịn và đẹp sẽ khiến các tác phẩm vẽ, các bài viết của bạn trông sạch và gọn mắt hơn rất nhiều.",
+                            IsActive = true,
+                            IsBook = false,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Bút Chì Bấm Jedo Bium 0.5 mm - Morning Glory 32000-89749",
+                            ProductTypeId = 49,
+                            UnitMeasureId = 2
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Băng Keo Trong VP Dày\n\nBăng keo có màu trong suốt vừa giúp bạn dễ dàng quan sát vừa đảm bảo tính thẩm mỹ khi dán lên các đồ vật khác nhau.\n\nKhi dán các đồ vật có kích thước nhỏ hơn bề mặt băng dính, bạn cũng có thể cắt thành nhiều miếng nhỏ rất tiện lợi.\n\nSản phẩm được sử dụng rộng rãi trong cuộc sống, từ trường học, văn phòng, gia đình đến các cơ sở sản xuất thủ công\n\nThành phần không chứa các hóa chất độc hại, đảm bảo an toàn cho sức khỏe người sử dụng.",
+                            IsActive = true,
+                            IsBook = false,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Băng Keo Trong Dày",
+                            ProductTypeId = 86,
+                            UnitMeasureId = 2
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Băng Keo Xốp Đen Cao Cấp\n\nCó độ bám dính cao và trong thời gian dài, có thể cắt ra sử dụng dễ dàng. Băng keo 2 mặt giúp bạn dán các vật dụng lại với nhau một cách dễ dàng.\n\nBăng keo có lớp xốp màu đen khi tháo mặt giấy ra thuận tiện cho việc sử dụng và bảo quản.\n\nSản phẩm được sử dụng rộng rãi trong cuộc sống, từ trường học, văn phòng, gia đình đến các cơ sở sản xuất thủ công...\n\nThành phần không chứa các hóa chất độc hại, đảm bảo an toàn cho sức khỏe người sử dụn",
+                            IsActive = true,
+                            IsBook = false,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Băng Keo Mouse - Màu Đỏ - Đen",
+                            ProductTypeId = 86,
+                            UnitMeasureId = 2
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Băng Keo Điện Cỡ Đại Nano\n\nCó khả năng chịu mài mòn cao, chịu được trong môi trường acid\n\nCó khả năng chịu được điện thế cao (600V)\n\nChống cháy\n\nCó thể dùng ngoài trời và trong nhà.\n\nThích nghi mọi thay đổi thời tiết\n\nỨng dụng: Đánh dấu pha, đánh dấu màu cho hệ thống dẫn điện...\n\nMã hàng	1503010390462\nNhà Cung Cấp	Cty TM Hạnh Thuận\nThương Hiệu	Nano\nXuất Xứ Thương Hiệu	Trung Quốc\nNơi Gia Công & Sản Xuất	Việt Nam\nMàu sắc	Đen\nChất liệu	Nhựa\nTrọng lượng (gr)	55\nKích Thước Bao Bì	6.5 x 6.5 x 2 cm\nSản phẩm bán chạy nhất	Top 100 sản phẩm Băng Keo - Cắt Băng Keo bán chạy của tháng\nGiá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...\nChính sách khuyến mãi trên Fahasa.com không áp dụng cho Hệ thống Nhà sách Fahasa trên toàn quốc\nBăng Keo Điện Cỡ Đại Nano\n\nCó khả năng chịu mài mòn cao, chịu được trong môi trường acid\n\nCó khả năng chịu được điện thế cao (600V)\n\nChống cháy\n\nCó thể dùng ngoài trời và trong nhà.\n\nThích nghi mọi thay đổi thời tiết\n\nỨng dụng: Đánh dấu pha, đánh dấu màu cho hệ thống dẫn điện...",
+                            IsActive = true,
+                            IsBook = false,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Băng Keo Điện Cỡ Lớn - Nano - Màu Đen",
+                            ProductTypeId = 86,
+                            UnitMeasureId = 2
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Băng Keo Đục 5F\n\nLà loại băng keo dán thùng OPP được làm từ màng BOPP và được phủ dưới dạng sữa dựa vào chất acrylic adhesive.\n\nChúng được biểu thị đặc điểm có độ bền cao và có thể kéo dãn, trọng lượng nhẹ mà lại kinh tế cho nên băng keo được sử dụng rộng rãi trong công nghiệp tự động hóa đóng gói thùng carton.\n\nBăng keo đã trở thành vật liệu chính trong nguyên liệu đóng gói cho thùng carton nói chung hoặc dán thùng carton hay ngành đóng gói.",
+                            IsActive = true,
+                            IsBook = false,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Băng Keo Đục 5F - Màu Vàng",
+                            ProductTypeId = 86,
+                            UnitMeasureId = 2
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductImage", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3069,11 +2526,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_1-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_1-390x510.jpg"
                         },
                         new
                         {
@@ -3081,11 +2538,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_2-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_bo/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*10nhn5q*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjAuMTcxNjUzNTA4NC42MC4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_2-390x510.jpg"
                         },
                         new
                         {
@@ -3093,11 +2550,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*1v684ny*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTQ2NS41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_3-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_2-390x510.jpg?_gl=1*1v684ny*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTQ2NS41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_3-390x510.jpg"
                         },
                         new
                         {
@@ -3105,11 +2562,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_4-390x510.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_4-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_me/2024_05_20_17_11_53_4-390x510.jpg"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_4-390x510.jpg"
                         },
                         new
                         {
@@ -3117,11 +2574,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ba/2024_05_20_17_11_53_3-390x510.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_7-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ba/2024_05_20_17_11_53_3-390x510.jpg"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/chuyen_con_meo_day_hai_au_bay_tai_ban_2019/2023_01_11_15_38_11_7-390x510.jpg"
                         },
                         new
                         {
@@ -3129,11 +2586,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*11n63iw*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTY0Ny41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187010.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_1-390x510.jpg?_gl=1*11n63iw*_ga*NjQ1ODI5NTU4LjE3MTU4NTM2MTM.*_ga_460L9JMC2G*MTcxNjUzNTA4NC40LjEuMTcxNjUzNTY0Ny41OS4wLjIwNDc4NjYxODI.*_gcl_au*MjAzMDgwNzcxOS4xNzE1ODUzNjEz"
+                            ProductId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_187010.jpg"
                         },
                         new
                         {
@@ -3141,11 +2598,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_2-390x510.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_1-390x510.jpg?_gl=1*bt98vq*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODM0MjYuMjIuMC4xNTUxNzk5MTUz*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/gia_dinh_thuong_yeu___mot_ngay_cua_to_va_ong/2024_05_20_17_11_53_2-390x510.jpg"
+                            ProductId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_1-390x510.jpg?_gl=1*bt98vq*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODM0MjYuMjIuMC4xNTUxNzk5MTUz*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg."
                         },
                         new
                         {
@@ -3153,11 +2610,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_5-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 3,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg"
+                            ProductId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_5-390x510.jpg"
                         },
                         new
                         {
@@ -3165,11 +2622,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_9-390x510.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 4,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944359096_c109dffd7f8004e1b78aa31f65526f08_1.jpg"
+                            ProductId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_9-390x510.jpg"
                         },
                         new
                         {
@@ -3177,15 +2634,663 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_13-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hoang_tu_be_tai_ban_2019/2021_05_11_14_41_34_13-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/m/u/mu-7452.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/m/u/mu-7452.jpg"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3-1.jpg?_gl=1*1jvulx4*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQxNzQuNTMuMC4xNTUxNzk5MTUz",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3-1.jpg?_gl=1*1jvulx4*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQxNzQuNTMuMC4xNTUxNzk5MTUz"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3-1.jpg?_gl=1*1jvulx4*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQxNzQuNTMuMC4xNTUxNzk5MTUz",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3-1.jpg?_gl=1*1jvulx4*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQxNzQuNTMuMC4xNTUxNzk5MTUz"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117.jpg"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117-_4_.jpg?_gl=1*1ba1ol*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ0MTkuNDkuMC4xNTUxNzk5MTUz",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117-_4_.jpg?_gl=1*1ba1ol*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ0MTkuNDkuMC4xNTUxNzk5MTUz"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311008-_1_.jpg?_gl=1*1ba1ol*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ0MTkuNDkuMC4xNTUxNzk5MTUz",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311008-_1_.jpg?_gl=1*1ba1ol*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ0MTkuNDkuMC4xNTUxNzk5MTUz"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240318007-_2_.jpg?_gl=1*1ba1ol*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ0MTkuNDkuMC4xNTUxNzk5MTUz",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240318007-_2_.jpg?_gl=1*1ba1ol*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ0MTkuNDkuMC4xNTUxNzk5MTUz"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310124-_3_.jpg?_gl=1*7g85ts*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ1MzEuNDcuMC4xNTUxNzk5MTUz",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310124-_3_.jpg?_gl=1*7g85ts*_gcl_au*NzI3ODcyODI5LjE3MTQ0NzI5NDg.*_ga*MTkxMDUwNDM0LjE3MTQ0NzI5NDg.*_ga_460L9JMC2G*MTcxODE4MTU2OS4zOC4xLjE3MTgxODQ1MzEuNDcuMC4xNTUxNzk5MTUz"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498503-mau1.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 5,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/3/z3543944350145_ec66f22a86880daac11b61bc47e36387_1_1.jpg"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498503-mau1.jpg"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498503-mau1-_1__4.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498503-mau1-_1__4.jpg"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498503-mau1-_9_.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498503-mau1-_9_.jpg"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498480-_2__4.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6970601498480-_2__4.jpg"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___bo_me_luon_yeu_con/2023_04_06_11_04_51_1-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___bo_me_luon_yeu_con/2023_04_06_11_04_51_1-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___bo_me_luon_yeu_con/2023_04_06_11_04_51_5-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___bo_me_luon_yeu_con/2023_04_06_11_04_51_5-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___con_tu_dau_toi/2023_04_05_15_26_22_1-390x510.jpg?_gl=1*yoqblq*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___con_tu_dau_toi/2023_04_05_15_26_22_1-390x510.jpg?_gl=1*yoqblq*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU."
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___to_dung_cam_noi_khong/2023_04_05_15_26_30_3-390x510.jpg?_gl=1*yoqblq*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___to_dung_cam_noi_khong/2023_04_05_15_26_30_3-390x510.jpg?_gl=1*yoqblq*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU."
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___nguy_hiem_day__mau_tranh_xa/2023_03_28_15_33_15_9-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___nguy_hiem_day__mau_tranh_xa/2023_03_28_15_33_15_9-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___khong_duoc_cham_vao_vung_rieng_tu_cua_to/2023_04_05_15_26_37_7-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___khong_duoc_cham_vao_vung_rieng_tu_cua_to/2023_04_05_15_26_37_7-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://salt.tikicdn.com/cache/280x280/ts/product/80/92/94/9d29d86173ca50a4820ae32a6ec2bbdc.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            ThumbnailImageUrl = "https://salt.tikicdn.com/cache/280x280/ts/product/80/92/94/9d29d86173ca50a4820ae32a6ec2bbdc.jpg"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_thi_n_t_i_b_n_tr_i_k_i_n_b_n_ph_i_1.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_thi_n_t_i_b_n_tr_i_k_i_n_b_n_ph_i_1.png"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/thien_tai_ben_trai__ke_dien_ben_phai_tai_ban_2021/2021_05_10_08_51_00_3-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/thien_tai_ben_trai__ke_dien_ben_phai_tai_ban_2021/2021_05_10_08_51_00_3-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/thuatthaotung1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/thuatthaotung1.jpg"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/thuatthaotung1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/thuatthaotung1.jpg"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/thuatthaotung4.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/thuatthaotung4.jpg"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/p/h/ph_c-h_a-ch_n-dung-k_-ph_m-t_i.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/p/h/ph_c-h_a-ch_n-dung-k_-ph_m-t_i.jpg"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-tr_cph_c-h_a-ch_n-dung-k_-ph_m-t_i.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-tr_cph_c-h_a-ch_n-dung-k_-ph_m-t_i.jpg"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-sauph_c-h_a-ch_n-dung-k_-ph_m-t_i.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-sauph_c-h_a-ch_n-dung-k_-ph_m-t_i.jpg"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/th_ng-b_o-ph_t-h_nh-_nh-lu_t-murphybia-1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/th_ng-b_o-ph_t-h_nh-_nh-lu_t-murphybia-1.jpg"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/th_ng-b_o-ph_t-h_nh-_nh-lu_t-murphybia-4.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/t/h/th_ng-b_o-ph_t-h_nh-_nh-lu_t-murphybia-4.jpg"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/m/o/mockup-_nh-lu_t-murphy.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/m/o/mockup-_nh-lu_t-murphy.jpg"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dinh_luat_murphy___moi_bi_mat_tam_ly_thao_tung_cuoc_doi_ban/2022_11_24_16_24_26_2-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dinh_luat_murphy___moi_bi_mat_tam_ly_thao_tung_cuoc_doi_ban/2022_11_24_16_24_26_2-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dinh_luat_murphy___moi_bi_mat_tam_ly_thao_tung_cuoc_doi_ban/2022_11_24_16_24_26_3-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dinh_luat_murphy___moi_bi_mat_tam_ly_thao_tung_cuoc_doi_ban/2022_11_24_16_24_26_3-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dinh_luat_murphy___moi_bi_mat_tam_ly_thao_tung_cuoc_doi_ban/2022_11_24_16_24_26_6-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dinh_luat_murphy___moi_bi_mat_tam_ly_thao_tung_cuoc_doi_ban/2022_11_24_16_24_26_6-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935086856000.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935086856000.jpg"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/ban_dang_nghich_gi_voi_doi_minh/2022_12_13_08_59_38_1-390x510.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/ban_dang_nghich_gi_voi_doi_minh/2022_12_13_08_59_38_1-390x510.png"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/ban_dang_nghich_gi_voi_doi_minh/2022_12_13_08_59_38_4-390x510.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/ban_dang_nghich_gi_voi_doi_minh/2022_12_13_08_59_38_4-390x510.png"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_1_m_t_i_c_m_t.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_1_m_t_i_c_m_t.png"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_4_m_t_i_c_m_t.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_4_m_t_i_c_m_t.png"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_tr_c_15.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a_tr_c_15.jpg"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-tr_c-manifest.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-tr_c-manifest.jpg"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-tr_c-manifest_1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/b/_/b_a-tr_c-manifest_1.jpg"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/m/o/mockup---manifest.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/m/o/mockup---manifest.jpg"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/4/z4118763446785_cf4bc22d353b065bbb37e686de1f9207.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/4/z4118763446785_cf4bc22d353b065bbb37e686de1f9207.jpg"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/4/z4118763446785_cf4bc22d353b065bbb37e686de1f9207.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/4/z4118763446785_cf4bc22d353b065bbb37e686de1f9207.jpg"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hieu_ve_trai_tim_tai_ban_2023/2023_02_21_08_51_07_6-390x510.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/hieu_ve_trai_tim_tai_ban_2023/2023_02_21_08_51_07_6-390x510.jpg"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-3.jpg?_gl=1*1hdzk44*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTc1Ny41MC4wLjE4NTAxMzg5ODk.*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-3.jpg?_gl=1*1hdzk44*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTc1Ny41MC4wLjE4NTAxMzg5ODk.*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/9/1901011315413.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/9/1901011315413.jpg"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/9/1901011315413-1.jpg?_gl=1*1ssif82*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTc3OS4yOC4wLjE4NTAxMzg5ODk.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/9/1901011315413-1.jpg?_gl=1*1ssif82*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTc3OS4yOC4wLjE4NTAxMzg5ODk."
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_7641.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_7641.jpg"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/9/1901011550555_2_.jpg?_gl=1*vok620*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTgzOC41OC4wLjE4NTAxMzg5ODk.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/9/1901011550555_2_.jpg?_gl=1*vok620*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTgzOC41OC4wLjE4NTAxMzg5ODk."
+                        },
+                        new
+                        {
+                            Id = 61,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_232539.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_232539.jpg"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/5/1503010390462-_3_.jpg?_gl=1*1l407rd*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTgzOC41OC4wLjE4NTAxMzg5ODk.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/1/5/1503010390462-_3_.jpg?_gl=1*1l407rd*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE5MDc2OS4yLjEuMTcxODE5MTgzOC41OC4wLjE4NTAxMzg5ODk."
+                        },
+                        new
+                        {
+                            Id = 63,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_42015.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_42015.jpg"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_42015.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_42015.jpg"
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOption", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3245,8 +3350,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsOptionWithImage = true,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Phần",
-                            ProductId = 1
+                            Name = "Tập",
+                            ProductId = 3
                         },
                         new
                         {
@@ -3257,12 +3362,48 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsOptionWithImage = true,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Phân loại",
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            IsOptionWithImage = true,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Phần",
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            IsOptionWithImage = true,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Tập",
-                            ProductId = 2
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            IsOptionWithImage = true,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Màu sắc",
+                            ProductId = 16
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOptionValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3322,12 +3463,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/4/z4113307553305_aa5e027926d792b10f.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367646.jpg",
-                            Value = "Một ngày của tớ và bố"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/z/4/z4113307553305_aa5e027926d792b10f.jpg",
+                            Value = "Tập 1"
                         },
                         new
                         {
@@ -3335,12 +3476,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap2-1165_1.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367653.jpg",
-                            Value = "Một ngày của tớ và mẹ"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap2-1165_1.jpg",
+                            Value = "Tập 2"
                         },
                         new
                         {
@@ -3348,12 +3489,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367660.jpg",
-                            Value = "Một ngày của tớ và ông"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmnpbm3.jpg",
+                            Value = "Tập 3"
                         },
                         new
                         {
@@ -3361,12 +3502,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_tap4.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935212367677.jpg",
-                            Value = "Một ngày của tớ và bà"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_tap4.jpg",
+                            Value = "Tập 4"
                         },
                         new
                         {
@@ -3374,12 +3515,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_bia_tap5.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294357.jpg",
-                            Value = "Tập 1 - Mùa Xuân"
+                            OptionId = 1,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn_phienbanmoi_bia_tap5.jpg",
+                            Value = "Tập 5"
                         },
                         new
                         {
@@ -3387,12 +3528,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap6-364.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294364.jpg",
-                            Value = "Tập 2 - Mùa Hạ"
+                            OptionId = 1,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/l/h/lhmn-phienbanmoi-tap6-364.jpg",
+                            Value = "Tập 6"
                         },
                         new
                         {
@@ -3400,12 +3541,12 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310124.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294371.jpg",
-                            Value = "Tập 3 - Mùa Thu"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310124.jpg",
+                            Value = "WHL202"
                         },
                         new
                         {
@@ -3413,16 +3554,237 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
-                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117.jpg",
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
-                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8936071294388.jpg",
-                            Value = "Tập 4 - Mùa Đông"
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240310117.jpg",
+                            Value = "WHL201"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311008.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311008.jpg",
+                            Value = "KSXST"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240318007.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240318007.jpg",
+                            Value = "MRTSST"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311183.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 2,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/6/9/6920240311183.jpg",
+                            Value = "KPBL"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+                            Value = "Bố Mẹ Luôn Yêu Con"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+                            Value = "Con Từ Đâu Tới?"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___to_dung_cam_noi_khong/2023_04_05_15_26_30_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___to_dung_cam_noi_khong/2023_04_05_15_26_30_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+                            Value = "Tớ Dũng Cảm Nói “Không\""
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/wysiwyg/hieu_kd/2023-08-frame/frame-1.png",
+                            Value = "Nguy Hiểm Đấy Mau Tránh Xa"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___khong_duoc_cham_vao_vung_rieng_tu_cua_to/2023_04_05_15_26_37_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/flashmagazine/images/page_images/giao_duc_dau_doi_cho_tre___nhung_bai_hoc_tu_bao_ve_ban_than___khong_duoc_cham_vao_vung_rieng_tu_cua_to/2023_04_05_15_26_37_1-390x510.jpg?_gl=1*va315b*_gcl_au*MTIyMzg2NjI3OS4xNzE4MTg1MzA5*_ga*ODQ0Njg1MjIwLjE3MTgxODUzMDk.*_ga_460L9JMC2G*MTcxODE4NTMwOS4xLjEuMTcxODE4NjA3MS40My4wLjIxMTI2OTY3NzU.",
+                            Value = "Không Được Chạm Vào Vùng Riêng Tư Của Tớ"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-1_tb-2023.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-1_tb-2023.jpg",
+                            Value = "Tập 1"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-2---tb-2023.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-2---tb-2023.jpg",
+                            Value = "Tập 2"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-3---tb-2023.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-3---tb-2023.jpg",
+                            Value = "Tập 3"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-4_tb-2023.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet_tap-4_tb-2023.jpg",
+                            Value = "Tập 4"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935244890648_1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/9/8935244890648_1.jpg",
+                            Value = "Tập 5"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-6---tb-2023.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/d/o/doi-quan-doraemon-dac-biet---tap-6---tb-2023.jpg",
+                            Value = "Tập 6"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg",
+                            Value = "Vàng"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau3.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau3.jpg",
+                            Value = "Nâu"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LargeImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg",
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 5,
+                            ThumbnailImageUrl = "https://cdn0.fahasa.com/media/catalog/product/8/8/8801237897492-mau1.jpg",
+                            Value = "Trắng"
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductPriceHistory", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductPriceHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3471,7 +3833,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("ProductPriceHistories", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Rating", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3609,7 +3971,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.RatingLike", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.RatingLike", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3657,7 +4019,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Sku", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3750,8 +4112,8 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Barcode = "0765083359063",
-                            Comment = "",
+                            Barcode = " ",
+                            Comment = "Good",
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsActive = true,
@@ -3760,166 +4122,40 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 1,
                             Quantity = 20,
-                            RecommendedRetailPrice = 35000m,
+                            RecommendedRetailPrice = 49000m,
                             Status = "InStock",
-                            Tags = "",
+                            Tags = " ",
                             TaxRate = 0m,
-                            UnitPrice = 31500m,
+                            UnitPrice = 39200m,
                             ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 100
+                            Weight = 150
                         },
                         new
                         {
                             Id = 2,
-                            Barcode = "0462639494097",
-                            Comment = "",
+                            Barcode = " ",
+                            Comment = "Not Bad",
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsActive = true,
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1,
+                            ProductId = 2,
                             Quantity = 20,
-                            RecommendedRetailPrice = 35000m,
+                            RecommendedRetailPrice = 75000m,
                             Status = "InStock",
-                            Tags = "",
+                            Tags = " ",
                             TaxRate = 0m,
-                            UnitPrice = 31500m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2020), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 100
+                            UnitPrice = 60000m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 130
                         },
                         new
                         {
                             Id = 3,
-                            Barcode = "1482949057379",
-                            Comment = "",
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1,
-                            Quantity = 20,
-                            RecommendedRetailPrice = 35000m,
-                            Status = "InStock",
-                            Tags = "",
-                            TaxRate = 0m,
-                            UnitPrice = 31500m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2110), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 100
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Barcode = "6267047946549",
-                            Comment = "",
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 1,
-                            Quantity = 20,
-                            RecommendedRetailPrice = 35000m,
-                            Status = "InStock",
-                            Tags = "",
-                            TaxRate = 0m,
-                            UnitPrice = 31500m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2180), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 100
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Barcode = "9606726677252",
-                            Comment = "",
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2,
-                            Quantity = 20,
-                            RecommendedRetailPrice = 20000m,
-                            Status = "InStock",
-                            Tags = "",
-                            TaxRate = 0m,
-                            UnitPrice = 18000m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2510), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 150
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Barcode = "8379760183413",
-                            Comment = "",
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2,
-                            Quantity = 20,
-                            RecommendedRetailPrice = 20000m,
-                            Status = "InStock",
-                            Tags = "",
-                            TaxRate = 0m,
-                            UnitPrice = 18000m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2620), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 150
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Barcode = "4501110187232",
-                            Comment = "",
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2,
-                            Quantity = 20,
-                            RecommendedRetailPrice = 20000m,
-                            Status = "InStock",
-                            Tags = "",
-                            TaxRate = 0m,
-                            UnitPrice = 18000m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2740), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 150
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Barcode = "1262570326893",
-                            Comment = "",
-                            CreatedBy = 2,
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsActive = true,
-                            IsDeleted = false,
-                            LastEditedBy = 2,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            ProductId = 2,
-                            Quantity = 20,
-                            RecommendedRetailPrice = 20000m,
-                            Status = "InStock",
-                            Tags = "",
-                            TaxRate = 0m,
-                            UnitPrice = 18000m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2850), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 150
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Barcode = "2875627948270",
-                            Comment = "",
+                            Barcode = " ",
+                            Comment = "Good",
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsActive = true,
@@ -3928,19 +4164,187 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 3,
                             Quantity = 20,
-                            RecommendedRetailPrice = 31000m,
+                            RecommendedRetailPrice = 25000m,
                             Status = "InStock",
-                            Tags = "",
+                            Tags = " ",
                             TaxRate = 0m,
-                            UnitPrice = 27900m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(2980), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 190
+                            UnitPrice = 22500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 80
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 25000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 22500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 80
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            Quantity = 0,
+                            RecommendedRetailPrice = 25000m,
+                            Status = "OutOfStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 22500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 80
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            Quantity = 0,
+                            RecommendedRetailPrice = 25000m,
+                            Status = "OutOfStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 22500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 80
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 25000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 22500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 80
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 25000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 22500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 80
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            Quantity = 15,
+                            RecommendedRetailPrice = 89000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 80100m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 19, 18, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 100
                         },
                         new
                         {
                             Id = 10,
-                            Barcode = "5273035092419",
-                            Comment = "",
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            Quantity = 27,
+                            RecommendedRetailPrice = 72000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 64800m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 19, 18, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 100
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            Quantity = 30,
+                            RecommendedRetailPrice = 106000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 95400m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 19, 18, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 2, 0, 0)),
+                            Weight = 55
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Barcode = " ",
+                            Comment = "Good",
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsActive = true,
@@ -3949,19 +4353,40 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 4,
                             Quantity = 20,
-                            RecommendedRetailPrice = 170000m,
+                            RecommendedRetailPrice = 111000m,
                             Status = "InStock",
-                            Tags = "",
+                            Tags = " ",
                             TaxRate = 0m,
-                            UnitPrice = 170000m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(3120), new TimeSpan(0, 0, 0, 0, 0)),
-                            Weight = 1200
+                            UnitPrice = 99900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 19, 18, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 3, 0, 0)),
+                            Weight = 43
                         },
                         new
                         {
-                            Id = 11,
-                            Barcode = "3169651688303",
-                            Comment = "",
+                            Id = 13,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4,
+                            Quantity = 0,
+                            RecommendedRetailPrice = 101000m,
+                            Status = "OutOfStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 90900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 19, 18, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 4, 0, 0)),
+                            Weight = 26
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Barcode = " ",
+                            Comment = "Good",
                             CreatedBy = 2,
                             CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             IsActive = true,
@@ -3970,17 +4395,563 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             ProductId = 5,
                             Quantity = 20,
-                            RecommendedRetailPrice = 180000m,
+                            RecommendedRetailPrice = 55000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 49500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 53
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            Quantity = 15,
+                            RecommendedRetailPrice = 42000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 33600m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 133
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 42000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 33600m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 133
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            Quantity = 10,
+                            RecommendedRetailPrice = 42000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 33600m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 133
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 42000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 33600m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 0, 0, 0)),
+                            Weight = 133
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 42000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 33600m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 133
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Barcode = " ",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            Quantity = 20,
+                            RecommendedRetailPrice = 22000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 20900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            Quantity = 32,
+                            RecommendedRetailPrice = 22000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 20900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            Quantity = 14,
+                            RecommendedRetailPrice = 22000m,
+                            Status = "InStock",
+                            Tags = " ",
+                            TaxRate = 0m,
+                            UnitPrice = 20900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            Quantity = 26,
+                            RecommendedRetailPrice = 22000m,
                             Status = "InStock",
                             Tags = "",
                             TaxRate = 0m,
-                            UnitPrice = 180000m,
-                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(3210), new TimeSpan(0, 0, 0, 0, 0)),
+                            UnitPrice = 20900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            Quantity = 15,
+                            RecommendedRetailPrice = 22000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 20900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Barcode = " ",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7,
+                            Quantity = 18,
+                            RecommendedRetailPrice = 22000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 20900m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Barcode = "",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8,
+                            Quantity = 19,
+                            RecommendedRetailPrice = 179000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 125300m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
                             Weight = 2500
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9,
+                            Quantity = 21,
+                            RecommendedRetailPrice = 1390000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 97300m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 450
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Barcode = "",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10,
+                            Quantity = 10,
+                            RecommendedRetailPrice = 145000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 101500m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 350
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11,
+                            Quantity = 5,
+                            RecommendedRetailPrice = 119000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 95200m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 300
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12,
+                            Quantity = 15,
+                            RecommendedRetailPrice = 124000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 83080m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 320
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Barcode = "",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13,
+                            Quantity = 0,
+                            RecommendedRetailPrice = 139000m,
+                            Status = "OutOfStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 97300m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 340
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14,
+                            Quantity = 6,
+                            RecommendedRetailPrice = 89000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 62300m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 220
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Barcode = "",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15,
+                            Quantity = 8,
+                            RecommendedRetailPrice = 158000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 126400m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 415
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16,
+                            Quantity = 50,
+                            RecommendedRetailPrice = 33000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 31350m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 10
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16,
+                            Quantity = 40,
+                            RecommendedRetailPrice = 33000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 31350m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 10
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Barcode = "",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16,
+                            Quantity = 25,
+                            RecommendedRetailPrice = 33000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 31350m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 10
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17,
+                            Quantity = 100,
+                            RecommendedRetailPrice = 6000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 5400m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 195
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Barcode = "",
+                            Comment = "Not Bad",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18,
+                            Quantity = 50,
+                            RecommendedRetailPrice = 37500m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 33750m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 54
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19,
+                            Quantity = 40,
+                            RecommendedRetailPrice = 13000m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 11700m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 55
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Barcode = "",
+                            Comment = "Good",
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20,
+                            Quantity = 15,
+                            RecommendedRetailPrice = 16500m,
+                            Status = "InStock",
+                            Tags = "",
+                            TaxRate = 0m,
+                            UnitPrice = 14850m,
+                            ValidFrom = new DateTimeOffset(new DateTime(2024, 5, 18, 16, 0, 46, 140, DateTimeKind.Unspecified).AddTicks(1770), new TimeSpan(0, 0, 1, 0, 0)),
+                            Weight = 250
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.SkuOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.SkuOptionValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4042,7 +5013,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
                             OptionValueId = 1,
-                            SkuId = 1
+                            SkuId = 3
                         },
                         new
                         {
@@ -4054,7 +5025,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
                             OptionValueId = 2,
-                            SkuId = 2
+                            SkuId = 4
                         },
                         new
                         {
@@ -4066,7 +5037,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
                             OptionValueId = 3,
-                            SkuId = 3
+                            SkuId = 5
                         },
                         new
                         {
@@ -4078,7 +5049,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 1,
                             OptionValueId = 4,
-                            SkuId = 4
+                            SkuId = 6
                         },
                         new
                         {
@@ -4088,9 +5059,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            OptionId = 2,
+                            OptionId = 1,
                             OptionValueId = 5,
-                            SkuId = 5
+                            SkuId = 7
                         },
                         new
                         {
@@ -4100,9 +5071,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             IsDeleted = false,
                             LastEditedBy = 2,
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
-                            OptionId = 2,
+                            OptionId = 1,
                             OptionValueId = 6,
-                            SkuId = 6
+                            SkuId = 8
                         },
                         new
                         {
@@ -4114,7 +5085,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
                             OptionValueId = 7,
-                            SkuId = 7
+                            SkuId = 9
                         },
                         new
                         {
@@ -4126,11 +5097,215 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
                             OptionId = 2,
                             OptionValueId = 8,
-                            SkuId = 8
+                            SkuId = 10
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 2,
+                            OptionValueId = 9,
+                            SkuId = 11
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 2,
+                            OptionValueId = 10,
+                            SkuId = 12
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 2,
+                            OptionValueId = 11,
+                            SkuId = 13
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            OptionValueId = 12,
+                            SkuId = 15
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            OptionValueId = 13,
+                            SkuId = 16
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            OptionValueId = 14,
+                            SkuId = 17
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            OptionValueId = 15,
+                            SkuId = 18
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 3,
+                            OptionValueId = 16,
+                            SkuId = 19
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            OptionValueId = 17,
+                            SkuId = 20
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            OptionValueId = 18,
+                            SkuId = 21
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            OptionValueId = 19,
+                            SkuId = 22
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            OptionValueId = 20,
+                            SkuId = 23
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            OptionValueId = 21,
+                            SkuId = 24
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 4,
+                            OptionValueId = 22,
+                            SkuId = 25
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 5,
+                            OptionValueId = 23,
+                            SkuId = 34
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 5,
+                            OptionValueId = 24,
+                            SkuId = 35
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            OptionId = 5,
+                            OptionValueId = 25,
+                            SkuId = 36
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.UnitMeasure", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.UnitMeasure", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4214,7 +5389,3606 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ShoppingCart.ShoppingCartItem", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentProductTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductTypeCode")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DisplayName")
+                        .IsUnique();
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("ParentProductTypeId");
+
+                    b.ToTable("ProductTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại sách viết bằng tiếng Việt",
+                            DisplayName = "Sách Tiếng Việt",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 1,
+                            ProductTypeCode = "sach-tieng-viet"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Sách dành cho thiếu nhi",
+                            DisplayName = "Thiếu Nhi",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "thieu-nhi"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Truyện Thiếu Nhi",
+                            DisplayName = "Truyện Thiếu Nhi",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 2,
+                            ProductTypeCode = "truyen-thieu-nhi"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Kiến Thức - Kỹ Năng Sống Cho Trẻ",
+                            DisplayName = "Kiến Thức - Kỹ Năng Sống Cho Trẻ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 2,
+                            ProductTypeCode = "kien-thuc-ky-nang-song-cho-tre"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tô Màu, Luyện Chữ",
+                            DisplayName = "Tô Màu, Luyện Chữ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 2,
+                            ProductTypeCode = "to-mau-luyen-chu"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Sách giáo khoa và sách tham khảo",
+                            DisplayName = "Giáo Khoa - Tham Khảo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "giao-khoa-tham-khao"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sách Tham Khảo",
+                            DisplayName = "Sách Tham Khảo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 6,
+                            ProductTypeCode = "sach-tham-khao"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sách Giáo Khoa",
+                            DisplayName = "Sách Giáo Khoa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 6,
+                            ProductTypeCode = "sach-giao-khoa"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các tác phẩm văn học",
+                            DisplayName = "Văn Học",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "van-hoc"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tiểu Thuyết",
+                            DisplayName = "Tiểu Thuyết",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 9,
+                            ProductTypeCode = "tieu-thuyet"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Truyện Ngắn - Tản Văn",
+                            DisplayName = "Truyện Ngắn - Tản Văn",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 9,
+                            ProductTypeCode = "truyen-ngan-tan-van"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Light Novel",
+                            DisplayName = "Light Novel",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 9,
+                            ProductTypeCode = "light-novel"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Ngôn Tình",
+                            DisplayName = "Ngôn Tình",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 9,
+                            ProductTypeCode = "ngon-tinh"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Truyện Tranh",
+                            DisplayName = "Truyện Tranh",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 9,
+                            ProductTypeCode = "truyen-tranh"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Sách về tâm lý và kỹ năng sống",
+                            DisplayName = "Tâm Lý - Kỹ Năng Sống",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "tam-ly-ky-nang-song"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Kỹ Năng Sống",
+                            DisplayName = "Kỹ Năng Sống",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 15,
+                            ProductTypeCode = "ky-nang-song"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tâm Lý",
+                            DisplayName = "Tâm Lý",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 15,
+                            ProductTypeCode = "tam-ly"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sách Cho Tuổi Mới Lớn",
+                            DisplayName = "Sách Cho Tuổi Mới Lớn",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 15,
+                            ProductTypeCode = "sach-cho-tuoi-moi-lon"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Truyện tranh Manga và Comic",
+                            DisplayName = "Manga - Comic",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "manga-comic"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Manga",
+                            DisplayName = "Manga",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 19,
+                            ProductTypeCode = "manga"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Comic - Truyện Tranh",
+                            DisplayName = "Comic - Truyện Tranh",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 19,
+                            ProductTypeCode = "comic-truyen-tranh"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Sách học ngoại ngữ",
+                            DisplayName = "Sách Học Ngoại Ngữ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "sach-hoc-ngoai-ngu"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tiếng Anh",
+                            DisplayName = "Tiếng Anh",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 22,
+                            ProductTypeCode = "tieng-anh"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tiếng Hoa",
+                            DisplayName = "Tiếng Hoa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 22,
+                            ProductTypeCode = "tieng-hoa"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tiếng Nhật",
+                            DisplayName = "Tiếng Nhật",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 22,
+                            ProductTypeCode = "tieng-nhat"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tiếng Hàn",
+                            DisplayName = "Tiếng Hàn",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 22,
+                            ProductTypeCode = "tieng-han"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Sách về kinh tế",
+                            DisplayName = "Kinh Tế",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "kinh-te"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Quản Trị - Lãnh Đạo",
+                            DisplayName = "Quản Trị - Lãnh Đạo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 27,
+                            ProductTypeCode = "quan-tri-lanh-dao"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Marketing - Bán Hàng",
+                            DisplayName = "Marketing - Bán Hàng",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 27,
+                            ProductTypeCode = "marketing-ban-hang"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Khởi Nghiệp - Làm Giàu",
+                            DisplayName = "Khởi Nghiệp - Làm Giàu",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 27,
+                            ProductTypeCode = "khoi-nghiep-lam-giau"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Chứng Khoán - Bất Động Sản - Đầu Tư",
+                            DisplayName = "Chứng Khoán - Bất Động Sản - Đầu Tư",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 27,
+                            ProductTypeCode = "chung-khoan-bat-dong-san-dau-tu"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại từ điển",
+                            DisplayName = "Từ Điển",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 1,
+                            ProductTypeCode = "tu-dien"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Foreign Books",
+                            DisplayName = "Foreign Books",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 1,
+                            ProductTypeCode = "foreign-books"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Children's Books",
+                            DisplayName = "Children's Books",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 33,
+                            ProductTypeCode = "childrens-books"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Picture & Activity Books",
+                            DisplayName = "Picture & Activity Books",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 34,
+                            ProductTypeCode = "picture-activity-books"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Education",
+                            DisplayName = "Education",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 34,
+                            ProductTypeCode = "education"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Dictionaries & Languages",
+                            DisplayName = "Dictionaries & Languages",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 33,
+                            ProductTypeCode = "dictionaries-languages"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Thesauri",
+                            DisplayName = "Thesauri",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 37,
+                            ProductTypeCode = "thesauri"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Dictionaries",
+                            DisplayName = "Dictionaries",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 37,
+                            ProductTypeCode = "dictionaries"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Linguistics",
+                            DisplayName = "Linguistics",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 37,
+                            ProductTypeCode = "linguistics"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Computing",
+                            DisplayName = "Computing",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 33,
+                            ProductTypeCode = "computing"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Computer Science",
+                            DisplayName = "Computer Science",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 41,
+                            ProductTypeCode = "computer-science"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Databases",
+                            DisplayName = "Databases",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 41,
+                            ProductTypeCode = "databases"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Computer Programming - Software Development",
+                            DisplayName = "Computer Programming - Software Development",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 41,
+                            ProductTypeCode = "computer-programming-software-development"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Romance",
+                            DisplayName = "Romance",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 33,
+                            ProductTypeCode = "romance"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Humour",
+                            DisplayName = "Humour",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 33,
+                            ProductTypeCode = "humour"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Văn Phòng Phẩm - Dụng Cụ Học Sinh",
+                            DisplayName = "Văn Phòng Phẩm - Dụng Cụ Học Sinh",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 1,
+                            ProductTypeCode = "van-phong-pham-dung-cu-hoc-sinh"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút - Viết",
+                            DisplayName = "Bút - Viết",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "but-viet"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Chì - Ruột Bút Chì",
+                            DisplayName = "Bút Chì - Ruột Bút Chì",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 48,
+                            ProductTypeCode = "but-chi-ruot-but-chi"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Bi - Ruột Bút Bi",
+                            DisplayName = "Bút Bi - Ruột Bút Bi",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 48,
+                            ProductTypeCode = "but-bi-ruot-but-bi"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Lông",
+                            DisplayName = "Bút Lông",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 48,
+                            ProductTypeCode = "but-long"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Dạ Quang",
+                            DisplayName = "Bút Dạ Quang",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 48,
+                            ProductTypeCode = "but-da-quang"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Mực - Bút Máy",
+                            DisplayName = "Bút Mực - Bút Máy",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 48,
+                            ProductTypeCode = "but-muc-but-may"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sản Phẩm Về Giấy",
+                            DisplayName = "Sản Phẩm Về Giấy",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "san-pham-ve-giay"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sổ Các Loại",
+                            DisplayName = "Sổ Các Loại",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "so-cac-loai"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tập - Vở",
+                            DisplayName = "Tập - Vở",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "tap-vo"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Giấy Note",
+                            DisplayName = "Giấy Note",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "giay-note"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sticker",
+                            DisplayName = "Sticker",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "sticker"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Nhãn Vở - Nhãn Tên",
+                            DisplayName = "Nhãn Vở - Nhãn Tên",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "nhan-vo-nhan-ten"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Giấy Kiểm Tra",
+                            DisplayName = "Giấy Kiểm Tra",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "giay-kiem-tra"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Giấy Photo",
+                            DisplayName = "Giấy Photo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "giay-photo"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Giấy Bìa",
+                            DisplayName = "Giấy Bìa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 54,
+                            ProductTypeCode = "giay-bia"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Dụng Cụ Học Sinh",
+                            DisplayName = "Dụng Cụ Học Sinh",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "dung-cu-hoc-sinh"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Gôm - Tẩy",
+                            DisplayName = "Gôm - Tẩy",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "gom-tay"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Gọt Bút Chì",
+                            DisplayName = "Gọt Bút Chì",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "got-but-chi"
+                        },
+                        new
+                        {
+                            Id = 66,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bóp Viết - Hộp Bút",
+                            DisplayName = "Bóp Viết - Hộp Bút",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "bop-viet-hop-but"
+                        },
+                        new
+                        {
+                            Id = 67,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Cặp - Ba Lô",
+                            DisplayName = "Cặp - Ba Lô",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "cap-ba-lo"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Thước",
+                            DisplayName = "Thước",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "thuoc"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Compa",
+                            DisplayName = "Compa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "compa"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bảng Viết - Bông Lau Bảng",
+                            DisplayName = "Bảng Viết - Bông Lau Bảng",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "bang-viet-bong-lau-bang"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bao Tập - Bao Sách",
+                            DisplayName = "Bao Tập - Bao Sách",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "bao-tap-bao-sach"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Mực",
+                            DisplayName = "Mực",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "muc"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Phấn - Hộp Đựng Phấn",
+                            DisplayName = "Phấn - Hộp Đựng Phấn",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 63,
+                            ProductTypeCode = "phan-hop-dung-phan"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Dụng Cụ Vẽ",
+                            DisplayName = "Dụng Cụ Vẽ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "dung-cu-ve"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Vẽ",
+                            DisplayName = "Bút Vẽ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 74,
+                            ProductTypeCode = "but-ve"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Màu Vẽ",
+                            DisplayName = "Màu Vẽ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 74,
+                            ProductTypeCode = "mau-ve"
+                        },
+                        new
+                        {
+                            Id = 77,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Tập Vẽ - Giấy Vẽ",
+                            DisplayName = "Tập Vẽ - Giấy Vẽ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 74,
+                            ProductTypeCode = "tap-ve-giay-ve"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Dụng Cụ Văn Phòng",
+                            DisplayName = "Dụng Cụ Văn Phòng",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "dung-cu-van-phong"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bìa - File Hồ Sơ",
+                            DisplayName = "Bìa - File Hồ Sơ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 78,
+                            ProductTypeCode = "bia-file-ho-so"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đồ Bấm Kim - Kim Bấm - Gỡ Kim - Kim Kẹp",
+                            DisplayName = "Đồ Bấm Kim - Kim Bấm - Gỡ Kim - Kim Kẹp",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 78,
+                            ProductTypeCode = "do-bam-kim-kim-bam-go-kim-kim-kep"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Kẹp Giấy - Kẹp Bướm - Kẹp Các Loại",
+                            DisplayName = "Kẹp Giấy - Kẹp Bướm - Kẹp Các Loại",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 78,
+                            ProductTypeCode = "kep-giay-kep-buom-kep-cac-loai"
+                        },
+                        new
+                        {
+                            Id = 82,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Cắm Bút",
+                            DisplayName = "Cắm Bút",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 78,
+                            ProductTypeCode = "cam-but"
+                        },
+                        new
+                        {
+                            Id = 83,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sản Phẩm VPP Khác",
+                            DisplayName = "Sản Phẩm Vpp Khác",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "san-pham-vpp-khac"
+                        },
+                        new
+                        {
+                            Id = 84,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Dao Rọc Giấy - Lưỡi Dao Rọc Giấy - Kéo",
+                            DisplayName = "Dao Rọc Giấy - Lưỡi Dao Rọc Giấy - Kéo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 83,
+                            ProductTypeCode = "dao-roc-giay-luoi-dao-roc-giay-keo"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bút Xóa Nước - Xóa Kéo",
+                            DisplayName = "Bút Xóa Nước - Xóa Kéo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 83,
+                            ProductTypeCode = "but-xoa-nuoc-xoa-keo"
+                        },
+                        new
+                        {
+                            Id = 86,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Băng Keo - Cắt Băng Keo",
+                            DisplayName = "Băng Keo - Cắt Băng Keo",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 83,
+                            ProductTypeCode = "bang-keo-cat-bang-keo"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Keo Khô - Hồ Dán",
+                            DisplayName = "Keo Khô - Hồ Dán",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 83,
+                            ProductTypeCode = "keo-kho-ho-dan"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Thiệp",
+                            DisplayName = "Thiệp",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 47,
+                            ProductTypeCode = "thiep"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đồ Chơi",
+                            DisplayName = "Đồ Chơi",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 1,
+                            ProductTypeCode = "do-choi"
+                        },
+                        new
+                        {
+                            Id = 90,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Board Game",
+                            DisplayName = "Board Game",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 89,
+                            ProductTypeCode = "board-game"
+                        },
+                        new
+                        {
+                            Id = 91,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đồ Chơi Vận Động",
+                            DisplayName = "Đồ Chơi Vận Động",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 89,
+                            ProductTypeCode = "do-choi-van-dong"
+                        },
+                        new
+                        {
+                            Id = 92,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đồ Chơi Điều Khiển",
+                            DisplayName = "Đồ Chơi Điều Khiển",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 89,
+                            ProductTypeCode = "do-choi-dieu-khien"
+                        },
+                        new
+                        {
+                            Id = 93,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Robot - Siêu Nhân",
+                            DisplayName = "Robot - Siêu Nhân",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 89,
+                            ProductTypeCode = "robot-sieu-nhan"
+                        },
+                        new
+                        {
+                            Id = 94,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bách Hóa Tổng Hợp",
+                            DisplayName = "Bách Hóa Tổng Hợp",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 1,
+                            ProductTypeCode = "bach-hoa-tong-hop"
+                        },
+                        new
+                        {
+                            Id = 95,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Nhà Cửa - Đời Sống",
+                            DisplayName = "Nhà Cửa - Đời Sống",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 94,
+                            ProductTypeCode = "nha-cua-doi-song"
+                        },
+                        new
+                        {
+                            Id = 96,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Ly, Cốc, Bình Nước",
+                            DisplayName = "Ly, Cốc, Bình Nước",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 95,
+                            ProductTypeCode = "ly-coc-binh-nuoc"
+                        },
+                        new
+                        {
+                            Id = 97,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Sửa Chữa Nhà Cửa",
+                            DisplayName = "Sửa Chữa Nhà Cửa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 95,
+                            ProductTypeCode = "sua-chua-nha-cua"
+                        },
+                        new
+                        {
+                            Id = 98,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Bảo Vệ Nhà Cửa",
+                            DisplayName = "Bảo Vệ Nhà Cửa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 95,
+                            ProductTypeCode = "bao-ve-nha-cua"
+                        },
+                        new
+                        {
+                            Id = 99,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đồ Dùng Cá Nhân",
+                            DisplayName = "Đồ Dùng Cá Nhân",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 94,
+                            ProductTypeCode = "do-dung-ca-nhan"
+                        },
+                        new
+                        {
+                            Id = 100,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Túi - Ví Thời Trang",
+                            DisplayName = "Túi - Ví Thời Trang",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 99,
+                            ProductTypeCode = "tui-vi-thoi-trang"
+                        },
+                        new
+                        {
+                            Id = 101,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Phụ Kiện Tóc",
+                            DisplayName = "Phụ Kiện Tóc",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 99,
+                            ProductTypeCode = "phu-kien-toc"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Phụ Kiện Thời Trang",
+                            DisplayName = "Phụ Kiện Thời Trang",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 99,
+                            ProductTypeCode = "phu-kien-thoi-trang"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đồ Điện Gia Dụng",
+                            DisplayName = "Đồ Điện Gia Dụng",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 94,
+                            ProductTypeCode = "do-dien-gia-dung"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Pin & Dụng Cụ Sạc Pin",
+                            DisplayName = "Pin & Dụng Cụ Sạc Pin",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 103,
+                            ProductTypeCode = "pin-dung-cu-sac-pin"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Đèn Bàn",
+                            DisplayName = "Đèn Bàn",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 103,
+                            ProductTypeCode = "den-ban"
+                        },
+                        new
+                        {
+                            Id = 106,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Ổ Cắm Điện",
+                            DisplayName = "Ổ Cắm Điện",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 3,
+                            ParentProductTypeId = 103,
+                            ProductTypeCode = "o-cam-dien"
+                        },
+                        new
+                        {
+                            Id = 107,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Lưu Niệm",
+                            DisplayName = "Lưu Niệm",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 1,
+                            ProductTypeCode = "luu-niem"
+                        },
+                        new
+                        {
+                            Id = 108,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Móc Khóa",
+                            DisplayName = "Móc Khóa",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 107,
+                            ProductTypeCode = "moc-khoa"
+                        },
+                        new
+                        {
+                            Id = 109,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Hộp Quà - Túi Quà",
+                            DisplayName = "Hộp Quà - Túi Quà",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 107,
+                            ProductTypeCode = "hop-qua-tui-qua"
+                        },
+                        new
+                        {
+                            Id = 110,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Kẹp Ảnh Gỗ",
+                            DisplayName = "Kẹp Ảnh Gỗ",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 107,
+                            ProductTypeCode = "kep-anh-go"
+                        },
+                        new
+                        {
+                            Id = 111,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Description = "Các loại Khung Hình",
+                            DisplayName = "Khung Hình",
+                            IsDeleted = false,
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Level = 2,
+                            ParentProductTypeId = 107,
+                            ProductTypeCode = "khung-hinh"
+                        });
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeAttributeId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypeAttributes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "NXB"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Năm xuất bản"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Ngôn ngữ"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Số trang"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Hình thức"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Thương hiệu"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Xuất xứ thương hiệu"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Nơi gia công & sản xuất"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Màu sắc"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Chất liệu"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Độ tuổi"
+                        });
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeAttributeMappingId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ProductAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("ProductAttributeId");
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.ToTable("ProductTypeAttributeMappings", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 2,
+                            ProductTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 3,
+                            ProductTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 4,
+                            ProductTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 5,
+                            ProductTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 6,
+                            ProductTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 2,
+                            ProductTypeId = 33
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 3,
+                            ProductTypeId = 33
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 4,
+                            ProductTypeId = 33
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 5,
+                            ProductTypeId = 33
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 6,
+                            ProductTypeId = 33
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 7,
+                            ProductTypeId = 47
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 8,
+                            ProductTypeId = 47
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 9,
+                            ProductTypeId = 47
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 10,
+                            ProductTypeId = 47
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 11,
+                            ProductTypeId = 47
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 12,
+                            ProductTypeId = 89
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 7,
+                            ProductTypeId = 89
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 8,
+                            ProductTypeId = 89
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 9,
+                            ProductTypeId = 89
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 11,
+                            ProductTypeId = 89
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 10,
+                            ProductTypeId = 89
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 7,
+                            ProductTypeId = 94
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 8,
+                            ProductTypeId = 94
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 9,
+                            ProductTypeId = 94
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 11,
+                            ProductTypeId = 94
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 10,
+                            ProductTypeId = 94
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 7,
+                            ProductTypeId = 107
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 8,
+                            ProductTypeId = 107
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 9,
+                            ProductTypeId = 107
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 11,
+                            ProductTypeId = 107
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductAttributeId = 10,
+                            ProductTypeId = 107
+                        });
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeProductValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeAttributeProductValueId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeValueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeValueId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("ProductId", "AttributeValueId")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypeAttributeProductValues", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AttributeValueId = 1,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AttributeValueId = 2,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AttributeValueId = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AttributeValueId = 1,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AttributeValueId = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AttributeValueId = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AttributeValueId = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            AttributeValueId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            AttributeValueId = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 16,
+                            AttributeValueId = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 17,
+                            AttributeValueId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 18,
+                            AttributeValueId = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 19,
+                            AttributeValueId = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            AttributeValueId = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            AttributeValueId = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 22,
+                            AttributeValueId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 23,
+                            AttributeValueId = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 24,
+                            AttributeValueId = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 25,
+                            AttributeValueId = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 26,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 27,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 28,
+                            AttributeValueId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 29,
+                            AttributeValueId = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 30,
+                            AttributeValueId = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 31,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 32,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 33,
+                            AttributeValueId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 34,
+                            AttributeValueId = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 35,
+                            AttributeValueId = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 36,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 37,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 38,
+                            AttributeValueId = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 39,
+                            AttributeValueId = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 40,
+                            AttributeValueId = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 41,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 42,
+                            AttributeValueId = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 43,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 44,
+                            AttributeValueId = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 45,
+                            AttributeValueId = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 46,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 47,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 48,
+                            AttributeValueId = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 49,
+                            AttributeValueId = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 50,
+                            AttributeValueId = 26,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 51,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11
+                        },
+                        new
+                        {
+                            Id = 52,
+                            AttributeValueId = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11
+                        },
+                        new
+                        {
+                            Id = 53,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11
+                        },
+                        new
+                        {
+                            Id = 54,
+                            AttributeValueId = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11
+                        },
+                        new
+                        {
+                            Id = 55,
+                            AttributeValueId = 26,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 11
+                        },
+                        new
+                        {
+                            Id = 56,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12
+                        },
+                        new
+                        {
+                            Id = 57,
+                            AttributeValueId = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12
+                        },
+                        new
+                        {
+                            Id = 58,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12
+                        },
+                        new
+                        {
+                            Id = 59,
+                            AttributeValueId = 27,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12
+                        },
+                        new
+                        {
+                            Id = 60,
+                            AttributeValueId = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 12
+                        },
+                        new
+                        {
+                            Id = 61,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13
+                        },
+                        new
+                        {
+                            Id = 62,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13
+                        },
+                        new
+                        {
+                            Id = 63,
+                            AttributeValueId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13
+                        },
+                        new
+                        {
+                            Id = 64,
+                            AttributeValueId = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13
+                        },
+                        new
+                        {
+                            Id = 65,
+                            AttributeValueId = 29,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 13
+                        },
+                        new
+                        {
+                            Id = 66,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14
+                        },
+                        new
+                        {
+                            Id = 67,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14
+                        },
+                        new
+                        {
+                            Id = 68,
+                            AttributeValueId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14
+                        },
+                        new
+                        {
+                            Id = 69,
+                            AttributeValueId = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14
+                        },
+                        new
+                        {
+                            Id = 70,
+                            AttributeValueId = 30,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 14
+                        },
+                        new
+                        {
+                            Id = 71,
+                            AttributeValueId = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15
+                        },
+                        new
+                        {
+                            Id = 72,
+                            AttributeValueId = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15
+                        },
+                        new
+                        {
+                            Id = 73,
+                            AttributeValueId = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15
+                        },
+                        new
+                        {
+                            Id = 74,
+                            AttributeValueId = 31,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15
+                        },
+                        new
+                        {
+                            Id = 75,
+                            AttributeValueId = 32,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 15
+                        },
+                        new
+                        {
+                            Id = 76,
+                            AttributeValueId = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16
+                        },
+                        new
+                        {
+                            Id = 77,
+                            AttributeValueId = 33,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16
+                        },
+                        new
+                        {
+                            Id = 78,
+                            AttributeValueId = 34,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16
+                        },
+                        new
+                        {
+                            Id = 79,
+                            AttributeValueId = 35,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16
+                        },
+                        new
+                        {
+                            Id = 80,
+                            AttributeValueId = 36,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 16
+                        },
+                        new
+                        {
+                            Id = 81,
+                            AttributeValueId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17
+                        },
+                        new
+                        {
+                            Id = 82,
+                            AttributeValueId = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17
+                        },
+                        new
+                        {
+                            Id = 83,
+                            AttributeValueId = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17
+                        },
+                        new
+                        {
+                            Id = 84,
+                            AttributeValueId = 37,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17
+                        },
+                        new
+                        {
+                            Id = 85,
+                            AttributeValueId = 38,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 17
+                        },
+                        new
+                        {
+                            Id = 86,
+                            AttributeValueId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18
+                        },
+                        new
+                        {
+                            Id = 87,
+                            AttributeValueId = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18
+                        },
+                        new
+                        {
+                            Id = 88,
+                            AttributeValueId = 37,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18
+                        },
+                        new
+                        {
+                            Id = 89,
+                            AttributeValueId = 39,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18
+                        },
+                        new
+                        {
+                            Id = 90,
+                            AttributeValueId = 40,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 18
+                        },
+                        new
+                        {
+                            Id = 91,
+                            AttributeValueId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19
+                        },
+                        new
+                        {
+                            Id = 92,
+                            AttributeValueId = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19
+                        },
+                        new
+                        {
+                            Id = 93,
+                            AttributeValueId = 39,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19
+                        },
+                        new
+                        {
+                            Id = 94,
+                            AttributeValueId = 41,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19
+                        },
+                        new
+                        {
+                            Id = 95,
+                            AttributeValueId = 42,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 19
+                        },
+                        new
+                        {
+                            Id = 96,
+                            AttributeValueId = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20
+                        },
+                        new
+                        {
+                            Id = 97,
+                            AttributeValueId = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20
+                        },
+                        new
+                        {
+                            Id = 98,
+                            AttributeValueId = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20
+                        },
+                        new
+                        {
+                            Id = 99,
+                            AttributeValueId = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20
+                        },
+                        new
+                        {
+                            Id = 100,
+                            AttributeValueId = 37,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductId = 20
+                        });
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeAttributeValueId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("LastEditedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastEditedWhen")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ProductTypeAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastEditedBy");
+
+                    b.HasIndex("ProductTypeAttributeId", "Value")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypeAttributeValues", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Hội Nhà Văn"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "144"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 6,
+                            Value = "Bìa Mềm"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 3,
+                            Value = "2019"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 3,
+                            Value = "2022"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 4,
+                            Value = "Tiếng Việt"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "102"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Báo Sinh Viên Việt Nam - Hoa Học Trò"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 3,
+                            Value = "2023"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "100"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 7,
+                            Value = "WanLongDa"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 8,
+                            Value = "Trung Quốc"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 9,
+                            Value = "Trung Quốc"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 10,
+                            Value = "Nâu"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 11,
+                            Value = "Bông"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 10,
+                            Value = "Vàng"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 11,
+                            Value = "Nhựa"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Thanh niên"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "48"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Kim Đồng"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "204"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Thế giới"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 3,
+                            Value = "2021"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "424"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "344"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "280"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Hồng Đức"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "332"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "200"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 2,
+                            Value = "Tổng hợp TPHCM"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 5,
+                            Value = "479"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 7,
+                            Value = "Morning Glory"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 8,
+                            Value = "Hàn Quốc"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 9,
+                            Value = "Hàn Quốc"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 11,
+                            Value = "Nhựa, Kim Loại"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 7,
+                            Value = "OEM"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 10,
+                            Value = "Trong suốt"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 9,
+                            Value = "Việt Nam"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 10,
+                            Value = "Đỏ - Đen"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 7,
+                            Value = "Nano"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CreatedBy = 2,
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastEditedBy = 2,
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(3843), new TimeSpan(0, 0, 0, 0, 0)),
+                            ProductTypeAttributeId = 10,
+                            Value = "Đen"
+                        });
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ShoppingCartAggregate.ShoppingCartItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4314,7 +9088,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Users.ShippingAddress", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.ShippingAddress", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4407,7 +9181,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PhoneNumber = "0866919340",
                             Province = "Long An",
                             ReceiverName = "Nguyễn Trung Kiên",
-                            UserId = 1
+                            UserId = 4
                         },
                         new
                         {
@@ -4425,7 +9199,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             PhoneNumber = "0866919340",
                             Province = "Hồ Chí Minh",
                             ReceiverName = "Nguyễn Trung Kiên",
-                            UserId = 1
+                            UserId = 4
                         },
                         new
                         {
@@ -4447,7 +9221,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Users.User", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4580,22 +9354,23 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "c9f837c2-b1d4-4297-c035-e92856db3g51",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(5607), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2012), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1990, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
+                            ImageUrl = "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
                             IsActive = true,
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(5235), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(1418), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Admin",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBk9sNh5Iiu0Pr4cxVt/MU4EpLx+ShX30Na4R9UZ0PACeQ+Njuh8kCEwI/Av+3Yycw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHg7FYtwsveYIRCZe4aeuvSgfNSgPB4xvkn5pbUACdL789nF0sRSZMNrbj2BAIWNLQ==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "XJH4QW2N8GZRMLV5KF3Y7PCT9USB6ADO",
@@ -4608,22 +9383,23 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "d3e126c2-b2d3-4398-b024-e97372db4f60",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6176), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2789), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1985, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "salesstaff@example.com",
                             EmailConfirmed = true,
                             FirstName = "Sales",
+                            ImageUrl = "https://i.pinimg.com/originals/c0/4b/01/c04b017b6b9d1c189e15e6559aeb3ca8.png",
                             IsActive = true,
                             IsAdmin = false,
                             IsDeleted = false,
                             IsEmployee = true,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6172), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2783), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Staff",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "SALESSTAFF@EXAMPLE.COM",
                             NormalizedUserName = "SALESSTAFF@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOH5hZ0eTEh66/HWr1bRrj7EDAwxTTY6Y08ZUUuYh5Xh6875ey8eXg5iSxdO5kTQmA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP1dwVNxTBRTmXZTXZppsR/Y940hBAwUIh/YDnmOfuGU2IEyDFnCksUM6GOKvz44UA==",
                             PhoneNumber = "0987654321",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "LV9Q8G6ZRN2KM4PSTXJY5W3FB7HOCD1U",
@@ -4636,22 +9412,23 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e4f036c3-b2d3-4398-c034-e98272db4f61",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6179), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2792), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(1992, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "customercare@example.com",
                             EmailConfirmed = true,
                             FirstName = "Customer Care",
+                            ImageUrl = "https://i.pinimg.com/originals/c0/4b/01/c04b017b6b9d1c189e15e6559aeb3ca8.png",
                             IsActive = true,
                             IsAdmin = false,
                             IsDeleted = false,
                             IsEmployee = true,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6178), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2791), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Staff",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "CUSTOMERCARE@EXAMPLE.COM",
                             NormalizedUserName = "CUSTOMERCARE@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDnZZOgCfEFJggME740YsekxU3jXwFUABOioY6ys5dl7bz3/96We+2WT5KZIKsU4Og==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFZ8/Y7WuX/Nfw4g3/j1MfA4FPw6u2a8+NY4i07S1Ofoa6IbcYCB5JKAW6amU4s69Q==",
                             PhoneNumber = "1122334455",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "P5YHXJLZMO9V3G2KTRN4S8QWCFUB7D1A",
@@ -4664,22 +9441,23 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "f4e026b2-b1d3-4198-a024-e97272da3f50",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6180), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2793), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(2003, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "trungkien2003ntk@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Trung Kiên",
+                            ImageUrl = "https://i.pinimg.com/originals/c0/4b/01/c04b017b6b9d1c189e15e6559aeb3ca8.png",
                             IsActive = true,
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6179), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2793), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Nguyễn",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "TRUNGKIEN2003NTK@GMAIL.COM",
                             NormalizedUserName = "TRUNGKIEN2003NTK@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMr4OxbuPLOJKo2ZCknTXrJsiQzp4bwUkKBuRBTt8bx5JhMgy3UlIIqZn0YmonYmWg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMO/GGhLALVKlyfrl1HvD6P0plawdCp2lmk6+54ea0AAAte9Nyb7q0fDgrswbHis1A==",
                             PhoneNumber = "0866919340",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "SENTMLQ2I6NCSBGSCLVXP4UOHGJF4G66",
@@ -4692,22 +9470,23 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "f0klsm1m-b1d6-4496-d036-e96378ef3g67",
-                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6181), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2795), new TimeSpan(0, 7, 0, 0, 0)),
                             DateOfBirth = new DateTimeOffset(new DateTime(2003, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "truykichtk20031@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Tiêm Kích",
+                            ImageUrl = "https://pngimg.com/d/avatar_PNG9.png",
                             IsActive = true,
                             IsAdmin = true,
                             IsDeleted = false,
                             IsEmployee = false,
-                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 5, 28, 16, 46, 17, 529, DateTimeKind.Unspecified).AddTicks(6181), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastEditedWhen = new DateTimeOffset(new DateTime(2024, 6, 13, 2, 49, 9, 628, DateTimeKind.Unspecified).AddTicks(2794), new TimeSpan(0, 7, 0, 0, 0)),
                             LastName = "Trần",
                             LockoutEnabled = true,
                             LoginType = "Email",
                             NormalizedEmail = "TRUYKICHTK20031@GMAIL.COM",
                             NormalizedUserName = "TRUYKICHTK20031@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJnPZSEzBJDTQoDSNMAVlqzC5WUHceKZFfzqKs0rjuE58mXebj43slD+7aF7+xJFwA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHuC64Yssb2Tg7Smz6tvR5QKIVfUZ1YbXQ9XVApJ1/CmVTnqlFa6H08O86+TVtNfUQ==",
                             PhoneNumber = "0939199946",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "MGJSHVQ2IJ28SKMVCLVXP4LAM8J2KJ5O",
@@ -4933,90 +9712,74 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Discounts.DiscountVoucher", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DeliveryMethod", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountApplyToProductType", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "DiscountVoucher")
+                        .WithMany()
+                        .HasForeignKey("DiscountVoucherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", null)
+                        .WithMany("ProductTypesApplied")
+                        .HasForeignKey("DiscountVoucherId1")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.OwnsOne("KKBookstore.Domain.Discounts.DiscountQuantityRange", "QuantityRange", b1 =>
-                        {
-                            b1.Property<int>("DiscountVoucherId")
-                                .HasColumnType("int");
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                            b1.Property<int?>("MaxApplyQuantity")
-                                .HasPrecision(18, 2)
-                                .HasColumnType("int");
-
-                            b1.Property<int?>("MinApplyQuantity")
-                                .IsRequired()
-                                .HasPrecision(18, 2)
-                                .HasColumnType("int");
-
-                            b1.HasKey("DiscountVoucherId");
-
-                            b1.ToTable("DiscountVouchers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DiscountVoucherId");
-                        });
-
-                    b.OwnsOne("KKBookstore.Domain.Discounts.DiscountValueRange", "ValueRange", b1 =>
-                        {
-                            b1.Property<int>("DiscountVoucherId")
-                                .HasColumnType("int");
-
-                            b1.Property<decimal>("MaxValue")
-                                .HasPrecision(18, 2)
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("MinValue")
-                                .HasPrecision(18, 2)
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.HasKey("DiscountVoucherId");
-
-                            b1.ToTable("DiscountVouchers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DiscountVoucherId");
-                        });
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ProductType")
+                        .WithMany()
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("CreatedByUser");
 
+                    b.Navigation("DiscountVoucher");
+
                     b.Navigation("LastEditedByUser");
 
-                    b.Navigation("Product");
-
-                    b.Navigation("QuantityRange")
-                        .IsRequired();
-
-                    b.Navigation("ValueRange")
-                        .IsRequired();
+                    b.Navigation("ProductType");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.DeliveryMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5027,48 +9790,53 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("LastEditedByUser");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.Order", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Order", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "Customer")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Orders.DeliveryMethod", "DeliveryMethod")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DeliveryMethod", "DeliveryMethod")
                         .WithMany()
                         .HasForeignKey("DeliveryMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Discounts.DiscountVoucher", "DiscountVoucher")
-                        .WithMany()
-                        .HasForeignKey("DiscountVoucherId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Orders.PaymentMethod", "PaymentMethod")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.ShippingAddress", "ShippingAddress")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "PriceDiscountVoucher")
+                        .WithMany()
+                        .HasForeignKey("PriceDiscountVoucherId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.ShippingAddress", "ShippingAddress")
                         .WithMany()
                         .HasForeignKey("ShippingAddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "ShippingDiscountVoucher")
+                        .WithMany()
+                        .HasForeignKey("ShippingDiscountVoucherId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
 
@@ -5076,41 +9844,43 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Navigation("DeliveryMethod");
 
-                    b.Navigation("DiscountVoucher");
-
                     b.Navigation("LastEditedByUser");
 
                     b.Navigation("PaymentMethod");
 
+                    b.Navigation("PriceDiscountVoucher");
+
                     b.Navigation("ShippingAddress");
+
+                    b.Navigation("ShippingDiscountVoucher");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.OrderLine", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.OrderLine", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Discounts.DiscountVoucher", "DiscountVoucher")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "DiscountVoucher")
                         .WithMany()
                         .HasForeignKey("DiscountVoucherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Orders.Order", "Order")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.Order", "Order")
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Sku", "Sku")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", "Sku")
                         .WithMany()
                         .HasForeignKey("SkuId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5127,15 +9897,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Sku");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.PaymentMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.PaymentMethod", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5146,15 +9916,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("LastEditedByUser");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.RefAddressType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.RefAddressType", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5165,157 +9935,53 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("LastEditedByUser");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Transaction", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.Order", "Order")
+                        .WithMany("Transactions")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ParentProductType")
-                        .WithMany()
-                        .HasForeignKey("ParentProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ParentProductType");
+                    b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.VoucherUsage", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("CreatedBy")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
                         .WithMany()
-                        .HasForeignKey("LastEditedBy")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "Voucher")
+                        .WithMany("VoucherUsages")
+                        .HasForeignKey("VoucherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Voucher");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeMapping", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Author", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", "ProductAttribute")
-                        .WithMany("ProductTypes")
-                        .HasForeignKey("ProductAttributeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ProductType")
-                        .WithMany("Attributes")
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ProductAttribute");
-
-                    b.Navigation("ProductType");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeProductValue", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", "AttributeValue")
-                        .WithMany("ProductsAppliedValue")
-                        .HasForeignKey("AttributeValueId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AttributeValue");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", "ProductTypeAttribute")
-                        .WithMany("Values")
-                        .HasForeignKey("ProductTypeAttributeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ProductTypeAttribute");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Products.Author", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5326,27 +9992,27 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("LastEditedByUser");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.BookAuthor", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.BookAuthor", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Products.Author", "Author")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Author", "Author")
                         .WithMany("AuthorBooks")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
                         .WithMany("BookAuthors")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5361,27 +10027,27 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Product", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Product", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ProductType")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.UnitMeasure", "UnitMeasure")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.UnitMeasure", "UnitMeasure")
                         .WithMany()
                         .HasForeignKey("UnitMeasureId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5396,21 +10062,21 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("UnitMeasure");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductImage", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductImage", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5423,21 +10089,21 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOption", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
                         .WithMany("Options")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5450,21 +10116,21 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOptionValue", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.ProductOption", "Option")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", "Option")
                         .WithMany("OptionValues")
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5477,21 +10143,21 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Option");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductPriceHistory", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductPriceHistory", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Sku", "Sku")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", "Sku")
                         .WithMany()
                         .HasForeignKey("SkuId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5504,32 +10170,32 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Sku");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Rating", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Product", null)
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", null)
                         .WithMany("Ratings")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Products.Sku", "Sku")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", "Sku")
                         .WithMany("Ratings")
                         .HasForeignKey("SkuId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "User")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5544,15 +10210,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.RatingLike", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.RatingLike", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Products.Rating", "Rating")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", "Rating")
                         .WithMany("Likes")
                         .HasForeignKey("RatingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "User")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5563,27 +10229,27 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Sku", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
                         .WithMany("Skus")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("KKBookstore.Domain.Products.Dimension", "Dimension", b1 =>
+                    b.OwnsOne("KKBookstore.Domain.Aggregates.ProductAggregate.Dimension", "Dimension", b1 =>
                         {
                             b1.Property<int>("SkuId")
                                 .HasColumnType("int");
@@ -5611,83 +10277,286 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                                 new
                                 {
                                     SkuId = 1,
-                                    Height = 25m,
-                                    Length = 0.2m,
+                                    Height = 14m,
+                                    Length = 0.3m,
                                     Width = 20.5m
                                 },
                                 new
                                 {
                                     SkuId = 2,
-                                    Height = 25m,
-                                    Length = 0.2m,
-                                    Width = 20.5m
+                                    Height = 20.5m,
+                                    Length = 0.5m,
+                                    Width = 14.5m
                                 },
                                 new
                                 {
                                     SkuId = 3,
-                                    Height = 25m,
-                                    Length = 0.2m,
-                                    Width = 20.5m
+                                    Height = 22.0m,
+                                    Length = 0.5m,
+                                    Width = 12.0m
                                 },
                                 new
                                 {
                                     SkuId = 4,
-                                    Height = 25m,
-                                    Length = 0.2m,
-                                    Width = 20.5m
+                                    Height = 22.0m,
+                                    Length = 0.5m,
+                                    Width = 12.0m
                                 },
                                 new
                                 {
                                     SkuId = 5,
-                                    Height = 24.0m,
+                                    Height = 22.0m,
                                     Length = 0.5m,
-                                    Width = 16.0m
+                                    Width = 12.0m
                                 },
                                 new
                                 {
                                     SkuId = 6,
-                                    Height = 24.0m,
+                                    Height = 22.0m,
                                     Length = 0.5m,
-                                    Width = 16.0m
+                                    Width = 12.0m
                                 },
                                 new
                                 {
                                     SkuId = 7,
-                                    Height = 24.0m,
+                                    Height = 22.0m,
                                     Length = 0.5m,
-                                    Width = 16.0m
+                                    Width = 12.0m
                                 },
                                 new
                                 {
                                     SkuId = 8,
-                                    Height = 24.0m,
+                                    Height = 22.0m,
                                     Length = 0.5m,
-                                    Width = 16.0m
+                                    Width = 12.0m
                                 },
                                 new
                                 {
                                     SkuId = 9,
-                                    Height = 24.0m,
-                                    Length = 0.5m,
-                                    Width = 16.0m
+                                    Height = 17.0m,
+                                    Length = 8m,
+                                    Width = 9.0m
                                 },
                                 new
                                 {
                                     SkuId = 10,
-                                    Height = 24.0m,
-                                    Length = 3.0m,
-                                    Width = 17.0m
+                                    Height = 16.0m,
+                                    Length = 7m,
+                                    Width = 8.0m
                                 },
                                 new
                                 {
                                     SkuId = 11,
+                                    Height = 12.0m,
+                                    Length = 8m,
+                                    Width = 8.0m
+                                },
+                                new
+                                {
+                                    SkuId = 12,
+                                    Height = 9.0m,
+                                    Length = 8m,
+                                    Width = 9.0m
+                                },
+                                new
+                                {
+                                    SkuId = 13,
+                                    Height = 1.0m,
+                                    Length = 3.5m,
+                                    Width = 9.0m
+                                },
+                                new
+                                {
+                                    SkuId = 14,
+                                    Height = 7.0m,
+                                    Length = 1m,
+                                    Width = 7.0m
+                                },
+                                new
+                                {
+                                    SkuId = 15,
+                                    Height = 20.5m,
+                                    Length = 0.4m,
+                                    Width = 18.5m
+                                },
+                                new
+                                {
+                                    SkuId = 16,
+                                    Height = 20.5m,
+                                    Length = 0.4m,
+                                    Width = 18.5m
+                                },
+                                new
+                                {
+                                    SkuId = 17,
+                                    Height = 20.5m,
+                                    Length = 0.4m,
+                                    Width = 18.5m
+                                },
+                                new
+                                {
+                                    SkuId = 18,
+                                    Height = 20.5m,
+                                    Length = 0.4m,
+                                    Width = 18.5m
+                                },
+                                new
+                                {
+                                    SkuId = 19,
+                                    Height = 20.5m,
+                                    Length = 0.4m,
+                                    Width = 18.5m
+                                },
+                                new
+                                {
+                                    SkuId = 20,
+                                    Height = 17.6m,
+                                    Length = 1m,
+                                    Width = 11.3m
+                                },
+                                new
+                                {
+                                    SkuId = 21,
+                                    Height = 17.6m,
+                                    Length = 1m,
+                                    Width = 11.3m
+                                },
+                                new
+                                {
+                                    SkuId = 22,
+                                    Height = 17.6m,
+                                    Length = 1m,
+                                    Width = 11.3m
+                                },
+                                new
+                                {
+                                    SkuId = 23,
+                                    Height = 17.6m,
+                                    Length = 1m,
+                                    Width = 11.3m
+                                },
+                                new
+                                {
+                                    SkuId = 24,
+                                    Height = 17.6m,
+                                    Length = 1m,
+                                    Width = 11.3m
+                                },
+                                new
+                                {
+                                    SkuId = 25,
+                                    Height = 17.6m,
+                                    Length = 1m,
+                                    Width = 11.3m
+                                },
+                                new
+                                {
+                                    SkuId = 26,
                                     Height = 24.0m,
                                     Length = 6.0m,
                                     Width = 17.0m
+                                },
+                                new
+                                {
+                                    SkuId = 27,
+                                    Height = 24.0m,
+                                    Length = 2.1m,
+                                    Width = 16.0m
+                                },
+                                new
+                                {
+                                    SkuId = 28,
+                                    Height = 20.0m,
+                                    Length = 0.5m,
+                                    Width = 14.5m
+                                },
+                                new
+                                {
+                                    SkuId = 29,
+                                    Height = 24.0m,
+                                    Length = 1.4m,
+                                    Width = 16.0m
+                                },
+                                new
+                                {
+                                    SkuId = 30,
+                                    Height = 20.5m,
+                                    Length = 1.4m,
+                                    Width = 14.5m
+                                },
+                                new
+                                {
+                                    SkuId = 31,
+                                    Height = 20.0m,
+                                    Length = 1.6m,
+                                    Width = 14.5m
+                                },
+                                new
+                                {
+                                    SkuId = 32,
+                                    Height = 20.5m,
+                                    Length = 1m,
+                                    Width = 14m
+                                },
+                                new
+                                {
+                                    SkuId = 33,
+                                    Height = 20.5m,
+                                    Length = 2.5m,
+                                    Width = 13.0m
+                                },
+                                new
+                                {
+                                    SkuId = 34,
+                                    Height = 10.5m,
+                                    Length = 1.5m,
+                                    Width = 5m
+                                },
+                                new
+                                {
+                                    SkuId = 35,
+                                    Height = 10.5m,
+                                    Length = 1.5m,
+                                    Width = 5m
+                                },
+                                new
+                                {
+                                    SkuId = 36,
+                                    Height = 10.5m,
+                                    Length = 1.5m,
+                                    Width = 5m
+                                },
+                                new
+                                {
+                                    SkuId = 37,
+                                    Height = 5m,
+                                    Length = 2m,
+                                    Width = 5m
+                                },
+                                new
+                                {
+                                    SkuId = 38,
+                                    Height = 15m,
+                                    Length = 2m,
+                                    Width = 2m
+                                },
+                                new
+                                {
+                                    SkuId = 39,
+                                    Height = 6.5m,
+                                    Length = 2m,
+                                    Width = 6.5m
+                                },
+                                new
+                                {
+                                    SkuId = 40,
+                                    Height = 8m,
+                                    Length = 8m,
+                                    Width = 8m
                                 });
                         });
 
-                    b.OwnsOne("KKBookstore.Domain.Products.SkuValue", "SkuValue", b1 =>
+                    b.OwnsOne("KKBookstore.Domain.Aggregates.ProductAggregate.SkuValue", "SkuValue", b1 =>
                         {
                             b1.Property<int>("SkuId")
                                 .HasColumnType("int");
@@ -5759,6 +10628,151 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                                 {
                                     SkuId = 11,
                                     Value = "SKU00011"
+                                },
+                                new
+                                {
+                                    SkuId = 12,
+                                    Value = "SKU00012"
+                                },
+                                new
+                                {
+                                    SkuId = 13,
+                                    Value = "SKU00013"
+                                },
+                                new
+                                {
+                                    SkuId = 14,
+                                    Value = "SKU00014"
+                                },
+                                new
+                                {
+                                    SkuId = 15,
+                                    Value = "SKU00015"
+                                },
+                                new
+                                {
+                                    SkuId = 16,
+                                    Value = "SKU00016"
+                                },
+                                new
+                                {
+                                    SkuId = 17,
+                                    Value = "SKU00017"
+                                },
+                                new
+                                {
+                                    SkuId = 18,
+                                    Value = "SKU00018"
+                                },
+                                new
+                                {
+                                    SkuId = 19,
+                                    Value = "SKU00019"
+                                },
+                                new
+                                {
+                                    SkuId = 20,
+                                    Value = "SKU00020"
+                                },
+                                new
+                                {
+                                    SkuId = 21,
+                                    Value = "SKU00021"
+                                },
+                                new
+                                {
+                                    SkuId = 22,
+                                    Value = "SKU00022"
+                                },
+                                new
+                                {
+                                    SkuId = 23,
+                                    Value = "SKU00023"
+                                },
+                                new
+                                {
+                                    SkuId = 24,
+                                    Value = "SKU00024"
+                                },
+                                new
+                                {
+                                    SkuId = 25,
+                                    Value = "SKU00025"
+                                },
+                                new
+                                {
+                                    SkuId = 26,
+                                    Value = "SKU00026"
+                                },
+                                new
+                                {
+                                    SkuId = 27,
+                                    Value = "SKU00027"
+                                },
+                                new
+                                {
+                                    SkuId = 28,
+                                    Value = "SKU00028"
+                                },
+                                new
+                                {
+                                    SkuId = 29,
+                                    Value = "SKU00029"
+                                },
+                                new
+                                {
+                                    SkuId = 30,
+                                    Value = "SKU00030"
+                                },
+                                new
+                                {
+                                    SkuId = 31,
+                                    Value = "SKU00031"
+                                },
+                                new
+                                {
+                                    SkuId = 32,
+                                    Value = "SKU00032"
+                                },
+                                new
+                                {
+                                    SkuId = 33,
+                                    Value = "SKU00033"
+                                },
+                                new
+                                {
+                                    SkuId = 34,
+                                    Value = "SKU00034"
+                                },
+                                new
+                                {
+                                    SkuId = 35,
+                                    Value = "SKU00035"
+                                },
+                                new
+                                {
+                                    SkuId = 36,
+                                    Value = "SKU00036"
+                                },
+                                new
+                                {
+                                    SkuId = 37,
+                                    Value = "SKU00037"
+                                },
+                                new
+                                {
+                                    SkuId = 38,
+                                    Value = "SKU00038"
+                                },
+                                new
+                                {
+                                    SkuId = 39,
+                                    Value = "SKU00039"
+                                },
+                                new
+                                {
+                                    SkuId = 40,
+                                    Value = "SKU00040"
                                 });
                         });
 
@@ -5775,33 +10789,33 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.SkuOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.SkuOptionValue", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.ProductOption", "Option")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", "Option")
                         .WithMany()
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.ProductOptionValue", "OptionValue")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOptionValue", "OptionValue")
                         .WithMany()
                         .HasForeignKey("OptionValueId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Sku", "Sku")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", "Sku")
                         .WithMany("SkuOptionValues")
                         .HasForeignKey("SkuId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5818,15 +10832,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Sku");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.UnitMeasure", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.UnitMeasure", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5837,27 +10851,169 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("LastEditedByUser");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ShoppingCart.ShoppingCartItem", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Products.Sku", "Sku")
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ParentProductType")
+                        .WithMany()
+                        .HasForeignKey("ParentProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+
+                    b.Navigation("ParentProductType");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeMapping", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", "ProductAttribute")
+                        .WithMany("ProductTypes")
+                        .HasForeignKey("ProductAttributeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ProductType")
+                        .WithMany("Attributes")
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+
+                    b.Navigation("ProductAttribute");
+
+                    b.Navigation("ProductType");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeProductValue", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", "AttributeValue")
+                        .WithMany("ProductsAppliedValue")
+                        .HasForeignKey("AttributeValueId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AttributeValue");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", "ProductTypeAttribute")
+                        .WithMany("Values")
+                        .HasForeignKey("ProductTypeAttributeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastEditedByUser");
+
+                    b.Navigation("ProductTypeAttribute");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ShoppingCartAggregate.ShoppingCartItem", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastEditedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", "Sku")
                         .WithMany()
                         .HasForeignKey("SkuId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5872,27 +11028,27 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Sku");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Users.ShippingAddress", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.ShippingAddress", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Orders.RefAddressType", "AddressType")
+                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.RefAddressType", "AddressType")
                         .WithMany()
                         .HasForeignKey("AddressTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "User")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5907,14 +11063,14 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Users.User", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.User", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Users.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
                         .WithMany()
                         .HasForeignKey("LastEditedBy")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -5926,7 +11082,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("KKBookstore.Infrastructure.Identity.RefreshToken", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", "User")
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5946,7 +11102,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", null)
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5955,7 +11111,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", null)
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5970,7 +11126,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Users.User", null)
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5979,41 +11135,33 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Users.User", null)
+                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Orders.Order", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", b =>
+                {
+                    b.Navigation("ProductTypesApplied");
+
+                    b.Navigation("VoucherUsages");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Order", b =>
                 {
                     b.Navigation("OrderLines");
+
+                    b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductType", b =>
-                {
-                    b.Navigation("Attributes");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", b =>
-                {
-                    b.Navigation("ProductTypes");
-
-                    b.Navigation("Values");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", b =>
-                {
-                    b.Navigation("ProductsAppliedValue");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Products.Author", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Author", b =>
                 {
                     b.Navigation("AuthorBooks");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Product", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Product", b =>
                 {
                     b.Navigation("BookAuthors");
 
@@ -6026,21 +11174,38 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Skus");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOption", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", b =>
                 {
                     b.Navigation("OptionValues");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Rating", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", b =>
                 {
                     b.Navigation("Likes");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Products.Sku", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Sku", b =>
                 {
                     b.Navigation("Ratings");
 
                     b.Navigation("SkuOptionValues");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", b =>
+                {
+                    b.Navigation("Attributes");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", b =>
+                {
+                    b.Navigation("ProductTypes");
+
+                    b.Navigation("Values");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", b =>
+                {
+                    b.Navigation("ProductsAppliedValue");
                 });
 #pragma warning restore 612, 618
         }

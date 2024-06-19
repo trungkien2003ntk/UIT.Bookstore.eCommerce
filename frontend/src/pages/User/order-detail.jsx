@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 
 import { Divider } from "@mui/material"
 
@@ -7,8 +8,27 @@ import Button from "../../components/Button"
 import VND from "../../components/vnd"
 import MyStepper from "../../components/MyStepper"
 
+import * as orderServices from "../../apiServices/orderServices"
+
 const OrderDetail = () => {
+  const { id } = useParams()
+  const [order, setOrder] = useState(null)
   const [paymentType, setPaymentType] = useState(1)
+
+  const getOrderDetail = async () => {
+    const response = await orderServices.getOrderDetail(id).catch((error) => {
+      console.log("Failed to fetch order detail: ", error)
+    })
+
+    if (response) {
+      console.log(response)
+      setOrder(response)
+    }
+  }
+
+  useEffect(() => {
+    getOrderDetail()
+  }, [])
 
   return (
     <div className='relative w-full'>
@@ -41,7 +61,7 @@ const OrderDetail = () => {
             Thông tin đơn hàng
           </span>
 
-          <MyStepper stepDone={2} />
+          <MyStepper stepDone={4} />
         </div>
 
         <div className='flex flex-col gap-3 rounded bg-white p-5 shadow'>

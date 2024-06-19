@@ -6,50 +6,50 @@ import "swiper/css"
 import ProductItem from "./User/ProductItem"
 
 const MySwiper = ({ slides }) => {
+  // console.log(slides)
   const swiperRef = useRef()
-
-  const calculateSlidesPerView = () => {
-    const screenWidth = window.innerWidth
-    if (screenWidth >= 1280) {
-      return 6
-    } else if (screenWidth >= 1024) {
-      return 5
-    } else if (screenWidth >= 950) {
-      return 5
-    } else if (screenWidth >= 800) {
-      return 4
-    } else if (screenWidth >= 750) {
-      return 3.7
-    } else if (screenWidth >= 700) {
-      return 3.5
-    } else if (screenWidth >= 650) {
-      return 3.2
-    } else if (screenWidth >= 600) {
-      return 3
-    } else if (screenWidth >= 550) {
-      return 2.7
-    } else if (screenWidth >= 500) {
-      return 2.2
-    } else if (screenWidth >= 450) {
-      return 2
-    } else if (screenWidth >= 400) {
-      return 1.8
-    } else if (screenWidth >= 375) {
-      return 1.7
-    }
-  }
+  // const calculateSlidesPerView = () => {
+  //   const screenWidth = window.innerWidth
+  //   if (screenWidth >= 1280) {
+  //     return 6
+  //   } else if (screenWidth >= 1024) {
+  //     return 5
+  //   } else if (screenWidth >= 950) {
+  //     return 5
+  //   } else if (screenWidth >= 800) {
+  //     return 4
+  //   } else if (screenWidth >= 750) {
+  //     return 3.7
+  //   } else if (screenWidth >= 700) {
+  //     return 3.5
+  //   } else if (screenWidth >= 650) {
+  //     return 3.2
+  //   } else if (screenWidth >= 600) {
+  //     return 3
+  //   } else if (screenWidth >= 550) {
+  //     return 2.7
+  //   } else if (screenWidth >= 500) {
+  //     return 2.2
+  //   } else if (screenWidth >= 450) {
+  //     return 2
+  //   } else if (screenWidth >= 400) {
+  //     return 1.8
+  //   } else if (screenWidth >= 375) {
+  //     return 1.7
+  //   }
+  // }
 
   return (
     <Swiper
       spaceBetween={1}
-      slidesPerView={calculateSlidesPerView()}
+      slidesPerView={6}
       onSwiper={(swiper) => {
         swiperRef.current = swiper
       }}
-      className='group relative select-none'
+      className='group relative w-full select-none'
     >
       {slides.map((slide, index) => (
-        <SwiperSlide key={index} className='flex max-w-fit'>
+        <SwiperSlide key={index} className='flex min-w-fit'>
           <ProductItem index={index} item={slide} />
         </SwiperSlide>
       ))}

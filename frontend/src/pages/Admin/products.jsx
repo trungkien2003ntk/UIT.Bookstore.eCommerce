@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import DataTable from "../../components/Admin/DataTable"
 import CellItem from "../../components/Admin/CellItem"
 import VND from "../../components/vnd"
@@ -172,6 +173,8 @@ const rows = object.items
 const Products = () => {
   const [itemsDelete, setItemsDelete] = useState()
 
+  const navigate = useNavigate()
+
   return (
     <div className='flex flex-col gap-3'>
       <div className='flex items-center justify-between rounded bg-white p-3 shadow'>
@@ -231,7 +234,7 @@ const Products = () => {
         getRowHeight={() => 100}
         checkboxSelection
         onRowClick={(value) => {
-          console.log({ ...value.row })
+          navigate(`/admin/products/${value.row.id}`)
         }}
       />
     </div>

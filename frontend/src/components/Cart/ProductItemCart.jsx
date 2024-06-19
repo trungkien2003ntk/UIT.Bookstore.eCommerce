@@ -6,8 +6,15 @@ import CategoryCart from "./CategoryCart"
 import VND from "../vnd"
 import ButtonNumber from "../ButtonNumber"
 
-const ProductItemCart = ({ item }) => {
-  const [quantity, setQuantity] = useState(1)
+const ProductItemCart = ({
+  item,
+  checked,
+  onChange,
+  onChangeQuantity,
+  onSubmit,
+  onDelete,
+}) => {
+  const [quantity, setQuantity] = useState(item.quantity)
 
   return (
     <div className='flex items-center rounded bg-white px-3 py-5 shadow'>
@@ -18,6 +25,8 @@ const ProductItemCart = ({ item }) => {
             color: green[500],
           },
         }}
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked, item)}
       ></Checkbox>
 
       <div className='flex flex-1 items-center gap-3'>
@@ -27,7 +36,7 @@ const ProductItemCart = ({ item }) => {
 
       {item.skuName && (
         <div className='flex min-w-44 items-center justify-center gap-2 text-sm'>
-          <CategoryCart item={item} />
+          <CategoryCart item={item} onSubmit={onSubmit} />
         </div>
       )}
 
@@ -40,7 +49,15 @@ const ProductItemCart = ({ item }) => {
       </div>
 
       <div className='flex min-w-44 items-center justify-center text-sm'>
-        <ButtonNumber quantity={quantity} setQuantity={setQuantity} min={1} />
+        <ButtonNumber
+          quantity={quantity}
+          setQuantity={(value) => {
+            onChangeQuantity(value, item)
+            setQuantity(value)
+          }}
+          min={1}
+          max={item.availableQuantity}
+        />
       </div>
 
       <div className='flex min-w-44 items-center justify-center text-sm'>
@@ -51,7 +68,10 @@ const ProductItemCart = ({ item }) => {
       </div>
 
       <div className='flex min-w-44 items-center justify-center text-sm'>
-        <span className='font-semibold text-red-400 hover:cursor-pointer hover:text-red-500'>
+        <span
+          className='font-semibold text-red-400 hover:cursor-pointer hover:text-red-500'
+          onClick={() => onDelete(item)}
+        >
           Xóa
         </span>
       </div>

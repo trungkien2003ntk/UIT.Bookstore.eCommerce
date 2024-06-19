@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
-import { Divider, Pagination } from "@mui/material"
+import { Divider, Pagination, CircularProgress } from "@mui/material"
 
 import FiveStar from "../../components/User/FiveStar"
 import Slider from "../../components/Slider"
@@ -13,45 +13,11 @@ import DiscountSwiper from "../../components/DiscountSwiper"
 import MySwiper from "../../components/MySwiper"
 import { skusToOptions } from "../../components/funcProductDetail"
 
-// const options = [
-//   {
-//     title: "Màu sắc",
-//     items: [
-//       {
-//         name: "xanh hải quân",
-//         image:
-//           "https://down-vn.img.susercontent.com/file/sg-11134201-7qvdg-lhfvlcfyl3f794",
-//       },
-//       {
-//         name: "quả mơ",
-//         image:
-//           "https://down-vn.img.susercontent.com/file/sg-11134201-7qvdt-lggahbq2v4lce9",
-//       },
-//       {
-//         name: "xanh xám",
-//         image:
-//           "https://down-vn.img.susercontent.com/file/sg-11134201-7qvei-lhfvlf2apmr10c",
-//       },
-//     ],
-//   },
-//   {
-//     title: "Kích thước",
-//     items: [
-//       {
-//         name: "S",
-//       },
-//       {
-//         name: "M",
-//       },
-//       {
-//         name: "L",
-//       },
-//       {
-//         name: "XL",
-//       },
-//     ],
-//   },
-// ]
+import * as productServices from "../../apiServices/productServices"
+import * as ratingServices from "../../apiServices/ratingServices"
+import * as cartServices from "../../apiServices/cartServices"
+import useToast from "../../hooks/useToast"
+import Modal from "../../components/Modal"
 
 const discount = [
   {
@@ -133,297 +99,25 @@ const discount = [
   },
 ]
 
-const products = [
-  {
-    name: "Tập Học Sinh Chống Lóa Fluffy Panda - Miền Bắc - 4 Ô Ly - 48 Trang 100gsm - The Sun 03",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 1200,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/c/h/chemta-bino_bia1.jpg",
-  },
-  {
-    name: "Tập Học Sinh Chống Lóa Fluffy Panda - Miền Bắc - 4 Ô Ly - 48 Trang 100gsm - The Sun 03",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 82,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/8/9/8935318307294.jpg",
-  },
-  {
-    name: "Nghệ Thuật Kể Chuyện Bằng Hình Ảnh",
-    price: 179000,
-    discount_rate: 20,
-    actual_price: 143200,
-    sale_quantity: 3000,
-    rating: 5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/n/g/ngh_-thu_t-k_-chuy_n-b_ng-h_nh-_nh-b_a-1.jpg",
-  },
-  {
-    name: "Mindmap English Grammar - Ngữ Pháp Tiếng Anh Bằng Sơ Đồ Tư Duy",
-    price: 190000,
-    discount_rate: 35,
-    actual_price: 123500,
-    sale_quantity: 100,
-    rating: 5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/m/i/mindmap_english_grammar___ngu_phap_tieng_anh_bang_so_do_tu_duy_1_2018_11_21_09_32_32.jpg?_gl=1*avkbv*_ga*MTExMDQwNzk0OS4xNzEyNjgxNDE1*_ga_460L9JMC2G*MTcxNTg0MDA0MS4yMC4xLjE3MTU4NDAyODcuNTEuMC4yMDYwMjM2MDU1*_gcl_au*NzEzNDUwNjcwLjE3MTI2ODE0MTU.",
-  },
-  {
-    name: "Atomic Habits: An Easy & Proven Way To Build Good Habits & Break Bad Ones",
-    price: 336000,
-    discount_rate: 10,
-    actual_price: 302000,
-    sale_quantity: 6000,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/9/7/9780593189641.jpg",
-  },
-  {
-    name: "Thrive : The Third Metric to Redefining Success and Creating a Happier Life",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 82,
-    rating: 4,
-    image: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_55020.jpg",
-  },
-  {
-    name: "Tập Học Sinh Chống Lóa Fluffy Panda - Miền Bắc - 4 Ô Ly - 48 Trang 100gsm - The Sun 03",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 1200,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/c/h/chemta-bino_bia1.jpg",
-  },
-  {
-    name: "Tập Học Sinh Chống Lóa Fluffy Panda - Miền Bắc - 4 Ô Ly - 48 Trang 100gsm - The Sun 03",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 82,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/8/9/8935318307294.jpg",
-  },
-  {
-    name: "Nghệ Thuật Kể Chuyện Bằng Hình Ảnh",
-    price: 179000,
-    discount_rate: 20,
-    actual_price: 143200,
-    sale_quantity: 3000,
-    rating: 5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/n/g/ngh_-thu_t-k_-chuy_n-b_ng-h_nh-_nh-b_a-1.jpg",
-  },
-  {
-    name: "Mindmap English Grammar - Ngữ Pháp Tiếng Anh Bằng Sơ Đồ Tư Duy",
-    price: 190000,
-    discount_rate: 35,
-    actual_price: 123500,
-    sale_quantity: 100,
-    rating: 5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/m/i/mindmap_english_grammar___ngu_phap_tieng_anh_bang_so_do_tu_duy_1_2018_11_21_09_32_32.jpg?_gl=1*avkbv*_ga*MTExMDQwNzk0OS4xNzEyNjgxNDE1*_ga_460L9JMC2G*MTcxNTg0MDA0MS4yMC4xLjE3MTU4NDAyODcuNTEuMC4yMDYwMjM2MDU1*_gcl_au*NzEzNDUwNjcwLjE3MTI2ODE0MTU.",
-  },
-  {
-    name: "Atomic Habits: An Easy & Proven Way To Build Good Habits & Break Bad Ones",
-    price: 336000,
-    discount_rate: 10,
-    actual_price: 302000,
-    sale_quantity: 6000,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/9/7/9780593189641.jpg",
-  },
-  {
-    name: "Thrive : The Third Metric to Redefining Success and Creating a Happier Life",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 82,
-    rating: 4,
-    image: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_55020.jpg",
-  },
-]
-
-const obj = {
-  name: "Atlat Địa lí Việt Nam (Theo Chương Trình Giáo Dục Phổ Thông 2118)",
-  minUnitPrice: 27900,
-  maxUnitPrice: 27900,
-  minRecommendedRetailPrice: 31000,
-  maxRecommendedRetailPrice: 31000,
-  unitMeasureName: "quyển",
-  description:
-    "Atlat Địa lí Việt Nam (Theo Chương Trình Giáo Dục Phổ Thông 2118)\r\n\r\nBản đồ là phương tiện giảng dạy và học tập điạ lý không thể thiếu trong nhà trường phổ thông. Cùng với sách giáo khoa, Atlat địa lí Việt Nam là nguồn cung cấp kiến thức, thông tin tổng hợp và hệ thống giúp giáo viên đổi mới phương pháp dạy học, hỗ trợ học.\r\n\r\nĐể đáp ứng nhu cầu bức thiết đó, NXB Giáo dục Việt Nam trân trọng giới thiệu tập Atlat địa lý Việt Nam gồm 21 bản đồ, được in màu rõ nét, liên quan đến các lĩnh vực kinh tế - xã hội. Các bản đồ được xây dựng theo nguồn số liệu của Nhà xuất bản thống kê - Tổng cục thống kê. Đây là tài liệu được phép mang vào phòng thi tốt nghiệp THPT môn Địa lý do Bộ Giáo dục và Đào tạo quy định.\r\n\r\nNội dung gồm có:\r\n\r\n1. Kí hiệu chung\r\n\r\n2. Hành chính 4. Hình thể\r\n\r\n4. Địa khoáng sản\r\n\r\n5. Khí hậu\r\n\r\n6. Các hệ thống sông\r\n\r\n7. Các nhóm và các loại đât chính\r\n\r\n8. Thực vật và động vật\r\n\r\n9. Các miền tự nhiên\r\n\r\n11. Dân số\r\n\r\n11. Dân tộc\r\n\r\n12. Kinh tế chung\r\n\r\n14. Nông nghiệp chung\r\n\r\n14. Lâm nông và thuỷ sản\r\n\r\n15. Công nghiệp chung\r\n\r\n16. Các ngành công nghiệp trọng điểm\r\n\r\n17. Giao thông\r\n\r\n18. Thương mại\r\n\r\n19. Du lịch\r\n\r\n21. Vùng trunh du và miền núi Bắc Bộ, vùn Đồng Bằng Sông Hồng\r\n\r\n21. Vùng Bắc Trung Bộ\r\n\r\n22. Vùng Duyên Hải Nam Trung Bộ, Vùng Tây Nguyên\r\n\r\n24. Vùng Đông Nam Bộ, Vùng Đồng Bằng Sông Cửu Long\r\n\r\n25. Các vùng kinh tế trọng điểm\r\n\r\nNgoài ra, NXB Giáo dục Việt Nam đã biên soạn cuốn “Hướng dẫn sử dụng Atlat Địa lý Việt Nam” dùng cho học sinh THCS và THPT, ôn tập thi tốt nghiệp THPT, thi ĐH, CĐ và ôn luyện thi học sinh giỏi quốc gia.\r\n\r\nNội dung sách gồm ba phần:\r\n\r\nPhần 1: Một số kiến thức về phương pháp sử dụng bản đồ giáo khoa;\r\n\r\nPhần 2: Giới thiệu về Atlat Địa lý Việt Nam.\r\n\r\nPhần 4: Hướng dẫn sử dụng Atlat Địa lý Việt Nam.",
-  productTypeName: "Sách Tham Khảo",
-  isBook: true,
-  thumbnailImageUrls: [
-    "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
-  ],
-  largeImageUrls: [
-    "https://cdn0.fahasa.com/media/catalog/product/a/t/atlat_1.jpg",
-  ],
-  productTypeAttributes: [
-    {
-      productTypeId: 15,
-      attributeId: 1,
-      attributeValueId: 1,
-      name: "Hình thức bìa",
-      value: "Bìa mềm",
-    },
-    {
-      productTypeId: 15,
-      attributeId: 2,
-      attributeValueId: 8,
-      name: "NXB",
-      value: "Đại Học Quốc Gia Hà Nội",
-    },
-    {
-      productTypeId: 15,
-      attributeId: 4,
-      attributeValueId: 4,
-      name: "Ngôn ngữ",
-      value: "Tiếng Việt",
-    },
-    {
-      productTypeId: 15,
-      attributeId: 5,
-      attributeValueId: 10,
-      name: "Số trang",
-      value: "178",
-    },
-  ],
-  authors: [
-    {
-      id: 5,
-      name: "Nhiều tác giả",
-      description: "Nhiều tác giả",
-    },
-  ],
-  skus: [
-    {
-      skuValue: "SKU00009",
-      unitPrice: 27900,
-      recommendedRetailPrice: 31000,
-      barcode: "2875627948270",
-      quantity: 20,
-      status: "InStock",
-      weight: 190,
-      width: 16,
-      height: 24,
-      length: 0.5,
-      thumbnailImageUrl: null,
-      largeImageUrl: null,
-      optionValues: [],
-      id: 9,
-    },
-  ],
-  id: 3,
-}
-
-const ratings = {
-  averageRating: 4.0,
-  totalApprovedRating: 5,
-  totalRating: 5,
-  total5StarRating: 3,
-  total4StarRating: 1,
-  total3StarRating: 0,
-  total2StarRating: 0,
-  total1StarRating: 1,
-  totalRatingWithComment: 5,
-  totalRatingWithImage: 0,
-  ratings: {
-    items: [
-      {
-        comment: "Good Product!",
-        ratingValue: 5,
-        userName: "Nguyễn Trung Kiên",
-        userAvatarUrl: null,
-        skuName: "Một ngày của tớ và bố",
-        likesCount: 1,
-        reportedCount: 0,
-        response: "Thank you for your compliment!",
-        status: "Approved",
-        id: 1,
-      },
-      {
-        comment: "Amazing thing, but need some upgrades",
-        ratingValue: 4,
-        userName: "Trần Tiêm Kích",
-        userAvatarUrl: null,
-        skuName: "Một ngày của tớ và bố",
-        likesCount: 1,
-        reportedCount: 0,
-        response: "Thank you for your compliment!",
-        status: "Approved",
-        id: 2,
-      },
-      {
-        comment: "Good Product!",
-        ratingValue: 5,
-        userName: "Nguyễn Trung Kiên",
-        userAvatarUrl: null,
-        skuName: "Một ngày của tớ và mẹ",
-        likesCount: 0,
-        reportedCount: 0,
-        response: "Thank you for your compliment!",
-        status: "Approved",
-        id: 3,
-      },
-      {
-        comment: "Hơi tệ một chút",
-        ratingValue: 1,
-        userName: "Trần Tiêm Kích",
-        userAvatarUrl: null,
-        skuName: "Một ngày của tớ và ông",
-        likesCount: 0,
-        reportedCount: 0,
-        response: "Thank you for your compliment!",
-        status: "Approved",
-        id: 4,
-      },
-      {
-        comment: "Good Product!",
-        ratingValue: 5,
-        userName: "Nguyễn Trung Kiên",
-        userAvatarUrl: null,
-        skuName: "Một ngày của tớ và bà",
-        likesCount: 0,
-        reportedCount: 0,
-        response: "Thank you for your compliment!",
-        status: "Approved",
-        id: 5,
-      },
-    ],
-    totalCount: 5,
-    pageSize: 12,
-    pageNumber: 1,
-    totalPages: 1,
-  },
-}
-
 const ProductDetail = () => {
   const { id } = useParams()
+  const toast = useToast()
+  const [obj, setObj] = useState(null)
+  const [ratings, setRatings] = useState(null)
 
-  // PRIMARY IMAGE
-  const [image, setImage] = useState(obj.largeImageUrls[0])
+  // MODAL
+  const [openModal, setOpenModal] = useState(false)
+  const handleModal = () => {
+    setOpenModal((prev) => !prev)
+  }
 
+  // IMAGE
+  const [image, setImage] = useState()
+  const [listImage, setListImage] = useState([])
+
+  // OPTIONS
+  const [myOptions, setMyOptions] = useState()
   const [selectedOptions, setSelectedOptions] = useState([])
-
-  const [money, setMoney] = useState({
-    price: obj.minUnitPrice,
-    discountRate: 10,
-    actualPrice: obj.minRecommendedRetailPrice,
-  })
-
   const handleSelectedOptions = (newOption) => {
     setSelectedOptions((prev) => {
       if (prev.some((option) => option.title === newOption.title)) {
@@ -434,21 +128,170 @@ const ProductDetail = () => {
 
       return [...prev, newOption]
     })
+
+    console.log("newOption", newOption)
+
+    console.log(money)
+
+    setMoney({
+      price: newOption.selected.recommendedRetailPrice,
+      discountRate: newOption.selected.basicDiscountRate,
+      actualPrice: newOption.selected.unitPrice,
+    })
+
+    setRestQuantity(newOption.selected.quantity)
+    setImage(newOption.selected.image)
   }
 
-  const [myOptions, setMyOptions] = useState(skusToOptions(obj.skus))
+  const [money, setMoney] = useState({
+    price: 0,
+    discountRate: 0,
+    actualPrice: 0,
+  })
 
-  // console.log(myOptions)
+  const [restQuantity, setRestQuantity] = useState(0)
+
+  const [quantity, setQuantity] = useState(1)
 
   // DESCRIPTION
   const [collapsedDesc, setCollapsedDesc] = useState(true)
 
-  // COMMENTS PAGINATION
-  const handleChange = (e, page) => {
-    console.log(page)
+  // RATINGS PAGINATION
+  const handleChange = (e, pageNumber) => {
+    getProductRatings(pageNumber)
   }
 
-  const [quantity, setQuantity] = useState(1)
+  const getProduct = async () => {
+    const response = await productServices.getProduct(id).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        console.log(error.request)
+      } else {
+        console.log("Error", error.message)
+      }
+      console.log(error.config)
+
+      toast("error", "Có lỗi xảy ra!")
+    })
+
+    if (response) {
+      setObj(response)
+      setMoney({
+        price: response.minUnitPrice,
+        discountRate: 0,
+        actualPrice: response.minRecommendedRetailPrice,
+      })
+      setMyOptions(skusToOptions(response.skus))
+
+      let listImage = response.largeImageUrls
+      response.skus.forEach((item) => {
+        if (item.largeImageUrl) {
+          listImage.push(item.largeImageUrl)
+        }
+      })
+      setListImage(listImage)
+
+      setImage(
+        response.largeImageUrls.concat(
+          response.skus.map((item) => item.largeImageUrl)
+        )[0]
+      )
+
+      console.log(response)
+    }
+  }
+
+  const getProductLike = async () => {}
+
+  const getProductRatings = async (pageNumber) => {
+    const response = await ratingServices
+      .getProductRatings(id, {
+        Statuses: "Approved",
+        pageNumber: pageNumber,
+        pageSize: 5,
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 404) {
+            setRatings({
+              averageRating: 0,
+              totalApprovedRating: 0,
+              totalRating: 0,
+              total5StarRating: 0,
+              total4StarRating: 0,
+              total3StarRating: 0,
+              total2StarRating: 0,
+              total1StarRating: 0,
+              totalRatingWithComment: 0,
+              totalRatingWithImage: 0,
+              ratings: {
+                items: [],
+                totalCount: 0,
+                pageSize: 5,
+                pageNumber: 1,
+                totalPages: 1,
+              },
+            })
+          }
+        }
+      })
+
+    if (response) {
+      console.log(response)
+      setRatings(response)
+    }
+  }
+
+  useEffect(() => {
+    getProduct()
+    getProductRatings(1)
+  }, [])
+
+  const addProductToCart = async (obj) => {
+    const response = await cartServices.addShoppingCart(obj).catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message)
+      }
+      console.log(error.config)
+    })
+
+    if (response) {
+      console.log(response)
+      toast("success", "Thêm vào giỏ hàng thành công!")
+    }
+  }
+
+  const handleAddCart = () => {
+    if (myOptions.length > 0) {
+      if (selectedOptions.length > 0) {
+        addProductToCart({
+          skuId: selectedOptions[0].selected.id,
+          quantity: quantity,
+        })
+      } else {
+        toast("error", "Vui lòng chọn phân loại sản phẩm!")
+      }
+    } else {
+      addProductToCart({ skuId: obj.skus[0].id, quantity: quantity })
+    }
+  }
+
+  const [selectedStar, setSelectedStar] = useState(0)
 
   return (
     <div className='relative w-full'>
@@ -456,121 +299,160 @@ const ProductDetail = () => {
         className='mx-auto flex w-full max-w-screen-xl flex-col items-center justify-between 
         gap-5 p-4 lg:px-8'
       >
-        <div className='flex w-full justify-center gap-10 rounded bg-white p-5 shadow'>
-          <div className='w-[40%] '>
-            <img alt='img' className='w-full' src={image} />
-            <Slider
-              className='mt-2 object-cover'
-              setHoverImage={(img) => setImage(img)}
-              slides={obj.largeImageUrls}
-            />
+        {obj === null ? (
+          <div className='flex w-full items-center justify-center rounded bg-white p-5 shadow'>
+            <CircularProgress sx={{ color: "green" }} />
           </div>
-
-          <div className='flex h-full w-[60%] flex-col'>
-            <div className='text-2xl font-semibold'>{obj.name}</div>
-
-            <div className='mt-3 flex items-center gap-4'>
-              <div className='flex items-center gap-1'>
-                <div className='text-sm font-medium text-yellow-500'>
-                  {ratings.averageRating.toFixed(1)}
-                </div>
-                <FiveStar
-                  rating={ratings.averageRating}
-                  classNameForSize='h-4 w-4'
-                />
-              </div>
-
-              <div className='h-5 w-[1px] bg-gray-300'></div>
-
-              <div className='flex items-center gap-1'>
-                <div className='text-sm font-medium '>
-                  {ratings.totalApprovedRating} Đánh giá
-                </div>
-              </div>
-
-              <div className='h-5 w-[1px] bg-gray-300'></div>
-
-              <div className='flex items-center gap-1'>
-                <div className='text-sm font-medium '>823 Đã bán</div>
-              </div>
-            </div>
-
-            <div className='mt-14 flex items-center gap-5'>
-              <VND
-                className={"text-3xl font-bold text-ct-green-400"}
-                number={money.actualPrice}
+        ) : (
+          <div className='flex w-full justify-center gap-10 rounded bg-white p-5 shadow'>
+            <div className='w-[40%] '>
+              <img
+                alt='img'
+                className='h-[500px] w-full object-contain'
+                src={image}
               />
-              <div className='rounded bg-red-100 px-2 py-1 font-medium text-red-600'>
-                {money.discountRate}%
-              </div>
-            </div>
-
-            <VND
-              className={"mt-2 text-xl font-medium text-gray-500 line-through"}
-              number={money.price}
-            ></VND>
-
-            <div className='mt-14 flex w-full items-center justify-center'>
-              <div className='w-[30%] text-gray-500'>Chính sách đổi trả</div>
-              <div className='flex w-[70%] gap-2'>
-                <div>Đổi trả sản phẩm trong 7 ngày</div>
-                <div
-                  className='font-medium text-ct-green-400 hover:cursor-pointer 
-                hover:text-ct-green-300'
-                >
-                  Xem thêm
-                </div>
-              </div>
-            </div>
-
-            {myOptions.map((option, index) => (
-              <Options
-                key={index}
-                className={"mt-10"}
-                option={option}
-                onOptionSelect={handleSelectedOptions}
+              <Slider
+                className='mt-2 object-cover'
+                setHoverImage={(img) => setImage(img)}
+                slides={listImage}
               />
-            ))}
-
-            <div className='mt-10 flex w-full items-center justify-center'>
-              <div className='w-[30%] text-gray-500'>Số lượng</div>
-              <div className='w-[70%]'>
-                <ButtonNumber
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                  min={1}
-                />
-              </div>
             </div>
 
-            <div className='mt-10 flex items-center gap-5'>
-              <Button
-                className={`w-72 border-[1px] border-ct-green-400 bg-green-50 !py-4 
-                !text-ct-green-400 hover:border-ct-green-500 hover:!bg-green-100`}
-                leftIcon={
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='size-6'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
+            <div className='flex h-full w-[60%] flex-col'>
+              <div className='text-2xl font-semibold'>{obj.name}</div>
+
+              <div className='mt-3 flex items-center gap-4'>
+                {ratings && (
+                  <div className='flex items-center gap-1'>
+                    <div className='text-sm font-medium text-yellow-500'>
+                      {ratings.averageRating.toFixed(1)}
+                    </div>
+                    <FiveStar
+                      rating={ratings.averageRating}
+                      classNameForSize='h-4 w-4'
                     />
-                  </svg>
-                }
-              >
-                Thêm vào giỏ hàng
-              </Button>
+                  </div>
+                )}
 
-              <Button className={`w-72 !py-4`}>Mua ngay</Button>
+                <div className='h-5 w-[1px] bg-gray-300'></div>
+
+                {ratings && (
+                  <div className='flex items-center gap-1'>
+                    <div className='text-sm font-medium '>
+                      {ratings?.totalApprovedRating} Đánh giá
+                    </div>
+                  </div>
+                )}
+
+                <div className='h-5 w-[1px] bg-gray-300'></div>
+
+                <div className='flex items-center gap-1'>
+                  <div className='text-sm font-medium '>823 Đã bán</div>
+                </div>
+              </div>
+
+              <div className='mt-14 flex items-center gap-5'>
+                <VND
+                  className={
+                    "mt-2 text-xl font-medium text-gray-500 line-through"
+                  }
+                  number={money.price}
+                ></VND>
+                <VND
+                  className={"text-3xl font-bold text-ct-green-400"}
+                  number={money.actualPrice}
+                />
+                {money.discountRate > 0 && (
+                  <div className='rounded bg-red-100 px-2 py-1 font-medium text-red-600'>
+                    {money.discountRate}%
+                  </div>
+                )}
+              </div>
+
+              <div className='mt-14 flex w-full items-center justify-center'>
+                <div className='w-[30%] text-gray-500'>Chính sách đổi trả</div>
+                <div className='flex w-[70%] gap-2'>
+                  <div>Đổi trả sản phẩm trong 7 ngày</div>
+                  <div
+                    className='font-medium text-ct-green-400 hover:cursor-pointer 
+                    hover:text-ct-green-300'
+                    onClick={handleModal}
+                  >
+                    Xem thêm
+                  </div>
+                </div>
+
+                <Modal
+                  open={openModal}
+                  setOpen={handleModal}
+                  title={"CHÍNH SÁCH ĐỔI TRẢ "}
+                  contentComp={
+                    <div>
+                      Đổi trả sản phẩm trong 7 ngày kể từ ngày nhận hàng
+                    </div>
+                  }
+                  isCancelButton
+                ></Modal>
+              </div>
+
+              {myOptions.map((option, index) => (
+                <Options
+                  key={index}
+                  className={"mt-10"}
+                  option={option}
+                  onOptionSelect={handleSelectedOptions}
+                />
+              ))}
+
+              <div className='mt-10 flex w-full items-center justify-center'>
+                <div className='w-[30%] text-gray-500'>Số lượng</div>
+                <div className='w-[70%]'>
+                  <div className='flex items-center gap-10'>
+                    <ButtonNumber
+                      quantity={quantity}
+                      setQuantity={setQuantity}
+                      min={1}
+                      max={restQuantity}
+                    />
+                    {restQuantity > 0 && (
+                      <div className='text-gray-500'>
+                        {restQuantity} sản phẩm
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className='mt-10 flex items-center gap-5'>
+                <Button
+                  className={`w-72 border-[1px] border-ct-green-400 bg-green-50 !py-4 
+                  !text-ct-green-400 hover:border-ct-green-500 hover:!bg-green-100`}
+                  leftIcon={
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className='size-6'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
+                      />
+                    </svg>
+                  }
+                  onClick={handleAddCart}
+                >
+                  Thêm vào giỏ hàng
+                </Button>
+
+                <Button className={`w-72 !py-4`}>Mua ngay</Button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <BlockWrapper
           title={"Ưu đãi liên quan"}
@@ -590,7 +472,7 @@ const ProductDetail = () => {
           </div>
         </BlockWrapper>
 
-        <BlockWrapper
+        {/* <BlockWrapper
           title={"Có thể bạn cũng thích"}
           icon={
             <svg
@@ -604,7 +486,7 @@ const ProductDetail = () => {
           }
         >
           <MySwiper slides={products}></MySwiper>
-        </BlockWrapper>
+        </BlockWrapper> */}
 
         <BlockWrapper
           title={"Thông tin sản phẩm"}
@@ -624,35 +506,39 @@ const ProductDetail = () => {
           }
         >
           <div className='w-full'>
-            <div className='info flex flex-col gap-3'>
-              <div className='flex w-full justify-center'>
-                <div className='w-[25%]'>Tên sản phẩm</div>
-                <div className='w-[75%]'>{obj.name}</div>
-              </div>
-
-              <div className='flex w-full justify-center'>
-                <div className='w-[25%]'>Loại sản phẩm</div>
-                <div className='w-[75%]'>{obj.productTypeName}</div>
-              </div>
-
-              {obj.isBook && (
+            {obj === null ? (
+              <CircularProgress />
+            ) : (
+              <div className='info flex flex-col gap-3'>
                 <div className='flex w-full justify-center'>
-                  <div className='w-[25%]'>Tác giả</div>
-                  <div className='flex w-[75%] flex-col'>
-                    {obj.authors.map((item, index) => (
-                      <div key={index}>{item.name}</div>
-                    ))}
-                  </div>
+                  <div className='w-[25%]'>Tên sản phẩm</div>
+                  <div className='w-[75%]'>{obj?.name}</div>
                 </div>
-              )}
 
-              {obj.productTypeAttributes.map((item, index) => (
-                <div key={index} className='flex w-full justify-center'>
-                  <div className='w-[25%]'>{item.name}</div>
-                  <div className='w-[75%]'>{item.value}</div>
+                <div className='flex w-full justify-center'>
+                  <div className='w-[25%]'>Loại sản phẩm</div>
+                  <div className='w-[75%]'>{obj.productTypeName}</div>
                 </div>
-              ))}
-            </div>
+
+                {obj.isBook && (
+                  <div className='flex w-full justify-center'>
+                    <div className='w-[25%]'>Tác giả</div>
+                    <div className='flex w-[75%] flex-col'>
+                      {obj.authors.map((item, index) => (
+                        <div key={index}>{item.name}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {obj.productTypeAttributes.map((item, index) => (
+                  <div key={index} className='flex w-full justify-center'>
+                    <div className='w-[25%]'>{item.name}</div>
+                    <div className='w-[75%]'>{item.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </BlockWrapper>
 
@@ -673,23 +559,26 @@ const ProductDetail = () => {
             </svg>
           }
         >
-          <div className='w-full'>
-            <div
-              className={`${collapsedDesc ? "max-h-[200px]" : "max-h-fit"}  
-              overflow-hidden transition-all ease-in-out`}
-            >
-              {obj.description.split("\r\n").map((item, index) => (
-                <div key={index}>{item}</div>
-              ))}
-            </div>
+          {obj === null ? (
+            <CircularProgress />
+          ) : (
+            <div className='w-full'>
+              <textarea
+                className={`${collapsedDesc ? "max-h-[200px]" : "max-h-fit"}  
+                w-full resize-none overflow-hidden outline-none transition-all ease-in-out`}
+                readOnly
+                value={obj.description}
+                rows={15}
+              ></textarea>
 
-            <Button
-              className='mt-5'
-              onClick={() => setCollapsedDesc(!collapsedDesc)}
-            >
-              {collapsedDesc ? "Xem thêm" : "Thu gọn"}
-            </Button>
-          </div>
+              <Button
+                className='mt-5'
+                onClick={() => setCollapsedDesc(!collapsedDesc)}
+              >
+                {collapsedDesc ? "Xem thêm" : "Thu gọn"}
+              </Button>
+            </div>
+          )}
         </BlockWrapper>
 
         <BlockWrapper
@@ -709,100 +598,126 @@ const ProductDetail = () => {
             </svg>
           }
         >
-          <div className='w-full'>
-            <div
-              className='flex items-center gap-5
+          {ratings === null ? (
+            <CircularProgress />
+          ) : (
+            <div className='w-full'>
+              <div
+                className='flex items-center gap-5
               rounded border-[1px] border-yellow-500 p-3'
-            >
-              <div className='flex w-fit flex-col items-center gap-2'>
-                <div className='text-2xl font-medium text-yellow-500'>
-                  {ratings.averageRating.toFixed(1)}/5
-                </div>
-
-                <FiveStar
-                  rating={ratings.averageRating}
-                  classNameForSize={`w-8 h-8`}
-                />
-              </div>
-
-              <div className='flex items-center justify-center gap-3'>
-                <div
-                  className='rounded border-[1px] px-5 py-1 hover:cursor-pointer
-                hover:border-yellow-500 hover:text-yellow-500'
-                >
-                  Tất cả
-                </div>
-                <div
-                  className='rounded border-[1px] px-5 py-1 hover:cursor-pointer
-                hover:border-yellow-500 hover:text-yellow-500'
-                >
-                  5 Sao
-                </div>
-                <div
-                  className='rounded border-[1px] px-5 py-1 hover:cursor-pointer
-                hover:border-yellow-500 hover:text-yellow-500'
-                >
-                  4 Sao
-                </div>
-                <div
-                  className='rounded border-[1px] px-5 py-1 hover:cursor-pointer
-                hover:border-yellow-500 hover:text-yellow-500'
-                >
-                  3 Sao
-                </div>
-                <div
-                  className='rounded border-[1px] px-5 py-1 hover:cursor-pointer
-                hover:border-yellow-500 hover:text-yellow-500'
-                >
-                  2 Sao
-                </div>
-                <div
-                  className='rounded border-[1px] px-5 py-1 hover:cursor-pointer
-                hover:border-yellow-500 hover:text-yellow-500'
-                >
-                  1 Sao
-                </div>
-              </div>
-            </div>
-
-            <div className='mt-5 flex flex-col gap-5 p-5'>
-              {ratings.ratings.items.map((item, index) => (
-                <div key={index} className='flex flex-col gap-5'>
-                  <div className='flex gap-x-3'>
-                    <img
-                      className='h-10 w-10 rounded-full'
-                      alt='img'
-                      src='https://down-vn.img.susercontent.com/file/sg-11134004-7qvef-lfjhk3o78hho40_tn'
-                    />
-
-                    <div className='flex flex-col gap-1'>
-                      <div className='text-sm font-medium'>{item.userName}</div>
-                      <div>
-                        <FiveStar
-                          classNameForSize={`w-5 h-5`}
-                          rating={item.ratingValue}
-                        />
-                      </div>
-                      <div className='text-sm'>Phân loại: {item.skuName}</div>
-                      <div className='mt-3'>{item.comment}</div>
+              >
+                <div className='flex w-fit flex-col items-center gap-2'>
+                  {ratings && (
+                    <div className='text-2xl font-medium text-yellow-500'>
+                      {ratings?.averageRating?.toFixed(1)}/5
                     </div>
-                  </div>
+                  )}
 
-                  <Divider className='mt-5' />
+                  <FiveStar
+                    rating={ratings?.averageRating && ratings?.averageRating}
+                    classNameForSize={`w-8 h-8`}
+                  />
                 </div>
-              ))}
 
-              <div className='flex items-center justify-center'>
-                <Pagination
-                  count={10}
-                  variant='outlined'
-                  color='primary'
-                  size='large'
-                  onChange={handleChange}
-                />
+                <div className='flex items-center justify-center gap-3'>
+                  <div
+                    className={`
+                    ${selectedStar === 0 && "border-yellow-500 text-yellow-500"} 
+                    rounded border-[1px] px-5 py-1 hover:cursor-pointer
+                  hover:border-yellow-500 hover:text-yellow-500`}
+                    onClick={() => setSelectedStar(0)}
+                  >
+                    Tất cả {"(" + ratings?.totalApprovedRating + ")"}
+                  </div>
+                  <div
+                    className={`
+                    ${selectedStar === 5 && "border-yellow-500 text-yellow-500"} 
+                    rounded border-[1px] px-5 py-1 hover:cursor-pointer
+                  hover:border-yellow-500 hover:text-yellow-500`}
+                    onClick={() => setSelectedStar(5)}
+                  >
+                    5 Sao {"(" + ratings?.total5StarRating + ")"}
+                  </div>
+                  <div
+                    className={`
+                    ${selectedStar === 4 && "border-yellow-500 text-yellow-500"} 
+                    rounded border-[1px] px-5 py-1 hover:cursor-pointer
+                  hover:border-yellow-500 hover:text-yellow-500`}
+                    onClick={() => setSelectedStar(4)}
+                  >
+                    4 Sao {"(" + ratings?.total4StarRating + ")"}
+                  </div>
+                  <div
+                    className={`
+                    ${selectedStar === 3 && "border-yellow-500 text-yellow-500"} 
+                    rounded border-[1px] px-5 py-1 hover:cursor-pointer
+                  hover:border-yellow-500 hover:text-yellow-500`}
+                    onClick={() => setSelectedStar(3)}
+                  >
+                    3 Sao {"(" + ratings?.total3StarRating + ")"}
+                  </div>
+                  <div
+                    className={`
+                    ${selectedStar === 2 && "border-yellow-500 text-yellow-500"} 
+                    rounded border-[1px] px-5 py-1 hover:cursor-pointer
+                  hover:border-yellow-500 hover:text-yellow-500`}
+                    onClick={() => setSelectedStar(2)}
+                  >
+                    2 Sao {"(" + ratings?.total2StarRating + ")"}
+                  </div>
+                  <div
+                    className={`
+                    ${selectedStar === 1 && "border-yellow-500 text-yellow-500"} 
+                    rounded border-[1px] px-5 py-1 hover:cursor-pointer
+                    hover:border-yellow-500 hover:text-yellow-500`}
+                    onClick={() => setSelectedStar(1)}
+                  >
+                    1 Sao {"(" + ratings?.total1StarRating + ")"}
+                  </div>
+                </div>
+              </div>
+
+              <div className='mt-5 flex flex-col gap-5 p-5'>
+                {ratings?.ratings?.items.map((item, index) => (
+                  <div key={index} className='flex flex-col gap-5'>
+                    <div className='flex gap-x-3'>
+                      <img
+                        className='h-10 w-10 rounded-full'
+                        alt='img'
+                        src='https://down-vn.img.susercontent.com/file/sg-11134004-7qvef-lfjhk3o78hho40_tn'
+                      />
+
+                      <div className='flex flex-col gap-1'>
+                        <div className='text-sm font-medium'>
+                          {item.userName}
+                        </div>
+                        <div>
+                          <FiveStar
+                            classNameForSize={`w-5 h-5`}
+                            rating={item.ratingValue}
+                          />
+                        </div>
+                        <div className='text-sm'>Phân loại: {item.skuName}</div>
+                        <div className='mt-3'>{item.comment}</div>
+                      </div>
+                    </div>
+
+                    <Divider className='mt-5' />
+                  </div>
+                ))}
+
+                <div className='flex items-center justify-center'>
+                  <Pagination
+                    count={ratings.ratings.totalPages}
+                    variant='outlined'
+                    color='primary'
+                    size='large'
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </BlockWrapper>
       </div>
     </div>

@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import BlockWrapper from "../../components/BlockWrapper"
 import ImageSlider from "../../components/User/ImageSlider"
 import ProductItem from "../../components/User/ProductItem"
 import MySwiper from "../../components/MySwiper"
+
+import * as productServices from "../../apiServices/productServices"
 
 const slides = [
   "https://img.freepik.com/free-vector/flat-social-media-cover-template-world-book-day-celebration_23-2150201450.jpg?t=st=1715839011~exp=1715842611~hmac=6bf816776980806cc41a27ea418ac1b2b5ec2d7b940d142057e66b6055da6bf5&w=1380",
@@ -351,6 +354,72 @@ const cateBlock = [
 ]
 
 const Home = () => {
+  const navigate = useNavigate()
+
+  const [trendyProducts, setTrendyProducts] = useState([])
+  const [vietBooks, setVietBooks] = useState([])
+
+  const getTrendyProducts = async () => {
+    const response = await productServices
+      .getTrendyProducts()
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request)
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+
+    if (response) {
+      console.log(response.items)
+      setTrendyProducts(response.items)
+    }
+  }
+
+  const getVietBooks = async () => {
+    const response = await productServices
+      .getProductList("?ProductTypeIds=1")
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request)
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+
+    if (response) {
+      console.log(response)
+      setVietBooks(response.items)
+    }
+  }
+
+  useEffect(() => {
+    getTrendyProducts()
+    getVietBooks()
+  }, [])
+
   return (
     <div>
       <main className='relative w-full'>
@@ -424,12 +493,7 @@ const Home = () => {
               </svg>
             }
           >
-            <MySwiper slides={products}></MySwiper>
-            {/* <div className='grid w-full grid-cols-2 grid-rows-1 overflow-hidden sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
-              {products.map((item, index) => (
-                <ProductItem key={index} index={index} item={item} />
-              ))}
-            </div> */}
+            <MySwiper slides={trendyProducts}></MySwiper>
           </BlockWrapper>
         </div>
       </main>
@@ -486,7 +550,7 @@ const Home = () => {
         </div>
       </main>
 
-      <main className='relative w-full'>
+      {/* <main className='relative w-full'>
         <div
           className='mx-auto flex w-full max-w-screen-xl flex-col items-center justify-between 
               gap-5 p-4 lg:px-8'
@@ -511,59 +575,7 @@ const Home = () => {
             </div>
           </BlockWrapper>
         </div>
-      </main>
-
-      <main className='relative mt-4 w-full'>
-        <div
-          className='mx-auto flex w-full max-w-screen-xl flex-col items-center justify-between 
-              gap-5 p-4 lg:px-8'
-        >
-          <div className='grid h-full w-full grid-cols-2 gap-4 lg:grid-cols-4'>
-            {cateBlock.map((item, index) => (
-              <Link
-                key={index}
-                className='group flex flex-col justify-center gap-2 rounded bg-white px-3 py-3 shadow'
-              >
-                <div
-                  className='header flex items-center justify-between font-semibold 
-                    group-hover:text-ct-green-400'
-                >
-                  <div className='title '>{item.name}</div>
-                  <div className='icon'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      viewBox='0 0 24 24'
-                      fill='currentColor'
-                      className='h-6 w-6'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div className=''>
-                  <div
-                    className='img h-44 w-full bg-cover bg-center bg-no-repeat'
-                    style={{ backgroundImage: `url(${item.primary})` }}
-                  ></div>
-                  <div className='mt-2 grid grid-cols-3 gap-1'>
-                    {item.child.map((childItem, childIndex) => (
-                      <div
-                        key={childIndex}
-                        className='img h-24 w-full bg-cover bg-center bg-no-repeat'
-                        style={{ backgroundImage: `url(${childItem})` }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </main>
+      </main> */}
 
       <main className='relative w-full'>
         <div
@@ -571,7 +583,7 @@ const Home = () => {
               gap-5 p-4 lg:px-8'
         >
           <BlockWrapper
-            title={"Sách nước ngoài nổi bật"}
+            title={"Sách tiếng Việt nổi bật"}
             icon={
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -584,7 +596,34 @@ const Home = () => {
             }
           >
             <div className='grid h-full w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
-              {products3.map((item, index) => (
+              {vietBooks.map((item, index) => (
+                <ProductItem key={index} index={index} item={item} />
+              ))}
+            </div>
+          </BlockWrapper>
+        </div>
+      </main>
+
+      <main className='relative w-full'>
+        <div
+          className='mx-auto flex w-full max-w-screen-xl flex-col items-center justify-between 
+              gap-5 p-4 lg:px-8'
+        >
+          <BlockWrapper
+            title={"Văn phòng phẩm nổi bật"}
+            icon={
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='h-6 w-6 text-orange-500'
+              >
+                <path d='M11.25 4.533A9.707 9.707 0 0 0 6 3a9.735 9.735 0 0 0-3.25.555.75.75 0 0 0-.5.707v14.25a.75.75 0 0 0 1 .707A8.237 8.237 0 0 1 6 18.75c1.995 0 3.823.707 5.25 1.886V4.533ZM12.75 20.636A8.214 8.214 0 0 1 18 18.75c.966 0 1.89.166 2.75.47a.75.75 0 0 0 1-.708V4.262a.75.75 0 0 0-.5-.707A9.735 9.735 0 0 0 18 3a9.707 9.707 0 0 0-5.25 1.533v16.103Z' />
+              </svg>
+            }
+          >
+            <div className='grid h-full w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
+              {vietBooks.map((item, index) => (
                 <ProductItem key={index} index={index} item={item} />
               ))}
             </div>

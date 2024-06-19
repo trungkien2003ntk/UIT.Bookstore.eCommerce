@@ -14,6 +14,7 @@ import Customers from "./pages/Admin/customers"
 import CustomerDetail from "./pages/Admin/customer-detail"
 import Promotions from "./pages/Admin/promotions"
 import PromotionDetail from "./pages/Admin/promotion-detail"
+import Comments from "./pages/Admin/comments"
 
 import { default as UserHome } from "./pages/User/home"
 import { default as UserLogin } from "./pages/User/login"
@@ -34,6 +35,7 @@ import { default as UserProductDetail } from "./pages/User/product-detail"
 import { default as UserCart } from "./pages/User/cart"
 import { default as UserCheckOut } from "./pages/User/checkout"
 import { default as UserOrderDetail } from "./pages/User/order-detail"
+import { default as UserResultPayment } from "./pages/User/resultPayment"
 
 import Layout from "./pages/Layout"
 import UserLayout from "./components/User/UserLayout"
@@ -63,6 +65,7 @@ function App() {
           <Route path='admin/customers/:id' element={<CustomerDetail />} />
           <Route path='admin/promotions' element={<Promotions />} />
           <Route path='admin/promotions/:id' element={<PromotionDetail />} />
+          <Route path='admin/comments' element={<Comments />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={["admin", "staff"]} />}>
@@ -77,10 +80,7 @@ function App() {
 
           <Route path='user/catalog' element={<UserCatalog />} />
 
-          <Route
-            path='user/product-detail/:id'
-            element={<UserProductDetail />}
-          />
+          <Route path='user/products/:id' element={<UserProductDetail />} />
 
           <Route path='user/orders/:id' element={<UserOrderDetail />} />
 
@@ -124,6 +124,7 @@ function App() {
 
         {/* catch all */}
         <Route path='*' element={<Missing />} />
+        <Route path='/user/result' element={<UserResultPayment />} />
       </Route>
     </Routes>
   )

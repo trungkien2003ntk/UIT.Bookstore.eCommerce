@@ -1,6 +1,11 @@
-import { Outlet } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import Header from "./Header"
 import Footer from "./Footer"
+import * as localStorage from "../../store/localStorage"
+import * as profileServices from "../../apiServices/profileServices"
+import * as cartServices from "../../apiServices/cartServices"
+import useToast from "../../hooks/useToast"
 
 const category = [
   {
@@ -510,10 +515,88 @@ const category = [
 ]
 
 const UserLayout = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const toast = useToast()
+  const [isLogin, setIsLogin] = useState(localStorage.getIsCustomerLogin())
+  const [user, setUser] = useState({})
+  const [inCart, setInCart] = useState([])
+
+  const [value, setValue] = useState("")
+  const onChange = (e) => {
+    setValue(e.target.value)
+  }
+
+  const onKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      if (value.trim() !== "") {
+        navigate(`/user/catalog?SearchText=${value}`, { replace: true })
+      }
+    }
+  }
+
+  useEffect(() => {
+    setIsLogin(localStorage.getIsCustomerLogin())
+    if (localStorage.getIsCustomerLogin()) {
+      getMe()
+      getShoppingCart()
+    }
+  }, [location])
+
+  const getMe = async () => {
+    const response = await profileServices.getMe().catch((error) => {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast("error", "Không thể lấy thông tin người dùng")
+        }
+      } else {
+        toast("error", "Có lỗi xảy ra")
+      }
+    })
+
+    if (response) {
+      setUser(response)
+    }
+  }
+
+  const getShoppingCart = async () => {
+    const response = await cartServices.getShoppingCart().catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message)
+      }
+      console.log(error.config)
+    })
+
+    if (response) {
+      // console.log(response)
+      setInCart(response.items)
+    }
+  }
+
   return (
     <div className='wrapper w-full'>
       <div className='content flex w-full flex-col bg-[#F3F4F6]'>
-        <Header category={category} />
+        <Header
+          category={category}
+          isLogin={isLogin}
+          user={user}
+          inCart={inCart}
+          value={value}
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+        />
         <Outlet />
         <Footer />
       </div>

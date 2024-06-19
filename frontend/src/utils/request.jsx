@@ -1,32 +1,53 @@
 import axios from "axios"
-import { getLocalStorage } from "../store/localStorage"
+import * as localStorage from "../store/localStorage"
 
 const request = axios.create({
   baseURL: "https://kkbookstore-api.azurewebsites.net/api/",
 })
 
-export const getMethod = async (path, options = {}, hasAuth = false) => {
-  const headers = {
-    accessToken: getLocalStorage().user.accessToken,
+export const getMethod = async (
+  path,
+  hasAuth = false,
+  isAdmin = false,
+  params = {},
+  options = {}
+) => {
+  const headersCustomer = {
+    Authorization: "Bearer " + localStorage.getCustomerAccessToken(),
   }
 
-  if (hasAuth === true) {
-    options.headers = headers
+  const headersAdmin = {
+    Authorization: "Bearer " + localStorage.getAdminAccessToken(),
   }
+
+  if (hasAuth) {
+    options.headers = isAdmin ? headersAdmin : headersCustomer
+  }
+
+  options.params = params || {}
 
   const response = await request.get(path, options)
 
   return response.data
 }
 
-export const postMethod = async (path, options = {}, loginRequest) => {
-  const headers = {}
+export const postMethod = async (
+  path,
+  hasAuth = false,
+  isAdmin = false,
+  options = {}
+) => {
+  let headers = {}
 
-  if (!loginRequest) {
-    headers.staffId = getLocalStorage().user.staffId
+  if (hasAuth) {
+    headers = {
+      Authorization:
+        "Bearer " +
+        (isAdmin
+          ? localStorage.getAdminAccessToken()
+          : localStorage.getCustomerAccessToken()),
+    }
   }
-
-  // console.log('HEADERS', headers);
 
   const response = await request.post(path, options, {
     headers: headers,
@@ -35,26 +56,32 @@ export const postMethod = async (path, options = {}, loginRequest) => {
   return response.data
 }
 
-export const putMethod = async (path, options = {}, staffId) => {
-  const headers = {}
+export const putMethod = async (path, isAdmin = false, options = {}) => {
+  const headersCustomer = {
+    accessToken: localStorage.getCustomerAccessToken(),
+  }
 
-  if (staffId) {
-    headers.staffId = staffId
-  } else {
-    headers.staffId = getLocalStorage().user.staffId
+  const headersAdmin = {
+    accessToken: localStorage.getAdminAccessToken(),
   }
 
   const response = await request.put(path, options, {
-    headers: headers,
+    headers: isAdmin ? headersAdmin : headersCustomer,
   })
   return response.data
 }
 
-export const deleteMethod = async (path) => {
+export const deleteMethod = async (path, isAdmin = false) => {
+  const headersCustomer = {
+    accessToken: localStorage.getCustomerAccessToken(),
+  }
+
+  const headersAdmin = {
+    accessToken: localStorage.getAdminAccessToken(),
+  }
+
   const response = await request.delete(path, {
-    headers: {
-      staffId: getLocalStorage().user.staffId,
-    },
+    headers: isAdmin ? headersAdmin : headersCustomer,
   })
   return response.data
 }

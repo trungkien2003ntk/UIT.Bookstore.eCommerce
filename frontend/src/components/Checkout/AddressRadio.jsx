@@ -24,11 +24,11 @@ const AddressRadio = ({ options, onChange, value, onUpdate }) => {
               <div className='flex flex-col justify-center'>
                 <div className='flex items-center gap-2'>
                   <div className='font-bold text-ct-black-300'>
-                    {option.name}
+                    {option.receiverName}
                   </div>
                   <Divider orientation='vertical' flexItem />
 
-                  <div>{option.phone}</div>
+                  <div>{option.phoneNumber}</div>
 
                   <Divider orientation='vertical' flexItem />
 
@@ -40,7 +40,7 @@ const AddressRadio = ({ options, onChange, value, onUpdate }) => {
                   </div>
                 </div>
 
-                <div className='line-clamp-2'>{option.addressDetail}</div>
+                <div className='line-clamp-2'>{option.detailAddress}</div>
 
                 <div className='mb-3'>
                   {option.commune +

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Fragment, useState, useRef } from "react"
-import { Link } from "react-router-dom"
+import { Fragment, useState, useRef, useEffect, memo } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import {
   PopoverButton,
   Popover,
@@ -12,44 +12,46 @@ import {
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
 import CombinationLogo from "../../assets/images/combination-logo.svg"
-import Logo from "../../assets/images/logo.svg"
 import MyMenu from "../MyMenu"
 import PopUp from "../PopUp"
 import VND from "../vnd"
 import useClickOutside from "../../hooks/useClickOutside"
+import noImage from "../../assets/images/no-photo.png"
 
-const inCart = [
-  {
-    name: "Vở Crabit Kẻ Ngang, Cornell, Ô Vuông 80 120 Trang, Vở Học Sinh Studygram",
-    image:
-      "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lh9zpatio75e8e",
-    price: 46000,
-  },
-  {
-    name: "Giá đỡ điện thoại iPhone, máy tính bảng iPad chân xoay 360 độ tiện lợi bằng hợp kim nhôm Macbox",
-    image:
-      "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfyas92mk4fe4a",
-    price: 80000,
-  },
-  {
-    name: "Khăn Tắm Cotton Lapyarn Mollis BM8V 60x120cm dày dặn mềm mại thấm hút không đổ lông dùng cho gia đình spa",
-    image:
-      "https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lsc4tpiputm677",
-    price: 192765,
-  },
-  {
-    name: "Áo sơ mi nam cổ bẻ dài tay chất liệu LINEN cao cấp, phom dáng thoải mái thấm hút cực tốt - LUCIINON",
-    image:
-      "https://down-vn.img.susercontent.com/file/f8022403d8fce9db8acd0701507cbf32",
-    price: 319000,
-  },
-  {
-    name: "Mũ bảo hiểm 3/4 đầu Lót Màu Cao Cấp,Nút Đồng Chống Rĩ,Nón 3/4 tặng kèm lưỡi trai-Đạt Chuản CR",
-    image:
-      "https://down-vn.img.susercontent.com/file/4c54b802a801203697c5cac490035bd0",
-    price: 135000,
-  },
-]
+import useToast from "../../hooks/useToast"
+
+// const inCart = [
+//   {
+//     name: "Vở Crabit Kẻ Ngang, Cornell, Ô Vuông 80 120 Trang, Vở Học Sinh Studygram",
+//     image:
+//       "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lh9zpatio75e8e",
+//     price: 46000,
+//   },
+//   {
+//     name: "Giá đỡ điện thoại iPhone, máy tính bảng iPad chân xoay 360 độ tiện lợi bằng hợp kim nhôm Macbox",
+//     image:
+//       "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfyas92mk4fe4a",
+//     price: 80000,
+//   },
+//   {
+//     name: "Khăn Tắm Cotton Lapyarn Mollis BM8V 60x120cm dày dặn mềm mại thấm hút không đổ lông dùng cho gia đình spa",
+//     image:
+//       "https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lsc4tpiputm677",
+//     price: 192765,
+//   },
+//   {
+//     name: "Áo sơ mi nam cổ bẻ dài tay chất liệu LINEN cao cấp, phom dáng thoải mái thấm hút cực tốt - LUCIINON",
+//     image:
+//       "https://down-vn.img.susercontent.com/file/f8022403d8fce9db8acd0701507cbf32",
+//     price: 319000,
+//   },
+//   {
+//     name: "Mũ bảo hiểm 3/4 đầu Lót Màu Cao Cấp,Nút Đồng Chống Rĩ,Nón 3/4 tặng kèm lưỡi trai-Đạt Chuản CR",
+//     image:
+//       "https://down-vn.img.susercontent.com/file/4c54b802a801203697c5cac490035bd0",
+//     price: 135000,
+//   },
+// ]
 
 const searchHistory = [
   {
@@ -69,12 +71,33 @@ const searchHistory = [
   },
 ]
 
-const Header = ({ category }) => {
+const notiItems = [
+  {
+    id: 3352,
+    status: "Đang vận chuyển",
+    price: 46000,
+  },
+  {
+    id: 1203,
+    status: "Đang gói hàng",
+    price: 46000,
+  },
+  {
+    id: 9635,
+    status: "Đã giao hàng",
+    price: 46000,
+  },
+]
+
+import * as localStorage from "../../store/localStorage"
+
+const Header = ({ category, isLogin, user, inCart, onKeyDown, onChange, value }) => {
+  const navigate = useNavigate()
+  const toast = useToast()
+
   const wrapperRef = useRef(null)
 
   const [catePop, setCatePop] = useState(category[0])
-
-  const [isLogin, setIsLogin] = useState(true)
 
   // const [isFocusedInput, setIsFocusedInput] = useState(false)
   const [isOpenHistory, setIsOpenHistory] = useState(false)
@@ -213,7 +236,7 @@ const Header = ({ category }) => {
 
                                   <Link
                                     className='more text-blue-500 hover:cursor-pointer 
-                                  hover:font-semibold'
+                                    hover:font-semibold'
                                   >
                                     Xem tất cả
                                   </Link>
@@ -240,6 +263,8 @@ const Header = ({ category }) => {
                 className='placeholder:font-sm box-border w-36 px-1 font-medium
                 leading-normal text-ct-black-300 outline-none placeholder:text-sm 2xs:w-full'
                 placeholder='Tìm kiếm ...'
+                onChange={onChange}
+                onKeyDown={onKeyDown}
               />
               <div className='icon'>
                 <svg
@@ -255,7 +280,7 @@ const Header = ({ category }) => {
                   />
                 </svg>
               </div>
-              <div
+              {/* <div
                 ref={wrapperRef}
                 className={`absolute left-0 top-full z-10 mt-2 w-full animate-fadeIn 
                 rounded border-[1px] bg-white shadow-lg ${isOpenHistory ? "" : "hidden"}`}
@@ -288,7 +313,7 @@ const Header = ({ category }) => {
                     </Link>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -320,8 +345,64 @@ const Header = ({ category }) => {
                 </div>
               }
             >
-              <div className='flex max-w-fit items-center justify-center'>
-                <div className='w-48 text-center'>Thông báo cập nhật</div>
+              <div
+                className='w-screen max-w-sm flex-auto 
+                flex-col justify-center divide-y-[0.5px] divide-gray-200 p-3 text-gray-700'
+              >
+                <div className='title pb-2 text-start text-sm font-medium uppercase'>
+                  Thông báo mới
+                </div>
+                <div className='flex flex-col items-center justify-center py-2'>
+                  {notiItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className='flex w-full items-center gap-2 rounded p-2 hover:cursor-pointer hover:bg-gray-100'
+                    >
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        viewBox='0 0 24 24'
+                        fill='currentColor'
+                        className='size-10 text-green-700'
+                      >
+                        <path d='M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z' />
+                        <path
+                          fillRule='evenodd'
+                          d='m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+
+                      <div className='flex flex-1 flex-col'>
+                        <div className='flex gap-1'>
+                          <div className='text-sm font-medium leading-6'>
+                            Đơn hàng
+                          </div>
+
+                          <div className='text-sm font-bold leading-6 text-ct-green-400'>
+                            {item.id}
+                          </div>
+                        </div>
+
+                        <div className='line-clamp-1 text-sm leading-6'>
+                          {item.status}
+                        </div>
+                      </div>
+
+                      <VND
+                        className={`font-medium text-ct-green-400`}
+                        number={item.price}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className='flex items-center justify-end pt-2'>
+                  <div
+                    className='rounded bg-ct-green-400 px-3 py-1 text-sm text-white hover:cursor-pointer
+                    hover:bg-green-600'
+                  >
+                    Xem thông báo
+                  </div>
+                </div>
               </div>
             </PopUp>
           </li>
@@ -359,30 +440,39 @@ const Header = ({ category }) => {
                   Sản phẩm mới thêm
                 </div>
                 <div className='flex flex-col items-center justify-center py-2'>
-                  {inCart.map((item, index) => (
-                    <div
-                      key={index}
-                      className='flex items-center gap-2 rounded p-2 hover:cursor-pointer hover:bg-gray-100'
-                    >
-                      <img className='h-14 w-14' alt='img' src={item.image} />
-                      <div className='line-clamp-2 text-sm leading-6'>
-                        {item.name}
+                  {inCart.map((item, index) => {
+                    if (index > 5) return
+
+                    return (
+                      <div
+                        key={index}
+                        className='flex w-full items-center gap-2 rounded p-2 hover:cursor-pointer hover:bg-gray-100'
+                      >
+                        <img
+                          className='h-14 w-14'
+                          alt='img'
+                          src={item.imageUrl}
+                        />
+                        <div className='line-clamp-2 flex-1 text-sm leading-6'>
+                          {item.productName}
+                        </div>
+                        <VND
+                          className={`font-medium text-ct-green-400`}
+                          number={item.unitPrice}
+                        />
                       </div>
-                      <VND
-                        className={`font-medium text-ct-green-400`}
-                        number={item.price}
-                      />
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
-                <div className='flex items-center justify-between pt-2'>
-                  <div className='text-sm'>13 sản phẩm trong giỏ</div>
-                  <div
+                <div className='flex items-center justify-end pt-2'>
+                  {/* <div className='text-sm'>13 sản phẩm trong giỏ</div> */}
+                  <Link
+                    to={"/user/cart"}
                     className='rounded bg-ct-green-400 px-3 py-1 text-sm text-white hover:cursor-pointer
                     hover:bg-green-600'
                   >
                     Xem giỏ hàng
-                  </div>
+                  </Link>
                 </div>
               </div>
             </PopUp>
@@ -470,11 +560,11 @@ const Header = ({ category }) => {
                       >
                         <img
                           alt='avt'
-                          src='https://th.bing.com/th/id/R.11b315105c63ad7bfd35778ddf984c9a?rik=2LjF8DiLJFIgcA&riu=http%3a%2f%2forig11.deviantart.net%2f0405%2ff%2f2014%2f082%2fb%2f8%2funivers_by_momez-d7bcl1h.jpg&ehk=K9hHXvRywf2iBjx2rp6ywehVhV8366uX%2bi%2bGDI388x8%3d&risl=1&pid=ImgRaw&r=0'
-                          className='h-10 w-10 rounded-full'
+                          src={user?.avatar || noImage}
+                          className='h-10 w-10 rounded-full object-cover'
                         />
                       </div>
-                      <div className='title'>Phạm Tuấn Kiệt</div>
+                      <div className='title'>{user?.fullName}</div>
                     </Link>
                   </MenuItem>
                 </div>
@@ -484,8 +574,9 @@ const Header = ({ category }) => {
                 <div className='py-1'>
                   <MenuItem>
                     <Link
+                      to={"user/orders"}
                       className='group flex items-center justify-start gap-3 px-4
-                          py-2 text-sm hover:bg-gray-100'
+                      py-2 text-sm hover:bg-gray-100'
                     >
                       <div className='icon text-gray-400 group-hover:text-ct-green-300'>
                         <svg
@@ -510,9 +601,17 @@ const Header = ({ category }) => {
               {isLogin && (
                 <div className='py-1'>
                   <MenuItem>
-                    <Link
+                    <div
                       className='group flex items-center justify-start gap-3 px-4
-                          py-2 text-sm hover:bg-gray-100'
+                      py-2 text-sm hover:cursor-pointer hover:bg-gray-100'
+                      onClick={() => {
+                        localStorage.setIsCustomerLogin(false)
+                        localStorage.setCustomerAccessToken(null)
+                        localStorage.setCustomerRefreshToken(null)
+                        toast("success", "Đăng xuất thành công")
+
+                        navigate("/")
+                      }}
                     >
                       <div className='icon text-gray-400 group-hover:text-ct-green-300'>
                         <svg
@@ -529,7 +628,7 @@ const Header = ({ category }) => {
                         </svg>
                       </div>
                       <div className='title'>Đăng xuất</div>
-                    </Link>
+                    </div>
                   </MenuItem>
                 </div>
               )}

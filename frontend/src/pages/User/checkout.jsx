@@ -1,7 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining"
-import { Autocomplete, Checkbox, Divider, TextField } from "@mui/material"
+import {
+  Autocomplete,
+  CircularProgress,
+  Divider,
+  TextField,
+} from "@mui/material"
 import { green } from "@mui/material/colors"
 
 import Modal from "../../components/Modal"
@@ -10,580 +16,176 @@ import Input from "../../components/Input"
 import VND from "../../components/vnd"
 import AddressRadio from "../../components/Checkout/AddressRadio"
 import VoucherRadio from "../../components/Checkout/VoucherRadio"
+import noImage from "../../assets/images/no-photo.png"
 
-const options = [
-  {
-    id: 1,
-    name: "Phạm Tuấn Kiệt",
-    phone: "0835489396",
-    province: "An Giang",
-    district: "An Phú",
-    commune: "Khánh Bình",
-    addressDetail: "Khu dân cư xã Khánh Bình",
-  },
-  {
-    id: 2,
-    name: "Nguuyễn Thị Loan",
-    phone: "0918885747",
-    province: "An Giang",
-    district: "An Phú",
-    commune: "Quốc Thái",
-    addressDetail: "Cửa hàng Điện thoại Di Động Chí Khang",
-  },
-]
-
-const provinces = [
-  {
-    id: 269,
-    label: "Lào Cai",
-  },
-  {
-    id: 268,
-    label: "Hưng Yên",
-  },
-  {
-    id: 267,
-    label: "Hòa Bình",
-  },
-  {
-    id: 266,
-    label: "Sơn La",
-  },
-  {
-    id: 265,
-    label: "Điện Biên",
-  },
-  {
-    id: 264,
-    label: "Lai Châu",
-  },
-  {
-    id: 263,
-    label: "Yên Bái",
-  },
-  {
-    id: 262,
-    label: "Bình Định",
-  },
-  {
-    id: 261,
-    label: "Ninh Thuận",
-  },
-  {
-    id: 260,
-    label: "Phú Yên",
-  },
-  {
-    id: 259,
-    label: "Kon Tum",
-  },
-  {
-    id: 258,
-    label: "Bình Thuận",
-  },
-  {
-    id: 253,
-    label: "Bạc Liêu",
-  },
-  {
-    id: 252,
-    label: "Cà Mau",
-  },
-  {
-    id: 250,
-    label: "Hậu Giang",
-  },
-  {
-    id: 249,
-    label: "Bắc Ninh",
-  },
-  {
-    id: 248,
-    label: "Bắc Giang",
-  },
-  {
-    id: 247,
-    label: "Lạng Sơn",
-  },
-  {
-    id: 246,
-    label: "Cao Bằng",
-  },
-  {
-    id: 245,
-    label: "Bắc Kạn",
-  },
-  {
-    id: 244,
-    label: "Thái Nguyên",
-  },
-  {
-    id: 243,
-    label: "Quảng Nam",
-  },
-  {
-    id: 242,
-    label: "Quảng Ngãi",
-  },
-  {
-    id: 241,
-    label: "Đắk Nông",
-  },
-  {
-    id: 240,
-    label: "Tây Ninh",
-  },
-  {
-    id: 239,
-    label: "Bình Phước",
-  },
-  {
-    id: 238,
-    label: "Quảng Trị",
-  },
-  {
-    id: 237,
-    label: "Quảng Bình",
-  },
-  {
-    id: 236,
-    label: "Hà Tĩnh",
-  },
-  {
-    id: 235,
-    label: "Nghệ An",
-  },
-  {
-    id: 234,
-    label: "Thanh Hóa",
-  },
-  {
-    id: 233,
-    label: "Ninh Bình",
-  },
-  {
-    id: 232,
-    label: "Hà Nam",
-  },
-  {
-    id: 231,
-    label: "Nam Định",
-  },
-  {
-    id: 230,
-    label: "Quảng Ninh",
-  },
-  {
-    id: 229,
-    label: "Phú Thọ",
-  },
-  {
-    id: 228,
-    label: "Tuyên Quang",
-  },
-  {
-    id: 227,
-    label: "Hà Giang",
-  },
-  {
-    id: 226,
-    label: "Thái Bình",
-  },
-  {
-    id: 225,
-    label: "Hải Dương",
-  },
-  {
-    id: 224,
-    label: "Hải Phòng",
-  },
-  {
-    id: 223,
-    label: "Thừa Thiên - Huế",
-  },
-  {
-    id: 221,
-    label: "Vĩnh Phúc",
-  },
-  {
-    id: 220,
-    label: "Cần Thơ",
-  },
-  {
-    id: 219,
-    label: "Kiên Giang",
-  },
-  {
-    id: 218,
-    label: "Sóc Trăng",
-  },
-  {
-    id: 217,
-    label: "An Giang",
-  },
-  {
-    id: 216,
-    label: "Đồng Tháp",
-  },
-  {
-    id: 215,
-    label: "Vĩnh Long",
-  },
-  {
-    id: 214,
-    label: "Trà Vinh",
-  },
-  {
-    id: 213,
-    label: "Bến Tre",
-  },
-  {
-    id: 212,
-    label: "Tiền Giang",
-  },
-  {
-    id: 211,
-    label: "Long An",
-  },
-  {
-    id: 210,
-    label: "Đắk Lắk",
-  },
-  {
-    id: 209,
-    label: "Lâm Đồng",
-  },
-  {
-    id: 208,
-    label: "Khánh Hòa",
-  },
-  {
-    id: 207,
-    label: "Gia Lai",
-  },
-  {
-    id: 206,
-    label: "Bà Rịa - Vũng Tàu",
-  },
-  {
-    id: 205,
-    label: "Bình Dương",
-  },
-  {
-    id: 204,
-    label: "Đồng Nai",
-  },
-  {
-    id: 203,
-    label: "Đà Nẵng",
-  },
-  {
-    id: 202,
-    label: "Hồ Chí Minh",
-  },
-  {
-    id: 201,
-    label: "Hà Nội",
-  },
-]
-
-const districts = [
-  {
-    id: 3715,
-    label: "33",
-  },
-  {
-    id: 3713,
-    label: "Quận mới",
-  },
-  {
-    id: 3695,
-    label: "Thành Phố Thủ Đức 1",
-  },
-  {
-    id: 2090,
-    label: "Huyện Cần Giờ",
-  },
-  {
-    id: 1534,
-    label: "Huyện Nhà Bè",
-  },
-  {
-    id: 1533,
-    label: "Huyện Bình Chánh",
-  },
-  {
-    id: 1463,
-    label: "Quận Thủ Đức",
-  },
-  {
-    id: 1462,
-    label: "Quận Bình Thạnh",
-  },
-  {
-    id: 1461,
-    label: "Quận Gò Vấp",
-  },
-  {
-    id: 1460,
-    label: "Huyện Củ Chi",
-  },
-  {
-    id: 1459,
-    label: "Huyện Hóc Môn",
-  },
-  {
-    id: 1458,
-    label: "Quận Bình Tân",
-  },
-  {
-    id: 1457,
-    label: "Quận Phú Nhuận",
-  },
-  {
-    id: 1456,
-    label: "Quận Tân Phú",
-  },
-  {
-    id: 1455,
-    label: "Quận Tân Bình",
-  },
-  {
-    id: 1454,
-    label: "Quận 12",
-  },
-  {
-    id: 1453,
-    label: "Quận 11",
-  },
-  {
-    id: 1452,
-    label: "Quận 10",
-  },
-  {
-    id: 1451,
-    label: "Quận 9",
-  },
-  {
-    id: 1450,
-    label: "Quận 8",
-  },
-  {
-    id: 1449,
-    label: "Quận 7",
-  },
-  {
-    id: 1448,
-    label: "Quận 6",
-  },
-  {
-    id: 1447,
-    label: "Quận 5",
-  },
-  {
-    id: 1446,
-    label: "Quận 4",
-  },
-  {
-    id: 1444,
-    label: "Quận 3",
-  },
-  {
-    id: 1443,
-    label: "Quận 2",
-  },
-  {
-    id: 1442,
-    label: "Quận 1",
-  },
-]
-
-const communes = [
-  {
-    id: "90768",
-    label: "Phường An Khánh",
-  },
-  {
-    id: "90767",
-    label: "Phường Bình Trưng Tây",
-  },
-  {
-    id: "90766",
-    label: "Phường Bình Trưng Đông",
-  },
-  {
-    id: "90765",
-    label: "Phường An Phú",
-  },
-  {
-    id: "90764",
-    label: "Phường Thảo Điền",
-  },
-  {
-    id: "90763",
-    label: "Phường Phú Hữu",
-  },
-  {
-    id: "90762",
-    label: "Phường Phước Bình",
-  },
-  {
-    id: "90761",
-    label: "Phường Long Trường",
-  },
-  {
-    id: "90760",
-    label: "Phường Long Phước",
-  },
-  {
-    id: "90759",
-    label: "Phường Trường Thạnh",
-  },
-  {
-    id: "90758",
-    label: "Phường Phước Long B",
-  },
-  {
-    id: "90757",
-    label: "Phường Phước Long A",
-  },
-  {
-    id: "90756",
-    label: "Phường Tăng Nhơn Phú B",
-  },
-  {
-    id: "90755",
-    label: "Phường Tăng Nhơn Phú A",
-  },
-  {
-    id: "90754",
-    label: "Phường Hiệp Phú",
-  },
-  {
-    id: "90753",
-    label: "Phường Tân Phú",
-  },
-  {
-    id: "90752",
-    label: "Phường Long Thạnh Mỹ",
-  },
-  {
-    id: "90751",
-    label: "Phường Long Bình",
-  },
-  {
-    id: "90750",
-    label: "Phường Thủ Thiêm",
-  },
-  {
-    id: "90749",
-    label: "Phường An Lợi Đông",
-  },
-  {
-    id: "90748",
-    label: "Phường Thạnh Mỹ Lợi",
-  },
-  {
-    id: "90747",
-    label: "Phường Cát Lái",
-  },
-  {
-    id: "90746",
-    label: "Phường Trường Thọ",
-  },
-  {
-    id: "90745",
-    label: "Phường Bình Thọ",
-  },
-  {
-    id: "90744",
-    label: "Phường Linh Đông",
-  },
-  {
-    id: "90743",
-    label: "Phường Linh Tây",
-  },
-  {
-    id: "90742",
-    label: "Phường Linh Chiểu",
-  },
-  {
-    id: "90741",
-    label: "Phường Hiệp Bình Chánh",
-  },
-  {
-    id: "90740",
-    label: "Phường Hiệp Bình Phước",
-  },
-  {
-    id: "90739",
-    label: "Phường Tam Phú",
-  },
-  {
-    id: "90738",
-    label: "Phường Tam Bình",
-  },
-  {
-    id: "90737",
-    label: "Phường Linh Trung",
-  },
-  {
-    id: "90736",
-    label: "Phường Bình Chiểu",
-  },
-  {
-    id: "90735",
-    label: "Phường Linh Xuân",
-  },
-]
-
-const vouchers = [
-  {
-    id: 1,
-    type: "discount",
-    title: "Mã giảm giá 50K cho đơn hàng từ 500K",
-    description:
-      "Mã giảm giá cho đơn hàng từ 500K chỉ áp dụng cho sản phẩm này",
-    expired: "20/10/2022",
-  },
-  {
-    id: 2,
-    type: "discount",
-    title: "Mã giảm giá 50K cho đơn hàng từ 500K",
-    description:
-      "Mã giảm giá cho đơn hàng từ 500K chỉ áp dụng cho sản phẩm này",
-    expired: "20/10/2022",
-  },
-]
-
-const freeShipping = [
-  {
-    id: 1,
-    type: "freeShipping",
-    title: "Mã giảm giá 50K cho đơn hàng từ 500K",
-    description:
-      "Mã giảm giá cho đơn hàng từ 500K chỉ áp dụng cho sản phẩm này",
-    expired: "20/10/2022",
-  },
-  {
-    id: 2,
-    type: "freeShipping",
-    title: "Mã giảm giá 50K cho đơn hàng từ 500K",
-    description:
-      "Mã giảm giá cho đơn hàng từ 500K chỉ áp dụng cho sản phẩm này",
-    expired: "20/10/2022",
-  },
-  {
-    id: 3,
-    type: "freeShipping",
-    title: "Mã giảm giá 50K cho đơn hàng từ 500K",
-    description:
-      "Mã giảm giá cho đơn hàng từ 500K chỉ áp dụng cho sản phẩm này",
-    expired: "20/10/2022",
-  },
-]
+import * as addressServices from "../../apiServices/addressServices"
+import * as voucherServices from "../../apiServices/voucherServices"
+import * as checkoutServices from "../../apiServices/checkoutServices"
 
 const CheckOut = () => {
+  const nav = useNavigate()
+  const { state } = useLocation()
+  const [obj, setObj] = useState(state.res)
+  const [address, setAddress] = useState(obj.shippingAddresses[0])
+  const [addressList, setAddressList] = useState(null)
+
+  console.log(obj)
+
+  const [date, setDate] = useState(new Date())
+
+  const [provinces, setProvinces] = useState([])
+  const [districts, setDistricts] = useState([])
+  const [communes, setCommunes] = useState([])
+
+  const [products, setProducts] = useState(obj.items)
+  const [subTotal, setSubTotal] = useState(0)
+  const [shippingFee, setShippingFee] = useState(0)
+  const [discountShip, setDiscountShip] = useState(0)
+  const [voucher, setVoucher] = useState(0)
+  const [total, setTotal] = useState(0)
+
+  const [listVouchers, setListVouchers] = useState()
+  const [listDiscountShip, setListDiscountShip] = useState()
+
+  const handleCalculate = () => {
+    setTotal(subTotal + shippingFee - discountShip - voucher)
+  }
+
+  const getAddressList = async () => {
+    const response = await addressServices.getAddressList().catch((error) => {
+      if (error.response) {
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        console.log(error.request)
+      } else {
+        console.log("Error", error.message)
+      }
+      console.log(error.config)
+    })
+
+    if (response) {
+      setAddressList(response)
+    }
+  }
+
+  const getVouchers = async () => {
+    const response = await voucherServices
+      .getVouchers({ selectedItemIds: products.map((i) => i.id) })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          console.log(error.request)
+        } else {
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+    if (response) {
+      // console.log(response)
+      setListVouchers(response.orderVouchers)
+      setListDiscountShip(response.shippingVouchers)
+    }
+  }
+
+  const getProvince = async () => {
+    const response = await addressServices.getProvince().catch((error) => {
+      if (error.response) {
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        console.log(error.request)
+      } else {
+        console.log("Error", error.message)
+      }
+      console.log(error.config)
+    })
+    if (response) {
+      setProvinces(response)
+    }
+  }
+
+  const getDistrict = async ({ provinceId }) => {
+    const response = await addressServices
+      .getDistrict({ provinceId })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          console.log(error.request)
+        } else {
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+    if (response) {
+      console.log(response)
+      setDistricts(response)
+    }
+  }
+
+  const getCommune = async ({ districtId }) => {
+    const response = await addressServices
+      .getCommune({ districtId })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          console.log(error.request)
+        } else {
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+    if (response) {
+      console.log(response)
+      setCommunes(response)
+    }
+  }
+
+  const getConfirmCheckout = async ({
+    OrderDiscountVoucherId,
+    ShippingDiscountVoucherId,
+  }) => {
+    const response = await checkoutServices
+      .confirmCheckout({
+        ItemIds: obj.items.map((i) => i.id),
+        OrderDiscountVoucherId,
+        ShippingDiscountVoucherId,
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          console.log(error.request)
+        } else {
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+
+    if (response) {
+      setObj(response)
+    }
+  }
+
+  useEffect(() => {
+    // handleCalculate()
+    getAddressList()
+    getVouchers()
+  }, [])
+
   // MODAL ADDRESS
   const [openAddress, setOpenAddress] = useState(false)
   const handleAddress = () => {
@@ -592,29 +194,31 @@ const CheckOut = () => {
 
   // MODAL EDIT ADDRESS
   const [editAddress, setEditAddress] = useState({
-    name: "",
-    phone: "",
+    receiverName: "",
+    phoneNumber: "",
     province: "",
     district: "",
     commune: "",
-    addressDetail: "",
+    detailAddress: "",
   })
 
   const [openEditAddress, setOpenEditAddress] = useState(false)
 
   const handleOpenEditAddress = (objAddress) => {
-    if (objAddress) {
-      setEditAddress(objAddress)
-    } else {
-      setEditAddress({
-        name: "",
-        phone: "",
-        province: "",
-        district: "",
-        commune: "",
-        addressDetail: "",
-      })
-    }
+    setEditAddress(objAddress)
+    // setDate(new Date())
+    // getProvince()
+
+    // const province = provinces.find((i) => i.label === objAddress.province)
+    // setValueProvince(province)
+
+    // getDistrict({ provinceId: province.id })
+    // const district = districts.find((i) => i.label === objAddress.district)
+    // setValueDistrict(district)
+
+    // getCommune({ districtId: district.id })
+    // const commune = communes.find((i) => i.label === objAddress.commune)
+    // setValueCommune(commune)
 
     handleAddress()
     setOpenEditAddress(true)
@@ -625,9 +229,9 @@ const CheckOut = () => {
   }
 
   // AUTOCOMPLETE
-  const [valueProvince, setValueProvince] = useState(provinces[0])
-  const [valueDistrict, setValueDistrict] = useState(districts[0])
-  const [valueCommune, setValueCommune] = useState(communes[0])
+  const [valueProvince, setValueProvince] = useState()
+  const [valueDistrict, setValueDistrict] = useState()
+  const [valueCommune, setValueCommune] = useState()
 
   const [inputValueAutoComplete, setInputValueAutoComplete] = useState({
     province: "",
@@ -636,9 +240,11 @@ const CheckOut = () => {
   })
 
   //   RADIO BUTTON
-  const [selectedValue, setSelectedValue] = useState(JSON.stringify(options[0]))
+  const [selectedValue, setSelectedValue] = useState(JSON.stringify(address))
   const handleChange = (event) => {
     setSelectedValue(event.target.value)
+
+    console.log(event.target.value)
   }
 
   // VOUCHER
@@ -647,9 +253,29 @@ const CheckOut = () => {
     setOpenVoucher((prev) => !prev)
   }
   // VOUCHER RADIO
-  const [selectedVoucher, setSelectedVoucher] = useState({})
+  const [selectedVoucher, setSelectedVoucher] = useState(null)
   const handleChangeVoucher = (event) => {
     setSelectedVoucher(event.target.value)
+  }
+
+  const handleAddVoucher = () => {
+    getConfirmCheckout({
+      OrderDiscountVoucherId: selectedVoucher && JSON.parse(selectedVoucher).id,
+      ShippingDiscountVoucherId:
+        selectedFreeShipping && JSON.parse(selectedFreeShipping).id,
+    })
+
+    handleVoucher()
+  }
+
+  const handleAddDiscountShipping = () => {
+    getConfirmCheckout({
+      OrderDiscountVoucherId: selectedVoucher && JSON.parse(selectedVoucher).id,
+      ShippingDiscountVoucherId:
+        selectedFreeShipping && JSON.parse(selectedFreeShipping).id,
+    })
+
+    handleFreeShipping()
   }
 
   // FREE SHIPPING
@@ -658,12 +284,47 @@ const CheckOut = () => {
     setOpenFreeShipping((prev) => !prev)
   }
   // FREE SHIPPING RADIO
-  const [selectedFreeShipping, setSelectedFreeShipping] = useState({})
+  const [selectedFreeShipping, setSelectedFreeShipping] = useState(null)
   const handleChangeFreeShipping = (event) => {
     setSelectedFreeShipping(event.target.value)
   }
 
   const [paymentType, setPaymentType] = useState(1)
+
+  const handleOrder = async () => {
+    const response = await checkoutServices
+      .placeOrder({
+        ItemIds: obj.items.map((i) => i.id),
+        ShippingAddressId: obj.shippingAddresses[0].id,
+        PaymentMethodId: paymentType,
+        DeliveryMethodId: 1,
+        OrderDiscountVoucherId:
+          selectedVoucher && JSON.parse(selectedVoucher).id,
+        ShippingVoucherId:
+          selectedFreeShipping && JSON.parse(selectedFreeShipping).id,
+        ShippingFee: obj.priceSummary.shippingFee,
+        ExpectedDeliveryWhen: obj.deliveryMethods[0].expectedDeliveryWhen,
+        Note: "",
+        PaymentReturnUrl: "http://localhost:5173/user/result",
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          console.log(error.request)
+        } else {
+          console.log("Error", error.message)
+        }
+        console.log(error.config)
+      })
+
+    if (response) {
+      window.location.replace(response.paymentUrl)
+      console.log(response)
+    }
+  }
 
   return (
     <div className='relative w-full'>
@@ -714,274 +375,298 @@ const CheckOut = () => {
             </div>
           </div>
 
-          <div className='flex items-center gap-5'>
-            <div className='font-medium'>Phạm Tuấn Kiệt</div>
-            <div className='font-medium'>0835489396</div>
-            <div>
-              KTX Khu B ĐHQG, Phường Linh Trung, Thành Phố Thủ Đức, TP. Hồ Chí
-              Minh
-            </div>
+          {address === null ? (
+            <CircularProgress />
+          ) : (
+            <div className='flex items-center gap-5'>
+              <div className='font-medium'>{address.receiverName}</div>
+              <div className='font-medium'>{address.phoneNumber}</div>
+              <div>
+                {address.detailAddress}, {address.commune}, {address.district},{" "}
+                {address.province}
+              </div>
 
-            <div
-              className='text-blue-500 hover:cursor-pointer hover:font-medium'
-              onClick={handleAddress}
-            >
-              Thay đổi
-            </div>
+              <div
+                className='text-blue-500 hover:cursor-pointer hover:font-medium'
+                onClick={handleAddress}
+              >
+                Thay đổi
+              </div>
 
-            <Modal
-              open={openAddress}
-              setOpen={handleAddress}
-              title={"Địa chỉ nhận hàng"}
-              contentComp={
-                <div>
-                  <AddressRadio
-                    options={options}
-                    onChange={handleChange}
-                    value={selectedValue}
-                    onUpdate={() => {
-                      handleOpenEditAddress(JSON.parse(selectedValue))
-                    }}
-                  />
+              <Modal
+                open={openAddress}
+                setOpen={handleAddress}
+                title={"Địa chỉ nhận hàng"}
+                contentComp={
+                  <div>
+                    <AddressRadio
+                      options={addressList}
+                      onChange={handleChange}
+                      value={selectedValue}
+                      onUpdate={() => {
+                        handleOpenEditAddress(JSON.parse(selectedValue))
+                      }}
+                    />
 
-                  <Button
-                    className={`mt-5 border-[1px] border-ct-green-400 
+                    <Button
+                      className={`mt-5 border-[1px] border-ct-green-400 
                     bg-green-50  !text-ct-green-400 hover:!bg-green-100`}
-                    leftIcon={
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 24 24'
-                        fill='currentColor'
-                        className='size-6'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    }
-                    onClick={handleOpenEditAddress}
-                  >
-                    Thêm mới
-                  </Button>
-                </div>
-              }
-              actionComp={<Button onClick={handleAddress}>Xác nhận</Button>}
-              isCancelButton
-            ></Modal>
+                      leftIcon={
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='size-6'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      }
+                      onClick={(objAddress) => {
+                        handleOpenEditAddress(objAddress)
+                      }}
+                    >
+                      Thêm mới
+                    </Button>
+                  </div>
+                }
+                actionComp={<Button onClick={handleAddress}>Xác nhận</Button>}
+                isCancelButton
+              ></Modal>
 
-            <Modal
-              open={openEditAddress}
-              setOpen={handleCloseEditAddress}
-              title={"Cập nhật địa chỉ nhận hàng"}
-              contentComp={
-                <div className='flex flex-col gap-2'>
-                  <Input
-                    value={editAddress.name}
-                    onChange={(value) =>
-                      setEditAddress((prev) => ({ ...prev, name: value }))
-                    }
-                    placeholder={"Tên"}
-                    title={"Tên"}
-                    type='text'
-                    // errorMsg={errors.lastName}
-                  />
+              <Modal
+                open={openEditAddress}
+                setOpen={handleCloseEditAddress}
+                title={"Cập nhật địa chỉ nhận hàng"}
+                contentComp={
+                  <div className='flex flex-col gap-2'>
+                    <Input
+                      value={editAddress?.receiverName}
+                      onChange={(value) =>
+                        setEditAddress((prev) => ({
+                          ...prev,
+                          receiverName: value,
+                        }))
+                      }
+                      placeholder={"Tên"}
+                      title={"Tên"}
+                      type='text'
+                      // errorMsg={errors.lastName}
+                    />
 
-                  <Input
-                    value={editAddress.phone}
-                    onChange={(value) =>
-                      setEditAddress((prev) => ({ ...prev, phone: value }))
-                    }
-                    placeholder={"Số điện thoại"}
-                    title={"Số điện thoại"}
-                    type='text'
-                    // errorMsg={errors.phoneNumber}
-                  />
+                    <Input
+                      value={editAddress?.phoneNumber}
+                      onChange={(value) =>
+                        setEditAddress((prev) => ({
+                          ...prev,
+                          phoneNumber: value,
+                        }))
+                      }
+                      placeholder={"Số điện thoại"}
+                      title={"Số điện thoại"}
+                      type='text'
+                      // errorMsg={errors.phoneNumber}
+                    />
 
-                  <Input
-                    value={editAddress.addressDetail}
-                    onChange={(value) =>
-                      setEditAddress((prev) => ({
-                        ...prev,
-                        addressDetail: value,
-                      }))
-                    }
-                    placeholder={"Địa chỉ cụ thể"}
-                    title={"Địa chỉ cụ thể"}
-                    type='text'
-                    // errorMsg={errors.lastName}
-                  />
+                    <Input
+                      value={editAddress?.detailAddress}
+                      onChange={(value) =>
+                        setEditAddress((prev) => ({
+                          ...prev,
+                          detailAddress: value,
+                        }))
+                      }
+                      placeholder={"Địa chỉ cụ thể"}
+                      title={"Địa chỉ cụ thể"}
+                      type='text'
+                      // errorMsg={errors.lastName}
+                    />
 
-                  <Autocomplete
-                    value={valueProvince}
-                    onChange={(event, newValue) => {
-                      setValueProvince(newValue)
-                    }}
-                    inputValue={inputValueAutoComplete.province}
-                    onInputChange={(event, newInputValue) => {
-                      setInputValueAutoComplete((prev) => ({
-                        ...prev,
-                        province: newInputValue,
-                      }))
-                    }}
-                    getOptionLabel={(option) => {
-                      return option.label
-                    }}
-                    noOptionsText='Không có dữ liệu'
-                    isOptionEqualToValue={(option, value) =>
-                      option.id === value.id
-                    }
-                    freeSolo={false}
-                    id='controllable-states-demo'
-                    options={provinces}
-                    sx={{ width: "100%", color: green[400] }}
-                    className='mt-3'
-                    renderInput={(params) => (
-                      <TextField
-                        sx={{ color: green[400] }}
-                        {...params}
-                        label='Tỉnh/Thành phố'
-                        size='small'
-                      />
+                    {valueProvince && (
+                      <Autocomplete
+                        value={valueProvince}
+                        onChange={(event, newValue) => {
+                          setValueProvince(newValue)
+                        }}
+                        inputValue={editAddress?.province}
+                        onInputChange={(event, newInputValue) => {
+                          setEditAddress((prev) => ({
+                            ...prev,
+                            province: newInputValue,
+                          }))
+                        }}
+                        getOptionLabel={(option) => {
+                          return option.label
+                        }}
+                        noOptionsText='Không có dữ liệu'
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                        freeSolo={false}
+                        id='controllable-states-demo'
+                        options={provinces}
+                        sx={{ width: "100%", color: green[400] }}
+                        className='mt-3'
+                        renderInput={(params) => (
+                          <TextField
+                            sx={{ color: green[400] }}
+                            {...params}
+                            label='Tỉnh/Thành phố'
+                            size='small'
+                          />
+                        )}
+                      ></Autocomplete>
                     )}
-                  ></Autocomplete>
 
-                  <Autocomplete
-                    value={valueDistrict}
-                    onChange={(event, newValue) => {
-                      setValueDistrict(newValue)
-                    }}
-                    inputValue={inputValueAutoComplete.district}
-                    onInputChange={(event, newInputValue) => {
-                      setInputValueAutoComplete((prev) => ({
-                        ...prev,
-                        district: newInputValue,
-                      }))
-                    }}
-                    getOptionLabel={(option) => {
-                      return option.label
-                    }}
-                    isOptionEqualToValue={(option, value) =>
-                      option.id === value.id
-                    }
-                    noOptionsText='Không có dữ liệu'
-                    id='controllable-states-demo'
-                    options={districts}
-                    sx={{ width: "100%", color: green[400] }}
-                    className='mt-3'
-                    renderInput={(params) => (
-                      <TextField
-                        sx={{ color: green[400] }}
-                        {...params}
-                        label='Quận/Huyện'
-                        size='small'
-                      />
+                    {valueDistrict && (
+                      <Autocomplete
+                        value={valueDistrict}
+                        onChange={(event, newValue) => {
+                          setValueDistrict(newValue)
+                        }}
+                        inputValue={editAddress.district}
+                        onInputChange={(event, newInputValue) => {
+                          setEditAddress((prev) => ({
+                            ...prev,
+                            district: newInputValue,
+                          }))
+                        }}
+                        getOptionLabel={(option) => {
+                          return option.label
+                        }}
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                        noOptionsText='Không có dữ liệu'
+                        id='controllable-states-demo'
+                        options={districts}
+                        sx={{ width: "100%", color: green[400] }}
+                        className='mt-3'
+                        renderInput={(params) => (
+                          <TextField
+                            sx={{ color: green[400] }}
+                            {...params}
+                            label='Quận/Huyện'
+                            size='small'
+                          />
+                        )}
+                      ></Autocomplete>
                     )}
-                  ></Autocomplete>
 
-                  <Autocomplete
-                    value={valueCommune}
-                    onChange={(event, newValue) => {
-                      setValueCommune(newValue)
-                    }}
-                    inputValue={inputValueAutoComplete.commune}
-                    onInputChange={(event, newInputValue) => {
-                      setInputValueAutoComplete((prev) => ({
-                        ...prev,
-                        commune: newInputValue,
-                      }))
-                    }}
-                    getOptionLabel={(option) => {
-                      return option.label
-                    }}
-                    isOptionEqualToValue={(option, value) =>
-                      option.id === value.id
-                    }
-                    noOptionsText='Không có dữ liệu'
-                    id='controllable-states-demo'
-                    options={communes}
-                    sx={{ width: "100%", color: green[400] }}
-                    className='mt-3'
-                    renderInput={(params) => (
-                      <TextField
-                        sx={{ color: green[400] }}
-                        {...params}
-                        label='Phường/Xã'
-                        size='small'
-                      />
+                    {valueCommune && (
+                      <Autocomplete
+                        value={valueCommune}
+                        onChange={(event, newValue) => {
+                          setValueCommune(newValue)
+                        }}
+                        inputValue={editAddress.commune}
+                        onInputChange={(event, newInputValue) => {
+                          setEditAddress((prev) => ({
+                            ...prev,
+                            commune: newInputValue,
+                          }))
+                        }}
+                        getOptionLabel={(option) => {
+                          return option.label
+                        }}
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                        noOptionsText='Không có dữ liệu'
+                        id='controllable-states-demo'
+                        options={communes}
+                        sx={{ width: "100%", color: green[400] }}
+                        className='mt-3'
+                        renderInput={(params) => (
+                          <TextField
+                            sx={{ color: green[400] }}
+                            {...params}
+                            label='Phường/Xã'
+                            size='small'
+                          />
+                        )}
+                      ></Autocomplete>
                     )}
-                  ></Autocomplete>
-                </div>
-              }
-              actionComp={
-                <div className='flex items-center gap-2'>
-                  <Button
-                    className={`border-[1px] border-ct-green-400 bg-green-50 
+                  </div>
+                }
+                actionComp={
+                  <div className='flex items-center gap-2'>
+                    <Button
+                      className={`border-[1px] border-ct-green-400 bg-green-50 
                     !text-ct-green-400  hover:!bg-green-100`}
-                    onClick={() => {
-                      handleAddress()
-                      handleCloseEditAddress()
-                    }}
-                  >
-                    Trở lại
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleAddress()
-                      handleCloseEditAddress()
-                    }}
-                  >
-                    Xác nhận
-                  </Button>
-                </div>
-              }
-            ></Modal>
-          </div>
+                      onClick={() => {
+                        handleAddress()
+                        handleCloseEditAddress()
+                      }}
+                    >
+                      Trở lại
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleAddress()
+                        handleCloseEditAddress()
+                      }}
+                    >
+                      Xác nhận
+                    </Button>
+                  </div>
+                }
+              ></Modal>
+            </div>
+          )}
         </div>
 
         <div className='flex flex-col gap-3 rounded bg-white p-5 shadow'>
           <div className='flex items-center justify-between'>
             <div className='text-xl'>Sản phẩm</div>
             <div className='flex'>
+              <div className='min-w-44 text-center'></div>
               <div className='min-w-44 text-center'>Đơn giá</div>
               <div className='min-w-44 text-center'>Số lượng</div>
               <div className='min-w-44 text-center'>Thành tiền</div>
             </div>
           </div>
 
-          <div className='flex items-center justify-between text-sm'>
-            <div className='flex items-center gap-2'>
-              <img
-                className='h-20 w-20'
-                alt='img'
-                src='https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-ltkh7zcofuoa65_tn'
-              />
-              <div className='line-clamp-3 text-sm'>
-                Áo Sơ Mi Denim Basic Godmother Xuân Hè 2024
-              </div>
-
+          {products &&
+            products.map((item, index) => (
               <div
-                className='flex min-w-44 max-w-44 flex-col items-start justify-start 
-                rounded bg-slate-100 p-3 hover:cursor-pointer'
+                key={index}
+                className='flex items-center justify-between text-sm'
               >
-                <div className='flex items-center gap-1 text-sm'>
-                  <span className='font-medium'>Phân loại hàng</span>
+                <div className='flex items-center gap-2'>
+                  <img
+                    className='h-20 w-20'
+                    alt='img'
+                    src={item.imageUrl || noImage}
+                  />
+                  <div className='line-clamp-3 text-sm'>{item.productName}</div>
                 </div>
-                <div className='text-start text-sm'>123</div>
-              </div>
-            </div>
 
-            <div className='flex'>
-              <div className='min-w-44 text-center'>
-                <VND number={249000} />
+                <div className='flex'>
+                  {item.skuName && (
+                    <div
+                      className='flex min-w-44 max-w-44 flex-col items-start justify-start 
+                  rounded bg-slate-100 p-3 hover:cursor-pointer'
+                    >
+                      <div className='flex items-center gap-1 text-sm'>
+                        <span className='font-medium'>Phân loại hàng</span>
+                      </div>
+                      <div className='text-start text-sm'>{item.skuName}</div>
+                    </div>
+                  )}
+                  <div className='min-w-44 text-center'>
+                    <VND number={item.unitPrice} />
+                  </div>
+                  <div className='min-w-44 text-center'>{item.quantity}</div>
+                  <div className='min-w-44 text-center'>
+                    <VND number={item.totalPrice} />
+                  </div>
+                </div>
               </div>
-              <div className='min-w-44 text-center'>1</div>
-              <div className='min-w-44 text-center'>
-                <VND number={249000} />
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
 
         <div className='flex justify-between rounded bg-white p-5 shadow'>
@@ -1015,13 +700,13 @@ const CheckOut = () => {
             contentComp={
               <div>
                 <VoucherRadio
-                  options={vouchers}
+                  options={listVouchers}
                   onChange={handleChangeVoucher}
                   value={selectedVoucher}
                 />
               </div>
             }
-            actionComp={<Button onClick={handleVoucher}>Xác nhận</Button>}
+            actionComp={<Button onClick={handleAddVoucher}>Xác nhận</Button>}
             isCancelButton
           ></Modal>
         </div>
@@ -1050,18 +735,20 @@ const CheckOut = () => {
             contentComp={
               <div>
                 <VoucherRadio
-                  options={freeShipping}
+                  options={listDiscountShip}
                   onChange={handleChangeFreeShipping}
                   value={selectedFreeShipping}
                 />
               </div>
             }
-            actionComp={<Button onClick={handleFreeShipping}>Xác nhận</Button>}
+            actionComp={
+              <Button onClick={handleAddDiscountShipping}>Xác nhận</Button>
+            }
             isCancelButton
           ></Modal>
         </div>
 
-        <div className='flex justify-between rounded bg-white p-5 shadow'>
+        {/* <div className='flex justify-between rounded bg-white p-5 shadow'>
           <div className='flex items-center gap-2'>
             <div className='text-yellow-400'>
               <svg
@@ -1084,7 +771,7 @@ const CheckOut = () => {
             <VND className={`text-gray-300`} number={500} />
             <Checkbox />
           </div>
-        </div>
+        </div> */}
 
         <div className='flex flex-col justify-between rounded bg-white p-5 shadow'>
           <div className='flex items-center gap-2'>
@@ -1147,12 +834,18 @@ const CheckOut = () => {
           <div className='flex flex-col items-end gap-5'>
             <div className='flex items-center'>
               <div className='min-w-52'>Tổng tiền hàng</div>
-              <VND className={`min-w-52 text-end`} number={518000} />
+              <VND
+                className={`min-w-52 text-end`}
+                number={obj.priceSummary.subTotal || 0}
+              />
             </div>
 
             <div className='flex items-center'>
               <div className='min-w-52'>Phí vận chuyển</div>
-              <VND className={`min-w-52 text-end`} number={35000} />
+              <VND
+                className={`min-w-52 text-end`}
+                number={obj.priceSummary.shippingFee || 0}
+              />
             </div>
 
             <div className='flex items-center'>
@@ -1160,7 +853,10 @@ const CheckOut = () => {
 
               <div className='flex min-w-52 items-center justify-end'>
                 <span>-</span>
-                <VND className={`text-end`} number={35000} />
+                <VND
+                  className={`text-end`}
+                  number={parseInt(obj.priceSummary.shippingDiscount) || 0}
+                />
               </div>
             </div>
 
@@ -1169,24 +865,27 @@ const CheckOut = () => {
 
               <div className='flex min-w-52 items-center justify-end'>
                 <span>-</span>
-                <VND className={`text-end`} number={5000} />
+                <VND
+                  className={`text-end`}
+                  number={obj.priceSummary.orderVoucherDiscount || 0}
+                />
               </div>
             </div>
 
-            <div className='flex items-center'>
+            {/* <div className='flex items-center'>
               <div className='min-w-52'>KKBooks Xu</div>
 
               <div className='flex min-w-52 items-center justify-end'>
                 <span>-</span>
                 <VND className={`text-end`} number={500} />
               </div>
-            </div>
+            </div> */}
 
             <div className='flex items-center'>
               <div className='min-w-52'>Tổng thanh toán</div>
               <VND
                 className={`min-w-52 text-end text-3xl font-medium text-ct-green-400`}
-                number={35000}
+                number={parseInt(obj.priceSummary.total) || 0}
               />
             </div>
           </div>
@@ -1196,7 +895,9 @@ const CheckOut = () => {
           </div>
 
           <div className='flex items-center justify-end'>
-            <Button className={`min-w-64`}>Đặt hàng</Button>
+            <Button className={`min-w-64`} onClick={handleOrder}>
+              Đặt hàng
+            </Button>
           </div>
         </div>
       </div>

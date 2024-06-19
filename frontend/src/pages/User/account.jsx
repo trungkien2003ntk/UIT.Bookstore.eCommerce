@@ -34,14 +34,14 @@ const Account = () => {
                 { name: "Hồ sơ", path: "user/account/profile" },
                 { name: "Sổ địa chỉ", path: "user/account/address" },
                 { name: "Đổi mật khẩu", path: "user/account/change-password" },
-                {
-                  name: "Cài đặt thông báo",
-                  path: "user/account/noti-settings",
-                },
-                {
-                  name: "Thiết lập tài khoản",
-                  path: "user/account/delete-account",
-                },
+                // {
+                //   name: "Cài đặt thông báo",
+                //   path: "user/account/noti-settings",
+                // },
+                // {
+                //   name: "Thiết lập tài khoản",
+                //   path: "user/account/delete-account",
+                // },
               ]}
             ></ButtonCollapse>
 
@@ -89,7 +89,7 @@ const Account = () => {
               ]}
             ></ButtonCollapse>
 
-            <ButtonCollapse
+            {/* <ButtonCollapse
               icon={
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -130,7 +130,7 @@ const Account = () => {
                   path: "user/coin",
                 },
               ]}
-            ></ButtonCollapse>
+            ></ButtonCollapse> */}
           </div>
 
           <Divider orientation='vertical' flexItem />

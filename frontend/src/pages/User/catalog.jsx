@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react"
 import { Divider, CircularProgress, Pagination } from "@mui/material"
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
@@ -13,277 +14,8 @@ import { findParent } from "../../components/funcCatalog"
 import ProductItem from "../../components/User/ProductItem"
 import MyFilter from "../../components/MyFilter"
 
-const productTypes = [
-  {
-    productTypeCode: "sach-tieng-viet",
-    level: 1,
-    displayName: "SáchTiếngViệt",
-    description: "Các loại sách viết bằng tiếng Việt",
-    parentProductTypeId: null,
-    childProductTypes: null,
-    id: 1,
-  },
-  {
-    productTypeCode: "van-phong-pham",
-    level: 1,
-    displayName: "VănPhòngPhẩm",
-    description: "Các loại văn phòng phẩm như bút, viết, tập vở",
-    parentProductTypeId: null,
-    childProductTypes: null,
-    id: 2,
-  },
-  {
-    productTypeCode: "do-choi",
-    level: 1,
-    displayName: "ĐồChơi",
-    description: "Đồ chơi các loại",
-    parentProductTypeId: null,
-    childProductTypes: null,
-    id: 3,
-  },
-  {
-    productTypeCode: "thieu-nhi",
-    level: 2,
-    displayName: "ThiếuNhi",
-    description: "Các loại sách Thiếu Nhi",
-    parentProductTypeId: 1,
-    childProductTypes: null,
-    id: 4,
-  },
-  {
-    productTypeCode: "giao-khoa-tham-khao",
-    level: 2,
-    displayName: "GiáoKhoa-ThamKhảo",
-    description: "Các loại SGK và sách tham khảo",
-    parentProductTypeId: 1,
-    childProductTypes: null,
-    id: 5,
-  },
-  {
-    productTypeCode: "manga-comic",
-    level: 2,
-    displayName: "Manga-Comic",
-    description: "Các loại sách Manga và Comic",
-    parentProductTypeId: 1,
-    childProductTypes: null,
-    id: 6,
-  },
-  {
-    productTypeCode: "but-viet",
-    level: 2,
-    displayName: "Bút-Viết",
-    description: "Các loại bút viết",
-    parentProductTypeId: 2,
-    childProductTypes: null,
-    id: 7,
-  },
-  {
-    productTypeCode: "dung-cu-hoc-sinh",
-    level: 2,
-    displayName: "DụngCụHọcSinh",
-    description: "Các loại dụng cụ học sinh dùng ở trường",
-    parentProductTypeId: 2,
-    childProductTypes: null,
-    id: 8,
-  },
-  {
-    productTypeCode: "san-pham-ve-giay",
-    level: 2,
-    displayName: "SảnPhẩmVềGiấy",
-    description: "Các loại bút viết",
-    parentProductTypeId: 2,
-    childProductTypes: null,
-    id: 9,
-  },
-  {
-    productTypeCode: "bup-be-thu-bong",
-    level: 2,
-    displayName: "BúpBê-ThúBông",
-    description: "Các loại thú bông và búp bê",
-    parentProductTypeId: 3,
-    childProductTypes: null,
-    id: 10,
-  },
-  {
-    productTypeCode: "mo-hinh",
-    level: 2,
-    displayName: "MôHình",
-    description: "Các loại mô hình lắp ghép",
-    parentProductTypeId: 3,
-    childProductTypes: null,
-    id: 11,
-  },
-  {
-    productTypeCode: "board-game",
-    level: 2,
-    displayName: "BoardGame",
-    description: "Các loại board game",
-    parentProductTypeId: 3,
-    childProductTypes: null,
-    id: 12,
-  },
-  {
-    productTypeCode: "truyen-thieu-nhi",
-    level: 3,
-    displayName: "TruyệnThiếuNhi",
-    description: "Các loại truyện thiếu nhi",
-    parentProductTypeId: 4,
-    childProductTypes: null,
-    id: 13,
-  },
-  {
-    productTypeCode: "to-mau-luyen-chu",
-    level: 3,
-    displayName: "TôMàu-LuyệnChữ",
-    description: "Các loại sách tô màu và luyện chữ cho trẻ em",
-    parentProductTypeId: 4,
-    childProductTypes: null,
-    id: 14,
-  },
-  {
-    productTypeCode: "sach-tham-khao",
-    level: 3,
-    displayName: "SáchThamKhảo",
-    description: "Các loại sách tham khảo dành cho học sinh, sinh viên",
-    parentProductTypeId: 5,
-    childProductTypes: null,
-    id: 15,
-  },
-  {
-    productTypeCode: "sach-giao-khoa",
-    level: 3,
-    displayName: "SáchGiáoKhoa",
-    description: "Các loại sách giáo khoa dành cho học sinh",
-    parentProductTypeId: 5,
-    childProductTypes: null,
-    id: 16,
-  },
-  {
-    productTypeCode: "manga",
-    level: 3,
-    displayName: "Manga",
-    description: "Các loại sách Manga",
-    parentProductTypeId: 6,
-    childProductTypes: null,
-    id: 17,
-  },
-  {
-    productTypeCode: "comic",
-    level: 3,
-    displayName: "Comic",
-    description: "Các loại sách Comic",
-    parentProductTypeId: 6,
-    childProductTypes: null,
-    id: 18,
-  },
-  {
-    productTypeCode: "but-chi",
-    level: 3,
-    displayName: "BútChì",
-    description: "Các loại bút chì",
-    parentProductTypeId: 7,
-    childProductTypes: null,
-    id: 19,
-  },
-  {
-    productTypeCode: "but-muc-but-may",
-    level: 3,
-    displayName: "BútMực-BútMáy",
-    description: "Các loại bút mực và bút máy",
-    parentProductTypeId: 7,
-    childProductTypes: null,
-    id: 20,
-  },
-  {
-    productTypeCode: "gom-tay",
-    level: 3,
-    displayName: "Gôm-Tẩy",
-    description: "Các loại gôm và tẩy",
-    parentProductTypeId: 8,
-    childProductTypes: null,
-    id: 21,
-  },
-  {
-    productTypeCode: "thu-bong",
-    level: 3,
-    displayName: "ThúBông",
-    description: "Các loại thú bông",
-    parentProductTypeId: 10,
-    childProductTypes: null,
-    id: 22,
-  },
-  {
-    productTypeCode: "bup-be",
-    level: 3,
-    displayName: "BúpBê",
-    description: "Các loại búp bê",
-    parentProductTypeId: 10,
-    childProductTypes: null,
-    id: 23,
-  },
-]
-
-const products = [
-  {
-    name: "Bút Bi Nước Roller Pen 0.5 mm - Stacom RP2025 - Mực Xanh",
-    price: 10500,
-    discount_rate: 5,
-    actual_price: 9975,
-    sale_quantity: 1200,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/8/9/8904106862611.jpg",
-  },
-  {
-    name: "Bút Bi Bấm Pentonic Switch 0.4 mm - Linc 4029-B",
-    price: 0,
-    discount_rate: 0,
-    actual_price: 5000,
-    sale_quantity: 82,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/8/9/8935318307294.jpg",
-  },
-  {
-    name: "Kệ Rổ 1 Ngăn Ageless - Xanh Dương",
-    price: 179000,
-    discount_rate: 20,
-    actual_price: 143200,
-    sale_quantity: 3000,
-    rating: 5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/i/m/image_244718_1_1685.jpg",
-  },
-  {
-    name: "Bìa Tài Liệu 5 Ngăn A4 Friendly Rabbit - Classmate CL-CBA32 - Màu Xanh Dương",
-    price: 190000,
-    discount_rate: 35,
-    actual_price: 123500,
-    sale_quantity: 100,
-    rating: 5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/8/9/8936212221839-mau3.jpg",
-  },
-  {
-    name: "Gỡ Kim Số 10 Officetex OT-SR003 (Mẫu Màu Giao Ngẫu Nhiên)",
-    price: 336000,
-    discount_rate: 10,
-    actual_price: 302000,
-    sale_quantity: 6000,
-    rating: 4.5,
-    image:
-      "https://cdn0.fahasa.com/media/catalog/product/i/m/image_244718_1_187.jpg",
-  },
-  {
-    name: "Kẹp Bướm Echo 32mm",
-    price: 100000,
-    discount_rate: 20,
-    actual_price: 80000,
-    sale_quantity: 82,
-    rating: 4,
-    image: "https://cdn0.fahasa.com/media/catalog/product/i/m/image_220690.jpg",
-  },
-]
+import * as productTypeServices from "../../apiServices/productTypeServices"
+import * as productServices from "../../apiServices/productServices"
 
 const filters = [
   {
@@ -328,7 +60,13 @@ const Catalog = () => {
   const location = useLocation()
   const [objectSearch, setObjectSearch] = useState({})
 
+  const [products, setProducts] = useState(null)
+
+  const [totalPages, setTotalPages] = useState(0)
+
   const [loading, setLoading] = useState(false)
+
+  const [productTypes, setProductTypes] = useState(null)
 
   // CATALOG
   const [currentProductType, setCurrentProductType] = useState(null)
@@ -366,20 +104,19 @@ const Catalog = () => {
   const [selected, setSelected] = useState({})
 
   const handleSort = (value, sortBy, sortDirection) => {
+    console.log("go")
     if (sortBy && sortDirection) {
       setSelected({})
-      navigate(
-        "/catalog" +
-          objectToQueryString({
-            ...objectSearch,
-            sortBy: [sortBy],
-            sortDirection: [sortDirection],
-          })
-      )
+
+      getListProduct({
+        ...objectSearch,
+        sortBy: [sortBy],
+        sortDirection: [sortDirection],
+      })
     } else {
       setSelected(value)
       navigate(
-        "/catalog" +
+        "/user/catalog" +
           objectToQueryString({
             ...objectSearch,
             sortBy: [value.sortBy],
@@ -389,9 +126,50 @@ const Catalog = () => {
     }
   }
 
-  // PAGINATION
-  const [totalPages, setTotalPages] = useState(10)
-  const [pageNumber, setPageNumber] = useState(1)
+  const [hightLight, setHightLight] = useState(0)
+
+  const [notFound, setNotFound] = useState(false)
+
+  const getListProduct = async (objectSearch) => {
+    console.log(objectToQueryString(objectSearch))
+
+    const response = await productServices
+      .getProductList(objectToQueryString(objectSearch))
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 404) {
+            setNotFound(true)
+          }
+        }
+      })
+
+    if (response) {
+      setNotFound(false)
+      setProducts(response.items)
+      setTotalPages(response.totalPages)
+    }
+  }
+
+  const getListProduct2 = async (objectSearch) => {
+    console.log(objectToQueryString(objectSearch))
+
+    const response = await productServices
+      .getProductList2(objectToQueryString(objectSearch))
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 404) {
+            setNotFound(true)
+          }
+        }
+      })
+
+    if (response) {
+      console.log(response)
+      setNotFound(false)
+      setProducts(response.products)
+      setTotalPages(response.totalPages)
+    }
+  }
 
   useEffect(() => {
     const fetch = async () => {
@@ -405,17 +183,48 @@ const Catalog = () => {
 
       console.log(objectSearch)
 
-      // setObjectSearch(objectSearch)
+      if (objectSearch.sortBy) {
+        if (objectSearch.sortBy[0] === "BestSeller") {
+          setHightLight(1)
+        } else if (objectSearch.sortBy[0] === "CreatedWhen") {
+          setHightLight(2)
+        } else {
+          setHightLight(3)
+        }
+      }
 
+      if (objectSearch.SearchText) {
+        getListProduct2(objectSearch)
+      } else {
+        getListProduct(objectSearch)
+      }
+
+      setObjectSearch(objectSearch)
       handleCatalog(objectSearch)
     }
 
     fetch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
 
+  useEffect(() => {
+    getAllProductTypes()
+  }, [])
+
   const handleChange = (e, page) => {
-    console.log(page)
+    getListProduct({ ...objectSearch, pageNumber: page })
+  }
+
+  const getAllProductTypes = async () => {
+    const response = await productTypeServices
+      .getAllProductTypes()
+      .catch((error) => {
+        console.log("error", error)
+      })
+
+    if (response) {
+      // console.log(response)
+      setProductTypes(response.listItem)
+    }
   }
 
   return (
@@ -453,7 +262,7 @@ const Catalog = () => {
                 <li key={index}>
                   <div className='flex items-center'>
                     <Link
-                      to={"/catalog?ProductTypeIds=" + breadcrumb.id}
+                      to={"/user/catalog?ProductTypeIds=" + breadcrumb.id}
                       className='mx-2 text-sm font-medium text-green-900'
                     >
                       {breadcrumb.displayName}
@@ -513,7 +322,7 @@ const Catalog = () => {
 
                 <div className='my-2 flex flex-col'>
                   <NavLink
-                    to={"/catalog"}
+                    to={"/user/catalog"}
                     className={`${currentProductType === null && "text-ct-green-400"}
                         my-1 font-medium hover:cursor-pointer hover:text-ct-green-400`}
                     onClick={() => {
@@ -528,7 +337,7 @@ const Catalog = () => {
                     parents.map((item) => (
                       <Link
                         key={item.id}
-                        to={"/catalog?ProductTypeIds=" + item.id}
+                        to={"/user/catalog?ProductTypeIds=" + item.id}
                         className={`
                           ${item.level === 1 && "ml-5"} 
                           ${item.level === 2 && "ml-10"} 
@@ -541,7 +350,9 @@ const Catalog = () => {
                   {currentProductType && currentProductType.level !== 3 && (
                     <Link
                       key={currentProductType.id}
-                      to={"/catalog?ProductTypeIds=" + currentProductType.id}
+                      to={
+                        "/user/catalog?ProductTypeIds=" + currentProductType.id
+                      }
                       className={`
                       ${currentProductType.level === 1 && "ml-5"} 
                       ${currentProductType.level === 2 && "ml-10"} 
@@ -556,7 +367,7 @@ const Catalog = () => {
                     equalLevel.map((item) => (
                       <Link
                         key={item.id}
-                        to={"/catalog?ProductTypeIds=" + item.id}
+                        to={"/user/catalog?ProductTypeIds=" + item.id}
                         className={`${currentProductType.id === item.id && "font-medium text-ct-green-400"} 
                         my-1 ml-14 hover:cursor-pointer`}
                       >
@@ -568,7 +379,7 @@ const Catalog = () => {
                     child?.map((item) => (
                       <Link
                         key={item.id}
-                        to={"/catalog?ProductTypeIds=" + item.id}
+                        to={"/user/catalog?ProductTypeIds=" + item.id}
                         className={`
                       ${item.level === 1 && "ml-5"} 
                       ${item.level === 2 && "ml-10"} 
@@ -580,13 +391,14 @@ const Catalog = () => {
                     ))}
 
                   {currentProductType === null &&
+                    productTypes &&
                     productTypes.map((item, index) => {
                       if (item.level > 1) return null
 
                       return (
                         <Link
                           key={index}
-                          to={"/catalog?ProductTypeIds=" + item.id}
+                          to={"/user/catalog?ProductTypeIds=" + item.id}
                           className={`
                             ${item.level === 1 && "ml-5"} 
                             ${item.level === 2 && "ml-10"} 
@@ -615,10 +427,8 @@ const Catalog = () => {
                 <Button
                   className={`
                    ${
-                     objectSearch?.sortBy
-                       ? objectSearch?.sortBy[0] === "BestSeller"
-                         ? ""
-                         : "bg-white !text-gray-900 hover:!bg-gray-100"
+                     hightLight === 1
+                       ? ""
                        : "bg-white !text-gray-900 hover:!bg-gray-100"
                    } 
                     border-[1px] text-sm`}
@@ -629,10 +439,8 @@ const Catalog = () => {
                 <Button
                   className={`
                    ${
-                     objectSearch?.sortBy
-                       ? objectSearch?.sortBy[0] === "CreatedWhen"
-                         ? ""
-                         : "bg-white !text-gray-900 hover:!bg-gray-100"
+                     hightLight === 2
+                       ? ""
                        : "bg-white !text-gray-900 hover:!bg-gray-100"
                    } 
                      border-[1px] text-sm`}
@@ -660,39 +468,41 @@ const Catalog = () => {
               </div>
 
               <div className='flex w-full flex-1 items-center justify-center rounded-md bg-white p-3 shadow'>
-                {loading ? (
+                {notFound ? (
+                  <div className='flex flex-col items-center justify-center gap-y-4'>
+                    <div className='text-xl font-medium text-gray-400'>
+                      Không có kết quả
+                    </div>
+                    <div className='logo'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        viewBox='0 0 24 24'
+                        fill='currentColor'
+                        className='size-20 text-gray-300'
+                      >
+                        <path
+                          fillRule='evenodd'
+                          d='M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                ) : products === null ? (
                   <CircularProgress sx={{ color: "green" }} size={50} />
                 ) : (
-                  // <div className='flex flex-col items-center justify-center gap-y-4'>
-                  //   <div className='text-xl font-medium text-gray-400'>
-                  //     Không có kết quả
-                  //   </div>
-                  //   <div className='logo'>
-                  //     <svg
-                  //       xmlns='http://www.w3.org/2000/svg'
-                  //       viewBox='0 0 24 24'
-                  //       fill='currentColor'
-                  //       className='size-20 text-gray-300'
-                  //     >
-                  //       <path
-                  //         fillRule='evenodd'
-                  //         d='M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z'
-                  //         clipRule='evenodd'
-                  //       />
-                  //     </svg>
-                  //   </div>
-                  // </div>
                   <div className='grid h-full w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                    {products.map((item, index) => (
-                      <ProductItem key={index} index={index} item={item} />
-                    ))}
+                    {products &&
+                      products.map((item, index) => (
+                        <ProductItem key={index} index={index} item={item} />
+                      ))}
                   </div>
                 )}
               </div>
 
               <div className='flex items-center gap-3 rounded-md bg-white p-2 shadow '>
                 <Pagination
-                  count={10}
+                  count={totalPages}
                   variant='outlined'
                   color='primary'
                   size='large'

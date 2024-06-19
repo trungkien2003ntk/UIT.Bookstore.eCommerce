@@ -9,11 +9,14 @@ export const skusToOptions = (skus) => {
       optionsMap.get(option.name).items.push({
         name: option.value,
         image: sku.largeImageUrl,
+        basicDiscountRate: sku.basicDiscountRate,
+        quantity: sku.quantity,
+        recommendedRetailPrice: sku.recommendedRetailPrice,
+        unitPrice: sku.unitPrice,
+        id: sku.id,
       })
     })
   })
 
   return Array.from(optionsMap.values())
 }
-
-export const objToImages = (obj) => {}

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+
 import Input from "../../components/Input"
 import Button from "../../components/Button"
 import Symbol from "../../assets/images/symbol-logo.svg"
@@ -10,8 +11,9 @@ import {
   isAllPropsNotNull,
   isValidPhoneNumber,
 } from "../../components/isValid"
-
 import useToast from "../../hooks/useToast"
+
+import * as authServices from "../../apiServices/authServices"
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -47,6 +49,7 @@ const SignUp = () => {
     phoneNumber: "",
     dateOfBirth: "",
     password: "",
+    role: "customer",
   })
 
   const handleSignUp = (e) => {
@@ -56,11 +59,13 @@ const SignUp = () => {
 
     if (step === 1 && isValidEmail(email)) {
       setButtonProgressing(true)
-      setTimeout(() => {
-        setButtonProgressing(false)
-        setStep(2)
-        toast("success", "OTP đã được gửi đến email của bạn")
-      }, 2000)
+
+      handleRequestOTP()
+      // setTimeout(() => {
+      //   setButtonProgressing(false)
+      //   setStep(2)
+      //   toast("success", "OTP đã được gửi đến email của bạn")
+      // }, 2000)
     } else if (email === "") {
       setEmailErrorMsg("Email không được để trống")
     } else {
@@ -70,17 +75,21 @@ const SignUp = () => {
     if (step === 2) {
       if (otp !== "") {
         setButtonProgressing(true)
-        setTimeout(() => {
-          setButtonProgressing(false)
-          setUserInfo((prev) => ({ ...prev, email: email }))
-          setStep(3)
-        }, 2000)
+
+        handleVerifyOTP()
+
+        // setTimeout(() => {
+        //   setButtonProgressing(false)
+        //   setUserInfo((prev) => ({ ...prev, email: email }))
+        //   setStep(3)
+        // }, 2000)
       } else {
         setOtpErrorMsg("OTP không được để trống")
       }
     }
 
     if (step === 3) {
+      console.log(userInfo)
       if (isAllPropsNotNull(userInfo) && confirmPwd !== "") {
         if (!isValidPhoneNumber(userInfo.phoneNumber)) {
           setErrors((prev) => ({
@@ -101,11 +110,13 @@ const SignUp = () => {
           userInfo.password === confirmPwd
         ) {
           setButtonProgressing(true)
-          setTimeout(() => {
-            setButtonProgressing(false)
-            toast("success", "Đăng ký thành công. Hay đăng nhập để tiếp tục.")
-            navigate("/user/login")
-          }, 2000)
+
+          handleRegister()
+          // setTimeout(() => {
+          //   setButtonProgressing(false)
+          //   toast("success", "Đăng ký thành công. Hay đăng nhập để tiếp tục.")
+          //   navigate("/user/login")
+          // }, 2000)
         }
       } else {
         setErrors((prev) => ({
@@ -146,8 +157,74 @@ const SignUp = () => {
       phoneNumber: "",
       dateOfBirth: "",
       password: "",
+      role: "customer",
     })
     setConfirmPwd("")
+  }
+
+  const handleRequestOTP = async () => {
+    const response = await authServices.requestOTP({ email }).catch((error) => {
+      setButtonProgressing(false)
+
+      toast("error", "Có lỗi khi gửi OTP. Vui lòng thử lại sau!")
+    })
+
+    if (response) {
+      console.log(response)
+    } else {
+      setStep(2)
+      setButtonProgressing(false)
+      setUserInfo((prev) => ({ ...prev, email: email }))
+      toast("success", "OTP đã được gửi đến email của bạn")
+    }
+  }
+
+  const handleVerifyOTP = async () => {
+    const response = await authServices
+      .verifyOTP({ email, otp })
+      .catch((error) => {
+        setButtonProgressing(false)
+
+        if (error.response) {
+          if (error.response.status === 409) {
+            toast("error", "Email đã được đăng ký.")
+          } else {
+            toast("error", "Có lỗi xác nhận OTP. Vui lòng thử lại!")
+          }
+        } else {
+          toast("error", "Có lỗi xác nhận OTP. Vui lòng thử lại!")
+        }
+      })
+
+    if (response) {
+      setButtonProgressing(false)
+      setStep(3)
+
+      console.log(response)
+    }
+  }
+
+  const handleRegister = async () => {
+    console.log(userInfo)
+    //   const response = await authServices
+    //   .register({ email, otp })
+    //   .catch((error) => {
+    //     setButtonProgressing(false)
+    //     if (error.response) {
+    //       if (error.response.status === 409) {
+    //         toast("error", "Email đã được đăng ký.")
+    //       } else {
+    //         toast("error", "Có lỗi xác nhận OTP. Vui lòng thử lại!")
+    //       }
+    //     } else {
+    //       toast("error", "Có lỗi xác nhận OTP. Vui lòng thử lại!")
+    //     }
+    //   })
+    // if (response) {
+    //   setButtonProgressing(false)
+    //   setStep(3)
+    //   console.log(response)
+    // }
   }
 
   return (

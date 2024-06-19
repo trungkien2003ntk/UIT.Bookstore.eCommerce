@@ -5,6 +5,7 @@ import { green } from "@mui/material/colors"
 import DiscountItem from "../DiscountItem"
 
 const VoucherRadio = ({ options, onChange, value }) => {
+  console.log({ options })
   return (
     <div>
       <RadioGroup className='gap-3' onChange={onChange} value={value}>
@@ -14,6 +15,7 @@ const VoucherRadio = ({ options, onChange, value }) => {
             value={JSON.stringify(option)}
             control={
               <Radio
+                disabled={!option.isRedeemable}
                 sx={{
                   color: green[400],
                   "&.Mui-checked": {
@@ -23,7 +25,7 @@ const VoucherRadio = ({ options, onChange, value }) => {
               />
             }
             label={
-              <div className='w-full min-w-80'>
+              <div className='w-full min-w-96'>
                 <DiscountItem obj={option} />
               </div>
             }

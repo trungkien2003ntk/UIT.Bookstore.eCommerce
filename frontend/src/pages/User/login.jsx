@@ -1,18 +1,22 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+
 import Input from "../../components/Input"
 import Button from "../../components/Button"
 import Symbol from "../../assets/images/symbol-logo.svg"
 import Logo from "../../assets/images/combination-logo.svg"
-
 import { isValidEmail, isAllPropsNotNull } from "../../components/isValid"
 import useToast from "../../hooks/useToast"
 
+import * as authServices from "../../apiServices/authServices"
+import * as localStorage from "../../store/localStorage"
+
 const Login = () => {
+  const navigate = useNavigate()
   const toast = useToast()
   const [progressingButton, setProgressingButton] = useState(false)
 
-  const [loginInfo, setLoginInfo] = useState({
+  const [loginObj, setLoginObj] = useState({
     email: "",
     password: "",
   })
@@ -27,36 +31,59 @@ const Login = () => {
 
     setErrors({ email: "", password: "" })
 
-    if (isAllPropsNotNull(loginInfo)) {
-      if (!isValidEmail(loginInfo.email)) {
+    if (isAllPropsNotNull(loginObj)) {
+      if (!isValidEmail(loginObj.email)) {
         setErrors((prev) => ({ ...prev, email: "Email không hợp lệ" }))
-      }
-
-      if (isValidEmail(loginInfo.email) && loginInfo.password === "123") {
-        setProgressingButton(true)
-        setTimeout(() => {
-          setProgressingButton(false)
-          toast("success", "Đăng nhập thành công")
-        }, 2000)
       } else {
-        setProgressingButton(true)
-        setTimeout(() => {
-          setProgressingButton(false)
-          toast("error", "Đăng nhập thất bại")
-          setErrors((prev) => ({
-            ...prev,
-            password: "Mật khẩu không chính xác",
-          }))
-        }, 2000)
+        handleLogin()
       }
     } else {
       setErrors((prev) => ({
         ...prev,
-        email: loginInfo.email === "" ? "Không được để trống" : "",
-        password: loginInfo.password === "" ? "Không được để trống" : "",
+        email: loginObj.email === "" ? "Không được để trống" : "",
+        password: loginObj.password === "" ? "Không được để trống" : "",
       }))
     }
   }
+
+  const handleLogin = async () => {
+    setProgressingButton(true)
+
+    const response = await authServices
+      .loginCustomer(loginObj)
+      .catch((error) => {
+        setProgressingButton(false)
+
+        if (error.response) {
+          if (error.response.status === 401) {
+            toast("error", "Vui lòng kiểm tra lại email hoặc mật khẩu")
+          } else if (error.response.status === 403) {
+            toast("error", "Tài khoản đã bị vô hiệu hóa")
+          }
+        } else {
+          toast("error", "Có lỗi xảy ra")
+        }
+      })
+
+    if (response) {
+      console.log(response)
+      setProgressingButton(false)
+      toast("success", "Đăng nhập thành công")
+
+      localStorage.setIsCustomerLogin(true)
+      localStorage.setCustomerAccessToken(response.accessToken)
+      localStorage.setCustomerRefreshToken(response.refreshToken)
+
+      navigate("/")
+    }
+  }
+
+  useEffect(() => {
+    if (localStorage.getIsCustomerLogin()) {
+      navigate("/")
+      toast("info", "Bạn đã đăng nhập vào KKBooks")
+    }
+  }, [])
 
   return (
     <div className='relative w-full bg-green-400'>
@@ -86,18 +113,18 @@ const Login = () => {
 
             <div className='flex w-full flex-col items-center justify-center gap-y-4'>
               <Input
-                value={loginInfo.email}
+                value={loginObj.email}
                 onChange={(value) =>
-                  setLoginInfo((prev) => ({ ...prev, email: value }))
+                  setLoginObj((prev) => ({ ...prev, email: value }))
                 }
                 placeholder={"Email"}
                 title={"Email"}
                 errorMsg={errors.email}
               />
               <Input
-                value={loginInfo.password}
+                value={loginObj.password}
                 onChange={(value) =>
-                  setLoginInfo((prev) => ({ ...prev, password: value }))
+                  setLoginObj((prev) => ({ ...prev, password: value }))
                 }
                 placeholder={"Mật khẩu"}
                 title={"Mật khẩu"}

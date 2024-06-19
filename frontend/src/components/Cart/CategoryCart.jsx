@@ -5,13 +5,17 @@ import { useState, memo } from "react"
 import PopUp from "../PopUp"
 import Options from "../Options"
 
-const CategoryCart = memo(({ item }) => {
+const CategoryCart = memo(({ item, onSubmit }) => {
   const [myOptions, setMyOptions] = useState(
     item.productOptions.map((section) => ({
       title: section.name,
       items: section.values.map((value, index) => ({
         name: value,
         image: section.images[index],
+        skuItem: item.skuVariations.find(
+          (variation) => variation.skuName === value
+        ),
+        id: item.id,
       })),
     }))
   )
@@ -58,8 +62,8 @@ const CategoryCart = memo(({ item }) => {
       }
     >
       <div
-        className='w-screen max-w-sm flex-auto 
-        flex-col justify-center divide-y-[0.5px] divide-gray-200 p-3 text-gray-700'
+        className='z-50 w-screen max-w-sm 
+        flex-auto flex-col justify-center divide-y-[0.5px] divide-gray-200 p-3 text-gray-700'
       >
         <div className='title pb-2 text-start text-sm font-medium uppercase'>
           Phân loại hàng
@@ -78,6 +82,7 @@ const CategoryCart = memo(({ item }) => {
           <div
             className='rounded bg-ct-green-400 px-3 py-1 text-sm text-white hover:cursor-pointer
             hover:bg-green-600'
+            onClick={() => onSubmit(selectedOptions)}
           >
             Xác nhận
           </div>

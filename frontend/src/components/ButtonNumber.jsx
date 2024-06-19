@@ -10,13 +10,23 @@ const ButtonNumber = ({ quantity, setQuantity, min, max }) => {
         return setQuantity(min)
       }
 
+      if (Number(inputValue) > max) {
+        return setQuantity(max)
+      }
+
       setQuantity(Number(inputValue))
     }
   }
 
   const handlePlus = () => {
-    if (quantity < 99999) {
-      setQuantity(quantity + 1)
+    if (max) {
+      if (quantity < max) {
+        setQuantity(quantity + 1)
+      }
+    } else {
+      if (quantity < 99999) {
+        setQuantity(quantity + 1)
+      }
     }
   }
 

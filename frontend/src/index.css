@@ -1,68 +1,49 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url("https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap");
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+@layer components {
+  .clip-zigzag {
+    clip-path: polygon(
+      0 10%,
+      3% 0,
+      6% 10%,
+      9% 0,
+      12% 10%,
+      15% 0,
+      18% 10%,
+      21% 0,
+      24% 10%,
+      27% 0,
+      30% 10%,
+      33% 0,
+      36% 10%,
+      39% 0,
+      42% 10%,
+      45% 0,
+      48% 10%,
+      51% 0,
+      54% 10%,
+      57% 0,
+      60% 10%,
+      63% 0,
+      66% 10%,
+      69% 0,
+      72% 10%,
+      75% 0,
+      78% 10%,
+      81% 0,
+      84% 10%,
+      87% 0,
+      90% 10%,
+      93% 0,
+      96% 10%,
+      99% 0,
+      100% 10%,
+      100% 100%,
+      0 100%
+    );
   }
 }

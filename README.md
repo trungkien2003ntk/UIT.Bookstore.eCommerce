@@ -1,32 +1,24 @@
 # Về project
-
-Dự án SE121.O21 - Đồ án 1 được thực hiện bởi nhóm sinh viên dưới sự hướng dẫn của Trần Thị Hồng Yến. Dự án này nhằm mục đích học tập và có thể thay đổi & chỉnh sửa nếu cần.
+Website thương mại điện tử cho hệ thống nhà sách
 
 # Chức năng
-
-1. Quản lý tài khoản người dùng.
-2. Đăng nhập và đăng ký.
-3. Tạo và quản lý các sự kiện.
-4. Thông báo đẩy cho người dùng theo dõi sự kiện.
+- Quản lý sản phẩm (thêm, sửa, xóa, xem chi tiết sản phẩm)
+- Quản lý đơn hàng (thêm, sửa, xóa, xem chi tiết đơn hàng)
+- Quản lý người dùng (đăng ký, đăng nhập, cập nhật thông tin cá nhân)
+- Tìm kiếm sản phẩm theo tên, danh mục, tác giả
+- Giỏ hàng và thanh toán trực tuyến
+- Xem và viết đánh giá cho sản phẩm
 
 # Công nghệ sử dụng:
-
-- Ngôn ngữ lập trình: C#
-- Framework: .NET Core, ASP.NET Core Web API
-- Cơ sở dữ liệu: SQL Server, Azure SQL Database, Azure Storage
-- Công cụ khác: Firebase Admin SDK, Azure Function App, Mapster
+- Frontend: React, Tailwind CSS
+- Backend: ASP.NET Core, Entity Framework Core
+- Database: SQL Server
+- Authentication: Identity Server
+- Hosting: Azure App Services, Azure SQL Database
 
 # Công cụ sử dụng
-
-- IDE: Visual Studio
-- Quản lý mã nguồn: Git, GitHub
-- Triển khai: Azure App Service
-
-# Preview:
-
-Hình ảnh minh họa của giao diện và các chức năng chính của dự án.
-
-Dự án (project) này có thể được sử dụng với mục đích học tập và có thể thay đổi & chỉnh sửa nếu cần.<br><b>
+- IDE: Visual Studio, Visual Studio Code
+- Version Control: Git, GitHub
 
 # Nhóm thực hiện
 |STT|Họ và tên     |MSSV    |Chức vụ  |Github|

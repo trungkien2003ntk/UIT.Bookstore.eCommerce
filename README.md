@@ -23,8 +23,8 @@ Website thương mại điện tử cho hệ thống nhà sách
 # Nhóm thực hiện
 |STT|Họ và tên     |MSSV    |Chức vụ  |Github|
 |:-:|:------------------|:---------:|:--------:|:-----------:|
-| 1	|[Phạm Tuấn Kiệt](mailto:kietphamkb2@gmail.com)	| 21522262	| ![](https://img.shields.io/badge/-Member-blue) |[phamtuankietuit](https://github.com/phamtuankietuit)|
-| 3	|[Nguyễn Trung Kiên](mailto:21521026@gm.uit.edu.vn)	| 21521026	| ![](https://img.shields.io/badge/-Leader-gold) |[trungkien2003ntk](https://github.com/trungkien2003ntk)|
+| 1	|[Nguyễn Trung Kiên](mailto:21521026@gm.uit.edu.vn)	| 21521026	| ![](https://img.shields.io/badge/-Leader-gold) |[trungkien2003ntk](https://github.com/trungkien2003ntk)|
+| 2	|[Phạm Tuấn Kiệt](mailto:kietphamkb2@gmail.com)	| 21522262	| ![](https://img.shields.io/badge/-Member-blue) |[phamtuankietuit](https://github.com/phamtuankietuit)|
 
 # SE121.O21 - Đồ án 1
 **Giáo viên hướng dẫn:** Trần Thị Hồng Yến

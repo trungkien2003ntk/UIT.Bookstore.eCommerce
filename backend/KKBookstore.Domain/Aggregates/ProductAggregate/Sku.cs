@@ -71,26 +71,6 @@ public class Sku : BaseAuditableEntity, ISoftDelete
     // calculated properties
     public string SkuName => string.Join(", ", SkuOptionValues.Select(sov => sov.OptionValue.Value));
 
-    public static Result<Sku> Create(
-        int productId,
-        decimal recommendedRetailPrice,
-        decimal unitPrice,
-        decimal taxRate,
-        string comment,
-        string tags,
-        string barcode
-    )
-    {
-        var skuValueResult = SkuValue.Create(productId);
-        if (skuValueResult.IsFailure)
-        {
-            return Result.Failure<Sku>(skuValueResult.Error);
-        }
-
-
-        return new Sku(skuValueResult.Value, productId, recommendedRetailPrice, unitPrice, taxRate, comment, tags, barcode);
-    }
-
     public string? GetThumbnailImageUrl()
     {
         var thumbnailImageUrl = SkuOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.ThumbnailImageUrl))?.OptionValue.ThumbnailImageUrl;

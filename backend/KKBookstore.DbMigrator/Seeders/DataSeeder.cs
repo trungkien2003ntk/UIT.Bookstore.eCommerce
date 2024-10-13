@@ -1,0 +1,815 @@
+﻿using Bogus;
+using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
+using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
+using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Models;
+using KKBookstore.Infrastructure.Data;
+using KKBookstore.Infrastructure.Data.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Serilog;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace KKBookstore.DbMigrator.Seeders;
+
+internal class DataSeeder
+{
+    #region Json paths
+    // User paths
+    private const string BASE_PATH = "./Seeders/JsonData";
+    private readonly string UserJsonPath = $"{BASE_PATH}/Users/User.json";
+    private readonly string ShippingAddressJsonPath = $"{BASE_PATH}/Users/ShippingAddress.json";
+
+    // Product paths
+    private readonly string AuthorJsonPath = $"{BASE_PATH}/Products/Author.json";
+    private readonly string BookAuthorJsonPath = $"{BASE_PATH}/Products/BookAuthor.json";
+    private readonly string ProductOptionJsonPath = $"{BASE_PATH}/Products/ProductOption.json";
+    private readonly string ProductOptionValueJsonPath = $"{BASE_PATH}/Products/ProductOptionValue.json";
+    private readonly string ProductJsonPath = $"{BASE_PATH}/Products/Product.json";
+    private readonly string ProductImageJsonPath = $"{BASE_PATH}/Products/ProductImage.json";
+    private readonly string ProductTypeJsonPath = $"{BASE_PATH}/Products/ProductType.json";
+    private readonly string ProductTypeAttributeJsonPath = $"{BASE_PATH}/Products/ProductTypeAttribute.json";
+    private readonly string ProductTypeAttributeMappingJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeMapping.json";
+    private readonly string ProductTypeAttributeProductValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeProductValue.json";
+    private readonly string ProductTypeAttributeValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeValue.json";
+    private readonly string RatingJsonPath = $"{BASE_PATH}/Products/Rating.json";
+    private readonly string RatingLikeJsonPath = $"{BASE_PATH}/Products/RatingLike.json";
+    private readonly string SkuJsonPath = $"{BASE_PATH}/Products/Sku.json";
+    private readonly string SkuOptionValueJsonPath = $"{BASE_PATH}/Products/SkuOptionValue.json";
+    private readonly string UnitMeasureJsonPath = $"{BASE_PATH}/Products/UnitMeasure.json";
+
+    // Order paths
+    private readonly string OrderJsonPath = $"{BASE_PATH}/Orders/Order.json";
+    private readonly string OrderLineJsonPath = $"{BASE_PATH}/Orders/OrderLine.json";
+
+    // Discount paths
+    private readonly string DiscountVoucherJsonPath = $"{BASE_PATH}/DiscountVouchers/DiscountVoucher.json";
+    private readonly string VoucherUsageJsonPath = $"{BASE_PATH}/DiscountVouchers/VoucherUsage.json";
+
+
+    // ShoppingCartItem paths
+    private readonly string ShoppingCartItemJsonPath = $"{BASE_PATH}/ShoppingCartItems/ShoppingCartItem.json";
+    #endregion Json paths
+
+    #region Data lists
+    // User related data
+    private readonly List<User> _users = [];
+    private readonly List<ShippingAddress> _shippingAddresses = [];
+
+    // Product related data
+    private readonly List<Author> _authors = [];
+    private readonly List<UnitMeasure> _unitMeasures = [];
+    private readonly List<ProductType> _productTypes = [];
+    private readonly List<ProductTypeAttribute> _productTypeAttributes = [];
+    private readonly List<ProductTypeAttributeMapping> _productTypeAttributeMappings = [];
+    private readonly List<ProductTypeAttributeValue> _productTypeAttributeValues = [];
+    private readonly List<ProductTypeAttributeProductValue> _productTypeAttributeProductValues = [];
+    private readonly List<Product> _products = [];
+    private readonly List<ProductImage> _productImages = [];
+    private readonly List<Rating> _ratings = [];
+    private readonly List<RatingLike> _ratingLikes = [];
+    private readonly List<Sku> _skus = [];
+    private readonly List<BookAuthor> _bookAuthors = [];
+    private readonly List<ProductOption> _productOptions = [];
+    private readonly List<ProductOptionValue> _productOptionValues = [];
+    private readonly List<SkuOptionValue> _skuOptionValues = [];
+
+    // Order related data
+    private readonly List<DeliveryMethod> _deliveryMethods = [];
+    private readonly List<PaymentMethod> _paymentMethods = [];
+    private readonly List<RefAddressType> _refAddressTypes = [];
+    private readonly List<Order> _orders = [];
+    private readonly List<OrderLine> _orderLines = [];
+
+    // Discount related data
+    private readonly List<DiscountVoucher> _discountVouchers = [];
+    private readonly List<VoucherUsage> _voucherUsages = [];
+
+    // ShoppingCartItem related data
+    private readonly List<ShoppingCartItem> _shoppingCartItems = [];
+    #endregion Data lists
+
+    // Json option
+    private readonly JsonSerializerOptions enumOption = new() { Converters = { new JsonStringEnumConverter() } };
+
+    private const int DEFAULT_ADMIN_ID = 2;
+    private const int SEED = 1000000;
+    private readonly Faker _faker = new("vi") { Random = new Randomizer(SEED) };
+    private readonly KKBookstoreDbContext _dbContext;
+
+    public DataSeeder(KKBookstoreDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task SeedAsync()
+    {
+        int order = 0;
+        Log.Information($"\t{++order}. Seeding users related data and reference values");
+
+        await SeedUsersRelatedDataAndReferenceValue();
+
+        Log.Information($"\t{++order}. Seeding product related data");
+        await SeedProductRelatedData();
+
+        Log.Information($"\t{++order}. Seeding discount related data");
+        await SeedDiscountVouchers();
+
+        Log.Information($"\t{++order}. Seeding order related data");
+        await SeedOrderRelatedData();
+
+        Log.Information($"\t{++order}. Seeding voucher usages");
+        await SeedVoucherUsages();
+
+        Log.Information($"\t{++order}. Seeding shopping cart item related data");
+        await SeedShoppingCartItemRelatedDataAsync();
+    }
+
+    private async Task SeedUsersRelatedDataAndReferenceValue()
+    {
+        await SeedRoles();
+        await SeedUsers();
+        await SeedUserRoles();
+        await SeedReferenceValues();
+        await SeedShippingAddress();
+    }
+
+    private async Task SeedProductRelatedData()
+    {
+        await SeedAuthors();
+        await SeedUnitMeasures();
+        await SeedProductTypes();
+        await SeedProductTypeAttributes();
+        await SeedProductTypeAttributeMappings();
+        await SeedProductTypeAttributeValues();
+        await SeedProducts();
+        await SeedProductTypeAttributeProductValues();
+        await SeedProductImages();
+        await SeedSkus();
+        await SeedBookAuthors();
+        await SeedOptions();
+        await SeedOptionValues();
+        await SeedSkuOptionValues();
+        await SeedRatings();
+    }
+
+    private async Task SeedOrderRelatedData()
+    {
+        await SeedOrders();
+        await SeedOrderLines();
+    }
+
+    private async Task SeedShoppingCartItemRelatedDataAsync()
+    {
+        if (_dbContext.ShoppingCartItems.Any())
+        {
+            return;
+        }
+
+        var shoppingCartItemJson = File.ReadAllText(ShoppingCartItemJsonPath, Encoding.UTF8);
+        var shoppingCartItems = JsonSerializer.Deserialize<List<ShoppingCartItem>>(shoppingCartItemJson);
+
+        AddAudit(shoppingCartItems);
+
+        _shoppingCartItems.AddRange(shoppingCartItems);
+
+        _dbContext.AddRange(_shoppingCartItems);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ShoppingCartItem>();
+    }
+
+
+
+    #region Seed User related data
+    private async Task SeedRoles()
+    {
+        if (_dbContext.Roles.Any())
+        {
+            return;
+        }
+
+        var roles = new List<IdentityRole<int>>
+        {
+            new() { Id = 1, Name = "Customer", NormalizedName = "CUSTOMER" },
+            new() { Id = 2, Name = "Admin", NormalizedName = "ADMIN" },
+            new() { Id = 3, Name = "SalesStaff", NormalizedName = "SALESSTAFF" },
+            new() { Id = 4, Name = "CustomerCareStaff", NormalizedName = "CUSTOMERCARESTAFF" },
+        };
+
+        _dbContext.AddRange(roles);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<IdentityRole<int>>();
+    }
+
+    private async Task SeedUsers()
+    {
+        if (_dbContext.Users.Any())
+        {
+            return;
+        }
+
+        var userJson = File.ReadAllText(UserJsonPath, Encoding.UTF8);
+        var users = JsonSerializer.Deserialize<List<User>>(userJson, enumOption);
+
+        foreach (var user in users)
+        {
+            user.LastEditedWhen = DateTimeOffset.Now;
+            user.CreatedWhen = DateTimeOffset.Now;
+            user.CreatedBy = null;
+            user.LastEditedBy = null;
+        }
+
+        foreach (var user in users)
+        {
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, user.PasswordHash ?? "Abc123*");
+        }
+
+        _users.AddRange(users);
+        _dbContext.AddRange(_users);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<User>();
+    }
+
+    private async Task SeedUserRoles()
+    {
+        if (_dbContext.UserRoles.Any())
+        {
+            return;
+        }
+
+        var userRoles = new List<IdentityUserRole<int>>
+        {
+            new() { UserId = 1, RoleId = 2 }, // admin
+            new() { UserId = 2, RoleId = 3 }, // sales staff
+            new() { UserId = 3, RoleId = 4 }, // customer care staff
+        };
+
+        // set role for other users as Customer
+        foreach (var user in _users)
+        {
+            switch (user.Id)
+            {
+                case 1:
+                case 2:
+                case 3:
+                    break;
+                default:
+                    userRoles.Add(new() { UserId = user.Id, RoleId = 1 });
+                    break;
+            }
+        }
+
+        _dbContext.AddRange(userRoles);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    private async Task SeedShippingAddress()
+    {
+        if (_dbContext.ShippingAddresses.Any())
+        {
+            return;
+        }
+
+        var shippingAddressJson = File.ReadAllText(ShippingAddressJsonPath, Encoding.UTF8);
+        var shippingAddresses = JsonSerializer.Deserialize<List<ShippingAddress>>(shippingAddressJson);
+
+        AddAudit(shippingAddresses);
+
+        _shippingAddresses.AddRange(shippingAddresses);
+
+        _dbContext.AddRange(_shippingAddresses);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ShippingAddress>();
+    }
+    #endregion Seed User related data
+
+
+    #region Seed Product related data
+    private async Task SeedAuthors()
+    {
+        if (_dbContext.Authors.Any())
+        {
+            return;
+        }
+
+        var authorJson = File.ReadAllText(AuthorJsonPath, Encoding.UTF8);
+        var authors = JsonSerializer.Deserialize<List<Author>>(authorJson);
+
+        AddAudit(authors);
+
+        _authors.AddRange(authors);
+
+        _dbContext.AddRange(_authors);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Author>();
+    }
+
+    private async Task SeedUnitMeasures()
+    {
+        if (_dbContext.UnitMeasures.Any())
+        {
+            return;
+        }
+
+        var unitMeasureJson = File.ReadAllText(UnitMeasureJsonPath, Encoding.UTF8);
+        var unitMeasures = JsonSerializer.Deserialize<List<UnitMeasure>>(unitMeasureJson);
+
+        AddAudit(unitMeasures);
+
+        _unitMeasures.AddRange(unitMeasures);
+
+        _dbContext.AddRange(_unitMeasures);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<UnitMeasure>();
+    }
+
+    private async Task SeedProductTypes()
+    {
+        if (_dbContext.ProductTypes.Any())
+        {
+            return;
+        }
+
+        var productTypeJson = File.ReadAllText(ProductTypeJsonPath, Encoding.UTF8);
+        var productTypes = JsonSerializer.Deserialize<List<ProductType>>(productTypeJson);
+
+        productTypes?.ForEach(pt =>
+        {
+            pt.DisplayName = CapitalizeFirstLetter(pt.DisplayName);
+        });
+
+        AddAudit(productTypes);
+
+        _productTypes.AddRange(productTypes);
+
+        _dbContext.AddRange(_productTypes);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductType>();
+    }
+
+    private async Task SeedProductTypeAttributes()
+    {
+        if (_dbContext.ProductTypeAttributes.Any())
+        {
+            return;
+        }
+
+        var productTypeAttributeJson = File.ReadAllText(ProductTypeAttributeJsonPath, Encoding.UTF8);
+        var productTypeAttributes = JsonSerializer.Deserialize<List<ProductTypeAttribute>>(productTypeAttributeJson);
+
+        AddAudit(productTypeAttributes);
+
+        _productTypeAttributes.AddRange(productTypeAttributes);
+
+        _dbContext.AddRange(_productTypeAttributes);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductTypeAttribute>();
+    }
+
+    private async Task SeedProductTypeAttributeMappings()
+    {
+        if (_dbContext.ProductTypeAttributeMappings.Any())
+        {
+            return;
+        }
+
+        var productTypeAttributeMappingJson = File.ReadAllText(ProductTypeAttributeMappingJsonPath, Encoding.UTF8);
+        var productTypeAttributeMappings = JsonSerializer.Deserialize<List<ProductTypeAttributeMapping>>(productTypeAttributeMappingJson);
+
+        AddAudit(productTypeAttributeMappings);
+
+        _productTypeAttributeMappings.AddRange(productTypeAttributeMappings);
+
+        _dbContext.AddRange(_productTypeAttributeMappings);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductTypeAttributeMapping>();
+    }
+
+    private async Task SeedProductTypeAttributeValues()
+    {
+        if (_dbContext.ProductTypeAttributeValues.Any())
+        {
+            return;
+        }
+
+        var productTypeAttributeValueJson = File.ReadAllText(ProductTypeAttributeValueJsonPath, Encoding.UTF8);
+        var productTypeAttributeValues = JsonSerializer.Deserialize<List<ProductTypeAttributeValue>>(productTypeAttributeValueJson);
+
+        AddAudit(productTypeAttributeValues);
+
+        _productTypeAttributeValues.AddRange(productTypeAttributeValues);
+
+        _dbContext.AddRange(_productTypeAttributeValues);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductTypeAttributeValue>();
+    }
+
+    private async Task SeedProductTypeAttributeProductValues()
+    {
+        if (_dbContext.ProductTypeAttributeProductValues.Any())
+        {
+            return;
+        }
+
+        var productTypeAttributeProductValueJson = File.ReadAllText(ProductTypeAttributeProductValueJsonPath, Encoding.UTF8);
+        var productTypeAttributeProductValues = JsonSerializer.Deserialize<List<ProductTypeAttributeProductValue>>(productTypeAttributeProductValueJson);
+
+        AddAudit(productTypeAttributeProductValues);
+
+        _productTypeAttributeProductValues.AddRange(productTypeAttributeProductValues);
+
+        _dbContext.AddRange(_productTypeAttributeProductValues);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductTypeAttributeProductValue>();
+    }
+
+    private async Task SeedProducts()
+    {
+        if (_dbContext.Products.Any())
+        {
+            return;
+        }
+
+        var productJson = File.ReadAllText(ProductJsonPath, Encoding.UTF8);
+        var products = JsonSerializer.Deserialize<List<Product>>(productJson);
+
+        AddAudit(products);
+
+        _products.AddRange(products);
+
+        _dbContext.AddRange(_products);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Product>();
+    }
+
+    private async Task SeedProductImages()
+    {
+        if (_dbContext.ProductImages.Any())
+        {
+            return;
+        }
+
+        var productImageJson = File.ReadAllText(ProductImageJsonPath, Encoding.UTF8);
+        var productImages = JsonSerializer.Deserialize<List<ProductImage>>(productImageJson);
+
+        AddAudit(productImages);
+
+        _productImages.AddRange(productImages);
+
+        _dbContext.AddRange(_productImages);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductImage>();
+    }
+
+    private async Task SeedSkus()
+    {
+        if (_dbContext.Skus.Any())
+        {
+            return;
+        }
+
+        var skuJson = File.ReadAllText(SkuJsonPath, Encoding.UTF8);
+        var skus = JsonSerializer.Deserialize<List<Sku>>(skuJson, enumOption);
+        AddAudit(skus);
+
+        _skus.AddRange(skus);
+
+        _dbContext.AddRange(_skus);
+
+        foreach (var sku in _skus)
+        {
+            sku.SkuValue = new SkuValue
+            {
+                Value = $"SKU{sku.Id:D5}"
+            };
+
+            switch (sku.Id)
+            {
+                case 1:
+                    sku.Dimension = new Dimension { Height = 14m, Width = 20.5m, Length = 0.3m };
+                    break;
+                case 2:
+                    sku.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 0.5m };
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    sku.Dimension = new Dimension { Height = 22.0m, Width = 12.0m, Length = 0.5m };
+                    break;
+                case 9:
+                    sku.Dimension = new Dimension { Height = 17.0m, Width = 9.0m, Length = 8m };
+                    break;
+                case 10:
+                    sku.Dimension = new Dimension { Height = 16.0m, Width = 8.0m, Length = 7m };
+                    break;
+                case 11:
+                    sku.Dimension = new Dimension { Height = 12.0m, Width = 8.0m, Length = 8m };
+                    break;
+                case 12:
+                    sku.Dimension = new Dimension { Height = 9.0m, Width = 9.0m, Length = 8m };
+                    break;
+                case 13:
+                    sku.Dimension = new Dimension { Height = 1.0m, Width = 9.0m, Length = 3.5m };
+                    break;
+                case 14:
+                    sku.Dimension = new Dimension { Height = 7.0m, Width = 7.0m, Length = 1m };
+                    break;
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                    sku.Dimension = new Dimension { Height = 20.5m, Width = 18.5m, Length = 0.4m };
+                    break;
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                    sku.Dimension = new Dimension { Height = 17.6m, Width = 11.3m, Length = 1m };
+                    break;
+                case 26:
+                    sku.Dimension = new Dimension { Height = 24.0m, Width = 17.0m, Length = 6.0m };
+                    break;
+                case 27:
+                    sku.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 2.1m };
+                    break;
+                case 28:
+                    sku.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 0.5m };
+                    break;
+                case 29:
+                    sku.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 1.4m };
+                    break;
+                case 30:
+                    sku.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 1.4m };
+                    break;
+                case 31:
+                    sku.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 1.6m };
+                    break;
+                case 32:
+                    sku.Dimension = new Dimension { Height = 20.5m, Width = 14m, Length = 1m };
+                    break;
+                case 33:
+                    sku.Dimension = new Dimension { Height = 20.5m, Width = 13.0m, Length = 2.5m };
+                    break;
+                case 34:
+                case 35:
+                case 36:
+                    sku.Dimension = new Dimension { Height = 10.5m, Width = 5m, Length = 1.5m };
+                    break;
+                case 37:
+                    sku.Dimension = new Dimension { Height = 5m, Width = 5m, Length = 2m };
+                    break;
+                case 38:
+                    sku.Dimension = new Dimension { Height = 15m, Width = 2m, Length = 2m };
+                    break;
+                case 39:
+                    sku.Dimension = new Dimension { Height = 6.5m, Width = 6.5m, Length = 2m };
+                    break;
+                case 40:
+                    sku.Dimension = new Dimension { Height = 8m, Width = 8m, Length = 8m };
+                    break;
+            }
+        }
+
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Sku>();
+    }
+
+    private async Task SeedBookAuthors()
+    {
+        if (_dbContext.BookAuthors.Any())
+        {
+            return;
+        }
+
+        var bookAuthorJson = File.ReadAllText(BookAuthorJsonPath, Encoding.UTF8);
+        var bookAuthors = JsonSerializer.Deserialize<List<BookAuthor>>(bookAuthorJson);
+
+        AddAudit(bookAuthors);
+
+        _bookAuthors.AddRange(bookAuthors);
+
+        _dbContext.AddRange(_bookAuthors);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<BookAuthor>();
+    }
+
+    private async Task SeedOptions()
+    {
+        if (_dbContext.ProductOptions.Any())
+        {
+            return;
+        }
+
+        var productOptionJson = File.ReadAllText(ProductOptionJsonPath, Encoding.UTF8);
+        var productOptions = JsonSerializer.Deserialize<List<ProductOption>>(productOptionJson);
+
+        AddAudit(productOptions);
+
+        _productOptions.AddRange(productOptions);
+
+        _dbContext.AddRange(_productOptions);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductOption>();
+    }
+
+    private async Task SeedOptionValues()
+    {
+        if (_dbContext.ProductOptionValues.Any())
+        {
+            return;
+        }
+
+        var productOptionValueJson = File.ReadAllText(ProductOptionValueJsonPath, Encoding.UTF8);
+        var productOptionValues = JsonSerializer.Deserialize<List<ProductOptionValue>>(productOptionValueJson);
+
+        AddAudit(productOptionValues);
+
+        _productOptionValues.AddRange(productOptionValues);
+
+        _dbContext.AddRange(_productOptionValues);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductOptionValue>();
+    }
+
+    private async Task SeedSkuOptionValues()
+    {
+        if (_dbContext.SkuOptionValues.Any())
+        {
+            return;
+        }
+
+        var skuOptionValueJson = File.ReadAllText(SkuOptionValueJsonPath, Encoding.UTF8);
+        var skuOptionValues = JsonSerializer.Deserialize<List<SkuOptionValue>>(skuOptionValueJson);
+
+        AddAudit(skuOptionValues);
+
+        _skuOptionValues.AddRange(skuOptionValues);
+
+        _dbContext.AddRange(_skuOptionValues);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<SkuOptionValue>();
+    }
+
+    private async Task SeedRatings()
+    {
+        if (_dbContext.Ratings.Any())
+        {
+            return;
+        }
+
+        var ratingJson = File.ReadAllText(RatingJsonPath, Encoding.UTF8);
+        var ratings = JsonSerializer.Deserialize<List<Rating>>(ratingJson, enumOption);
+
+        AddAudit(ratings);
+
+        _ratings.AddRange(ratings);
+
+        _dbContext.AddRange(_ratings);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Rating>();
+
+        var ratingLikeJson = File.ReadAllText(RatingLikeJsonPath, Encoding.UTF8);
+        var ratingLikes = JsonSerializer.Deserialize<List<RatingLike>>(ratingLikeJson);
+
+        AddAudit(ratingLikes);
+
+        _ratingLikes.AddRange(ratingLikes);
+
+
+        _dbContext.AddRange(_ratingLikes);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<RatingLike>();
+    }
+
+    #endregion Seed Product related data
+
+
+    #region Seed Order related data
+    private async Task SeedReferenceValues()
+    {
+        if (_dbContext.DeliveryMethods.Any())
+        {
+            return;
+        }
+
+        _deliveryMethods.AddRange([
+            new DeliveryMethod { Id = 1, Name = "Giao hàng tiêu chuẩn", Description = "Giao hàng tiêu chuẩn", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+            new DeliveryMethod { Id = 2, Name = "Giao hàng nhanh", Description = "Giao hàng nhanh", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+        ]);
+
+        _dbContext.AddRange(_deliveryMethods);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<DeliveryMethod>();
+
+        if (_dbContext.PaymentMethods.Any())
+        {
+            return;
+        }
+
+        _paymentMethods.AddRange([
+            new PaymentMethod { Id = 1, Name = "Thanh toán khi nhận hàng", Description = "Thanh toán khi nhận hàng", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+            new PaymentMethod { Id = 2, Name = "Thanh toán qua thẻ", Description = "Thanh toán qua thẻ", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+        ]);
+
+        _dbContext.AddRange(_paymentMethods);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<PaymentMethod>();
+
+        if (_dbContext.RefAddressTypes.Any())
+        {
+            return;
+        }
+
+        _refAddressTypes.AddRange([
+            new RefAddressType { Id = 1, Name = "Nhà riêng", Description = "Nhà riêng", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+            new RefAddressType { Id = 2, Name = "Văn phòng", Description = "Văn phòng", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+        ]);
+
+        _dbContext.AddRange(_refAddressTypes);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<RefAddressType>();
+    }
+
+    private async Task SeedOrders()
+    {
+        if (_dbContext.Orders.Any())
+        {
+            return;
+        }
+
+        var orderJson = File.ReadAllText(OrderJsonPath, Encoding.UTF8);
+        var orders = JsonSerializer.Deserialize<List<Order>>(orderJson, enumOption);
+        //Debugger.Launch();
+        AddAudit(orders);
+
+        _orders.AddRange(orders);
+
+        _dbContext.AddRange(_orders);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Order>();
+    }
+
+    private async Task SeedOrderLines()
+    {
+        if (_dbContext.OrderLines.Any())
+        {
+            return;
+        }
+
+        var orderLineJson = File.ReadAllText(OrderLineJsonPath, Encoding.UTF8);
+        var orderLines = JsonSerializer.Deserialize<List<OrderLine>>(orderLineJson);
+
+        AddAudit(orderLines);
+
+        _orderLines.AddRange(orderLines);
+
+        _dbContext.AddRange(_orderLines);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<OrderLine>();
+    }
+    #endregion Seed Order related data
+
+
+    #region Seed Discount related data
+    private async Task SeedDiscountVouchers()
+    {
+        if (_dbContext.DiscountVouchers.Any())
+        {
+            return;
+        }
+
+        var discountVoucherJson = File.ReadAllText(DiscountVoucherJsonPath, Encoding.UTF8);
+        var discountVouchers = JsonSerializer.Deserialize<List<DiscountVoucher>>(discountVoucherJson, enumOption);
+
+        AddAudit(discountVouchers);
+
+        _discountVouchers.AddRange(discountVouchers);
+
+        _dbContext.AddRange(_discountVouchers);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<DiscountVoucher>();
+    }
+
+    private async Task SeedVoucherUsages()
+    {
+        if (_dbContext.VoucherUsages.Any())
+        {
+            return;
+        }
+
+        var voucherUsageJson = File.ReadAllText(VoucherUsageJsonPath, Encoding.UTF8);
+        var voucherUsages = JsonSerializer.Deserialize<List<VoucherUsage>>(voucherUsageJson);
+
+        AddAudit(voucherUsages);
+
+        _voucherUsages.AddRange(voucherUsages);
+
+        _dbContext.AddRange(_voucherUsages);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<VoucherUsage>();
+    }
+
+    #endregion Seed Discount related data
+
+    private void AddAudit<TAuditableEntity>(List<TAuditableEntity> listItem) where TAuditableEntity : BaseAuditableEntity
+    {
+        foreach (var item in listItem)
+        {
+            // createWhen using Bogus 
+            var createdWhen = _faker.Date.PastOffset(2);
+            var lastEditedWhen = _faker.Date.BetweenOffset(createdWhen, createdWhen.AddYears(1)); // Generate a random date between createdWhen and now
+
+            item.CreatedByUserId = DEFAULT_ADMIN_ID;
+            item.CreatedWhen = createdWhen;
+            item.LastEditedByUserId = DEFAULT_ADMIN_ID;
+            item.LastEditedWhen = lastEditedWhen;
+        }
+    }
+
+    private string CapitalizeFirstLetter(string input)
+    {
+        return string.Join(" ", input.Split(' ').Select(s => s.First().ToString().ToUpper() + s[1..].ToLower()));
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,12 +22,7 @@ internal class ProductPriceHistoryConfiguration : IEntityTypeConfiguration<Produ
         builder.Property(t => t.UnitPrice)
             .HasPrecision(18, 2);
 
-        builder.HasOne(t => t.LastEditedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.LastEditedBy);
 
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
     }
 }

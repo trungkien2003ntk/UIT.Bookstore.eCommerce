@@ -1,6 +1,4 @@
-﻿using static System.Runtime.CompilerServices.RuntimeHelpers;
-
-namespace KKBookstore.Infrastructure.Payment;
+﻿namespace KKBookstore.Infrastructure.Payment;
 
 public class VnPayConfiguration
 {

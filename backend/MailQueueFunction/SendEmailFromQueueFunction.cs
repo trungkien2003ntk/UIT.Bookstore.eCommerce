@@ -38,11 +38,11 @@ public class SendEmailFromQueueFunction(
 
 
             // 2. Send Email using SMTP Client
-            using var client = new SmtpClient() ;
+            using var client = new SmtpClient();
             await client.ConnectAsync(server, port, true);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(username, password);
-            
+
             await client.SendAsync(mailMessageHtml);
 
             _logger.LogInformation("Sent email from queue: {Subject}", mailMessage.Subject);

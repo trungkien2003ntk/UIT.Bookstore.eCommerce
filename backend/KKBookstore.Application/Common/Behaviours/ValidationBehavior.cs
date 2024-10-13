@@ -34,7 +34,7 @@ public class ValidationBehavior<TRequest, TResponse>
             .Distinct()
             .ToArray();
 
-        if (errors.Any())
+        if (errors.Length != 0)
         {
             return CreateValidationResult<TResponse>(errors);
         }

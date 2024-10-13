@@ -21,7 +21,7 @@ public class ProductsController(
 {
     [HttpGet]
     public async Task<IActionResult> GetProducts(
-        [FromQuery]GetProductListRequest filter,
+        [FromQuery] GetProductListRequest filter,
         CancellationToken cancellationToken = default
     )
     {
@@ -42,7 +42,7 @@ public class ProductsController(
 
     [HttpGet("trendy")]
     public async Task<IActionResult> GetTrendyProducts(
-        [FromQuery]GetTrendyProductListQuery query,
+        [FromQuery] GetTrendyProductListQuery query,
         CancellationToken cancellationToken = default
     )
     {
@@ -53,13 +53,13 @@ public class ProductsController(
 
     [HttpGet("{id}/ratings")]
     public async Task<IActionResult> GetProductRatings(
-        [FromRoute]int id,
-        [FromQuery]GetProductRatingListRequest request,
+        [FromRoute] int id,
+        [FromQuery] GetProductRatingListRequest request,
         CancellationToken cancellationToken = default
     )
     {
         request.ProductId ??= id;
-        
+
         if (request.ProductId.Value != id)
         {
             var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
@@ -75,10 +75,10 @@ public class ProductsController(
 
     [HttpGet("search")]
     public async Task<IActionResult> SearchProducts(
-        [FromQuery]SearchProductsQuery query,
+        [FromQuery] SearchProductsQuery query,
         CancellationToken cancellationToken = default
     )
-    {   
+    {
         var result = await Sender.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
@@ -86,7 +86,7 @@ public class ProductsController(
 
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync(
-                
+
     )
     {
 

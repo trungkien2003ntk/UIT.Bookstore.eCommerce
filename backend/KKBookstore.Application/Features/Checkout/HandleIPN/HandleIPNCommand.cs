@@ -119,7 +119,7 @@ public class HandleIPNHandler(
                 Message = "Success"
             });
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await dbTransaction.RollbackAsync(cancellationToken);
             return Result.Failure<HandleIPNResponse>(TransactionErrors.FailedToCommitTransaction);

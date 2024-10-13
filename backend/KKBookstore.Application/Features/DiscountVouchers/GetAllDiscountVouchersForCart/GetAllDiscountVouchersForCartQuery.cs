@@ -4,9 +4,8 @@ using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchers;
+namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
 
 public record GetAllDiscountVouchersForCartQuery : IRequest<Result<GetAllDiscountVouchersForCartResponse>>
 {
@@ -21,7 +20,7 @@ public class GetAllDiscountVouchersForCartHandler(
     private readonly IApplicationDbContext _dbContext = dbContext;
 
     public async Task<Result<GetAllDiscountVouchersForCartResponse>> Handle(GetAllDiscountVouchersForCartQuery request, CancellationToken cancellationToken)
-    { 
+    {
         var userId = request.UserId;
         var selectedItemIds = request.SelectedItemIds;
 

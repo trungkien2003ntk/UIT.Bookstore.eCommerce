@@ -3,7 +3,7 @@ using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Domain.Aggregates.ProductAggregate;
 
-public class RatingLike : BaseEntity
+public class RatingLike : BaseAuditableEntity
 {
     public int RatingId { get; set; }
     public int UserId { get; set; }

@@ -19,7 +19,7 @@ public class UpdateShoppingCartMappingService(
         List<Product> neededProducts = await ExtractDistinctProductInCart(shoppingCart);
 
         ICollection<DiscountForReason> breakdown = [
-            new() 
+            new()
             {
                 DiscountName = DiscountConstant.ProductDiscountLabel,
                 DiscountValue = shoppingCart.TotalSavedAmount

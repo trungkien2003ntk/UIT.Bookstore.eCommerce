@@ -3,7 +3,7 @@ using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Domain.Aggregates.ProductAggregate;
 
-public class SkuOptionValue : BaseAuditableEntity, ISoftDelete, ITrackable
+public class SkuOptionValue : BaseAuditableEntity, ISoftDelete
 {
     public SkuOptionValue()
     {

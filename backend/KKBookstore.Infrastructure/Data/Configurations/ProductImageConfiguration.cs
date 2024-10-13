@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,7 +22,7 @@ internal class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage
         builder.Property(e => e.ThumbnailImageUrl)
             .HasColumnType("varchar(MAX)")
             .IsRequired();
-        
+
         builder.Property(e => e.LargeImageUrl)
             .HasColumnType("varchar(MAX)")
             .IsRequired();
@@ -29,13 +30,7 @@ internal class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage
         builder.Property(e => e.ProductId)
             .IsRequired();
 
-        builder.HasOne(t => t.LastEditedByUser)
-           .WithMany()
-           .HasForeignKey(t => t.LastEditedBy);
-
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
 
         builder.HasOne(e => e.Product)
             .WithMany(p => p.ProductImages)

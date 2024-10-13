@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
 using MediatR;

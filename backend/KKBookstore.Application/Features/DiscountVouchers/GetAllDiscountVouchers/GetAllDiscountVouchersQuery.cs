@@ -9,7 +9,7 @@ namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouche
 public record GetAllDiscountVouchersQuery : IRequest<Result<GetAllDiscountVouchersResponse>>;
 
 public class GetAllDiscountVouchersHandler(
-    IApplicationDbContext dbContext    
+    IApplicationDbContext dbContext
 ) : IRequestHandler<GetAllDiscountVouchersQuery, Result<GetAllDiscountVouchersResponse>>
 {
     private readonly IApplicationDbContext _dbContext = dbContext;

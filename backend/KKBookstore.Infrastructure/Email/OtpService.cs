@@ -54,7 +54,7 @@ public class OtpService(
                 return Result.Failure<bool>(ApplicationErrors.OtpIncorrect);
             }
         }
-        
+
         // OTP is expired
         return Result.Failure<bool>(ApplicationErrors.OtpExpired);
     }

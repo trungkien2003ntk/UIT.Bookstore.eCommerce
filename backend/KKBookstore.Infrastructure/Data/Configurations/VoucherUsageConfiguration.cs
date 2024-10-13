@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,9 +11,9 @@ internal class VoucherUsageConfiguration : IEntityTypeConfiguration<VoucherUsage
     {
         builder.ToTable($"{nameof(VoucherUsage)}s");
 
-        builder.HasKey( x => x.Id)
+        builder.HasKey(x => x.Id)
             .HasName($"{nameof(VoucherUsage)}Id");
-        
+
         builder.HasOne(vu => vu.Voucher)
             .WithMany(v => v.VoucherUsages)
             .HasForeignKey(vu => vu.VoucherId);
@@ -24,5 +25,7 @@ internal class VoucherUsageConfiguration : IEntityTypeConfiguration<VoucherUsage
         builder.HasOne(vu => vu.User)
             .WithMany()
             .HasForeignKey(vu => vu.UserId);
+
+        builder.ConfigureAuditing();
     }
 }

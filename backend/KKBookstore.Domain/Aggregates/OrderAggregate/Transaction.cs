@@ -7,7 +7,7 @@ public class Transaction : BaseEntity
 {
     public Transaction()
     {
-        
+
     }
 
     public int Amount { get; set; }
@@ -20,7 +20,7 @@ public class Transaction : BaseEntity
     public int TransactionNo { get; set; }
     public string TransactionStatus { get; set; }
     public int OrderId { get; set; }
-    
+
 
     // navigation properties
     public Order Order { get; set; }

@@ -50,7 +50,7 @@ public class GetOrderListHandler(
         query = ApplyOrderStatusFilter(query, request);
 
         var sortProperty = request.SortBy;
-        var validSortProperties = new List<string> { "CreatedWhen", "Id", "Status" };
+        var validSortProperties = new List<string> { nameof(Order.CreatedWhen), nameof(Order.Id), nameof(Order.Status) };
         PaginatedResult<Order> paginatedOrders;
 
         try

@@ -72,7 +72,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [HttpPost("update-password")]
+    [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPasswordAsync(
         [FromBody] UpdatePasswordCommand command,
         CancellationToken cancellationToken = default

@@ -1,10 +1,5 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
 

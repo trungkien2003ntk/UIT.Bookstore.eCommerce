@@ -1,5 +1,4 @@
 ﻿using KKBookstore.Application.Common.Models;
-using System.Runtime.CompilerServices;
 
 namespace KKBookstore.Application.Features.Checkout.Confirm;
 
@@ -42,7 +41,7 @@ public record ConfirmCheckoutResponse
         public string Name { get; set; }
         public string Description { get; set; }
     }
-    
+
     public sealed record DeliveryMethodDto : BaseDto
     {
         public string Name { get; set; }

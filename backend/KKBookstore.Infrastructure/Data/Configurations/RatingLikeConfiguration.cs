@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,5 +32,7 @@ internal class RatingLikeConfiguration : IEntityTypeConfiguration<RatingLike>
         builder.HasOne(t => t.Rating)
             .WithMany(r => r.Likes)
             .HasForeignKey(t => t.RatingId);
+
+        builder.ConfigureAuditing();
     }
 }

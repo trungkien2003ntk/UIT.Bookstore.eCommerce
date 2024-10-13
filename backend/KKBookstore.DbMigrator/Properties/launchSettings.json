@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "KKBookstore.DbMigrator": {
+      "commandName": "Project",
+      "commandLineArgs": "--environment Development",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

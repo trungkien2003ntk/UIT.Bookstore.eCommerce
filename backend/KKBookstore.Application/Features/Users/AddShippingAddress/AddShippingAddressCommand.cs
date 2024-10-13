@@ -13,5 +13,5 @@ public record AddShippingAddressCommand : IRequest<Result<AddShippingAddressResp
     public string Commune { get; init; }
     public string DetailAddress { get; init; }
     public bool IsDefault { get; init; }
-    public string AddressType {  get; init; }
+    public string AddressType { get; init; }
 }

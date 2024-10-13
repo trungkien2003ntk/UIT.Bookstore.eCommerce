@@ -30,14 +30,14 @@ public class IdentityService(
     IPasswordHasher<User> passwordHasher,
     IOptions<JwtSettings> jwtSettings,
     IMapper mapper,
-    ApplicationDbContext dbContext
+    KKBookstoreDbContext dbContext
 ) : IIdentityService
 {
     private readonly UserManager<User> _userManager = userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager = roleManager;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
     private readonly IOptions<JwtSettings> _jwtSettings = jwtSettings;
-    private readonly ApplicationDbContext _dbContext = dbContext;
+    private readonly KKBookstoreDbContext _dbContext = dbContext;
 
     public async Task<Result<User>> FindUserAsync(FindUserDto findUserDto)
     {
@@ -253,7 +253,7 @@ public class IdentityService(
     public async Task<Result> UpdatePasswordAsync(UpdatePasswordCommand request)
     {
         var userResult = await FindUserAsync(new(request.Email));
-        
+
         if (userResult.IsFailure)
         {
             return Result.Failure(userResult.Error);
@@ -272,7 +272,8 @@ public class IdentityService(
     public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
     {
         var userResult = await FindUserAsync(new(request.Email));
-        if (userResult.IsFailure) {
+        if (userResult.IsFailure)
+        {
             return Result.Failure(userResult.Error);
         }
 
@@ -284,7 +285,7 @@ public class IdentityService(
         }
 
         var result = await _userManager.ChangePasswordAsync(userResult.Value, request.CurrentPassword, request.NewPassword);
-        
+
         if (!result.Succeeded)
         {
             return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
@@ -409,5 +410,5 @@ public class IdentityService(
         return refreshToken;
     }
 
-    
+
 }

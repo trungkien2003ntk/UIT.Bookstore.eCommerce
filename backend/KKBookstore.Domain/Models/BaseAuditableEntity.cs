@@ -15,10 +15,10 @@ public abstract class BaseAuditableEntity : BaseEntity, ITrackable
     }
 
     public DateTimeOffset CreatedWhen { get; set; }
-    public int CreatedBy { get; set; }
+    public int CreatedByUserId { get; set; }
     public User CreatedByUser { get; set; }
 
     public DateTimeOffset LastEditedWhen { get; set; }
-    public int LastEditedBy { get; set; }
+    public int LastEditedByUserId { get; set; }
     public User LastEditedByUser { get; set; }
 }

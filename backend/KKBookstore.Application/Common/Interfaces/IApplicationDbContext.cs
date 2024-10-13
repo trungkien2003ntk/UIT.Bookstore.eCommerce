@@ -1,5 +1,4 @@
 ﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;

@@ -16,7 +16,7 @@ namespace KKBookstore.API.Controllers;
 [Authorize(Roles = $"{Role.Customer}")]
 [Route("api/[controller]")]
 public class ShoppingCartController(
-    ISender sender    
+    ISender sender
 ) : ApiController(sender)
 {
     [HttpGet]
@@ -45,7 +45,7 @@ public class ShoppingCartController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    
+
     [HttpPost("update")]
     public async Task<IActionResult> UpdateShoppingCartAsync(
         [FromBody] UpdateShoppingCartItemRequest request,
@@ -53,7 +53,8 @@ public class ShoppingCartController(
     )
     {
         var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
-        var command = new UpdateShoppingCartItemCommand {
+        var command = new UpdateShoppingCartItemCommand
+        {
             UserId = userId,
             ActionType = request.ActionType,
             SelectedItemIds = request.SelectedItemIds,
@@ -68,12 +69,12 @@ public class ShoppingCartController(
             OrderDiscountVoucherId = request.OrderDiscountVoucherId,
             ShippingDiscountVoucherId = request.ShippingDiscountVoucherId
         };
-            
+
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
-     
+
 
     [HttpDelete]
     public IActionResult RemoveFromShoppingCart()

@@ -3,9 +3,7 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace KKBookstore.Infrastructure.Search;
 

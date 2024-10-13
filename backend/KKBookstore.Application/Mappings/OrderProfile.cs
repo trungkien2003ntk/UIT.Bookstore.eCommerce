@@ -25,7 +25,7 @@ public class OrderProfile : Profile
 
         CreateMap<ShippingAddress, ShippingAddressDto>()
             .ForMember(dest => dest.DetailedFullAddress, opt => opt.MapFrom(src => $"{src.DetailAddress}, {src.Commune}, {src.District}, {src.Province}")); ;
-            
+
         CreateMap<Order, OrderGeneralInformation>()
             .ForMember(dest => dest.DeliveryMethodName, opt => opt.MapFrom(src => src.DeliveryMethod.Name))
             .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentMethod.Name))
@@ -47,5 +47,5 @@ public class OrderProfile : Profile
         CreateMap<DeliveryMethod, DeliveryMethodDto>().ReverseMap();
     }
 
-    
+
 }

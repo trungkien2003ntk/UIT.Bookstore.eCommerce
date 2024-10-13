@@ -46,7 +46,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.OptionValues, opt => opt.MapFrom(src => src.SkuOptionValues.Select(sov => sov.OptionValue)))
             .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetThumbnailImageUrl()))
             .ForMember(dest => dest.LargeImageUrl, opt => opt.MapFrom(src => src.GetLargeImageUrl()));
-        
+
 
         CreateMap<ProductOptionValue, OptionValueDto>()
             .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
@@ -64,7 +64,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Total1StarRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.RatingValue == 1)))
             .ForMember(dest => dest.TotalRating, opt => opt.MapFrom(src => src.Item2.Count));
 
-        CreateMap<PaginatedResult<Rating>, PaginatedResult <ProductRatingDto>>()
+        CreateMap<PaginatedResult<Rating>, PaginatedResult<ProductRatingDto>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
         CreateMap<Rating, ProductRatingDto>()
@@ -74,6 +74,6 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.SkuName, opt => opt.MapFrom(src => MappingHelpers.GetSkuOptionValuesString(src.Sku)))
             .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.Likes.Count))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
-            
+
     }
 }

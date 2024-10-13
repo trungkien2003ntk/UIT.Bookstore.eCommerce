@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,12 +28,7 @@ internal class BookAuthorConfiguration : IEntityTypeConfiguration<BookAuthor>
             .WithMany(a => a.AuthorBooks)
             .HasForeignKey(wb => wb.AuthorId);
 
-        builder.HasOne(t => t.LastEditedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.LastEditedBy);
 
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
     }
 }

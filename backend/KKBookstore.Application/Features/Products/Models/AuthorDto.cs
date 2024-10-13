@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace KKBookstore.Application.Features.Products.Models;
+﻿namespace KKBookstore.Application.Features.Products.Models;
 
 public class AuthorDto
 {

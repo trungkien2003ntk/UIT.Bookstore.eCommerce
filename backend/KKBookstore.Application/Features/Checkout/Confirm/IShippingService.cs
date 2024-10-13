@@ -9,7 +9,7 @@ public partial interface IShippingService
     Task<Result<int>> FindProvinceAsync(string provinceName, CancellationToken cancellationToken);
     Task<Result<int>> FindDistrictIdAsync(int provinceId, string districtName, CancellationToken cancellationToken);
     Task<Result<string>> FindCommuneCodeAsync(int districtId, string communeName, CancellationToken cancellationToken);
-    Task<Result<DateTimeOffset>> GetExpectedDeliveryTime(ExpectDeliveryTimeRequest request, CancellationToken cancellationToken);  
+    Task<Result<DateTimeOffset>> GetExpectedDeliveryTime(ExpectDeliveryTimeRequest request, CancellationToken cancellationToken);
 }
 
 public record ShippingFeeRequest

@@ -1,8 +1,8 @@
 ﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
@@ -75,13 +75,8 @@ internal class SkuConfigurations : IEntityTypeConfiguration<Sku>
             .WithMany(t => t.Skus)
             .HasForeignKey(t => t.ProductId);
 
-        builder.HasOne(t => t.LastEditedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.LastEditedBy);
 
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
 
     }
 }

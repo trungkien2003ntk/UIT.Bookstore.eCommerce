@@ -1,9 +1,4 @@
 ﻿using KKBookstore.Application.Common.Models;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
-using KKBookstore.Domain.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 

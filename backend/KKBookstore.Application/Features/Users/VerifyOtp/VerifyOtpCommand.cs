@@ -20,25 +20,6 @@ public class VerifyOtpCommandHandler(
             return Result.Failure(verifyResult.Error);
         }
 
-        //var createTempCustomerResult = await identityService.CreateTemporaryCustomerAsync(request.Email);
-        //if (createTempCustomerResult.IsFailure)
-        //{
-        //    return Result.Failure<VerifyOtpResponse>(createTempCustomerResult.Error);
-        //}
-
-        //// Return token
-        //var generateTokenResult = await identityService.GenerateJwtToken(request.Email);
-        //if (generateTokenResult.IsFailure)
-        //{
-        //    return Result.Failure<VerifyOtpResponse>(generateTokenResult.Error);
-        //}
-
-        //var response = new VerifyOtpResponse(
-        //    generateTokenResult.Value.AccessToken,
-        //    generateTokenResult.Value.AccessTokenExpiration,
-        //    generateTokenResult.Value.RefreshToken
-        //);
-
         return Result.Success();
     }
 }

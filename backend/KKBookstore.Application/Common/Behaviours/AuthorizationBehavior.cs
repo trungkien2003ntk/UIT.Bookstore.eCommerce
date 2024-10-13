@@ -1,8 +1,8 @@
-﻿using MediatR;
-using System.Reflection;
+﻿using KKBookstore.Application.Common.Exceptions;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Security;
-using KKBookstore.Application.Common.Exceptions;
+using MediatR;
+using System.Reflection;
 
 namespace KKBookstore.Application.Common.Behaviours;
 

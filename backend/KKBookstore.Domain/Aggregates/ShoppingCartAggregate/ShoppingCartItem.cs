@@ -57,7 +57,7 @@ public class ShoppingCartItem : BaseAuditableEntity
         {
             return Result.Failure(ShoppingCartError.QuantityMustBePositive);
         }
-        
+
         Quantity = newQuantity;
         return Result.Success();
     }

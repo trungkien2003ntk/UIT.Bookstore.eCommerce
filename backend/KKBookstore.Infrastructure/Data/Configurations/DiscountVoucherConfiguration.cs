@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -10,7 +11,7 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
     public void Configure(EntityTypeBuilder<DiscountVoucher> builder)
     {
         var converter = new EnumToStringConverter<DiscountVoucherType>();
-        
+
         builder.ToTable($"{nameof(DiscountVoucher)}s");
 
         builder.Property(dv => dv.Id)
@@ -52,13 +53,6 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
             .IsRequired()
             .HasConversion(converter);
 
-
-        builder.HasOne(t => t.LastEditedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.LastEditedBy);
-
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
     }
 }

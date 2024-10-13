@@ -14,7 +14,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.FirstName)
             .HasMaxLength(300)
             .IsRequired();
-        
+
         builder.Property(u => u.LastName)
             .HasMaxLength(300)
             .IsRequired();

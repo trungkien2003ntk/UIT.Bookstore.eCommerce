@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -27,7 +28,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
 
         builder.Property(t => t.Response)
             .HasColumnType("nvarchar(max)");
-            
+
         builder.Property(t => t.Status)
             .IsRequired()
             .HasConversion(converter);
@@ -40,12 +41,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
             .WithMany()
             .HasForeignKey(t => t.UserId);
 
-        builder.HasOne(t => t.LastEditedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.LastEditedBy);
 
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
     }
 }

@@ -1,23 +1,23 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using KKBookstore.Infrastructure.Web;
+﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Infrastructure.Data;
-using KKBookstore.Infrastructure.Identity;
-using KKBookstore.Application.Common.Interfaces;
-using System.Text;
 using KKBookstore.Infrastructure.Data.Interceptors;
 using KKBookstore.Infrastructure.Email;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using KKBookstore.Domain.Aggregates.UserAggregate;
-using KKBookstore.Infrastructure.Shipping;
+using KKBookstore.Infrastructure.Identity;
 using KKBookstore.Infrastructure.Payment;
+using KKBookstore.Infrastructure.Search;
+using KKBookstore.Infrastructure.Shipping;
+using KKBookstore.Infrastructure.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Caching.Memory;
-using KKBookstore.Infrastructure.Search;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace KKBookstore.Infrastructure;
 
@@ -27,19 +27,21 @@ public static class DependencyInjection
     {
         /// Config DbContext
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        
+
 
         services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
-        services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        services.AddDbContext<KKBookstoreDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
+#if DEBUG
             options.UseSqlServer(connectionString)
-                .EnableSensitiveDataLogging();
+                /*.EnableSensitiveDataLogging()*/;
+#endif
         });
-        
-        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+
+        services.AddScoped<IApplicationDbContext, KKBookstoreDbContext>();
 
 
         /// Config AuthN and AuthZ
@@ -75,7 +77,7 @@ public static class DependencyInjection
         services.AddIdentityCore<User>()
             .AddRoles<IdentityRole<int>>()
             .AddRoleManager<RoleManager<IdentityRole<int>>>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<KKBookstoreDbContext>()
             .AddApiEndpoints();
 
 

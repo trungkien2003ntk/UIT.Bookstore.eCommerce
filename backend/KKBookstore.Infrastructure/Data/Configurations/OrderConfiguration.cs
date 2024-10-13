@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -54,12 +55,6 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired()
             .HasConversion(converter);
 
-        builder.HasOne(t => t.LastEditedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.LastEditedBy);
-
-        builder.HasOne(t => t.CreatedByUser)
-            .WithMany()
-            .HasForeignKey(t => t.CreatedBy);
+        builder.ConfigureAuditing();
     }
 }

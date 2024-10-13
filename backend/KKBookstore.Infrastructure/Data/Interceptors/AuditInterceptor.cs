@@ -25,14 +25,14 @@ public class AuditInterceptor : ISaveChangesInterceptor
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedBy = currnetUserId;
+                    entry.Entity.CreatedByUserId = currnetUserId;
                     entry.Entity.CreatedWhen = DateTime.UtcNow;
-                    entry.Entity.LastEditedBy = currnetUserId;
+                    entry.Entity.LastEditedByUserId = currnetUserId;
                     entry.Entity.CreatedWhen = DateTime.UtcNow;
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.LastEditedBy = currnetUserId;
+                    entry.Entity.LastEditedByUserId = currnetUserId;
                     entry.Entity.LastEditedWhen = DateTime.UtcNow;
                     break;
             }

@@ -64,7 +64,7 @@ internal static class EmailBodyHelper
             })
             .ToList()
         ));
-            
+
 
         var orderConfirmationEmailBody = orderConfirmationTemplate
             .Replace(_deliveryTimePlaceholder, order.ExpectedDeliveryWhen.ToGmtPlus7FormattedString())
@@ -76,7 +76,7 @@ internal static class EmailBodyHelper
             .Replace(_totalPricePlaceholder, order.CalculateTotal().ToFormattedVietnamesePrice());
 
         return orderConfirmationEmailBody;
-        
-        
+
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Users.GetUserList;
 using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;

@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Interfaces;
+﻿using KKBookstore.Domain.Interfaces;
 using KKBookstore.Domain.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -12,7 +11,7 @@ public class DiscountVoucher : BaseAuditableEntity, ISoftDelete
 {
     public DiscountVoucher()
     {
-        
+
     }
 
     private DiscountVoucher(
@@ -53,7 +52,7 @@ public class DiscountVoucher : BaseAuditableEntity, ISoftDelete
     public DiscountValueType ValueType { get; set; }
     public DiscountVoucherType VoucherType { get; set; }
     public decimal Value { get; set; } // percentage 0.15 or fixed amount
-    
+
 
     // Discount limit
     public decimal? MaximumDiscountValue { get; set; } // this is set only when the discount is percentage
@@ -63,7 +62,7 @@ public class DiscountVoucher : BaseAuditableEntity, ISoftDelete
     // Usage limit
     public int? UsageLimitPerUser { get; set; }
     public int UsageLimitOverall { get; set; }
-    
+
 
     // Time limit
     public DateTimeOffset StartWhen { get; set; }
@@ -72,11 +71,11 @@ public class DiscountVoucher : BaseAuditableEntity, ISoftDelete
 
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
-    
+
 
     [NotMapped]
     public bool IsRedeemable { get; set; }
-    
+
     // navigation property to Order and OrderLine
     public ICollection<VoucherUsage> VoucherUsages { get; set; } = [];
     public ICollection<DiscountApplyToProductType> ProductTypesApplied { get; set; } = [];
@@ -87,7 +86,7 @@ public class DiscountVoucher : BaseAuditableEntity, ISoftDelete
     {
         if (ValueType == DiscountValueType.Percentage)
         {
-            return MaximumDiscountValue.HasValue? Math.Min(MaximumDiscountValue.Value, spentAmount * Value) : spentAmount * Value;
+            return MaximumDiscountValue.HasValue ? Math.Min(MaximumDiscountValue.Value, spentAmount * Value) : spentAmount * Value;
         }
 
         return spentAmount > Value ? Value : spentAmount;
@@ -149,7 +148,7 @@ public class DiscountVoucher : BaseAuditableEntity, ISoftDelete
         {
             return Result.Failure<DiscountVoucher>(DiscountVoucherErrors.ValueMustBePositive);
         }
-        
+
         if (value > 1)
         {
             return Result.Failure<DiscountVoucher>(DiscountVoucherErrors.InvalidValueRange);

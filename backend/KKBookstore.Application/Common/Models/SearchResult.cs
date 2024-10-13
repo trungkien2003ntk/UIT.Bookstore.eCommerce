@@ -1,6 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
-
-namespace KKBookstore.Application.Common.Models;
+﻿namespace KKBookstore.Application.Common.Models;
 
 public class SearchResult
 {

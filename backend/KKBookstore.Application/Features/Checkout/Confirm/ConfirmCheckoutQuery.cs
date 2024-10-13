@@ -61,7 +61,7 @@ public class ConfirmCheckoutHandler(
             var getCustomerDistrictIdResult = await _shippingService.FindDistrictIdAsync(getCustomerProvinceIdResult.Value, defaultAddress.District, cancellationToken);
             if (getCustomerDistrictIdResult.IsFailure)
             {
-               return Result.Failure<ConfirmCheckoutResponse>(getCustomerDistrictIdResult.Error);
+                return Result.Failure<ConfirmCheckoutResponse>(getCustomerDistrictIdResult.Error);
             }
 
             var getCustomerCommuneCodeResult = await _shippingService.FindCommuneCodeAsync(getCustomerDistrictIdResult.Value, defaultAddress.Commune, cancellationToken);
@@ -116,7 +116,7 @@ public class ConfirmCheckoutHandler(
         }
 
         var itemSubtotal = checkoutItems.Sum(i => i.TotalUnitPrice);
-        var orderSubtotal = itemSubtotal+ shippingFee;
+        var orderSubtotal = itemSubtotal + shippingFee;
 
         var shippingVoucher = await _dbContext.DiscountVouchers
             .Where(dv => dv.Id == request.ShippingDiscountVoucherId)

@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using KKBookstore.Application.Common.Behaviours;
 using KKBookstore.Application.Features.Checkout.PlaceOrder;
-using KKBookstore.Application.Features.ShoppingCarts;
 using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
 using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 using MediatR;
@@ -27,7 +26,7 @@ public static class DependencyInjection
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(assembly);
-            configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>)); 
+            configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         });
 

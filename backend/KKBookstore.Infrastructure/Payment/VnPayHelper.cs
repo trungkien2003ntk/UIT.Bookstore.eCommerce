@@ -30,7 +30,13 @@ internal class VnPayHelper
     //    var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
 
     //    var checkSignature =
-    //        vnPay.ValidateSignature(vnpSecureHash, hashSecret); //check Signature
+    //        vnPay.
+    //
+    //
+    //
+    //
+    //
+    //        Signature(vnpSecureHash, hashSecret); //check Signature
 
     //    if (!checkSignature)
     //        return new PaymentResponseModel()

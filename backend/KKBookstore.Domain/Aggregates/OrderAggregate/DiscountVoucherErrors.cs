@@ -18,7 +18,7 @@ public static class DiscountVoucherErrors
     public static readonly Error NotEnoughAmount = Error.BusinessRuleViolation("DiscountVoucher.NotEnoughAmount", "Discount voucher is not applicable for this order");
     public static readonly Error NotEnoughTotalAmount = Error.BusinessRuleViolation("DiscountVoucher.NotEnoughTotalAmount", "Discount voucher is not applicable for this order");
     public static readonly Error NotEnoughTotalQuantity = Error.BusinessRuleViolation("DiscountVoucher.NotEnoughTotalQuantity", "Discount voucher is not applicable for this order");
-    
-    
+
+
     public static readonly Error ValueMustBePositive = Error.Validation("DiscountVoucher.ValueMustBePositive", "Discount voucher value must be positive");
 }

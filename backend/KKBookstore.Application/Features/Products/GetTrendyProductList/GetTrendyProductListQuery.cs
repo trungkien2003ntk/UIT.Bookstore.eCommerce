@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using FluentValidation.Validators;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 using static KKBookstore.Application.Features.Products.GetTrendyProductList.GetTrendyProductListResponse;
 
 namespace KKBookstore.Application.Features.Products.GetTrendyProductList;

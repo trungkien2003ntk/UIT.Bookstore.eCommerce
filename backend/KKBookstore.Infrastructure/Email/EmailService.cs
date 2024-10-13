@@ -3,7 +3,6 @@ using Azure.Storage.Queues;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Infrastructure.Email.EmailTemplates;
-using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Text;
@@ -91,13 +90,13 @@ public class EmailService(
             sendOtpEmailTemplate.Body,
             email,
             new Dictionary<string, string>()
-            {   
+            {
                 { "{otp}", otp},
                 { "{AdminEmail}", _emailConfig.From},
                 { "{CustomerEmail}", email},
             }
         );
-        
+
         await Send(message);
     }
 
@@ -149,11 +148,11 @@ public class EmailService(
         string blobUri;
         var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_blobContainerName);
         var blobName = "mail-body-" + Guid.NewGuid().ToString();
-        
+
         using (var stream = new MemoryStream())
         {
             mailMessage.WriteTo(stream);
-            
+
             var blobClient = blobContainerClient.GetBlobClient(blobName);
             stream.Position = 0;
             await blobClient.UploadAsync(stream);

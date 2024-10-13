@@ -1,4 +1,5 @@
-﻿using KKBookstore.Infrastructure.Data;
+﻿using KKBookstore.DbMigrator.Seeders;
+using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +63,7 @@ internal static class Program
                 {
                     options.UseSqlServer(hostContext.Configuration.GetConnectionString("DefaultConnection"));
                 });
+                services.AddTransient<DataSeeder>();
                 services.AddTransient<DbMigrator>();
             });
 }

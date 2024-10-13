@@ -4,7 +4,6 @@ using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
@@ -81,7 +80,7 @@ public class UpdateShoppingCartItemCommandHandler(
 
         // load the sku navigation property for the updated items, this is because the sku navigation property for the items that changed skuId
         // will be null after saving changes
-        
+
         var itemIdsToUpdate = request.UpdateItems.Select(x => x.Id).ToList();
         foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
         {
@@ -101,7 +100,7 @@ public class UpdateShoppingCartItemCommandHandler(
         {
             discountFromVoucherAmount += orderDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
         }
-        
+
         if (shippingDiscountVoucher != null)
         {
             discountFromVoucherAmount += shippingDiscountVoucher.GetDiscountValue(shoppingCart.TotalUnitPrice);
@@ -142,7 +141,7 @@ public class UpdateShoppingCartItemCommandHandler(
             var updateItem = listItems.First(ui => ui.Id == item.Id);
             // todo: add a check to old quantity
             item.Quantity = updateItem.Quantity;
-            
+
             updatedItems.Add(item);
         }
 

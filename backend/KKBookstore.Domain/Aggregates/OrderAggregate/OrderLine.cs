@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
+﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Domain.Aggregates.OrderAggregate;

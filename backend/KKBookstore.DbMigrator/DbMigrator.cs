@@ -1,4 +1,5 @@
-﻿using KKBookstore.Infrastructure.Data;
+﻿using KKBookstore.DbMigrator.Seeders;
+using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +10,8 @@ namespace KKBookstore.DbMigrator;
 internal class DbMigrator(IServiceProvider serviceProvider, IHostEnvironment webHostEnvironment)
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
-    private readonly IHostEnvironment _webHostEnvironment = webHostEnvironment;
+    private readonly IHostEnvironment _hostEnvironment = webHostEnvironment;
+    private DataSeeder? _seeder;
 
     public async Task MigrateAndSeedAsync()
     {
@@ -24,14 +26,14 @@ internal class DbMigrator(IServiceProvider serviceProvider, IHostEnvironment web
     private async Task SeedDataAsync(KKBookstoreDbContext dbContext)
     {
         Log.Information("Seeding initial data started");
-
-        var env = _webHostEnvironment.EnvironmentName;
+        _seeder = new DataSeeder(dbContext);
+        var env = _hostEnvironment.EnvironmentName;
 
         if (env == "Development")
             await SeedDevelopmentDataAsync(dbContext);
-        else if (env == "Staging") 
+        else if (env == "Staging")
             await SeedStagingDataAsync(dbContext);
-        else if (env == "Production") 
+        else if (env == "Production")
             await SeedProductionDataAsync(dbContext);
 
         Log.Information("Seeding initial data completed");
@@ -40,8 +42,8 @@ internal class DbMigrator(IServiceProvider serviceProvider, IHostEnvironment web
     private async Task SeedDevelopmentDataAsync(KKBookstoreDbContext dbContext)
     {
         // Seed development data here
-        // Use Bogus to seed development data
 
+        await _seeder!.SeedAsync();
     }
 
     private async Task SeedStagingDataAsync(KKBookstoreDbContext dbContext)

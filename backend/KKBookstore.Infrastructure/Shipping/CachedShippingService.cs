@@ -1,7 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
-using MimeKit.Cryptography;
 
 namespace KKBookstore.Infrastructure.Shipping;
 
@@ -14,7 +13,7 @@ public class CachedShippingService(
     private readonly string _communesCacheKey = "location:communes";
     private readonly string _districtsCacheKey = "location:districts";
     private readonly string _provincesCacheKey = "location:provinces";
-    
+
     private readonly TimeSpan _cacheDuration = TimeSpan.FromHours(1);
 
     private readonly IMemoryCache _memoryCache = memoryCache;
@@ -27,7 +26,7 @@ public class CachedShippingService(
         {
             return Result.Success(communes!);
         }
-        
+
         var result = await base.GetCommuneAsync(districtId, cancellationToken);
 
         if (result.IsSuccess)

@@ -145,7 +145,7 @@ public class ShippingService : IShippingService
 
             var responseBody = await response.Content.ReadFromJsonAsync<ExpectDeliveryTimeResponse>(cancellationToken: cancellationToken);
 
-            if (responseBody == null ) 
+            if (responseBody == null)
             {
                 var errors = await response.Content.ReadAsStringAsync(cancellationToken);
 

@@ -1,10 +1,9 @@
-﻿namespace KKBookstore.Domain.Aggregates.UserAggregate
+﻿namespace KKBookstore.Domain.Aggregates.UserAggregate;
+
+public enum UserStatus
 {
-    public enum UserStatus
-    {
-        Active,
-        Verified,
-        Unverified,
-        Inactive
-    }
+    Active,
+    Verified,
+    Unverified,
+    Inactive
 }

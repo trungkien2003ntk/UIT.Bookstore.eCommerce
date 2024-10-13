@@ -1,6 +1,4 @@
-﻿using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
-using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
+﻿using KKBookstore.Application.Features.Users.Register;
 using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
 using Microsoft.AspNetCore.Identity;

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Features.Orders.Models;
 using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Models;

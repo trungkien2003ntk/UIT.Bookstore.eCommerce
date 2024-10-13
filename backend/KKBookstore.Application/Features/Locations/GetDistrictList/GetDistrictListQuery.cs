@@ -10,7 +10,7 @@ public record GetDistrictListQuery : IRequest<Result<GetDistrictListResponse>>
 }
 
 public class GetDistrictListHandler(
-    IShippingService shippingService    
+    IShippingService shippingService
 ) : IRequestHandler<GetDistrictListQuery, Result<GetDistrictListResponse>>
 {
     private readonly IShippingService _shippingService = shippingService;

@@ -1,13 +1,13 @@
 ﻿using KKBookstore.Application.Common.Models;
-using KKBookstore.Domain.Aggregates.UserAggregate;
-using KKBookstore.Domain.Models;
-using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.ChangePassword;
+using KKBookstore.Application.Features.Users.RefreshAccessToken;
+using KKBookstore.Application.Features.Users.Register;
+using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Application.Features.Users.UpdatePassword;
 using KKBookstore.Application.Features.Users.UpdateUser;
-using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Application.Features.Users.RefreshAccessToken;
+using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Application.Common.Interfaces;
 

@@ -6,49 +6,66 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<UserSecretsId>44cb7408-c032-466d-9058-cb5947354fbb</UserSecretsId>
+		<Configurations>Debug;Release;Stage</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
-		<PackageReference Include="FluentValidation" Version="11.9.1" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+		<PackageReference Include="FluentValidation" Version="11.9.2" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\KKBookstore.Application\KKBookstore.Application.csproj" />
-		<ProjectReference Include="..\KKBookstore.Infrastructure\KKBookstore.Infrastructure.csproj" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<EnvironmentName>Development</EnvironmentName>
+	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<EnvironmentName>Production</EnvironmentName>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<EnvironmentName>Staging</EnvironmentName>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' != '' and '$(Configuration)' != '' ">
+		<EnvironmentName>Production</EnvironmentName>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<Content Remove="appsettings.json" />
 		<Content Remove="appsettings.*.json" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="appsettings.json" CopyToOutputDirectory="Always" />
-		<Content Include="appsettings.$(ASPNETCORE_ENVIRONMENT).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Always" />
+		<Content Remove="appsettings.json" />
+		<Content Remove="appsettings.*.json" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Contracts\Enums\" />
-		<Folder Include="Contracts\Responses\" />
+		<Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="appsettings.*.json" Exclude="appsettings.$(EnvironmentName).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Never" />
+		<Content Include="appsettings.$(EnvironmentName).json" DependentUpon="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
-		<EnvironmentName>Development</EnvironmentName>
-	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(Configuration)' != '' and '$(Configuration)' != 'Debug' ">
-		<EnvironmentName>Production</EnvironmentName>
-	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\KKBookstore.Application\KKBookstore.Application.csproj" />
+	  <ProjectReference Include="..\KKBookstore.Infrastructure\KKBookstore.Infrastructure.csproj" />
+	</ItemGroup>
 </Project>

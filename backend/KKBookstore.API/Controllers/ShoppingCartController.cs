@@ -14,7 +14,7 @@ using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartIt
 namespace KKBookstore.API.Controllers;
 
 [Authorize(Roles = $"{Role.Customer}")]
-[Route("api/[controller]")]
+[Route("api/shopping-cart/items")]
 public class ShoppingCartController(
     ISender sender
 ) : ApiController(sender)

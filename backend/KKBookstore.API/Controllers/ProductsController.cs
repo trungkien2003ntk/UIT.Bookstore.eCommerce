@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KKBookstore.API.Controllers;
 
 
-[Route("api/[controller]")]
+[Route("api/products")]
 public class ProductsController(
     ISender sender,
     IMapper mapper

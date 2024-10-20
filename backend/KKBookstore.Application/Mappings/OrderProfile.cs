@@ -35,11 +35,11 @@ public class OrderProfile : Profile
             .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.OrderLines));
 
         CreateMap<OrderLine, OrderLineDto>()
-            .ForMember(dest => dest.SkuId, opt => opt.MapFrom(src => src.SkuId))
-            .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => MappingHelpers.GetSkuThumbnailImageUrl(src.Sku)))
-            .ForMember(dest => dest.SkuOptionName, opt => opt.MapFrom(src => MappingHelpers.GetSkuOptionValuesString(src.Sku)))
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Sku.Product.Name))
-            .ForMember(dest => dest.RecommendedRetailPrice, opt => opt.MapFrom(src => src.Sku.RecommendedRetailPrice))
+            .ForMember(dest => dest.ProductVariantId, opt => opt.MapFrom(src => src.ProductVariantId))
+            .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => MappingHelpers.GetProductVariantThumbnailImageUrl(src.ProductVariant)))
+            .ForMember(dest => dest.ProductVariantOptionName, opt => opt.MapFrom(src => MappingHelpers.GetProductVariantOptionValuesString(src.ProductVariant)))
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductVariant.Product.Name))
+            .ForMember(dest => dest.RecommendedRetailPrice, opt => opt.MapFrom(src => src.ProductVariant.RecommendedRetailPrice))
             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
 

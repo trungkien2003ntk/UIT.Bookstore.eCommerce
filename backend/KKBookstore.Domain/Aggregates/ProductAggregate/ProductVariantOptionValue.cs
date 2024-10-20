@@ -3,25 +3,25 @@ using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Domain.Aggregates.ProductAggregate;
 
-public class SkuOptionValue : BaseAuditableEntity, ISoftDelete
+public class ProductVariantOptionValue : BaseAuditableEntity, ISoftDelete
 {
-    public SkuOptionValue()
+    public ProductVariantOptionValue()
     {
 
     }
-    private SkuOptionValue(
-        int skuId,
+    private ProductVariantOptionValue(
+        int productVariantId,
         int optionId,
         int optionValueId
     ) : base()
     {
-        SkuId = skuId;
+        ProductVariantId = productVariantId;
         OptionId = optionId;
         OptionValueId = optionValueId;
         IsDeleted = false;
     }
 
-    public int SkuId { get; set; }
+    public int ProductVariantId { get; set; }
     public int OptionId { get; set; }
     public int OptionValueId { get; set; }
     public bool IsDeleted { get; set; }
@@ -29,15 +29,15 @@ public class SkuOptionValue : BaseAuditableEntity, ISoftDelete
 
     // navigation properties
     public ProductOption Option { get; set; }
-    public Sku Sku { get; set; }
+    public ProductVariant ProductVariant { get; set; }
     public ProductOptionValue OptionValue { get; set; }
 
-    public static Result<SkuOptionValue> Create(
-        int skuId,
+    public static Result<ProductVariantOptionValue> Create(
+        int productVariantId,
         int optionId,
         int optionValueId
     )
     {
-        return new SkuOptionValue(skuId, optionId, optionValueId);
+        return new ProductVariantOptionValue(productVariantId, optionId, optionValueId);
     }
 }

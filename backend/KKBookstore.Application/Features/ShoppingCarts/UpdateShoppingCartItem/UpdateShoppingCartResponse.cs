@@ -12,9 +12,9 @@ public record UpdateShoppingCartResponse
     public sealed record ShoppingCartItemDto : BaseDto
     {
         public int ProductId { get; init; }
-        public int SkuId { get; init; }
+        public int ProductVariantId { get; init; }
         public bool IsSelected { get; init; }
-        public string SkuName { get; init; }
+        public string ProductVariantName { get; init; }
         public string ProductName { get; init; }
         public int ProductTypeId { get; init; }
         public decimal UnitPrice { get; init; }
@@ -28,14 +28,14 @@ public record UpdateShoppingCartResponse
         public string ImageUrl { get; init; }
         public string Description { get; init; }
         public DateTimeOffset CreatedWhen { get; init; }
-        public List<SkuForCartDto> SkuVariations { get; init; }
+        public List<ProductVariantForCartDto> ProductVariantVariations { get; init; }
         public List<ProductOptionAttributeDto> ProductOptions { get; init; }
 
-        public sealed record SkuForCartDto : BaseDto
+        public sealed record ProductVariantForCartDto : BaseDto
         {
             public int ProductId { get; init; }
             public string SkuValue { get; init; }
-            public string SkuName { get; init; }
+            public string ProductVariantName { get; init; }
             public decimal UnitPrice { get; init; }
             public decimal RecommendedRetailPrice { get; init; }
             public decimal BasicDiscountRate { get; init; }
@@ -46,7 +46,7 @@ public record UpdateShoppingCartResponse
             public List<int> OptionIndex { get; init; } = [];
 
 
-            public SkuForCartDto PopulateIndex(List<ProductOptionAttributeDto> productOptions)
+            public ProductVariantForCartDto PopulateIndex(List<ProductOptionAttributeDto> productOptions)
             {
                 Console.WriteLine(OptionNames);
                 if (OptionNames.Count == 0)
@@ -54,12 +54,12 @@ public record UpdateShoppingCartResponse
                     return this;
                 }
 
-                var skuOptionValues = SkuName.Split(',').Select(sv => sv.Trim()).ToList();
+                var productVariantOptionValues = ProductVariantName.Split(',').Select(sv => sv.Trim()).ToList();
                 var optionValueDictionary = new Dictionary<string, string>();
 
-                for (int i = 0; i < skuOptionValues.Count; i++)
+                for (int i = 0; i < productVariantOptionValues.Count; i++)
                 {
-                    optionValueDictionary.Add(OptionNames[i], skuOptionValues[i]);
+                    optionValueDictionary.Add(OptionNames[i], productVariantOptionValues[i]);
                 }
 
                 foreach (var (optionName, value) in optionValueDictionary)

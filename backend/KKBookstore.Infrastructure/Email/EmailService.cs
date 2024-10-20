@@ -15,10 +15,10 @@ public class EmailService(
     BlobServiceClient blobServiceClient
 ) : IEmailService
 {
-    private readonly string SenderName = "KKBookstore";
-    private readonly string ReceiverName = "Customer";
-    private readonly string _queueName = "mail-trigger";
-    private readonly string _blobContainerName = "mail-body";
+    private const string _SENDER_NAME = "KKBookstore";
+    private const string _RECEIVER_NAME = "Customer";
+    private const string _QUEUE_NAME = "email-general-info";
+    private const string _BLOB_CONTAINER_NAME = "email-body";
 
     private readonly EmailConfiguration _emailConfig = emailConfiguration.Value;
     private readonly QueueServiceClient _queueServiceClient = queueServiceClient;
@@ -121,8 +121,8 @@ public class EmailService(
     private MimeMessage CreateEmailMessage(string subject, string body, string toEmail, Dictionary<string, string>? placeholders = null)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress(SenderName, _emailConfig.From));
-        message.To.Add(new MailboxAddress(ReceiverName, toEmail));
+        message.From.Add(new MailboxAddress(_SENDER_NAME, _emailConfig.From));
+        message.To.Add(new MailboxAddress(_RECEIVER_NAME, toEmail));
         message.Subject = subject;
 
 
@@ -139,19 +139,16 @@ public class EmailService(
         return message;
     }
 
-    private async Task Send(MimeMessage mailMessage)
+    private async Task Send(MimeMessage emailMessage)
     {
-        var messageData = SerializeMimeMessage(mailMessage);
+        var emailQueueClient = await GetQueueClient(_QUEUE_NAME);
 
-        var queueClient = _queueServiceClient.GetQueueClient(_queueName);
-
-        string blobUri;
-        var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_blobContainerName);
+        var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_BLOB_CONTAINER_NAME);
         var blobName = "mail-body-" + Guid.NewGuid().ToString();
 
         using (var stream = new MemoryStream())
         {
-            mailMessage.WriteTo(stream);
+            emailMessage.WriteTo(stream);
 
             var blobClient = blobContainerClient.GetBlobClient(blobName);
             stream.Position = 0;
@@ -162,7 +159,19 @@ public class EmailService(
         var blobNameBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(blobName));
 
 
-        await queueClient.SendMessageAsync(blobNameBase64);
+        await emailQueueClient.SendMessageAsync(blobNameBase64);
+    }
+
+    private async Task<QueueClient> GetQueueClient(string queueName)
+    {
+        var queueClient = _queueServiceClient.GetQueueClient(queueName);
+
+        if (!queueClient.Exists())
+        {
+            await queueClient.CreateAsync();
+        }
+
+        return queueClient;
     }
 
     private static string SerializeMimeMessage(MimeMessage mailMessage)

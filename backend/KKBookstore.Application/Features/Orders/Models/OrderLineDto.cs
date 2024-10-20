@@ -6,8 +6,8 @@ public record OrderLineDto : BaseDto
 {
     // move all from constructor down here as properties
     public int OrderId { get; init; }
-    public int SkuId { get; init; }
-    public string SkuOptionName { get; init; }
+    public int ProductVariantId { get; init; }
+    public string ProductVariantOptionName { get; init; }
     public string ProductName { get; init; }
     public string ThumbnailUrl { get; init; }
     public decimal RecommendedRetailPrice { get; init; }

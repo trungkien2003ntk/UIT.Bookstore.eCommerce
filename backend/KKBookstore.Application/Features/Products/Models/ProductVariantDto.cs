@@ -2,7 +2,7 @@
 
 namespace KKBookstore.Application.Features.Products.Models;
 
-public record SkuDto : BaseDto
+public record ProductVariantDto : BaseDto
 {
     public string SkuValue { get; set; }
     public decimal UnitPrice { get; set; }

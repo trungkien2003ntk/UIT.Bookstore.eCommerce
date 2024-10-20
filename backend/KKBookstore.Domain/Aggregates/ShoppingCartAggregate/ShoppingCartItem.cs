@@ -10,34 +10,34 @@ public class ShoppingCartItem : BaseAuditableEntity
     public ShoppingCartItem() { }
     private ShoppingCartItem(
         int customerId,
-        int skuId,
+        int productVariantId,
         int quantity
     )
     {
         CustomerId = customerId;
-        SkuId = skuId;
+        ProductVariantId = productVariantId;
         Quantity = quantity;
     }
 
     public int CustomerId { get; set; }
-    public int SkuId { get; set; }
+    public int ProductVariantId { get; set; }
     public int Quantity { get; set; }
     [NotMapped]
     public bool IsSelected { get; set; }
     [NotMapped]
-    public decimal TotalUnitPrice => Sku.UnitPrice * Quantity;
+    public decimal TotalUnitPrice => ProductVariant.UnitPrice * Quantity;
     [NotMapped]
-    public decimal TotalRecommendedRetailPrice => Sku.RecommendedRetailPrice * Quantity;
+    public decimal TotalRecommendedRetailPrice => ProductVariant.RecommendedRetailPrice * Quantity;
     [NotMapped]
     public decimal TotalSavedAmount => TotalRecommendedRetailPrice - TotalUnitPrice;
 
     // navigation properties
-    public Sku Sku { get; set; }
+    public ProductVariant ProductVariant { get; set; }
     public User Customer { get; set; }
 
     public static Result<ShoppingCartItem> Create(
         int customerId,
-        int skuId,
+        int productVariantId,
         int quantity
     )
     {
@@ -47,7 +47,7 @@ public class ShoppingCartItem : BaseAuditableEntity
         }
 
 
-        return new ShoppingCartItem(customerId, skuId, quantity);
+        return new ShoppingCartItem(customerId, productVariantId, quantity);
     }
 
     public Result UpdateQuantity(int newQuantity)

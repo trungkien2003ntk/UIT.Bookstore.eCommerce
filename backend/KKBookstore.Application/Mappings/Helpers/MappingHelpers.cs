@@ -4,20 +4,20 @@ namespace KKBookstore.Application.Mappings.Helpers;
 
 internal static class MappingHelpers
 {
-    internal static string GetSkuThumbnailImageUrl(Sku src)
+    internal static string GetProductVariantThumbnailImageUrl(ProductVariant src)
     {
-        if (src.SkuOptionValues is null || src.SkuOptionValues.Count == 0)
+        if (src.ProductVariantOptionValues is null || src.ProductVariantOptionValues.Count == 0)
             return string.Empty;
 
-        var thumbnailImageUrl = src.SkuOptionValues
+        var thumbnailImageUrl = src.ProductVariantOptionValues
             .FirstOrDefault(sov => sov.Option.IsOptionWithImage)?.OptionValue?.ThumbnailImageUrl;
 
         return thumbnailImageUrl ?? "";
     }
 
-    internal static string GetSkuLargeImageUrl(Sku src)
+    internal static string GetProductVariantLargeImageUrl(ProductVariant src)
     {
-        var thumbnailImageUrl = src.SkuOptionValues
+        var thumbnailImageUrl = src.ProductVariantOptionValues
             .FirstOrDefault(sov => sov.Option.IsOptionWithImage)?.OptionValue?.LargeImageUrl;
 
         return thumbnailImageUrl ?? "";
@@ -28,42 +28,42 @@ internal static class MappingHelpers
         var firstProductImage = src.ProductImages.FirstOrDefault();
         return firstProductImage != null
             ? firstProductImage.ThumbnailImageUrl
-            : GetSkuThumbnailImageUrl(src.Skus.First());
+            : GetProductVariantThumbnailImageUrl(src.ProductVariants.First());
     }
 
-    public static string GetSkuOptionValuesString(Sku sku)
+    public static string GetProductVariantOptionValuesString(ProductVariant productVariant)
     {
-        if (sku.SkuOptionValues is null || sku.SkuOptionValues.Count == 0)
+        if (productVariant.ProductVariantOptionValues is null || productVariant.ProductVariantOptionValues.Count == 0)
         {
             return string.Empty;
         }
 
-        return string.Join(" / ", sku.SkuOptionValues.Select(sov => sov.OptionValue.Value));
+        return string.Join(" / ", productVariant.ProductVariantOptionValues.Select(sov => sov.OptionValue.Value));
     }
 
     public static List<string> GetOptionValuesWithImages(ProductOption productOption)
     {
-        var optionValueImageMap = productOption.Product.Skus
-            .SelectMany(sku => sku.SkuOptionValues, (sku, sov) => new { sku, sov })
+        var optionValueImageMap = productOption.Product.ProductVariants
+            .SelectMany(pv => pv.ProductVariantOptionValues, (pv, sov) => new { pv=pv, sov })
             .Where(x => x.sov.OptionId == productOption.Id)
             .GroupBy(x => x.sov.OptionValueId)
-            .ToDictionary(g => g.Key, g => g.First().sku);
+            .ToDictionary(g => g.Key, g => g.First().pv);
 
         return productOption.OptionValues.Select(ov =>
         {
-            if (optionValueImageMap.TryGetValue(ov.Id, out var sku))
+            if (optionValueImageMap.TryGetValue(ov.Id, out var productVariant))
             {
-                return GetSkuThumbnailImageUrl(sku);
+                return GetProductVariantThumbnailImageUrl(productVariant);
             }
             return "";
         }).ToList();
     }
 
-    public static List<int> GetOptionIndices(Sku sku, Product product)
+    public static List<int> GetOptionIndices(ProductVariant productVariant, Product product)
     {
         var optionIndices = new List<int>();
 
-        foreach (var sov in sku.SkuOptionValues)
+        foreach (var sov in productVariant.ProductVariantOptionValues)
         {
             var option = product.Options.FirstOrDefault(o => o.Id == sov.OptionId);
             if (option != null)

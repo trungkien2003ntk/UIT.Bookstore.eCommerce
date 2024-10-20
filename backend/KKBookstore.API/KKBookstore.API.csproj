@@ -46,10 +46,6 @@
 		<Optimize>true</Optimize>
 		<EnvironmentName>Staging</EnvironmentName>
 	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(Configuration)' != '' and '$(Configuration)' != '' ">
-		<EnvironmentName>Production</EnvironmentName>
-	</PropertyGroup>
 	
 	<ItemGroup>
 		<Content Remove="appsettings.json" />

@@ -21,8 +21,8 @@ public class GetTrendyProductListQueryHandler(
         var numberOfTrendyProducts = 12;
 
         var boughtProductIds = await dbContext.OrderLines
-            .Include(ol => ol.Sku)
-            .Select(ol => ol.Sku.ProductId)
+            .Include(ol => ol.ProductVariant)
+            .Select(ol => ol.ProductVariant.ProductId)
             .ToListAsync(cancellationToken);
 
         var topMostPurchasedProductIds = boughtProductIds
@@ -37,7 +37,7 @@ public class GetTrendyProductListQueryHandler(
             .Include(p => p.ProductImages)
             .Include(p => p.ProductType)
             .Include(p => p.Ratings)
-            .Include(p => p.Skus)
+            .Include(p => p.ProductVariants)
             .Select(p =>
                 new ProductSummary
                 {
@@ -47,10 +47,10 @@ public class GetTrendyProductListQueryHandler(
                     ProductTypeName = p.ProductType.DisplayName,
                     IsBook = p.IsBook,
                     SoldCount = dbContext.OrderLines
-                        .Include(ol => ol.Sku)
-                        .Count(ol => ol.Sku.ProductId == p.Id),
-                    MinUnitPrice = p.Skus.Min(s => s.UnitPrice),
-                    MinRecommendedRetailPrice = p.Skus.Min(s => s.RecommendedRetailPrice),
+                        .Include(ol => ol.ProductVariant)
+                        .Count(ol => ol.ProductVariant.ProductId == p.Id),
+                    MinUnitPrice = p.ProductVariants.Min(s => s.UnitPrice),
+                    MinRecommendedRetailPrice = p.ProductVariants.Min(s => s.RecommendedRetailPrice),
                     AverageRating = Convert.ToDecimal(p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0),
                     IsActive = p.IsActive,
                     ThumbnailImageUrl = p.GetFirstThumbnailImageUrl()

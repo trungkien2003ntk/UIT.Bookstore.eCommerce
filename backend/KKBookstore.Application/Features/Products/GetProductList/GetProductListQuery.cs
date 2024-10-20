@@ -49,7 +49,7 @@ public class GetProductListQueryHandler(
 
         query = result.Value
             .Include(p => p.ProductImages)
-            .Include(p => p.Skus)
+            .Include(p => p.ProductVariants)
             .Include(p => p.ProductType)
             .Include(p => p.Ratings);
 
@@ -90,12 +90,12 @@ public class GetProductListQueryHandler(
                 {
                     var productInDb = query
                         .Where(p => p.Id == product.Id)
-                        .Include(p => p.Skus)
-                            .ThenInclude(s => s.SkuOptionValues)
+                        .Include(p => p.ProductVariants)
+                            .ThenInclude(s => s.ProductVariantOptionValues)
                                 .ThenInclude(s => s.OptionValue)
                         .FirstOrDefault();
 
-                    product.ThumbnailImageUrl = productInDb!.Skus.FirstOrDefault(s => !string.IsNullOrEmpty(s.GetThumbnailImageUrl()))?.GetThumbnailImageUrl();
+                    product.ThumbnailImageUrl = productInDb!.ProductVariants.FirstOrDefault(s => !string.IsNullOrEmpty(s.GetThumbnailImageUrl()))?.GetThumbnailImageUrl();
                 }
                 catch
                 {
@@ -134,7 +134,7 @@ public class GetProductListQueryHandler(
     {
         if (priceRange != null)
         {
-            query = query.Where(p => p.Skus.Any(s => s.UnitPrice >= priceRange.MinPrice && s.UnitPrice <= priceRange.MaxPrice));
+            query = query.Where(p => p.ProductVariants.Any(s => s.UnitPrice >= priceRange.MinPrice && s.UnitPrice <= priceRange.MaxPrice));
         }
 
         return query;

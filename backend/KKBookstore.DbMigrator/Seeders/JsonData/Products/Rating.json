@@ -4,7 +4,7 @@
     "Comment": "Good Product!",
     "RatingValue": 5,
     "UserId": 4,
-    "SkuId": 1,
+    "ProductVariantId": 1,
     "ReportedCount": 0,
     "Response": "Thank you for your compliment!",
     "Status": "Approved"
@@ -14,7 +14,7 @@
     "Comment": "Amazing thing, but need some upgrades",
     "RatingValue": 4,
     "UserId": 5,
-    "SkuId": 1,
+    "ProductVariantId": 1,
     "ReportedCount": 0,
     "Response": "Thank you for your compliment!",
     "Status": "Approved"
@@ -24,7 +24,7 @@
     "Comment": "Good Product!",
     "RatingValue": 5,
     "UserId": 4,
-    "SkuId": 2,
+    "ProductVariantId": 2,
     "ReportedCount": 0,
     "Response": "Thank you for your compliment!",
     "Status": "Approved"
@@ -34,7 +34,7 @@
     "Comment": "Hơi tệ một chút",
     "RatingValue": 1,
     "UserId": 5,
-    "SkuId": 3,
+    "ProductVariantId": 3,
     "ReportedCount": 0,
     "Response": "Thank you for your compliment!",
     "Status": "Approved"
@@ -44,7 +44,7 @@
     "Comment": "Good Product!",
     "RatingValue": 5,
     "UserId": 4,
-    "SkuId": 4,
+    "ProductVariantId": 4,
     "ReportedCount": 0,
     "Response": "Thank you for your compliment!",
     "Status": "Approved"

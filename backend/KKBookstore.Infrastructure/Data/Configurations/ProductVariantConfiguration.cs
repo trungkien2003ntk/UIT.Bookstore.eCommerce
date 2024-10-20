@@ -6,15 +6,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
-internal class SkuConfigurations : IEntityTypeConfiguration<Sku>
+internal class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVariant>
 {
-    public void Configure(EntityTypeBuilder<Sku> builder)
+    public void Configure(EntityTypeBuilder<ProductVariant> builder)
     {
-        var converter = new EnumToStringConverter<SkuStatus>();
+        var converter = new EnumToStringConverter<InventoryStatus>();
+
+        builder.ToTable($"{nameof(ProductVariant)}s");
 
         // Property Config
         builder.Property(t => t.Id)
-            .HasColumnName($"{nameof(Sku)}Id");
+            .HasColumnName($"{nameof(ProductVariant)}Id");
 
         builder.Property(t => t.ProductId)
             .IsRequired();
@@ -72,7 +74,7 @@ internal class SkuConfigurations : IEntityTypeConfiguration<Sku>
         // Foreign Key
 
         builder.HasOne(t => t.Product)
-            .WithMany(t => t.Skus)
+            .WithMany(t => t.ProductVariants)
             .HasForeignKey(t => t.ProductId);
 
 

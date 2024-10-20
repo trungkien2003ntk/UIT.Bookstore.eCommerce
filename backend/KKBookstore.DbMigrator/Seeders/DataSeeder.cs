@@ -37,8 +37,8 @@ internal class DataSeeder
     private readonly string ProductTypeAttributeValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeValue.json";
     private readonly string RatingJsonPath = $"{BASE_PATH}/Products/Rating.json";
     private readonly string RatingLikeJsonPath = $"{BASE_PATH}/Products/RatingLike.json";
-    private readonly string SkuJsonPath = $"{BASE_PATH}/Products/Sku.json";
-    private readonly string SkuOptionValueJsonPath = $"{BASE_PATH}/Products/SkuOptionValue.json";
+    private readonly string ProductVariantJsonPath = $"{BASE_PATH}/Products/ProductVariant.json";
+    private readonly string ProductVariantOptionValueJsonPath = $"{BASE_PATH}/Products/ProductVariantOptionValue.json";
     private readonly string UnitMeasureJsonPath = $"{BASE_PATH}/Products/UnitMeasure.json";
 
     // Order paths
@@ -71,11 +71,11 @@ internal class DataSeeder
     private readonly List<ProductImage> _productImages = [];
     private readonly List<Rating> _ratings = [];
     private readonly List<RatingLike> _ratingLikes = [];
-    private readonly List<Sku> _skus = [];
+    private readonly List<ProductVariant> _productVariants = [];
     private readonly List<BookAuthor> _bookAuthors = [];
     private readonly List<ProductOption> _productOptions = [];
     private readonly List<ProductOptionValue> _productOptionValues = [];
-    private readonly List<SkuOptionValue> _skuOptionValues = [];
+    private readonly List<ProductVariantOptionValue> _productVariantOptionValues = [];
 
     // Order related data
     private readonly List<DeliveryMethod> _deliveryMethods = [];
@@ -148,11 +148,11 @@ internal class DataSeeder
         await SeedProducts();
         await SeedProductTypeAttributeProductValues();
         await SeedProductImages();
-        await SeedSkus();
+        await SeedProductVariants();
         await SeedBookAuthors();
         await SeedOptions();
         await SeedOptionValues();
-        await SeedSkuOptionValues();
+        await SeedProductVariantOptionValues();
         await SeedRatings();
     }
 
@@ -451,35 +451,35 @@ internal class DataSeeder
         await _dbContext.SaveChangesWithIdentityInsertAsync<ProductImage>();
     }
 
-    private async Task SeedSkus()
+    private async Task SeedProductVariants()
     {
-        if (_dbContext.Skus.Any())
+        if (_dbContext.ProductVariants.Any())
         {
             return;
         }
 
-        var skuJson = File.ReadAllText(SkuJsonPath, Encoding.UTF8);
-        var skus = JsonSerializer.Deserialize<List<Sku>>(skuJson, enumOption);
-        AddAudit(skus);
+        var productVariantJson = File.ReadAllText(ProductVariantJsonPath, Encoding.UTF8);
+        var productVariants = JsonSerializer.Deserialize<List<ProductVariant>>(productVariantJson, enumOption);
+        AddAudit(productVariants);
 
-        _skus.AddRange(skus);
+        _productVariants.AddRange(productVariants);
 
-        _dbContext.AddRange(_skus);
+        _dbContext.AddRange(_productVariants);
 
-        foreach (var sku in _skus)
+        foreach (var variant in _productVariants)
         {
-            sku.SkuValue = new SkuValue
+            variant.SkuValue = new SkuValue
             {
-                Value = $"SKU{sku.Id:D5}"
+                Value = $"SKU{variant.Id:D5}"
             };
 
-            switch (sku.Id)
+            switch (variant.Id)
             {
                 case 1:
-                    sku.Dimension = new Dimension { Height = 14m, Width = 20.5m, Length = 0.3m };
+                    variant.Dimension = new Dimension { Height = 14m, Width = 20.5m, Length = 0.3m };
                     break;
                 case 2:
-                    sku.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 0.5m };
+                    variant.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 0.5m };
                     break;
                 case 3:
                 case 4:
@@ -487,32 +487,32 @@ internal class DataSeeder
                 case 6:
                 case 7:
                 case 8:
-                    sku.Dimension = new Dimension { Height = 22.0m, Width = 12.0m, Length = 0.5m };
+                    variant.Dimension = new Dimension { Height = 22.0m, Width = 12.0m, Length = 0.5m };
                     break;
                 case 9:
-                    sku.Dimension = new Dimension { Height = 17.0m, Width = 9.0m, Length = 8m };
+                    variant.Dimension = new Dimension { Height = 17.0m, Width = 9.0m, Length = 8m };
                     break;
                 case 10:
-                    sku.Dimension = new Dimension { Height = 16.0m, Width = 8.0m, Length = 7m };
+                    variant.Dimension = new Dimension { Height = 16.0m, Width = 8.0m, Length = 7m };
                     break;
                 case 11:
-                    sku.Dimension = new Dimension { Height = 12.0m, Width = 8.0m, Length = 8m };
+                    variant.Dimension = new Dimension { Height = 12.0m, Width = 8.0m, Length = 8m };
                     break;
                 case 12:
-                    sku.Dimension = new Dimension { Height = 9.0m, Width = 9.0m, Length = 8m };
+                    variant.Dimension = new Dimension { Height = 9.0m, Width = 9.0m, Length = 8m };
                     break;
                 case 13:
-                    sku.Dimension = new Dimension { Height = 1.0m, Width = 9.0m, Length = 3.5m };
+                    variant.Dimension = new Dimension { Height = 1.0m, Width = 9.0m, Length = 3.5m };
                     break;
                 case 14:
-                    sku.Dimension = new Dimension { Height = 7.0m, Width = 7.0m, Length = 1m };
+                    variant.Dimension = new Dimension { Height = 7.0m, Width = 7.0m, Length = 1m };
                     break;
                 case 15:
                 case 16:
                 case 17:
                 case 18:
                 case 19:
-                    sku.Dimension = new Dimension { Height = 20.5m, Width = 18.5m, Length = 0.4m };
+                    variant.Dimension = new Dimension { Height = 20.5m, Width = 18.5m, Length = 0.4m };
                     break;
                 case 20:
                 case 21:
@@ -520,53 +520,53 @@ internal class DataSeeder
                 case 23:
                 case 24:
                 case 25:
-                    sku.Dimension = new Dimension { Height = 17.6m, Width = 11.3m, Length = 1m };
+                    variant.Dimension = new Dimension { Height = 17.6m, Width = 11.3m, Length = 1m };
                     break;
                 case 26:
-                    sku.Dimension = new Dimension { Height = 24.0m, Width = 17.0m, Length = 6.0m };
+                    variant.Dimension = new Dimension { Height = 24.0m, Width = 17.0m, Length = 6.0m };
                     break;
                 case 27:
-                    sku.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 2.1m };
+                    variant.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 2.1m };
                     break;
                 case 28:
-                    sku.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 0.5m };
+                    variant.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 0.5m };
                     break;
                 case 29:
-                    sku.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 1.4m };
+                    variant.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 1.4m };
                     break;
                 case 30:
-                    sku.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 1.4m };
+                    variant.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 1.4m };
                     break;
                 case 31:
-                    sku.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 1.6m };
+                    variant.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 1.6m };
                     break;
                 case 32:
-                    sku.Dimension = new Dimension { Height = 20.5m, Width = 14m, Length = 1m };
+                    variant.Dimension = new Dimension { Height = 20.5m, Width = 14m, Length = 1m };
                     break;
                 case 33:
-                    sku.Dimension = new Dimension { Height = 20.5m, Width = 13.0m, Length = 2.5m };
+                    variant.Dimension = new Dimension { Height = 20.5m, Width = 13.0m, Length = 2.5m };
                     break;
                 case 34:
                 case 35:
                 case 36:
-                    sku.Dimension = new Dimension { Height = 10.5m, Width = 5m, Length = 1.5m };
+                    variant.Dimension = new Dimension { Height = 10.5m, Width = 5m, Length = 1.5m };
                     break;
                 case 37:
-                    sku.Dimension = new Dimension { Height = 5m, Width = 5m, Length = 2m };
+                    variant.Dimension = new Dimension { Height = 5m, Width = 5m, Length = 2m };
                     break;
                 case 38:
-                    sku.Dimension = new Dimension { Height = 15m, Width = 2m, Length = 2m };
+                    variant.Dimension = new Dimension { Height = 15m, Width = 2m, Length = 2m };
                     break;
                 case 39:
-                    sku.Dimension = new Dimension { Height = 6.5m, Width = 6.5m, Length = 2m };
+                    variant.Dimension = new Dimension { Height = 6.5m, Width = 6.5m, Length = 2m };
                     break;
                 case 40:
-                    sku.Dimension = new Dimension { Height = 8m, Width = 8m, Length = 8m };
+                    variant.Dimension = new Dimension { Height = 8m, Width = 8m, Length = 8m };
                     break;
             }
         }
 
-        await _dbContext.SaveChangesWithIdentityInsertAsync<Sku>();
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductVariant>();
     }
 
     private async Task SeedBookAuthors()
@@ -623,22 +623,22 @@ internal class DataSeeder
         await _dbContext.SaveChangesWithIdentityInsertAsync<ProductOptionValue>();
     }
 
-    private async Task SeedSkuOptionValues()
+    private async Task SeedProductVariantOptionValues()
     {
-        if (_dbContext.SkuOptionValues.Any())
+        if (_dbContext.ProductVariantOptionValues.Any())
         {
             return;
         }
 
-        var skuOptionValueJson = File.ReadAllText(SkuOptionValueJsonPath, Encoding.UTF8);
-        var skuOptionValues = JsonSerializer.Deserialize<List<SkuOptionValue>>(skuOptionValueJson);
+        var productVariantOptionValueJson = File.ReadAllText(ProductVariantOptionValueJsonPath, Encoding.UTF8);
+        var productVariantOptionValues = JsonSerializer.Deserialize<List<ProductVariantOptionValue>>(productVariantOptionValueJson);
 
-        AddAudit(skuOptionValues);
+        AddAudit(productVariantOptionValues);
 
-        _skuOptionValues.AddRange(skuOptionValues);
+        _productVariantOptionValues.AddRange(productVariantOptionValues);
 
-        _dbContext.AddRange(_skuOptionValues);
-        await _dbContext.SaveChangesWithIdentityInsertAsync<SkuOptionValue>();
+        _dbContext.AddRange(_productVariantOptionValues);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ProductVariantOptionValue>();
     }
 
     private async Task SeedRatings()

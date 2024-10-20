@@ -75,12 +75,12 @@ public class ConfirmCheckoutHandler(
 
             Dimension overallDimension = new()
             {
-                Height = checkoutItems.Max(ci => ci.Sku.Dimension.Height),
-                Width = checkoutItems.Sum(ci => ci.Sku.Dimension.Width),
-                Length = checkoutItems.Max(ci => ci.Sku.Dimension.Length)
+                Height = checkoutItems.Max(ci => ci.ProductVariant.Dimension.Height),
+                Width = checkoutItems.Sum(ci => ci.ProductVariant.Dimension.Width),
+                Length = checkoutItems.Max(ci => ci.ProductVariant.Dimension.Length)
             };
 
-            var totalWeight = checkoutItems.Sum(ci => ci.Sku.Weight);
+            var totalWeight = checkoutItems.Sum(ci => ci.ProductVariant.Weight);
 
             var shippingFeeRequest = new ShippingFeeRequest
             {
@@ -160,17 +160,17 @@ public class ConfirmCheckoutHandler(
         {
             Items = checkoutItems.Select(i =>
             {
-                var product = productsInCart.First(p => p.Id == i.Sku.ProductId);
+                var product = productsInCart.First(p => p.Id == i.ProductVariant.ProductId);
 
                 string thumbnailImageUrl;
-                if (i.Sku.SkuOptionValues.Count == 0)
+                if (i.ProductVariant.ProductVariantOptionValues.Count == 0)
                 {
                     // load sku's Product and ProductImages
                     thumbnailImageUrl = product.GetFirstThumbnailImageUrl();
                 }
                 else
                 {
-                    thumbnailImageUrl = i.Sku.GetThumbnailImageUrl();
+                    thumbnailImageUrl = i.ProductVariant.GetThumbnailImageUrl();
                 }
 
                 return new CheckoutItemDto()
@@ -178,11 +178,11 @@ public class ConfirmCheckoutHandler(
                     Id = i.Id,
                     ProductId = product.Id,
                     ProductName = product.Name,
-                    SkuId = i.SkuId,
-                    SkuName = i.Sku.SkuName,
+                    ProductVariantId = i.ProductVariantId,
+                    ProductVariantName = i.ProductVariant.VariantName,
                     Quantity = i.Quantity,
                     ImageUrl = thumbnailImageUrl,
-                    UnitPrice = i.Sku.UnitPrice,
+                    UnitPrice = i.ProductVariant.UnitPrice,
                     TotalPrice = i.TotalUnitPrice,
                 };
             }).ToList(),
@@ -233,24 +233,24 @@ public class ConfirmCheckoutHandler(
     {
         return await _dbContext.ShoppingCartItems
             .Where(sci => itemIds.Contains(sci.Id) && sci.CustomerId == userId)
-            .Include(sci => sci.Sku)
-                .ThenInclude(sku => sku.SkuOptionValues)
+            .Include(sci => sci.ProductVariant)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)
                     .ThenInclude(sov => sov.OptionValue)
-            .Include(sci => sci.Sku)
-                .ThenInclude(sku => sku.Dimension)
+            .Include(sci => sci.ProductVariant)
+                .ThenInclude(pv => pv.Dimension)
             .ToListAsync(cancellationToken);
     }
 
     private async Task<List<Product>> ExtractDistinctProductInCart(List<ShoppingCartItem> items)
     {
         // todo: use projection to reduce the amount of data fetched, increase performance
-        var productIds = items.Select(ci => ci.Sku.ProductId).Distinct().ToList();
+        var productIds = items.Select(ci => ci.ProductVariant.ProductId).Distinct().ToList();
         var neededProducts = await _dbContext.Products
             .Where(p => productIds.Contains(p.Id))
             .Include(p => p.Options)                        // these are for 
                 .ThenInclude(o => o.OptionValues)           // sku variations
-            .Include(p => p.Skus)
-                .ThenInclude(s => s.SkuOptionValues)        // these are for
+            .Include(p => p.ProductVariants)
+                .ThenInclude(s => s.ProductVariantOptionValues)        // these are for
                     .ThenInclude(sov => sov.OptionValue)    // sku thumbnail image
                         .ThenInclude(ov => ov.Option)       // this is for SkuInCart option names
             .Include(p => p.ProductImages)

@@ -1,6 +1,6 @@
 ﻿namespace KKBookstore.Domain.Aggregates.ProductAggregate;
 
-public enum SkuStatus
+public enum InventoryStatus
 {
     InStock,
     OutOfStock

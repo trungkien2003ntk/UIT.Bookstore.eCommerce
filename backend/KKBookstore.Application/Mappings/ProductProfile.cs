@@ -13,7 +13,7 @@ public class ProductProfile : Profile
 {
     public ProductProfile()
     {
-        CreateMap<Product, GetProductResponse>()
+        CreateMap<Product, GetProductDetailResponse>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.ProductTypeId, opt => opt.MapFrom(src => src.ProductTypeId))
@@ -23,11 +23,11 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.ThumbnailImageUrls, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.ThumbnailImageUrl)))
             .ForMember(dest => dest.IsBook, opt => opt.MapFrom(src => src.IsBook))
             .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.BookAuthors.Select(ba => ba.Author).ToList()))
-            .ForMember(dest => dest.Skus, opt => opt.MapFrom(src => src.Skus));
+            .ForMember(dest => dest.ProductVariants, opt => opt.MapFrom(src => src.ProductVariants));
 
         CreateMap<Product, ProductSummary>()
-            .ForMember(dest => dest.MinUnitPrice, opt => opt.MapFrom(src => src.Skus.Count != 0 ? src.Skus.Min(s => s.UnitPrice) : 0))
-            .ForMember(dest => dest.MinRecommendedRetailPrice, opt => opt.MapFrom(src => src.Skus.Count != 0 ? src.Skus.Min(s => s.RecommendedRetailPrice) : 0))
+            .ForMember(dest => dest.MinUnitPrice, opt => opt.MapFrom(src => src.ProductVariants.Count != 0 ? src.ProductVariants.Min(s => s.UnitPrice) : 0))
+            .ForMember(dest => dest.MinRecommendedRetailPrice, opt => opt.MapFrom(src => src.ProductVariants.Count != 0 ? src.ProductVariants.Min(s => s.RecommendedRetailPrice) : 0))
             .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.Ratings.Count != 0 ? src.Ratings.Average(s => s.RatingValue) : 0))
             .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.DisplayName))
             .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetFirstThumbnailImageUrl()));
@@ -37,13 +37,13 @@ public class ProductProfile : Profile
 
         CreateMap<Author, AuthorDto>();
 
-        CreateMap<Sku, SkuDto>()
+        CreateMap<ProductVariant, ProductVariantDto>()
             .ForMember(dest => dest.SkuValue, opt => opt.MapFrom(src => src.SkuValue.Value))
             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Dimension.Height))
             .ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.Dimension.Width))
             .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Dimension.Length))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
-            .ForMember(dest => dest.OptionValues, opt => opt.MapFrom(src => src.SkuOptionValues.Select(sov => sov.OptionValue)))
+            .ForMember(dest => dest.OptionValues, opt => opt.MapFrom(src => src.ProductVariantOptionValues.Select(sov => sov.OptionValue)))
             .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetThumbnailImageUrl()))
             .ForMember(dest => dest.LargeImageUrl, opt => opt.MapFrom(src => src.GetLargeImageUrl()));
 
@@ -71,7 +71,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.Comment))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.User.LastName} {src.User.FirstName}"))
             .ForMember(dest => dest.UserAvatarUrl, opt => opt.MapFrom(src => src.User.ImageUrl))
-            .ForMember(dest => dest.SkuName, opt => opt.MapFrom(src => MappingHelpers.GetSkuOptionValuesString(src.Sku)))
+            .ForMember(dest => dest.ProductVariantName, opt => opt.MapFrom(src => MappingHelpers.GetProductVariantOptionValuesString(src.ProductVariant)))
             .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.Likes.Count))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
 

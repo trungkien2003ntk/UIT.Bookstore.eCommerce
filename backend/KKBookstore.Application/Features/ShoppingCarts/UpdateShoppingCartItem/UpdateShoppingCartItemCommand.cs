@@ -20,8 +20,8 @@ public record UpdateShoppingCartItemCommand : IRequest<Result<UpdateShoppingCart
     public sealed record UpdateShoppingCartItemBriefDto
     {
         public int Id { get; init; }
-        public int SkuId { get; init; }
-        public int OldSkuId { get; init; }
+        public int ProductVariantId { get; init; }
+        public int OldProductVariantId { get; init; }
         public int Quantity { get; init; }
         public int OldQuantity { get; init; }
     }
@@ -60,8 +60,8 @@ public class UpdateShoppingCartItemCommandHandler(
                 UpdateItemQuantities(shoppingCart, request.UpdateItems);
                 break;
 
-            case UpdateCartActionType.UpdateSku:
-                UpdateItemSkus(shoppingCart, request.UpdateItems);
+            case UpdateCartActionType.UpdateProductVariant:
+                UpdateItemProductVariants(shoppingCart, request.UpdateItems);
                 break;
 
             case UpdateCartActionType.Remove:
@@ -84,7 +84,7 @@ public class UpdateShoppingCartItemCommandHandler(
         var itemIdsToUpdate = request.UpdateItems.Select(x => x.Id).ToList();
         foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
         {
-            await _dbContext.Entry(item).Reference(nameof(Sku)).LoadAsync(cancellationToken);
+            await _dbContext.Entry(item).Reference(nameof(ProductVariant)).LoadAsync(cancellationToken);
         }
 
 
@@ -126,7 +126,7 @@ public class UpdateShoppingCartItemCommandHandler(
     {
         return await _dbContext.ShoppingCartItems
             .Where(sci => sci.CustomerId == userId)
-            .Include(sci => sci.Sku)
+            .Include(sci => sci.ProductVariant)
             .ToListAsync(cancellationToken);
     }
 
@@ -148,7 +148,7 @@ public class UpdateShoppingCartItemCommandHandler(
         return updatedItems;
     }
 
-    private List<ShoppingCartItem> UpdateItemSkus(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    private List<ShoppingCartItem> UpdateItemProductVariants(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
     {
         List<ShoppingCartItem> updatedItems = [];
         var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
@@ -157,7 +157,7 @@ public class UpdateShoppingCartItemCommandHandler(
         {
             var updateItem = listItems.First(ui => ui.Id == item.Id);
             // todo: add a check to old skuId
-            item.SkuId = updateItem.SkuId;
+            item.ProductVariantId = updateItem.ProductVariantId;
 
             updatedItems.Add(item);
         }

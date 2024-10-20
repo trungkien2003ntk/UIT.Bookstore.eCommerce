@@ -17,7 +17,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.Property(t => t.Id)
             .HasColumnName($"{nameof(Rating)}Id");
 
-        builder.Property(t => t.SkuId)
+        builder.Property(t => t.ProductVariantId)
             .IsRequired();
 
         builder.Property(t => t.RatingValue)
@@ -33,9 +33,9 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
             .IsRequired()
             .HasConversion(converter);
 
-        builder.HasOne(t => t.Sku)
+        builder.HasOne(t => t.ProductVariant)
             .WithMany(t => t.Ratings)
-            .HasForeignKey(t => t.SkuId);
+            .HasForeignKey(t => t.ProductVariantId);
 
         builder.HasOne(t => t.User)
             .WithMany()

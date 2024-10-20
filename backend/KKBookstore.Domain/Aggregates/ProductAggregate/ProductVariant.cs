@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.Domain.Aggregates.ProductAggregate;
 
-public class Sku : BaseAuditableEntity, ISoftDelete
+public class ProductVariant : BaseAuditableEntity, ISoftDelete
 {
-    protected Sku() : base() { }
+    protected ProductVariant() : base() { }
 
-    public Sku(int productId) : base()
+    public ProductVariant(int productId) : base()
     {
         ProductId = productId;
         Comment = "";
@@ -17,7 +17,7 @@ public class Sku : BaseAuditableEntity, ISoftDelete
         IsDeleted = false;
     }
 
-    private Sku(
+    private ProductVariant(
         SkuValue skuValue,
         int productId,
         decimal recommendedRetailPrice,
@@ -59,28 +59,28 @@ public class Sku : BaseAuditableEntity, ISoftDelete
     public Dimension Dimension { get; set; }
     public bool IsActive { get; set; }
     public string Tags { get; set; }
-    public SkuStatus Status { get; set; }
+    public InventoryStatus Status { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedWhen { get; set; }
 
     // navigation properties
     public Product Product { get; set; }
-    public ICollection<SkuOptionValue> SkuOptionValues { get; set; } = [];
+    public ICollection<ProductVariantOptionValue> ProductVariantOptionValues { get; set; } = [];
     public ICollection<Rating> Ratings { get; set; } = [];
 
     // calculated properties
-    public string SkuName => string.Join(", ", SkuOptionValues.Select(sov => sov.OptionValue.Value));
+    public string VariantName => string.Join(", ", ProductVariantOptionValues.Select(sov => sov.OptionValue.Value));
 
     public string? GetThumbnailImageUrl()
     {
-        var thumbnailImageUrl = SkuOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.ThumbnailImageUrl))?.OptionValue.ThumbnailImageUrl;
+        var thumbnailImageUrl = ProductVariantOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.ThumbnailImageUrl))?.OptionValue.ThumbnailImageUrl;
 
         return thumbnailImageUrl;
     }
 
     public string? GetLargeImageUrl()
     {
-        var largeImageUrl = SkuOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.LargeImageUrl))?.OptionValue.LargeImageUrl;
+        var largeImageUrl = ProductVariantOptionValues.FirstOrDefault(sov => !string.IsNullOrEmpty(sov.OptionValue.LargeImageUrl))?.OptionValue.LargeImageUrl;
 
         return largeImageUrl;
     }

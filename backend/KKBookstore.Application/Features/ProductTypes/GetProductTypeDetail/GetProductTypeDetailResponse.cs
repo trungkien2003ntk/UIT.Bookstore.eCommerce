@@ -1,10 +1,10 @@
 ﻿using KKBookstore.Application.Common.Models;
 
-namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
+namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail;
 
-public record GetProductTypeListResponse
-    {
-        public List<ProductTypeGeneralDto> ListItem { get; init; }
+public record GetProductTypeDetailResponse
+{
+    public List<ProductTypeGeneralDto> ListItem { get; init; }
 
     public record ProductTypeGeneralDto : BaseDto
     {
@@ -14,7 +14,6 @@ public record GetProductTypeListResponse
         public string DisplayName { get; set; }
         public string Description { get; set; }
         public int? ParentProductTypeId { get; set; }
-        public List<ProductTypeGeneralDto> ChildProductTypes { get; set; }
+        public List<ProductTypeGeneralDto>? ChildProductTypes { get; set; }
     }
-
 }

@@ -17,11 +17,11 @@ public class DefaultOrderProcessor(
     {
         return await _dbContext.ShoppingCartItems
             .Where(i => request.ItemIds.Contains(i.Id))
-            .Include(sci => sci.Sku)
+            .Include(sci => sci.ProductVariant)
                 .ThenInclude(s => s.Product)
                     .ThenInclude(p => p.ProductImages)
-            .Include(sci => sci.Sku)
-                .ThenInclude(s => s.SkuOptionValues)
+            .Include(sci => sci.ProductVariant)
+                .ThenInclude(s => s.ProductVariantOptionValues)
                     .ThenInclude(sov => sov.OptionValue)
             .AsSplitQuery()
             .ToListAsync(cancellationToken);
@@ -31,7 +31,7 @@ public class DefaultOrderProcessor(
     {
         foreach (var item in checkoutItems)
         {
-            if (item.Sku.Quantity < item.Quantity)
+            if (item.ProductVariant.Quantity < item.Quantity)
             {
                 return false;
             }
@@ -43,7 +43,7 @@ public class DefaultOrderProcessor(
     {
         foreach (var item in checkoutItems)
         {
-            item.Sku.Quantity -= item.Quantity;
+            item.ProductVariant.Quantity -= item.Quantity;
         }
     }
 
@@ -72,10 +72,10 @@ public class DefaultOrderProcessor(
         {
             order.OrderLines.Add(new OrderLine()
             {
-                SkuId = item.SkuId,
+                ProductVariantId = item.ProductVariantId,
                 Quantity = item.Quantity,
-                UnitPrice = item.Sku.UnitPrice,
-                Sku = item.Sku
+                UnitPrice = item.ProductVariant.UnitPrice,
+                ProductVariant = item.ProductVariant
             });
         }
 

@@ -25,12 +25,12 @@ public class GetProductRatingListQueryHandler(
     public async Task<Result<ProductRatingSummary>> Handle(GetProductRatingListQuery request, CancellationToken cancellationToken)
     {
         var query = dbContext.Ratings
-            .Include(r => r.Sku)
-                .ThenInclude(s => s.SkuOptionValues)
+            .Include(r => r.ProductVariant)
+                .ThenInclude(s => s.ProductVariantOptionValues)
                     .ThenInclude(sov => sov.OptionValue)
             .Include(r => r.User)
             .Include(r => r.Likes)
-            .Where(x => x.Sku.ProductId == request.ProductId)
+            .Where(x => x.ProductVariant.ProductId == request.ProductId)
             .AsQueryable();
 
         var queryResult = ApplyStatusFilter(query, request);

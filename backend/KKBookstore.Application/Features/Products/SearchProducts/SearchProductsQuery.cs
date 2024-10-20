@@ -38,7 +38,7 @@ public class SearchProductHandler(
             .Where(p => productIds.Contains(p.Id))
             .Include(p => p.ProductType)
             .Include(p => p.Ratings)
-            .Include(p => p.Skus)
+            .Include(p => p.ProductVariants)
             .Include(p => p.ProductImages)
             .Select(p => new ProductDto
             {
@@ -48,8 +48,8 @@ public class SearchProductHandler(
                 Name = p.Name,
                 IsActive = p.IsActive,
                 IsBook = p.IsBook,
-                MinRecommendedRetailPrice = p.Skus.Min(s => s.RecommendedRetailPrice),
-                MinUnitPrice = p.Skus.Min(s => s.UnitPrice),
+                MinRecommendedRetailPrice = p.ProductVariants.Min(s => s.RecommendedRetailPrice),
+                MinUnitPrice = p.ProductVariants.Min(s => s.UnitPrice),
                 ProductTypeId = p.ProductTypeId,
                 ProductTypeName = p.ProductType.DisplayName,
                 ThumbnailImageUrl = p.GetFirstThumbnailImageUrl(),

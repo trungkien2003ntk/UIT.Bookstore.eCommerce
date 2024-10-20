@@ -26,7 +26,7 @@ public class GetAllDiscountVouchersForCartHandler(
 
         var shoppingCartItems = await _dbContext.ShoppingCartItems
             .Where(sci => sci.CustomerId == userId && selectedItemIds.Contains(sci.Id))
-            .Include(sci => sci.Sku)
+            .Include(sci => sci.ProductVariant)
             .ToListAsync(cancellationToken);
 
         var createShoppingCartResult = ShoppingCart.Create(userId, shoppingCartItems);

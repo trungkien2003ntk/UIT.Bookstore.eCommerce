@@ -6,14 +6,14 @@ public record AddShoppingCartItemResponse
 {
     public AddShoppingCartItemResponse(ShoppingCartItem cartItem)
     {
-        ProductId = cartItem.Sku.ProductId;
-        SkuId = cartItem.SkuId;
+        ProductId = cartItem.ProductVariant.ProductId;
+        ProductVariantId = cartItem.ProductVariantId;
         Quantity = cartItem.Quantity;
-        UnitPrice = cartItem.Sku.UnitPrice;
+        UnitPrice = cartItem.ProductVariant.UnitPrice;
     }
 
     public int ProductId { get; init; }
-    public int SkuId { get; init; }
+    public int ProductVariantId { get; init; }
     public int Quantity { get; init; }
     public decimal UnitPrice { get; init; }
 }

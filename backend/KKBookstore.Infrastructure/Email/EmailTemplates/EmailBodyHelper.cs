@@ -47,12 +47,12 @@ internal static class EmailBodyHelper
 
         orderItemCellContent.Append(string.Join("\n", order.OrderLines.Select(ol =>
             {
-                var orderItemName = ol.Sku.Product.Name;
+                var orderItemName = ol.ProductVariant.Product.Name;
                 var unitPriceToString = $"{ol.UnitPrice:#,##0}₫";
-                var orderItemImageUrl = ol.Sku.GetThumbnailImageUrl();
+                var orderItemImageUrl = ol.ProductVariant.GetThumbnailImageUrl();
                 if (string.IsNullOrEmpty(orderItemImageUrl))
                 {
-                    orderItemImageUrl = ol.Sku.Product.GetFirstThumbnailImageUrl();
+                    orderItemImageUrl = ol.ProductVariant.Product.GetFirstThumbnailImageUrl();
                 }
 
                 var newOrderItemTemplate = orderItemTemplate

@@ -5,17 +5,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KKBookstore.Infrastructure.Data.Configurations;
 
-internal class SkuOptionValueConfiguration : IEntityTypeConfiguration<SkuOptionValue>
+internal class ProductVariantOptionValueConfiguration : IEntityTypeConfiguration<ProductVariantOptionValue>
 {
-    public void Configure(EntityTypeBuilder<SkuOptionValue> builder)
+    public void Configure(EntityTypeBuilder<ProductVariantOptionValue> builder)
     {
-        builder.Property(t => t.Id)
-            .HasColumnName($"{nameof(SkuOptionValue)}Id");
+        builder.ToTable($"{nameof(ProductVariantOptionValue)}s");
 
-        builder.HasIndex(t => new { t.SkuId, t.OptionId, t.OptionValueId })
+        builder.Property(t => t.Id)
+            .HasColumnName($"{nameof(ProductVariantOptionValue)}Id");
+
+        builder.HasIndex(t => new { t.ProductVariantId, t.OptionId, t.OptionValueId })
             .IsUnique();
 
-        builder.Property(t => t.SkuId)
+        builder.Property(t => t.ProductVariantId)
             .IsRequired();
 
         builder.Property(t => t.OptionId)
@@ -24,9 +26,9 @@ internal class SkuOptionValueConfiguration : IEntityTypeConfiguration<SkuOptionV
         builder.Property(t => t.OptionValueId)
             .IsRequired();
 
-        builder.HasOne(t => t.Sku)
-            .WithMany(t => t.SkuOptionValues)
-            .HasForeignKey(t => t.SkuId);
+        builder.HasOne(t => t.ProductVariant)
+            .WithMany(t => t.ProductVariantOptionValues)
+            .HasForeignKey(t => t.ProductVariantId);
 
         builder.HasOne(t => t.Option)
             .WithMany()

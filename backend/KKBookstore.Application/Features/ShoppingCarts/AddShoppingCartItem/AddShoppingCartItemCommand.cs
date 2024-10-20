@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
 
-public record AddShoppingCartItemCommand(int CustomerId, int SkuId, int Quantity) : IRequest<Result<AddShoppingCartItemResponse>>;
+public record AddShoppingCartItemCommand(int CustomerId, int ProductVariantId, int Quantity) : IRequest<Result<AddShoppingCartItemResponse>>;
 
 public class AddShoppingCartItemCommandHandler(
     IApplicationDbContext dbContext
@@ -15,15 +15,15 @@ public class AddShoppingCartItemCommandHandler(
     public async Task<Result<AddShoppingCartItemResponse>> Handle(AddShoppingCartItemCommand request, CancellationToken cancellationToken)
     {
         // check valid sku
-        var sku = await dbContext.Skus.FindAsync([request.SkuId], cancellationToken: cancellationToken);
+        var productVariant = await dbContext.ProductVariants.FindAsync([request.ProductVariantId], cancellationToken: cancellationToken);
 
-        if (sku is null)
+        if (productVariant is null)
         {
-            return Result.Failure<AddShoppingCartItemResponse>(ShoppingCartError.InvalidSkuToAdd);
+            return Result.Failure<AddShoppingCartItemResponse>(ShoppingCartError.InvalidProductVariantToAdd);
         }
 
         var existingShoppingCartItem = await dbContext.ShoppingCartItems
-            .Where(sci => sci.CustomerId == request.CustomerId && sci.SkuId == request.SkuId)
+            .Where(sci => sci.CustomerId == request.CustomerId && sci.ProductVariantId == request.ProductVariantId)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (existingShoppingCartItem is not null)
@@ -34,7 +34,7 @@ public class AddShoppingCartItemCommandHandler(
         }
 
 
-        var newShoppingCartItemResult = ShoppingCartItem.Create(request.CustomerId, request.SkuId, request.Quantity);
+        var newShoppingCartItemResult = ShoppingCartItem.Create(request.CustomerId, request.ProductVariantId, request.Quantity);
 
         if (newShoppingCartItemResult.IsFailure)
         {
@@ -42,7 +42,7 @@ public class AddShoppingCartItemCommandHandler(
         }
 
         var newShoppingCartItem = newShoppingCartItemResult.Value;
-        newShoppingCartItem.Sku = sku;
+        newShoppingCartItem.ProductVariant = productVariant;
 
         await dbContext.ShoppingCartItems.AddAsync(newShoppingCartItem, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);

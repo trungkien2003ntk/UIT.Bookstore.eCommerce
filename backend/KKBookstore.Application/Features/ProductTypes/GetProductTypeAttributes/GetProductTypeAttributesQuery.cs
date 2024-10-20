@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
 using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
 using MediatR;
@@ -8,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
 
-public record GetProductTypeAttributesRequest(int ProductTypeId) : IRequest<Result<GetProductTypeAttributesResponse>>;
+public record GetProductTypeAttributesQuery(int ProductTypeId) : IRequest<Result<GetProductTypeAttributesResponse>>;
 
 public class GetProductTypeAttributesQueryHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetProductTypeAttributesRequest, Result<GetProductTypeAttributesResponse>>
+) : IRequestHandler<GetProductTypeAttributesQuery, Result<GetProductTypeAttributesResponse>>
 {
-    public async Task<Result<GetProductTypeAttributesResponse>> Handle(GetProductTypeAttributesRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetProductTypeAttributesResponse>> Handle(GetProductTypeAttributesQuery request, CancellationToken cancellationToken)
     {
         var productTypeId = request.ProductTypeId;
         var productType = await dbContext.ProductTypes

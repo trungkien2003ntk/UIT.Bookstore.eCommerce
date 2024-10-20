@@ -1,151 +1,151 @@
 [
 	{
 		"Id": 1,
-		"SkuId": 3,
+		"ProductVariantId": 3,
 		"OptionId": 1,
 		"OptionValueId": 1
 	},
 	{
 		"Id": 2,
-		"SkuId": 4,
+		"ProductVariantId": 4,
 		"OptionId": 1,
 		"OptionValueId": 2
 	},
 	{
 		"Id": 3,
-		"SkuId": 5,
+		"ProductVariantId": 5,
 		"OptionId": 1,
 		"OptionValueId": 3
 	},
 	{
 		"Id": 4,
-		"SkuId": 6,
+		"ProductVariantId": 6,
 		"OptionId": 1,
 		"OptionValueId": 4
 	},
 	{
 		"Id": 5,
-		"SkuId": 7,
+		"ProductVariantId": 7,
 		"OptionId": 1,
 		"OptionValueId": 5
 	},
 	{
 		"Id": 6,
-		"SkuId": 8,
+		"ProductVariantId": 8,
 		"OptionId": 1,
 		"OptionValueId": 6
 	},
 	{
 		"Id": 7,
-		"SkuId": 9,
+		"ProductVariantId": 9,
 		"OptionId": 2,
 		"OptionValueId": 7
 	},
 	{
 		"Id": 8,
-		"SkuId": 10,
+		"ProductVariantId": 10,
 		"OptionId": 2,
 		"OptionValueId": 8
 	},
 	{
 		"Id": 9,
-		"SkuId": 11,
+		"ProductVariantId": 11,
 		"OptionId": 2,
 		"OptionValueId": 9
 	},
 	{
 		"Id": 10,
-		"SkuId": 12,
+		"ProductVariantId": 12,
 		"OptionId": 2,
 		"OptionValueId": 10
 	},
 	{
 		"Id": 11,
-		"SkuId": 13,
+		"ProductVariantId": 13,
 		"OptionId": 2,
 		"OptionValueId": 11
 	},
 	{
 		"Id": 12,
-		"SkuId": 15,
+		"ProductVariantId": 15,
 		"OptionId": 3,
 		"OptionValueId": 12
 	},
 	{
 		"Id": 13,
-		"SkuId": 16,
+		"ProductVariantId": 16,
 		"OptionId": 3,
 		"OptionValueId": 13
 	},
 	{
 		"Id": 14,
-		"SkuId": 17,
+		"ProductVariantId": 17,
 		"OptionId": 3,
 		"OptionValueId": 14
 	},
 	{
 		"Id": 15,
-		"SkuId": 18,
+		"ProductVariantId": 18,
 		"OptionId": 3,
 		"OptionValueId": 15
 	},
 	{
 		"Id": 16,
-		"SkuId": 19,
+		"ProductVariantId": 19,
 		"OptionId": 3,
 		"OptionValueId": 16
 	},
 	{
 		"Id": 17,
-		"SkuId": 20,
+		"ProductVariantId": 20,
 		"OptionId": 4,
 		"OptionValueId": 17
 	},
 	{
 		"Id": 18,
-		"SkuId": 21,
+		"ProductVariantId": 21,
 		"OptionId": 4,
 		"OptionValueId": 18
 	},
 	{
 		"Id": 19,
-		"SkuId": 22,
+		"ProductVariantId": 22,
 		"OptionId": 4,
 		"OptionValueId": 19
 	},
 	{
 		"Id": 20,
-		"SkuId": 23,
+		"ProductVariantId": 23,
 		"OptionId": 4,
 		"OptionValueId": 20
 	},
 	{
 		"Id": 21,
-		"SkuId": 24,
+		"ProductVariantId": 24,
 		"OptionId": 4,
 		"OptionValueId": 21
 	},
 	{
 		"Id": 22,
-		"SkuId": 25,
+		"ProductVariantId": 25,
 		"OptionId": 4,
 		"OptionValueId": 22
 	},
 	{
 		"Id": 23,
-		"SkuId": 34,
+		"ProductVariantId": 34,
 		"OptionId": 5,
 		"OptionValueId": 23
 	},
 	{
 		"Id": 24,
-		"SkuId": 35,
+		"ProductVariantId": 35,
 		"OptionId": 5,
 		"OptionValueId": 24
 	},
 	{
 		"Id": 25,
-		"SkuId": 36,
+		"ProductVariantId": 36,
 		"OptionId": 5,
 		"OptionValueId": 25
 	}

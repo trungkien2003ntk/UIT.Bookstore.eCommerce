@@ -17,7 +17,7 @@ internal class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
         builder.Property(t => t.OrderId)
             .IsRequired();
 
-        builder.Property(t => t.SkuId)
+        builder.Property(t => t.ProductVariantId)
             .IsRequired();
 
         builder.Property(t => t.UnitPrice)
@@ -31,9 +31,9 @@ internal class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .WithMany(t => t.OrderLines)
             .HasForeignKey(t => t.OrderId);
 
-        builder.HasOne(t => t.Sku)
+        builder.HasOne(t => t.ProductVariant)
             .WithMany()
-            .HasForeignKey(t => t.SkuId);
+            .HasForeignKey(t => t.ProductVariantId);
 
 
         builder.ConfigureAuditing();

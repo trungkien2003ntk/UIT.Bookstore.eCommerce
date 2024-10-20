@@ -2,6 +2,6 @@
 
 public class AddShoppingCartItemRequest
 {
-    public int SkuId { get; set; }
+    public int ProductVariantId { get; set; }
     public int Quantity { get; set; }
 }

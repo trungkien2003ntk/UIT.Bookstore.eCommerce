@@ -20,7 +20,7 @@ namespace KKBookstore.API.Controllers;
 
 
 
-[Route("api/[controller]")]
+[Route("api/discounts")]
 public class DiscountController(ISender sender) : ApiController(sender)
 {
     [HttpGet("get-vouchers")]

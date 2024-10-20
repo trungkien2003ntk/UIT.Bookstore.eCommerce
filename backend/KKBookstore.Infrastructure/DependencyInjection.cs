@@ -120,11 +120,12 @@ public static class DependencyInjection
         services.AddScoped<ISearchService, SearchService>();
 
 
-
+        var blobConnectionString = configuration["StorageConnectionString:blob"];
+        var queueConnectionString = configuration["StorageConnectionString:queue"];
         services.AddAzureClients(clientBuilder =>
         {
-            clientBuilder.AddBlobServiceClient(configuration["StorageConnectionString:blob"]!, preferMsi: true);
-            clientBuilder.AddQueueServiceClient(configuration["StorageConnectionString:queue"]!, preferMsi: true);
+            clientBuilder.AddBlobServiceClient(blobConnectionString!, preferMsi: true);
+            clientBuilder.AddQueueServiceClient(queueConnectionString!, preferMsi: true);
         });
 
 

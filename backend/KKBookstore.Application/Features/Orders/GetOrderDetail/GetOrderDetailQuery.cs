@@ -18,16 +18,16 @@ public class GetOrderDetailHandler(
         var order = await dbContext.Orders
             .Where(o => o.Id == request.Id)
             .Include(o => o.OrderLines)
-                .ThenInclude(ol => ol.Sku)
-                    .ThenInclude(s => s.SkuOptionValues)
+                .ThenInclude(ol => ol.ProductVariant)
+                    .ThenInclude(s => s.ProductVariantOptionValues)
                         .ThenInclude(sov => sov.Option)
                             .ThenInclude(sov => sov.OptionValues)
             .Include(o => o.OrderLines)
-                .ThenInclude(ol => ol.Sku)
-                    .ThenInclude(s => s.SkuOptionValues)
+                .ThenInclude(ol => ol.ProductVariant)
+                    .ThenInclude(s => s.ProductVariantOptionValues)
                         .ThenInclude(sov => sov.OptionValue)
             .Include(o => o.OrderLines)
-                .ThenInclude(ol => ol.Sku)
+                .ThenInclude(ol => ol.ProductVariant)
                     .ThenInclude(s => s.Product)
             .Include(o => o.DeliveryMethod)
             .Include(o => o.PaymentMethod)
@@ -83,14 +83,14 @@ public class GetOrderDetailHandler(
             OrderLines = order.OrderLines.Select(ol => new OrderLineDto
             {
                 Id = ol.Id,
-                ProductName = ol.Sku.Product.Name,
+                ProductName = ol.ProductVariant.Product.Name,
                 Quantity = ol.Quantity,
                 UnitPrice = ol.UnitPrice,
-                RecommendedRetailPrice = ol.Sku.RecommendedRetailPrice,
-                SkuOptionName = ol.Sku.SkuName,
+                RecommendedRetailPrice = ol.ProductVariant.RecommendedRetailPrice,
+                ProductVariantOptionName = ol.ProductVariant.VariantName,
                 OrderId = ol.OrderId,
-                SkuId = ol.SkuId,
-                ThumbnailUrl = ol.Sku.GetThumbnailImageUrl() ?? ""
+                ProductVariantId = ol.ProductVariantId,
+                ThumbnailUrl = ol.ProductVariant.GetThumbnailImageUrl() ?? ""
             })
         };
 

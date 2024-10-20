@@ -27,9 +27,9 @@ public class ShoppingCart
         return new ShoppingCart(UserId, items);
     }
 
-    public Result AddItem(int skuId, int newQuantity)
+    public Result AddItem(int productVariantId, int newQuantity)
     {
-        var existingItem = Items.FirstOrDefault(i => i.SkuId == skuId);
+        var existingItem = Items.FirstOrDefault(i => i.ProductVariantId == productVariantId);
         if (existingItem != null)
         {
             existingItem.UpdateQuantity(newQuantity);
@@ -37,7 +37,7 @@ public class ShoppingCart
         }
         else
         {
-            var newShoppingCartItemResult = ShoppingCartItem.Create(UserId, skuId, newQuantity);
+            var newShoppingCartItemResult = ShoppingCartItem.Create(UserId, productVariantId, newQuantity);
 
             if (newShoppingCartItemResult.IsFailure)
             {
@@ -50,9 +50,9 @@ public class ShoppingCart
         }
     }
 
-    public void RemoveItem(int skuId)
+    public void RemoveItem(int variantId)
     {
-        var existingItem = Items.FirstOrDefault(i => i.SkuId == skuId);
+        var existingItem = Items.FirstOrDefault(i => i.ProductVariantId == variantId);
         if (existingItem != null)
         {
             Items.Remove(existingItem);

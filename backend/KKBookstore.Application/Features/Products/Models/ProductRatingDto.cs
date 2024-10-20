@@ -8,7 +8,7 @@ public record ProductRatingDto : BaseDto
     public int RatingValue { get; init; }
     public string UserName { get; init; }
     public string? UserAvatarUrl { get; init; }
-    public string SkuName { get; init; }
+    public string ProductVariantName { get; init; }
     public int LikesCount { get; init; }
     public int ReportedCount { get; init; }
     public string? Response { get; init; }

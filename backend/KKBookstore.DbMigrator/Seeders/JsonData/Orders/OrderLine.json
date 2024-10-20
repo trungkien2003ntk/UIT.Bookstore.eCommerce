@@ -2,7 +2,7 @@
 	{
 		"Id": 1,
 		"OrderId": 1,
-		"SkuId": 11,
+		"ProductVariantId": 11,
 		"Description": "",
 		"Quantity": 3,
 		"UnitPrice": 31500,
@@ -12,7 +12,7 @@
 	{
 		"Id": 2,
 		"OrderId": 1,
-		"SkuId": 39,
+		"ProductVariantId": 39,
 		"Description": "",
 		"Quantity": 1,
 		"UnitPrice": 31500,
@@ -22,7 +22,7 @@
 	{
 		"Id": 3,
 		"OrderId": 2,
-		"SkuId": 29,
+		"ProductVariantId": 29,
 		"Description": "",
 		"Quantity": 1,
 		"UnitPrice": 18000,
@@ -32,7 +32,7 @@
 	{
 		"Id": 4,
 		"OrderId": 3,
-		"SkuId": 29,
+		"ProductVariantId": 29,
 		"Description": "",
 		"Quantity": 8,
 		"UnitPrice": 18000,
@@ -42,7 +42,7 @@
 	{
 		"Id": 5,
 		"OrderId": 3,
-		"SkuId": 9,
+		"ProductVariantId": 9,
 		"Description": "",
 		"Quantity": 5,
 		"UnitPrice": 31500,
@@ -52,7 +52,7 @@
 	{
 		"Id": 6,
 		"OrderId": 4,
-		"SkuId": 13,
+		"ProductVariantId": 13,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 31500,
@@ -62,7 +62,7 @@
 	{
 		"Id": 7,
 		"OrderId": 4,
-		"SkuId": 34,
+		"ProductVariantId": 34,
 		"Description": "",
 		"Quantity": 2,
 		"UnitPrice": 27900,
@@ -72,7 +72,7 @@
 	{
 		"Id": 8,
 		"OrderId": 4,
-		"SkuId": 20,
+		"ProductVariantId": 20,
 		"Description": "",
 		"Quantity": 3,
 		"UnitPrice": 170000,
@@ -82,7 +82,7 @@
 	{
 		"Id": 9,
 		"OrderId": 5,
-		"SkuId": 30,
+		"ProductVariantId": 30,
 		"Description": "",
 		"Quantity": 2,
 		"UnitPrice": 170000,
@@ -92,7 +92,7 @@
 	{
 		"Id": 10,
 		"OrderId": 5,
-		"SkuId": 37,
+		"ProductVariantId": 37,
 		"Description": "",
 		"Quantity": 4,
 		"UnitPrice": 27900,
@@ -102,7 +102,7 @@
 	{
 		"Id": 11,
 		"OrderId": 5,
-		"SkuId": 8,
+		"ProductVariantId": 8,
 		"Description": "",
 		"Quantity": 5,
 		"UnitPrice": 18000,
@@ -112,7 +112,7 @@
 	{
 		"Id": 12,
 		"OrderId": 6,
-		"SkuId": 27,
+		"ProductVariantId": 27,
 		"Description": "",
 		"Quantity": 5,
 		"UnitPrice": 18000,
@@ -122,7 +122,7 @@
 	{
 		"Id": 13,
 		"OrderId": 6,
-		"SkuId": 24,
+		"ProductVariantId": 24,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 18000,
@@ -132,7 +132,7 @@
 	{
 		"Id": 14,
 		"OrderId": 7,
-		"SkuId": 25,
+		"ProductVariantId": 25,
 		"Description": "",
 		"Quantity": 2,
 		"UnitPrice": 31500,
@@ -142,7 +142,7 @@
 	{
 		"Id": 15,
 		"OrderId": 7,
-		"SkuId": 23,
+		"ProductVariantId": 23,
 		"Description": "",
 		"Quantity": 8,
 		"UnitPrice": 27900,
@@ -152,7 +152,7 @@
 	{
 		"Id": 16,
 		"OrderId": 8,
-		"SkuId": 14,
+		"ProductVariantId": 14,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 170000,
@@ -162,7 +162,7 @@
 	{
 		"Id": 17,
 		"OrderId": 9,
-		"SkuId": 23,
+		"ProductVariantId": 23,
 		"Description": "",
 		"Quantity": 5,
 		"UnitPrice": 18000,
@@ -172,7 +172,7 @@
 	{
 		"Id": 18,
 		"OrderId": 9,
-		"SkuId": 33,
+		"ProductVariantId": 33,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 31500,
@@ -182,7 +182,7 @@
 	{
 		"Id": 19,
 		"OrderId": 9,
-		"SkuId": 12,
+		"ProductVariantId": 12,
 		"Description": "",
 		"Quantity": 7,
 		"UnitPrice": 31500,
@@ -192,7 +192,7 @@
 	{
 		"Id": 20,
 		"OrderId": 10,
-		"SkuId": 16,
+		"ProductVariantId": 16,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 18000,
@@ -202,7 +202,7 @@
 	{
 		"Id": 21,
 		"OrderId": 10,
-		"SkuId": 16,
+		"ProductVariantId": 16,
 		"Description": "",
 		"Quantity": 2,
 		"UnitPrice": 31500,
@@ -212,7 +212,7 @@
 	{
 		"Id": 22,
 		"OrderId": 11,
-		"SkuId": 37,
+		"ProductVariantId": 37,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 170000,
@@ -222,7 +222,7 @@
 	{
 		"Id": 23,
 		"OrderId": 11,
-		"SkuId": 23,
+		"ProductVariantId": 23,
 		"Description": "",
 		"Quantity": 10,
 		"UnitPrice": 31500,
@@ -232,7 +232,7 @@
 	{
 		"Id": 24,
 		"OrderId": 11,
-		"SkuId": 34,
+		"ProductVariantId": 34,
 		"Description": "",
 		"Quantity": 7,
 		"UnitPrice": 18000,
@@ -242,7 +242,7 @@
 	{
 		"Id": 25,
 		"OrderId": 12,
-		"SkuId": 33,
+		"ProductVariantId": 33,
 		"Description": "",
 		"Quantity": 9,
 		"UnitPrice": 180000,
@@ -252,7 +252,7 @@
 	{
 		"Id": 26,
 		"OrderId": 12,
-		"SkuId": 40,
+		"ProductVariantId": 40,
 		"Description": "",
 		"Quantity": 3,
 		"UnitPrice": 170000,
@@ -262,7 +262,7 @@
 	{
 		"Id": 27,
 		"OrderId": 12,
-		"SkuId": 36,
+		"ProductVariantId": 36,
 		"Description": "",
 		"Quantity": 1,
 		"UnitPrice": 27900,
@@ -272,7 +272,7 @@
 	{
 		"Id": 28,
 		"OrderId": 13,
-		"SkuId": 28,
+		"ProductVariantId": 28,
 		"Description": "",
 		"Quantity": 3,
 		"UnitPrice": 31500,
@@ -282,7 +282,7 @@
 	{
 		"Id": 29,
 		"OrderId": 14,
-		"SkuId": 38,
+		"ProductVariantId": 38,
 		"Description": "",
 		"Quantity": 7,
 		"UnitPrice": 170000,
@@ -292,7 +292,7 @@
 	{
 		"Id": 30,
 		"OrderId": 15,
-		"SkuId": 11,
+		"ProductVariantId": 11,
 		"Description": "",
 		"Quantity": 2,
 		"UnitPrice": 31500,
@@ -302,7 +302,7 @@
 	{
 		"Id": 31,
 		"OrderId": 16,
-		"SkuId": 34,
+		"ProductVariantId": 34,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 31500,
@@ -312,7 +312,7 @@
 	{
 		"Id": 32,
 		"OrderId": 17,
-		"SkuId": 7,
+		"ProductVariantId": 7,
 		"Description": "",
 		"Quantity": 4,
 		"UnitPrice": 31500,
@@ -322,7 +322,7 @@
 	{
 		"Id": 33,
 		"OrderId": 17,
-		"SkuId": 20,
+		"ProductVariantId": 20,
 		"Description": "",
 		"Quantity": 6,
 		"UnitPrice": 27900,
@@ -332,7 +332,7 @@
 	{
 		"Id": 34,
 		"OrderId": 17,
-		"SkuId": 30,
+		"ProductVariantId": 30,
 		"Description": "",
 		"Quantity": 1,
 		"UnitPrice": 18000,
@@ -342,7 +342,7 @@
 	{
 		"Id": 35,
 		"OrderId": 18,
-		"SkuId": 6,
+		"ProductVariantId": 6,
 		"Description": "",
 		"Quantity": 5,
 		"UnitPrice": 18000,
@@ -352,7 +352,7 @@
 	{
 		"Id": 36,
 		"OrderId": 18,
-		"SkuId": 29,
+		"ProductVariantId": 29,
 		"Description": "",
 		"Quantity": 3,
 		"UnitPrice": 18000,
@@ -362,7 +362,7 @@
 	{
 		"Id": 37,
 		"OrderId": 19,
-		"SkuId": 27,
+		"ProductVariantId": 27,
 		"Description": "",
 		"Quantity": 7,
 		"UnitPrice": 31500,
@@ -372,7 +372,7 @@
 	{
 		"Id": 38,
 		"OrderId": 20,
-		"SkuId": 26,
+		"ProductVariantId": 26,
 		"Description": "",
 		"Quantity": 9,
 		"UnitPrice": 31500,

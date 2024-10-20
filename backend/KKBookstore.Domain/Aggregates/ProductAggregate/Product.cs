@@ -42,7 +42,7 @@ public class Product : BaseAuditableEntity, ISoftDelete
     public UnitMeasure UnitMeasure { get; set; }
     public ICollection<ProductOption> Options { get; set; } = [];
     public ICollection<BookAuthor> BookAuthors { get; set; } = [];
-    public ICollection<Sku> Skus { get; set; } = [];
+    public ICollection<ProductVariant> ProductVariants { get; set; } = [];
     public ICollection<Rating> Ratings { get; set; } = [];
     public ICollection<ProductImage> ProductImages { get; set; } = [];
 

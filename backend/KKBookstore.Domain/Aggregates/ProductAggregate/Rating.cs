@@ -13,35 +13,35 @@ public class Rating : BaseAuditableEntity
         string comment,
         int ratingValue,
         int userId,
-        int skuId
+        int productVariantId
     ) : base()
     {
         Comment = comment;
         RatingValue = ratingValue;
         UserId = userId;
-        SkuId = skuId;
+        ProductVariantId = productVariantId;
     }
 
     public string? Comment { get; set; }
     public int RatingValue { get; set; }
     public int UserId { get; set; }
-    public int SkuId { get; set; }
+    public int ProductVariantId { get; set; }
     public int ReportedCount { get; set; }
     public string? Response { get; set; }
     public RatingStatus Status { get; set; }
 
     // navigation property
     public User User { get; set; }
-    public Sku Sku { get; set; }
+    public ProductVariant ProductVariant { get; set; }
     public ICollection<RatingLike> Likes { get; set; }
 
     public static Result<Rating> Create(
         string comment,
         int ratingValue,
         int userId,
-        int skuId
+        int productVariantId
     )
     {
-        return new Rating(comment, ratingValue, userId, skuId);
+        return new Rating(comment, ratingValue, userId, productVariantId);
     }
 }

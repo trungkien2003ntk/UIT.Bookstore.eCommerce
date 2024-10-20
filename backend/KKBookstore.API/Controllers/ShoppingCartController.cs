@@ -14,7 +14,7 @@ using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartIt
 namespace KKBookstore.API.Controllers;
 
 [Authorize(Roles = $"{Role.Customer}")]
-[Route("api/[controller]")]
+[Route("api/shopping-cart/items")]
 public class ShoppingCartController(
     ISender sender
 ) : ApiController(sender)
@@ -39,7 +39,7 @@ public class ShoppingCartController(
     )
     {
         var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
-        var command = new AddShoppingCartItemCommand(userId, request.SkuId, request.Quantity);
+        var command = new AddShoppingCartItemCommand(userId, request.ProductVariantId, request.Quantity);
 
         var result = await Sender.Send(command, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
@@ -61,8 +61,8 @@ public class ShoppingCartController(
             UpdateItems = request.UpdateItems.Select(i => new UpdateShoppingCartItemBriefDto
             {
                 Id = i.Id,
-                SkuId = i.SkuId,
-                OldSkuId = i.OldSkuId,
+                ProductVariantId = i.SkuId,
+                OldProductVariantId = i.OldSkuId,
                 Quantity = i.Quantity,
                 OldQuantity = i.OldQuantity
             }).ToList(),

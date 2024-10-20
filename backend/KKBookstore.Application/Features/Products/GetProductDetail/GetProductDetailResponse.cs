@@ -1,9 +1,10 @@
 ﻿using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Features.Products.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace KKBookstore.Application.Features.Products.GetProductDetail;
 
-public record GetProductResponse : BaseDto
+public record GetProductDetailResponse : BaseDto
 {
     public string Name { get; set; }
     public decimal MinUnitPrice { get; set; }
@@ -19,7 +20,10 @@ public record GetProductResponse : BaseDto
     public IEnumerable<string> LargeImageUrls { get; set; } = [];
     public IEnumerable<ProductTypeAttribute> productTypeAttributes { get; set; }
     public IEnumerable<AuthorDto>? Authors { get; set; }
-    public IEnumerable<SkuDto> Skus { get; set; } = [];
+    public IEnumerable<ProductVariantDto> ProductVariants { get; set; } = [];
+
+    // list of options that each variant can have
+    public IEnumerable<ProductVariantOption> ProductVariantOptions { get; set; } = [];
 
     // other properties as needed
     public sealed class ProductTypeAttribute
@@ -29,5 +33,16 @@ public record GetProductResponse : BaseDto
         public int AttributeValueId { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
+    }
+
+    public sealed class ProductVariantOption
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public IEnumerable<string> Values { get; set; } = [];
+        public IEnumerable<string>? ThumbnailImageUrls { get; set; }
+        public IEnumerable<string>? LargeImageUrls { get; set; }
+
+
     }
 }

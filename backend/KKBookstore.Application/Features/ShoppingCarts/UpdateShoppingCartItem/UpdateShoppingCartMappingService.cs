@@ -42,7 +42,7 @@ public class UpdateShoppingCartMappingService(
 
             UpdatedItems = shoppingCart.Items.Select(ci =>
             {
-                var product = neededProducts.First(p => p.Id == ci.Sku.ProductId);
+                var product = neededProducts.First(p => p.Id == ci.ProductVariant.ProductId);
                 return MapToShoppingCartItemDto(ci, product);
             }).ToList(),
 
@@ -61,13 +61,13 @@ public class UpdateShoppingCartMappingService(
     private async Task<List<Product>> ExtractDistinctProductInCart(ShoppingCart shoppingCart)
     {
         // todo: use projection to reduce the amount of data fetched, increase performance
-        var productIds = shoppingCart.Items.Select(ci => ci.Sku.ProductId).Distinct().ToList();
+        var productIds = shoppingCart.Items.Select(ci => ci.ProductVariant.ProductId).Distinct().ToList();
         var neededProducts = await _dbContext.Products
             .Where(p => productIds.Contains(p.Id))
             .Include(p => p.Options)                        // these are for 
                 .ThenInclude(o => o.OptionValues)           // sku variations
-            .Include(p => p.Skus)
-                .ThenInclude(s => s.SkuOptionValues)        // these are for
+            .Include(p => p.ProductVariants)
+                .ThenInclude(s => s.ProductVariantOptionValues)        // these are for
                     .ThenInclude(sov => sov.OptionValue)    // sku thumbnail image
                         .ThenInclude(ov => ov.Option)       // this is for SkuInCart option names
             .Include(p => p.ProductImages)
@@ -85,43 +85,43 @@ public class UpdateShoppingCartMappingService(
         return new ShoppingCartItemDto()
         {
             Id = ci.Id,
-            ProductId = ci.Sku.ProductId,
-            SkuId = ci.SkuId,
+            ProductId = ci.ProductVariant.ProductId,
+            ProductVariantId = ci.ProductVariantId,
             IsSelected = ci.IsSelected,
-            SkuName = ci.Sku.SkuName,
+            ProductVariantName = ci.ProductVariant.VariantName,
             ProductName = product.Name,
             ProductTypeId = product.ProductTypeId,
-            UnitPrice = ci.Sku.UnitPrice,
-            RecommendedRetailPrice = ci.Sku.RecommendedRetailPrice,
+            UnitPrice = ci.ProductVariant.UnitPrice,
+            RecommendedRetailPrice = ci.ProductVariant.RecommendedRetailPrice,
             Quantity = ci.Quantity,
-            AvailableQuantity = ci.Sku.Quantity,
-            TotalQuantity = ci.Sku.Quantity,
-            ImageUrl = ci.Sku.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
+            AvailableQuantity = ci.ProductVariant.Quantity,
+            TotalQuantity = ci.ProductVariant.Quantity,
+            ImageUrl = ci.ProductVariant.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
             Description = product.Description,
             CreatedWhen = ci.CreatedWhen,
-            SkuVariations = product.Skus
-                .Select(MapToSkuForCartDto)
+            ProductVariantVariations = product.ProductVariants
+                .Select(MapToProductVariantForCartDto)
                 .Select(sv => sv.PopulateIndex(productOptionAttributeDtos))
                 .ToList(),
             ProductOptions = productOptionAttributeDtos
         };
     }
 
-    private SkuForCartDto MapToSkuForCartDto(Sku sku)
+    private ProductVariantForCartDto MapToProductVariantForCartDto(ProductVariant productVariant)
     {
-        return new SkuForCartDto()
+        return new ProductVariantForCartDto()
         {
-            Id = sku.Id,
-            SkuName = sku.SkuName,
-            UnitPrice = sku.UnitPrice,
-            RecommendedRetailPrice = sku.RecommendedRetailPrice,
-            BasicDiscountRate = sku.BasicDiscountRate,
-            AvailableQuantity = sku.AvailableQuantity,
-            TotalQuantity = sku.Quantity,
-            ProductId = sku.ProductId,
-            Status = sku.Status.ToString(),
-            SkuValue = sku.SkuValue.Value,
-            OptionNames = sku.SkuOptionValues.Select(sov => sov.OptionValue.Option.Name).ToList()
+            Id = productVariant.Id,
+            ProductVariantName = productVariant.VariantName,
+            UnitPrice = productVariant.UnitPrice,
+            RecommendedRetailPrice = productVariant.RecommendedRetailPrice,
+            BasicDiscountRate = productVariant.BasicDiscountRate,
+            AvailableQuantity = productVariant.AvailableQuantity,
+            TotalQuantity = productVariant.Quantity,
+            ProductId = productVariant.ProductId,
+            Status = productVariant.Status.ToString(),
+            SkuValue = productVariant.SkuValue.Value,
+            OptionNames = productVariant.ProductVariantOptionValues.Select(sov => sov.OptionValue.Option.Name).ToList()
         };
     }
 

@@ -35,8 +35,8 @@ public interface IApplicationDbContext
     public DbSet<RefAddressType> RefAddressTypes { get; set; }
     public DbSet<ShippingAddress> ShippingAddresses { get; set; }
     public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
-    public DbSet<Sku> Skus { get; set; }
-    public DbSet<SkuOptionValue> SkuOptionValues { get; set; }
+    public DbSet<ProductVariant> ProductVariants { get; set; }
+    public DbSet<ProductVariantOptionValue> ProductVariantOptionValues { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<UnitMeasure> UnitMeasures { get; set; }
 

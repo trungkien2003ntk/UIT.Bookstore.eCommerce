@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace KKBookstore.API.Controllers;
 
 [Authorize]
-[Route("api/[controller]")]
+[Route("api/check-outs")]
 public class CheckoutController(ISender sender) : ApiController(sender)
 {
 
@@ -66,7 +66,7 @@ public class CheckoutController(ISender sender) : ApiController(sender)
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [HttpGet("IPN")]
+    [HttpGet("ipn")]
     public async Task<IActionResult> HandleIPNAsync(
         [FromQuery] HandleIPNRequest request,
         CancellationToken cancellationToken = default)

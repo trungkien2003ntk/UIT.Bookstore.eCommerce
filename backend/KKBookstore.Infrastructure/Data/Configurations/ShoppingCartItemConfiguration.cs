@@ -12,15 +12,15 @@ internal class ShoppingCartItemConfiguration : IEntityTypeConfiguration<Shopping
         builder.Property(t => t.Id)
             .HasColumnName($"{nameof(ShoppingCartItem)}Id");
 
-        builder.Property(t => t.SkuId)
+        builder.Property(t => t.ProductVariantId)
             .IsRequired();
 
         builder.Property(t => t.Quantity)
             .IsRequired();
 
-        builder.HasOne(t => t.Sku)
+        builder.HasOne(t => t.ProductVariant)
             .WithMany()
-            .HasForeignKey(t => t.SkuId);
+            .HasForeignKey(t => t.ProductVariantId);
 
         builder.HasOne(t => t.Customer)
             .WithMany()

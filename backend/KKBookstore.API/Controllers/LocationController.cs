@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KKBookstore.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/locations")]
 public class LocationController(
     ISender sender
 ) : ApiController(sender)

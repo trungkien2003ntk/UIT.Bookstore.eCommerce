@@ -3,6 +3,7 @@ using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Aggregates.UserAggregate;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -12,6 +13,8 @@ namespace KKBookstore.Application.Common.Interfaces;
 public interface IApplicationDbContext
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<IdentityRole<int>> Roles { get; set; }
+    public DbSet<IdentityUserRole<int>> UserRoles { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }

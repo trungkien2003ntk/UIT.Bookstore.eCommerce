@@ -132,7 +132,7 @@ public class UsersController(
             District = request.District,
             Commune = request.Commune,
             IsDefault = request.IsDefault,
-            AddressType = request.AddressType,
+            Type = request.Type,
             ReceiverName = request.ReceiverName,
             PhoneNumber = request.PhoneNumber,
             DetailAddress = request.DetailAddress

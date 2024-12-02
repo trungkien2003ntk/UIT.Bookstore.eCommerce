@@ -7,8 +7,9 @@ using KKBookstore.Application.Features.Users.Register;
 using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.UpdateShippingAddress;
 using KKBookstore.Application.Features.Users.UpdateUser;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Customers;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Users;
 
 namespace KKBookstore.Application.Mappings;
 public class UserProfile : Profile
@@ -31,13 +32,9 @@ public class UserProfile : Profile
 
         CreateMap<ReplaceUserCommand, User>();
 
-        CreateMap<ShippingAddress, GetUserShippingAddressesResponse>()
-            .ForMember(dest => dest.AddressType, opt => opt.MapFrom(src => src.AddressTypeEnum.ToString()));
+        CreateMap<ShippingAddress, GetUserShippingAddressesResponse>();
 
-        CreateMap<ShippingAddress, AddShippingAddressCommand>()
-            .ForMember(dest => dest.AddressType, opt => opt.MapFrom(src => src.AddressTypeEnum.ToString()))
-            .ReverseMap()
-            .ForMember(dest => dest.AddressTypeEnum, opt => opt.MapFrom(src => Enum.Parse<AddressType>(src.AddressType)));
+        CreateMap<ShippingAddress, AddShippingAddressCommand>().ReverseMap();
 
         CreateMap<AddShippingAddressResponse, ShippingAddress>().ReverseMap();
         CreateMap<UpdateShippingAddressResponse, ShippingAddress>().ReverseMap();

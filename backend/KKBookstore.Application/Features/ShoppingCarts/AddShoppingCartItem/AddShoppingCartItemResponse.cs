@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
+﻿using KKBookstore.Domain.ShoppingCarts;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
 

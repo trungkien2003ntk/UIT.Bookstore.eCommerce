@@ -4,8 +4,8 @@ using KKBookstore.Application.Features.Orders.GetOrderDetail;
 using KKBookstore.Application.Features.Orders.GetOrderList;
 using KKBookstore.Application.Features.Orders.Models;
 using KKBookstore.Application.Mappings.Helpers;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Customers;
+using KKBookstore.Domain.Orders;
 
 namespace KKBookstore.Application.Mappings;
 

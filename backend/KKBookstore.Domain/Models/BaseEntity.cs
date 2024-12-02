@@ -14,7 +14,6 @@ public abstract class BaseEntity : IEquatable<BaseEntity>
 
     public int Id { get; set; }
 
-    // implement IEquatable<BaseEntity>
     public bool Equals(BaseEntity? other)
     {
         if (other is null)

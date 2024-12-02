@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Application.Common.Models;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Domain.Shared.Orders;
 
 namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
 

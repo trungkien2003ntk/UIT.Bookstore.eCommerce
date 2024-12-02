@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail.GetProductTypeDetailResponse;

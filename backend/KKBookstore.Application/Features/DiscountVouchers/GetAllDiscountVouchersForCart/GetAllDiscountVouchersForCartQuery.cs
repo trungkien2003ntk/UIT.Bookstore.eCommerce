@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Shared.Orders;
+using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +41,7 @@ public class GetAllDiscountVouchersForCartHandler(
 
         // Get all discount vouchers that are active
         var discountVouchers = await _dbContext.DiscountVouchers
-            .Where(dv => dv.StartWhen <= DateTimeOffset.Now && dv.EndWhen >= DateTimeOffset.Now)
+            .Where(dv => dv.StartTime <= DateTimeOffset.Now && dv.EndTime >= DateTimeOffset.Now)
             .Include(dv => dv.VoucherUsages)
             .ToListAsync(cancellationToken);
 
@@ -66,8 +66,8 @@ public class GetAllDiscountVouchersForCartHandler(
                     Value = dv.Value,
                     MaximumDiscountValue = dv.MaximumDiscountValue,
                     MinimumSpend = dv.MinimumSpend,
-                    StartDate = dv.StartWhen,
-                    EndDate = dv.EndWhen,
+                    StartDate = dv.StartTime,
+                    EndDate = dv.EndTime,
                     UsageLimitOverall = usageLimitOverall,
                     UsageLimitPerUser = dv.UsageLimitPerUser,
                     UsageCount = dv.VoucherUsages.Count,

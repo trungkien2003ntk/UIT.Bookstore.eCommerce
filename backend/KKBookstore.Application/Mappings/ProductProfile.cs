@@ -5,7 +5,7 @@ using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Application.Mappings.Helpers;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
+using KKBookstore.Domain.Products;
 
 namespace KKBookstore.Application.Mappings;
 
@@ -42,7 +42,6 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Dimension.Height))
             .ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.Dimension.Width))
             .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Dimension.Length))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
             .ForMember(dest => dest.OptionValues, opt => opt.MapFrom(src => src.ProductVariantOptionValues.Select(sov => sov.OptionValue)))
             .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetThumbnailImageUrl()))
             .ForMember(dest => dest.LargeImageUrl, opt => opt.MapFrom(src => src.GetLargeImageUrl()));
@@ -69,8 +68,8 @@ public class ProductProfile : Profile
 
         CreateMap<Rating, ProductRatingDto>()
             .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.Comment))
-            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.User.LastName} {src.User.FirstName}"))
-            .ForMember(dest => dest.UserAvatarUrl, opt => opt.MapFrom(src => src.User.ImageUrl))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => $"{src.Customer.LastName} {src.Customer.FirstName}"))
+            .ForMember(dest => dest.UserAvatarUrl, opt => opt.MapFrom(src => src.Customer.ImageUrl))
             .ForMember(dest => dest.ProductVariantName, opt => opt.MapFrom(src => MappingHelpers.GetProductVariantOptionValuesString(src.ProductVariant)))
             .ForMember(dest => dest.LikesCount, opt => opt.MapFrom(src => src.Likes.Count))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));

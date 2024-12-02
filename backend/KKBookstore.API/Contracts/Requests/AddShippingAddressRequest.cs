@@ -1,4 +1,6 @@
-﻿namespace KKBookstore.API.Contracts.Requests;
+﻿using KKBookstore.Domain.Shared.Orders;
+
+namespace KKBookstore.API.Contracts.Requests;
 
 public class AddShippingAddressRequest
 {
@@ -9,5 +11,5 @@ public class AddShippingAddressRequest
     public string Commune { get; init; }
     public string DetailAddress { get; init; }
     public bool IsDefault { get; init; }
-    public string AddressType { get; init; }
+    public AddressType Type { get; init; }
 }

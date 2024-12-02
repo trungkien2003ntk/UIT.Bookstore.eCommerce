@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
+using KKBookstore.Domain.ProductTypes;
 
 namespace KKBookstore.Application.Mappings;
 

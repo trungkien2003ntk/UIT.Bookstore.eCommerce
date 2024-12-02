@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Application.Extensions;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Domain.Orders;
 using System.Reflection;
 using System.Text;
 
@@ -21,9 +21,9 @@ internal static class EmailBodyHelper
     private static readonly string _orderItemCellPlaceholder = "{{OrderItemCell}}";
 
 
-    public static string BuildOrderConfirmationEmailBody(Order orderWithItemsWithSkuWithProductWithProductImagesAndBothVouchers)
+    public static string BuildOrderConfirmationEmailBody(Order orderWithItems)
     {
-        var order = orderWithItemsWithSkuWithProductWithProductImagesAndBothVouchers;
+        var order = orderWithItems;
 
         string orderConfirmationTemplate;
         var assembly = Assembly.GetExecutingAssembly();

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

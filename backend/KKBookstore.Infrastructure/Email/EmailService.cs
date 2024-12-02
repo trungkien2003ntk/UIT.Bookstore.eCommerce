@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
+using KKBookstore.Domain.Orders;
 using KKBookstore.Infrastructure.Email.EmailTemplates;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -19,7 +19,8 @@ public class EmailService(
     private const string _RECEIVER_NAME = "Customer";
     private const string _QUEUE_NAME = "email-general-info";
     private const string _BLOB_CONTAINER_NAME = "email-body";
-
+    private const string _EMAIL_CONTENT_TYPE = "plain";
+    private const string _EMAIL_BLOB_PREFIX = "mail-body-";
     private readonly EmailConfiguration _emailConfig = emailConfiguration.Value;
     private readonly QueueServiceClient _queueServiceClient = queueServiceClient;
     private readonly BlobServiceClient _blobServiceClient = blobServiceClient;
@@ -116,6 +117,28 @@ public class EmailService(
         );
 
         await Send(message);
+        
+    }
+
+    public async Task SendPasswordResetLink(string email, string token)
+    {
+        var resetPasswordTemplate = new EmailTemplate
+        {
+            Subject = "Reset Your Password - KKBookstore",
+            Body = "To reset your password, please click the following link: {resetLink}"
+        };
+
+        var message = CreateEmailMessage(
+            resetPasswordTemplate.Subject,
+            resetPasswordTemplate.Body,
+            email,
+            new Dictionary<string, string>()
+            {
+                { "{resetLink}", $"{_emailConfig.ResetPasswordLink}?email={email}&token={token}" }
+            }
+        );
+
+        await Send(message);
     }
 
     private MimeMessage CreateEmailMessage(string subject, string body, string toEmail, Dictionary<string, string>? placeholders = null)
@@ -134,7 +157,7 @@ public class EmailService(
             }
         }
 
-        message.Body = new TextPart("plain") { Text = body };
+        message.Body = new TextPart(_EMAIL_CONTENT_TYPE) { Text = body };
 
         return message;
     }
@@ -144,7 +167,7 @@ public class EmailService(
         var emailQueueClient = await GetQueueClient(_QUEUE_NAME);
 
         var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_BLOB_CONTAINER_NAME);
-        var blobName = "mail-body-" + Guid.NewGuid().ToString();
+        var blobName = _EMAIL_BLOB_PREFIX + Guid.NewGuid().ToString();
 
         using (var stream = new MemoryStream())
         {

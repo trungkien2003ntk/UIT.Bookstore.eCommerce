@@ -2,8 +2,8 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

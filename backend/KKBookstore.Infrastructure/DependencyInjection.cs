@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using KKBookstore.Infrastructure.Data.Interceptors;
 using KKBookstore.Infrastructure.Email;
@@ -29,8 +29,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 
-        services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
-        services.AddScoped<ISaveChangesInterceptor, SoftDeleteInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, AuditingInterceptor>();
         services.AddDbContext<KKBookstoreDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());

@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Models;
+using KKBookstore.Domain.Shared.Orders;
 
 namespace KKBookstore.Application.Features.Users.GetUserShippingAddresses;
 
@@ -12,5 +13,5 @@ public record GetUserShippingAddressesResponse : BaseDto
     public string Commune { get; set; }
     public string DetailAddress { get; set; }
     public bool IsDefault { get; set; }
-    public string AddressType { get; set; }
+    public AddressType Type { get; set; }
 }

@@ -2,8 +2,8 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Users;
 using MediatR;
 
 namespace KKBookstore.Application.Features.Users.GetUserList;

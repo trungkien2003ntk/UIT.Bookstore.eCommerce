@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

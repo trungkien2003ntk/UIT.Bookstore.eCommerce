@@ -1,10 +1,11 @@
 ﻿using Bogus;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
-using KKBookstore.Domain.Aggregates.UserAggregate;
+using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ProductTypes;
+using KKBookstore.Domain.ShoppingCarts;
+using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -80,7 +81,6 @@ internal class DataSeeder
     // Order related data
     private readonly List<DeliveryMethod> _deliveryMethods = [];
     private readonly List<PaymentMethod> _paymentMethods = [];
-    private readonly List<RefAddressType> _refAddressTypes = [];
     private readonly List<Order> _orders = [];
     private readonly List<OrderLine> _orderLines = [];
 
@@ -214,10 +214,10 @@ internal class DataSeeder
 
         foreach (var user in users)
         {
-            user.LastEditedWhen = DateTimeOffset.Now;
-            user.CreatedWhen = DateTimeOffset.Now;
-            user.CreatedBy = null;
-            user.LastEditedBy = null;
+            user.LastModificationTime = DateTimeOffset.Now;
+            user.CreationTime = DateTimeOffset.Now;
+            user.CreatorId = null;
+            user.LastModifierId = null;
         }
 
         foreach (var user in users)
@@ -682,8 +682,8 @@ internal class DataSeeder
         }
 
         _deliveryMethods.AddRange([
-            new DeliveryMethod { Id = 1, Name = "Giao hàng tiêu chuẩn", Description = "Giao hàng tiêu chuẩn", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
-            new DeliveryMethod { Id = 2, Name = "Giao hàng nhanh", Description = "Giao hàng nhanh", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+            new DeliveryMethod { Id = 1, Name = "Giao hàng tiêu chuẩn", Description = "Giao hàng tiêu chuẩn", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new DeliveryMethod { Id = 2, Name = "Giao hàng nhanh", Description = "Giao hàng nhanh", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
         ]);
 
         _dbContext.AddRange(_deliveryMethods);
@@ -695,25 +695,12 @@ internal class DataSeeder
         }
 
         _paymentMethods.AddRange([
-            new PaymentMethod { Id = 1, Name = "Thanh toán khi nhận hàng", Description = "Thanh toán khi nhận hàng", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
-            new PaymentMethod { Id = 2, Name = "Thanh toán qua thẻ", Description = "Thanh toán qua thẻ", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
+            new PaymentMethod { Id = 1, Name = "Thanh toán khi nhận hàng", Description = "Thanh toán khi nhận hàng", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new PaymentMethod { Id = 2, Name = "Thanh toán qua thẻ", Description = "Thanh toán qua thẻ", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
         ]);
 
         _dbContext.AddRange(_paymentMethods);
         await _dbContext.SaveChangesWithIdentityInsertAsync<PaymentMethod>();
-
-        if (_dbContext.RefAddressTypes.Any())
-        {
-            return;
-        }
-
-        _refAddressTypes.AddRange([
-            new RefAddressType { Id = 1, Name = "Nhà riêng", Description = "Nhà riêng", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
-            new RefAddressType { Id = 2, Name = "Văn phòng", Description = "Văn phòng", CreatedByUserId = DEFAULT_ADMIN_ID, CreatedWhen = DateTimeOffset.Now, LastEditedByUserId = DEFAULT_ADMIN_ID, LastEditedWhen = DateTimeOffset.Now },
-        ]);
-
-        _dbContext.AddRange(_refAddressTypes);
-        await _dbContext.SaveChangesWithIdentityInsertAsync<RefAddressType>();
     }
 
     private async Task SeedOrders()
@@ -793,7 +780,7 @@ internal class DataSeeder
 
     #endregion Seed Discount related data
 
-    private void AddAudit<TAuditableEntity>(List<TAuditableEntity> listItem) where TAuditableEntity : BaseAuditableEntity
+    private void AddAudit<TAuditableEntity>(List<TAuditableEntity> listItem) where TAuditableEntity : BaseAuditedEntity
     {
         foreach (var item in listItem)
         {
@@ -801,10 +788,10 @@ internal class DataSeeder
             var createdWhen = _faker.Date.PastOffset(2);
             var lastEditedWhen = _faker.Date.BetweenOffset(createdWhen, createdWhen.AddYears(1)); // Generate a random date between createdWhen and now
 
-            item.CreatedByUserId = DEFAULT_ADMIN_ID;
-            item.CreatedWhen = createdWhen;
-            item.LastEditedByUserId = DEFAULT_ADMIN_ID;
-            item.LastEditedWhen = lastEditedWhen;
+            item.CreatorId = DEFAULT_ADMIN_ID;
+            item.CreationTime = createdWhen;
+            item.LastModifierId = DEFAULT_ADMIN_ID;
+            item.LastModificationTime = lastEditedWhen;
         }
     }
 

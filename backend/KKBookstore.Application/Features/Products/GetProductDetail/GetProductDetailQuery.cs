@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Features.Products.Models;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.Products.GetProductDetail.GetProductDetailResponse;
@@ -69,7 +69,7 @@ public class GetProductDetailQueryHandler(
             .ToListAsync(cancellationToken);
 
         // hand map:
-        var productDtoHandMap = new GetProductDetailResponse()
+        var productDtoHandMap = new GetProductDetailResponse
         {
             Id = product.Id,
             Name = product.Name,
@@ -113,11 +113,8 @@ public class GetProductDetailQueryHandler(
                     Values = g.Select(pov => pov.OptionValue.Value),
                     ThumbnailImageUrls = g.Select(pov => pov.OptionValue.ThumbnailImageUrl),
                     LargeImageUrls = g.Select(pov => pov.OptionValue.LargeImageUrl)
-                })
-        };
-
-
-        productDtoHandMap.productTypeAttributes = productTypeAttributeValues
+                }),
+            ProductTypeAttributes = productTypeAttributeValues
             .Select(pav => new GetProductDetailResponse.ProductTypeAttribute()
             {
                 ProductTypeId = pav.Product.ProductTypeId,
@@ -125,7 +122,18 @@ public class GetProductDetailQueryHandler(
                 AttributeId = pav.AttributeValue.ProductTypeAttribute.Id,
                 Name = pav.AttributeValue.ProductTypeAttribute.Name,
                 Value = pav.AttributeValue.Value
-            });
+            }),
+            ProductTypes = await _dbContext.ProductTypes
+                .Where(pt => pt.Id == product.ProductTypeId)
+                .OrderBy(pt => pt.Level)
+                .Select(pt => new ProductTypeDto()
+                {
+                    Id = pt.Id,
+                    Name = pt.DisplayName,
+                    Level = pt.Level
+                })
+                .ToListAsync(cancellationToken)
+        };
 
         // Calculate min and max prices
         if (product.ProductVariants.Count != 0)
@@ -156,7 +164,7 @@ public class GetProductDetailQueryHandler(
     {
         return await _dbContext.BookAuthors
                         .Include(ab => ab.Author)
-                        .Where(wb => wb.ProductId == product.Id)
+                        .Where(wb => wb.BookId == product.Id)
                         .ToListAsync(cancellationToken);
     }
 }

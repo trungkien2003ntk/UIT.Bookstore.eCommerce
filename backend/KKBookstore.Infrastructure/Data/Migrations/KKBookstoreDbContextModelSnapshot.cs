@@ -22,48 +22,194 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DeliveryMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Branches.Branch", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DeliveryMethodId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Email");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("AddressId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Branchs", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Customers.CustomerType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<double>("MinSpending")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("float(18)")
+                        .HasColumnName("MinSpending");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("CustomerTypes", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DeliveryMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -71,7 +217,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("DeliveryMethods", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountApplyToProductType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DiscountApplyToProductType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,83 +225,105 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<int>("DiscountVoucherId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id")
-                        .HasName("DiscountApplyToProductTypeId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
 
                     b.HasIndex("DiscountVoucherId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("ProductTypeId");
 
                     b.ToTable("DiscountApplyToProductTypes", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DiscountVoucher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("DiscountVoucherId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Code");
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
 
-                    b.Property<DateTimeOffset>("EndWhen")
+                    b.Property<DateTimeOffset>("EndTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<decimal?>("MaximumDiscountValue")
                         .HasPrecision(18, 2)
@@ -167,10 +335,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Name");
 
-                    b.Property<DateTimeOffset>("StartWhen")
+                    b.Property<DateTimeOffset>("StartTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("UsageLimitOverall")
@@ -192,24 +361,27 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.ToTable("DiscountVouchers", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Order", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("OrderId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Comment");
 
                     b.Property<DateTimeOffset?>("ConfirmedDeliveryWhen")
                         .HasColumnType("datetimeoffset");
@@ -217,19 +389,23 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset?>("ConfirmedReceivedWhen")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("DeliveryInstruction")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("DeliveryInstruction");
 
-                    b.Property<int>("DeliveryMethodId")
+                    b.Property<int?>("DeliveryMethodId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("DueWhen")
@@ -238,15 +414,19 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset>("ExpectedDeliveryWhen")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("OrderNumber");
 
                     b.Property<DateTimeOffset>("OrderWhen")
                         .HasColumnType("datetimeoffset");
@@ -254,7 +434,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset?>("PaidWhen")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("PaymentMethodId")
+                    b.Property<int?>("PaymentMethodId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("PickingCompletedWhen")
@@ -283,13 +463,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("DeliveryMethodId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -302,53 +482,60 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("Orders", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.OrderLine", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.OrderLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("OrderLineId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
                     b.Property<int?>("DiscountVoucherId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("OrderId");
 
-                    b.Property<DateTimeOffset?>("PickingCompletedWhen")
+                    b.Property<DateTimeOffset?>("PickingCompletionTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("ProductVariantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductVariantId");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Quantity");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("UnitPrice");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("DiscountVoucherId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("OrderId");
 
@@ -357,48 +544,60 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("OrderLines", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.PaymentMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.PaymentMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("PaymentMethodId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -406,61 +605,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("PaymentMethods", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.RefAddressType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("RefAddressTypeId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedByUserId")
                         .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("RefAddressTypes");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("TransactionId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -469,36 +618,53 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<string>("BankCode")
                         .IsRequired()
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("BankCode");
 
                     b.Property<string>("BankTranNo")
                         .IsRequired()
-                        .HasColumnType("varchar(260)");
+                        .HasMaxLength(260)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(260)")
+                        .HasColumnName("BankTranNo");
 
                     b.Property<string>("CardType")
                         .IsRequired()
-                        .HasColumnType("varchar(25)");
+                        .HasMaxLength(25)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(25)")
+                        .HasColumnName("CardType");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("OrderId");
 
                     b.Property<string>("OrderInfo")
                         .IsRequired()
-                        .HasColumnType("varchar(260)");
+                        .HasMaxLength(260)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(260)")
+                        .HasColumnName("OrderInfo");
 
                     b.Property<DateTimeOffset>("PayDate")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("PayDate");
 
                     b.Property<string>("ResponseCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ResponseCode");
 
                     b.Property<int>("TransactionNo")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("TransactionNo");
 
                     b.Property<string>("TransactionStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("TransactionStatus");
 
                     b.HasKey("Id");
 
@@ -507,7 +673,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("Transactions", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.VoucherUsage", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.VoucherUsage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -515,195 +681,500 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int")
+                        .HasColumnName("CustomerId");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("OrderId");
 
-                    b.Property<DateTimeOffset>("UsedWhen")
+                    b.Property<DateTimeOffset>("RedemptionTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("VoucherId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("VoucherId");
 
-                    b.HasKey("Id")
-                        .HasName("VoucherUsageId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("VoucherId");
 
                     b.ToTable("VoucherUsages", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Author", b =>
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("AuthorId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnName("DisplayName");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int>("Level")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("ParentProductTypeId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ProductTypeCode")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("ProductTypeCode");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("ParentProductTypeId");
+
+                    b.HasIndex("ProductTypeCode")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypes", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypeAttributes", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int>("ProductAttributeId")
+                        .HasColumnType("int")
+                        .HasColumnName("ProductAttributeId");
+
+                    b.Property<int>("ProductTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("ProductAttributeId");
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.ToTable("ProductTypeAttributeMappings", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeProductValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeValueId")
+                        .HasColumnType("int")
+                        .HasColumnName("AttributeValueId");
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int")
+                        .HasColumnName("ProductId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeValueId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("ProductId", "AttributeValueId")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypeAttributeProductValues", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int>("ProductTypeAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("ProductTypeAttributeId", "Value")
+                        .IsUnique();
+
+                    b.ToTable("ProductTypeAttributeValues", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Products.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.ToTable("Authors", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.BookAuthor", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.BookAuthor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("BookAuthorId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("AuthorId");
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<int>("BookId")
+                        .HasColumnType("int")
+                        .HasColumnName("BookId");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("WrittenWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset>("WriteTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("WriteTime");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
 
-                    b.HasIndex("ProductId", "AuthorId")
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("BookId", "AuthorId")
                         .IsUnique();
 
                     b.ToTable("BookAuthors", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Product", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsActive");
 
                     b.Property<bool>("IsBook")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsBook");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Name");
 
                     b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductTypeId");
 
                     b.Property<int>("UnitMeasureId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("UnitMeasureId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -715,236 +1186,289 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductImage", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductImageId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
                     b.Property<string>("LargeImageUrl")
                         .IsRequired()
-                        .HasColumnType("varchar(MAX)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("LargeImageUrl");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductId");
 
                     b.Property<string>("ThumbnailImageUrl")
                         .IsRequired()
-                        .HasColumnType("varchar(MAX)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ThumbnailImageUrl");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductOptionId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
                     b.Property<bool>("IsOptionWithImage")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnName("IsOptionWithImage");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Name");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductOptions", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOptionValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductOptionValueId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
                     b.Property<string>("LargeImageUrl")
                         .IsRequired()
-                        .HasColumnType("varchar(MAX)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("LargeImageUrl");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("OptionId")
                         .HasColumnType("int");
 
                     b.Property<string>("ThumbnailImageUrl")
                         .IsRequired()
-                        .HasColumnType("varchar(MAX)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ThumbnailImageUrl");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Value");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("OptionId");
 
                     b.ToTable("ProductOptionValues", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductPriceHistory", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductPriceHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductPriceHistoryId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset>("EndWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset>("EndTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("EndTime");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("ProductVariantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductVariantId");
 
                     b.Property<decimal>("RecommendedRetailPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("RecommendedRetailPrice");
 
-                    b.Property<DateTimeOffset>("StartWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset>("StartTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("StartTime");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("UnitPrice");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("ProductVariantId");
+                    b.HasIndex("LastModifierId");
 
                     b.ToTable("ProductPriceHistories", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductVariant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductVariantId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Barcode")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)")
+                        .HasColumnName("Barcode");
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Comment");
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<DateTimeOffset?>("DiscontinuedWhen")
                         .HasColumnType("datetimeoffset");
@@ -953,27 +1477,29 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductId");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Quantity");
 
                     b.Property<decimal>("RecommendedRetailPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("RecommendedRetailPrice");
 
                     b.Property<string>("Tags")
                         .IsRequired()
@@ -981,11 +1507,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<decimal>("TaxRate")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("TaxRate");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("UnitPrice");
 
                     b.Property<DateTimeOffset>("ValidFrom")
                         .HasColumnType("datetimeoffset");
@@ -995,45 +1523,57 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<int>("Weight")
                         .HasPrecision(18, 2)
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Weight");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVariants", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariantOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductVariantOptionValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductVariantOptionValueId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("OptionId")
                         .HasColumnType("int");
@@ -1046,9 +1586,11 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("OptionId");
 
@@ -1060,510 +1602,401 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("ProductVariantOptionValues", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.Rating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("RatingId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnName("Comment");
 
-                    b.Property<int>("CreatedByUserId")
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductVariantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductVariantId");
 
                     b.Property<int>("RatingValue")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("RatingValue");
 
                     b.Property<int>("ReportedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Response")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnName("Response");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Status");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("ProductVariantId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Ratings", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.RatingLike", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.RatingLike", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("RatingLikeId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int")
+                        .HasColumnName("CustomerId");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<bool>("Liked")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("Liked");
 
-                    b.Property<DateTimeOffset>("LikedWhen")
+                    b.Property<DateTimeOffset>("LikedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("RatingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("RatingId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("RatingId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("RatingLikes", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.UnitMeasure", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.UnitMeasure", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("UnitMeasureId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("Description");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("UnitMeasures");
+                    b.ToTable("UnitMeasures", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.ShoppingCarts.ShoppingCartItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DeletedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentProductTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductTypeCode")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("DisplayName")
-                        .IsUnique();
-
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("ParentProductTypeId");
-
-                    b.ToTable("ProductTypes", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int?>("CreatorId")
                         .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("ProductTypeAttributes", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeMappingId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("ProductAttributeId");
-
-                    b.HasIndex("ProductTypeId");
-
-                    b.ToTable("ProductTypeAttributeMappings", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeProductValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeProductValueId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AttributeValueId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttributeValueId");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("ProductId", "AttributeValueId")
-                        .IsUnique();
-
-                    b.ToTable("ProductTypeAttributeProductValues", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductTypeAttributeValueId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ProductTypeAttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("LastEditedByUserId");
-
-                    b.HasIndex("ProductTypeAttributeId", "Value")
-                        .IsUnique();
-
-                    b.ToTable("ProductTypeAttributeValues", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ShoppingCartAggregate.ShoppingCartItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ShoppingCartItemId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnName("CreatorId");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
-                    b.Property<DateTimeOffset>("LastEditedWhen")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
 
                     b.Property<int>("ProductVariantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ProductVariantId");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Quantity");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("LastModifierId");
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ShoppingCartItems");
+                    b.ToTable("ShoppingCartItems", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.ShippingAddress", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Stocks.Inventory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ShippingAddressId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Commune")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
+                    b.Property<DateTimeOffset?>("CreationTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("DetailAddress")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDefault")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LastEditedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
+                    b.Property<DateTimeOffset?>("LastModificationTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Province")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("ProductVariantId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ReceiverName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("PurchaseOrderLineId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("PurchasePrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WarehouseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressTypeId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("DeleterId");
 
-                    b.HasIndex("LastEditedByUserId");
+                    b.HasIndex("LastModifierId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ShippingAddresses");
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("Inventory");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.User", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Users.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Commune")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Commune");
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
                         .HasColumnType("int")
-                        .HasColumnName("UserId");
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("DetailAddress")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("DetailAddress");
+
+                    b.Property<string>("Discriminator")
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("District");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDefault");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)")
+                        .HasColumnName("PhoneNumber");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("Province");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.ToTable("Addresses", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Users.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -1574,17 +2007,24 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedWhen")
+                    b.Property<DateTimeOffset?>("CreationTime")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("DateOfBirth")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("DeletedWhen")
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Discriminator")
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -1595,12 +2035,13 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("FirstName");
 
                     b.Property<string>("ImageUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ImageUrl");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1614,16 +2055,17 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Property<bool>("IsEmployee")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LastEditedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("LastEditedWhen")
+                    b.Property<DateTimeOffset?>("LastModificationTime")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(125)
+                        .HasColumnType("nvarchar(125)")
+                        .HasColumnName("LastName");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -1671,10 +2113,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastEditedBy");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -1683,7 +2121,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", (string)null);
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("KKBookstore.Infrastructure.Identity.RefreshToken", b =>
@@ -1849,134 +2289,234 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DeliveryMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Customers.ShippingAddress", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasBaseType("KKBookstore.Domain.Users.Address");
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int")
+                        .HasColumnName("CustomerId");
 
-                    b.Navigation("CreatedByUser");
+                    b.Property<string>("ReceiverName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("ReceiverName");
 
-                    b.Navigation("LastEditedByUser");
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("ShippingAddresses", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountApplyToProductType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Customers.Customer", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasBaseType("KKBookstore.Domain.Users.User");
+
+                    b.Property<int?>("CustomerTypeId")
+                        .IsRequired()
+                        .HasColumnType("int")
+                        .HasColumnName("CustomerTypeId");
+
+                    b.HasIndex("CustomerTypeId");
+
+                    b.ToTable("Customers", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Branches.Branch", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "DiscountVoucher")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Customers.CustomerType", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DeliveryMethod", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DiscountApplyToProductType", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Orders.DiscountVoucher", "DiscountVoucher")
                         .WithMany("ProductTypesApplied")
                         .HasForeignKey("DiscountVoucherId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ProductType")
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
 
                     b.Navigation("DiscountVoucher");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("ProductType");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DiscountVoucher", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("CreatedByUser");
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Order", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.Order", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "Customer")
+                    b.HasOne("KKBookstore.Domain.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DeliveryMethod", "DeliveryMethod")
+                    b.HasOne("KKBookstore.Domain.Orders.DeliveryMethod", "DeliveryMethod")
                         .WithMany()
                         .HasForeignKey("DeliveryMethodId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.PaymentMethod", "PaymentMethod")
+                    b.HasOne("KKBookstore.Domain.Orders.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "PriceDiscountVoucher")
+                    b.HasOne("KKBookstore.Domain.Orders.DiscountVoucher", "PriceDiscountVoucher")
                         .WithMany()
                         .HasForeignKey("PriceDiscountVoucherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.ShippingAddress", "ShippingAddress")
+                    b.HasOne("KKBookstore.Domain.Customers.ShippingAddress", "ShippingAddress")
                         .WithMany()
                         .HasForeignKey("ShippingAddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "ShippingDiscountVoucher")
+                    b.HasOne("KKBookstore.Domain.Orders.DiscountVoucher", "ShippingDiscountVoucher")
                         .WithMany()
                         .HasForeignKey("ShippingDiscountVoucherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
                     b.Navigation("Customer");
 
                     b.Navigation("DeliveryMethod");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("PaymentMethod");
 
@@ -1987,89 +2527,73 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("ShippingDiscountVoucher");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.OrderLine", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.OrderLine", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "DiscountVoucher")
+                    b.HasOne("KKBookstore.Domain.Orders.DiscountVoucher", "DiscountVoucher")
                         .WithMany()
                         .HasForeignKey("DiscountVoucherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.Order", "Order")
+                    b.HasOne("KKBookstore.Domain.Orders.Order", "Order")
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", "ProductVariant")
+                    b.HasOne("KKBookstore.Domain.Products.ProductVariant", "ProductVariant")
                         .WithMany()
                         .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
                     b.Navigation("DiscountVoucher");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Order");
 
                     b.Navigation("ProductVariant");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.PaymentMethod", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.PaymentMethod", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("CreatedByUser");
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.RefAddressType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.Transaction", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Transaction", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.Order", "Order")
+                    b.HasOne("KKBookstore.Domain.Orders.Order", "Order")
                         .WithMany("Transactions")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2078,267 +2602,427 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.VoucherUsage", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.VoucherUsage", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.Order", "Order")
+                    b.HasOne("KKBookstore.Domain.Orders.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", "Voucher")
+                    b.HasOne("KKBookstore.Domain.Orders.DiscountVoucher", "Voucher")
                         .WithMany("VoucherUsages")
                         .HasForeignKey("VoucherId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Customer");
+
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Order");
-
-                    b.Navigation("User");
 
                     b.Navigation("Voucher");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Author", b =>
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductType", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("CreatedByUser");
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("LastEditedByUser");
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ParentProductType")
+                        .WithMany()
+                        .HasForeignKey("ParentProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("ParentProductType");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.BookAuthor", b =>
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Author", "Author")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeMapping", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", "ProductAttribute")
+                        .WithMany("ProductTypes")
+                        .HasForeignKey("ProductAttributeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ProductType")
+                        .WithMany("Attributes")
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("ProductAttribute");
+
+                    b.Navigation("ProductType");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeProductValue", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", "AttributeValue")
+                        .WithMany("ProductsAppliedValue")
+                        .HasForeignKey("AttributeValueId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AttributeValue");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", "ProductTypeAttribute")
+                        .WithMany("Values")
+                        .HasForeignKey("ProductTypeAttributeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("ProductTypeAttribute");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Products.Author", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Products.BookAuthor", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Products.Author", "Author")
                         .WithMany("AuthorBooks")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Products.Product", "Book")
                         .WithMany("BookAuthors")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Author");
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Book");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("Product");
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Product", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.Product", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ProductType")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.ProductTypes.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.UnitMeasure", "UnitMeasure")
+                    b.HasOne("KKBookstore.Domain.Products.UnitMeasure", "UnitMeasure")
                         .WithMany()
                         .HasForeignKey("UnitMeasureId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
 
                     b.Navigation("ProductType");
 
                     b.Navigation("UnitMeasure");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductImage", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductImage", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOption", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
                         .WithMany("Options")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOptionValue", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", "Option")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.ProductOption", "Option")
                         .WithMany("OptionValues")
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Option");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductPriceHistory", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductPriceHistory", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", "ProductVariant")
-                        .WithMany()
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Creator");
 
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ProductVariant");
+                    b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductVariant", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.Product", "Product")
                         .WithMany("ProductVariants")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("KKBookstore.Domain.Aggregates.ProductAggregate.Dimension", "Dimension", b1 =>
+                    b.OwnsOne("KKBookstore.Domain.Products.Dimension", "Dimension", b1 =>
                         {
                             b1.Property<int>("ProductVariantId")
                                 .HasColumnType("int");
@@ -2363,15 +3047,15 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                                 .HasForeignKey("ProductVariantId");
                         });
 
-                    b.OwnsOne("KKBookstore.Domain.Aggregates.ProductAggregate.SkuValue", "SkuValue", b1 =>
+                    b.OwnsOne("KKBookstore.Domain.Products.SkuValue", "SkuValue", b1 =>
                         {
                             b1.Property<int>("ProductVariantId")
                                 .HasColumnType("int");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
+                                .HasMaxLength(64)
+                                .HasColumnType("nvarchar(64)");
 
                             b1.HasKey("ProductVariantId");
 
@@ -2381,12 +3065,14 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                                 .HasForeignKey("ProductVariantId");
                         });
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
 
                     b.Navigation("Dimension")
                         .IsRequired();
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Product");
 
@@ -2394,41 +3080,46 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariantOptionValue", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductVariantOptionValue", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", "Option")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.ProductOption", "Option")
                         .WithMany()
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOptionValue", "OptionValue")
+                    b.HasOne("KKBookstore.Domain.Products.ProductOptionValue", "OptionValue")
                         .WithMany()
                         .HasForeignKey("OptionValueId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", "ProductVariant")
+                    b.HasOne("KKBookstore.Domain.Products.ProductVariant", "ProductVariant")
                         .WithMany("ProductVariantOptionValues")
                         .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Option");
 
@@ -2437,332 +3128,200 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("ProductVariant");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.Rating", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", null)
-                        .WithMany("Ratings")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", "ProductVariant")
-                        .WithMany("Ratings")
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ProductVariant");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.RatingLike", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", "Rating")
-                        .WithMany("Likes")
-                        .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("Rating");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.UnitMeasure", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ParentProductType")
-                        .WithMany()
-                        .HasForeignKey("ParentProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ParentProductType");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeMapping", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", "ProductAttribute")
-                        .WithMany("ProductTypes")
-                        .HasForeignKey("ProductAttributeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", "ProductType")
-                        .WithMany("Attributes")
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ProductAttribute");
-
-                    b.Navigation("ProductType");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeProductValue", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", "AttributeValue")
-                        .WithMany("ProductsAppliedValue")
-                        .HasForeignKey("AttributeValueId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AttributeValue");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", "ProductTypeAttribute")
-                        .WithMany("Values")
-                        .HasForeignKey("ProductTypeAttributeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("ProductTypeAttribute");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ShoppingCartAggregate.ShoppingCartItem", b =>
-                {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "Customer")
+                    b.HasOne("KKBookstore.Domain.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.Product", null)
+                        .WithMany("Ratings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.ProductVariant", "ProductVariant")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", "ProductVariant")
+                    b.Navigation("Creator");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("ProductVariant");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Products.RatingLike", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.Rating", "Rating")
+                        .WithMany("Likes")
+                        .HasForeignKey("RatingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("Rating");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Products.UnitMeasure", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ShoppingCarts.ShoppingCartItem", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.ProductVariant", "ProductVariant")
                         .WithMany()
                         .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Creator");
 
                     b.Navigation("Customer");
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("ProductVariant");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.ShippingAddress", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Stocks.Inventory", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.OrderAggregate.RefAddressType", "AddressType")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("AddressTypeId")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Domain.Products.ProductVariant", "ProductVariant")
+                        .WithMany("Inventories")
+                        .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Branches.Branch", "Warehouse")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastEditedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Creator");
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Deleter");
 
-                    b.Navigation("AddressType");
+                    b.Navigation("LastModifier");
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("ProductVariant");
 
-                    b.Navigation("LastEditedByUser");
-
-                    b.Navigation("User");
+                    b.Navigation("Warehouse");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.UserAggregate.User", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Users.Address", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "CreatedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatedBy")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "LastEditedByUser")
+                    b.HasOne("KKBookstore.Domain.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("LastEditedBy")
+                        .HasForeignKey("DeleterId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("CreatedByUser");
+                    b.HasOne("KKBookstore.Domain.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("LastEditedByUser");
+                    b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
                 });
 
             modelBuilder.Entity("KKBookstore.Infrastructure.Identity.RefreshToken", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", "User")
+                    b.HasOne("KKBookstore.Domain.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2782,7 +3341,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
+                    b.HasOne("KKBookstore.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2791,7 +3350,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
+                    b.HasOne("KKBookstore.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2806,7 +3365,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
+                    b.HasOne("KKBookstore.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2815,33 +3374,84 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Aggregates.UserAggregate.User", null)
+                    b.HasOne("KKBookstore.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.DiscountVoucher", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Customers.ShippingAddress", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Customers.Customer", "Customer")
+                        .WithMany("ShippingAddresses")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.Address", null)
+                        .WithOne()
+                        .HasForeignKey("KKBookstore.Domain.Customers.ShippingAddress", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Customers.Customer", b =>
+                {
+                    b.HasOne("KKBookstore.Domain.Customers.CustomerType", "CustomerType")
+                        .WithMany()
+                        .HasForeignKey("CustomerTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("KKBookstore.Domain.Customers.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CustomerType");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Orders.DiscountVoucher", b =>
                 {
                     b.Navigation("ProductTypesApplied");
 
                     b.Navigation("VoucherUsages");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.OrderAggregate.Order", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Orders.Order", b =>
                 {
                     b.Navigation("OrderLines");
 
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Author", b =>
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductType", b =>
+                {
+                    b.Navigation("Attributes");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttribute", b =>
+                {
+                    b.Navigation("ProductTypes");
+
+                    b.Navigation("Values");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.ProductTypes.ProductTypeAttributeValue", b =>
+                {
+                    b.Navigation("ProductsAppliedValue");
+                });
+
+            modelBuilder.Entity("KKBookstore.Domain.Products.Author", b =>
                 {
                     b.Navigation("AuthorBooks");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Product", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.Product", b =>
                 {
                     b.Navigation("BookAuthors");
 
@@ -2854,38 +3464,28 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductOption", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductOption", b =>
                 {
                     b.Navigation("OptionValues");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.ProductVariant", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.ProductVariant", b =>
                 {
+                    b.Navigation("Inventories");
+
                     b.Navigation("ProductVariantOptionValues");
 
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductAggregate.Rating", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Products.Rating", b =>
                 {
                     b.Navigation("Likes");
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductType", b =>
+            modelBuilder.Entity("KKBookstore.Domain.Customers.Customer", b =>
                 {
-                    b.Navigation("Attributes");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttribute", b =>
-                {
-                    b.Navigation("ProductTypes");
-
-                    b.Navigation("Values");
-                });
-
-            modelBuilder.Entity("KKBookstore.Domain.Aggregates.ProductTypeAggregate.ProductTypeAttributeValue", b =>
-                {
-                    b.Navigation("ProductsAppliedValue");
+                    b.Navigation("ShippingAddresses");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Shared.Orders;
 using MediatR;
 
 namespace KKBookstore.Application.Features.Users.AddShippingAddress;
@@ -13,5 +14,5 @@ public record AddShippingAddressCommand : IRequest<Result<AddShippingAddressResp
     public string Commune { get; init; }
     public string DetailAddress { get; init; }
     public bool IsDefault { get; init; }
-    public string AddressType { get; init; }
+    public AddressType Type { get; init; }
 }

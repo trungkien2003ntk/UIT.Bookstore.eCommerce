@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;

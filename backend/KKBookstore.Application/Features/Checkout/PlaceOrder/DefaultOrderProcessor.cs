@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Shared.Orders;
+using KKBookstore.Domain.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
@@ -103,8 +104,8 @@ public class DefaultOrderProcessor(
             {
                 VoucherId = shippingDiscountVoucher.Id,
                 OrderId = order.Id,
-                UserId = userId,
-                UsedWhen = DateTimeOffset.Now
+                CustomerId = userId,
+                RedemptionTime = DateTimeOffset.Now
             }, cancellationToken);
         }
 
@@ -125,8 +126,8 @@ public class DefaultOrderProcessor(
             {
                 VoucherId = orderDiscountVoucher.Id,
                 OrderId = order.Id,
-                UserId = userId,
-                UsedWhen = DateTimeOffset.Now
+                CustomerId = userId,
+                RedemptionTime = DateTimeOffset.Now
             }, cancellationToken);
         }
 

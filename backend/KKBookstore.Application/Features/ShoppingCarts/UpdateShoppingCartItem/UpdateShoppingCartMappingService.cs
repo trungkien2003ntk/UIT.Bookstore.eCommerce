@@ -1,8 +1,8 @@
 ﻿using KKBookstore.Application.Common.Constants;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.DiscountDetailDto;
@@ -98,7 +98,7 @@ public class UpdateShoppingCartMappingService(
             TotalQuantity = ci.ProductVariant.Quantity,
             ImageUrl = ci.ProductVariant.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
             Description = product.Description,
-            CreatedWhen = ci.CreatedWhen,
+            CreationTime = ci.CreationTime,
             ProductVariantVariations = product.ProductVariants
                 .Select(MapToProductVariantForCartDto)
                 .Select(sv => sv.PopulateIndex(productOptionAttributeDtos))
@@ -119,7 +119,6 @@ public class UpdateShoppingCartMappingService(
             AvailableQuantity = productVariant.AvailableQuantity,
             TotalQuantity = productVariant.Quantity,
             ProductId = productVariant.ProductId,
-            Status = productVariant.Status.ToString(),
             SkuValue = productVariant.SkuValue.Value,
             OptionNames = productVariant.ProductVariantOptionValues.Select(sov => sov.OptionValue.Option.Name).ToList()
         };

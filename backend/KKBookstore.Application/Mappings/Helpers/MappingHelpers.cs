@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Aggregates.ProductAggregate;
+﻿using KKBookstore.Domain.Products;
 
 namespace KKBookstore.Application.Mappings.Helpers;
 

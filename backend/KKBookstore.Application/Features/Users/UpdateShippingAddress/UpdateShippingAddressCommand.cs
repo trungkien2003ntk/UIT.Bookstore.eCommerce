@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +37,7 @@ public class UpdateShippingAddressCommandHandler(
         }
 
 
-        shippingAddress.UserId = request.UserId;
+        shippingAddress.CustomerId = request.UserId;
         shippingAddress.ReceiverName = request.ReceiverName;
         shippingAddress.PhoneNumber = request.PhoneNumber;
         shippingAddress.Province = request.Province;
@@ -45,15 +45,14 @@ public class UpdateShippingAddressCommandHandler(
         shippingAddress.Commune = request.Commune;
         shippingAddress.DetailAddress = request.DetailAddress;
         shippingAddress.IsDefault = request.IsDefault;
-        shippingAddress.AddressTypeEnum = Enum.Parse<AddressType>(request.AddressType);
-
+        
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
         var response = new UpdateShippingAddressResponse
         (
             shippingAddress.Id,
-            shippingAddress.UserId,
+            shippingAddress.CustomerId,
             shippingAddress.ReceiverName,
             shippingAddress.PhoneNumber,
             shippingAddress.Province,
@@ -61,7 +60,7 @@ public class UpdateShippingAddressCommandHandler(
             shippingAddress.Commune,
             shippingAddress.DetailAddress,
             shippingAddress.IsDefault,
-            shippingAddress.AddressTypeEnum.ToString()
+            shippingAddress.Type.ToString()
         );
 
         return Result.Success(response);

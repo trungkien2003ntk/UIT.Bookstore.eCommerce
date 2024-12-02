@@ -2,8 +2,9 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Shared.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -50,7 +51,7 @@ public class GetOrderListHandler(
         query = ApplyOrderStatusFilter(query, request);
 
         var sortProperty = request.SortBy;
-        var validSortProperties = new List<string> { nameof(Order.CreatedWhen), nameof(Order.Id), nameof(Order.Status) };
+        var validSortProperties = new List<string> { nameof(Order.CreationTime), nameof(Order.Id), nameof(Order.Status) };
         PaginatedResult<Order> paginatedOrders;
 
         try

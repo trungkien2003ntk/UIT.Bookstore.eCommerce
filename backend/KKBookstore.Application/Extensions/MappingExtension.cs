@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
 namespace KKBookstore.Application.Extensions;

@@ -1,8 +1,9 @@
-﻿using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ProductTypeAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
-using KKBookstore.Domain.Aggregates.UserAggregate;
+﻿using KKBookstore.Domain.Customers;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ProductTypes;
+using KKBookstore.Domain.ShoppingCarts;
+using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -35,7 +36,6 @@ public interface IApplicationDbContext
     public DbSet<ProductPriceHistory> ProductPriceHistories { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<RatingLike> RatingLikes { get; set; }
-    public DbSet<RefAddressType> RefAddressTypes { get; set; }
     public DbSet<ShippingAddress> ShippingAddresses { get; set; }
     public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
     public DbSet<ProductVariant> ProductVariants { get; set; }

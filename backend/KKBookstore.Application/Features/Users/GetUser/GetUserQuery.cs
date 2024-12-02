@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

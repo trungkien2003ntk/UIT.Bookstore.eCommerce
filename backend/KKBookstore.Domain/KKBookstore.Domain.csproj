@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\KKBookstore.Domain.Shared\KKBookstore.Domain.Shared.csproj" />
   </ItemGroup>
 
 </Project>

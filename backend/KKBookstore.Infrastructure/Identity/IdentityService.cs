@@ -9,9 +9,9 @@ using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Application.Features.Users.UpdatePassword;
 using KKBookstore.Application.Features.Users.UpdateUser;
-using KKBookstore.Domain.Aggregates.UserAggregate;
 using KKBookstore.Domain.Constants;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +65,34 @@ public class IdentityService(
         var responseResult = await GenerateTokenResponse(user);
 
         return responseResult;
+    }
+
+    public async Task<Result<string>> GenerateResetPasswordTokenAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return Result.Failure<string>(UserErrors.NotFound);
+        }
+
+        return await _userManager.GeneratePasswordResetTokenAsync(user);
+    }
+
+    public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return Result.Failure(UserErrors.NotFound);
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        if (!result.Succeeded)
+        {
+            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        return Result.Success();
     }
 
     public async Task<Result<User>> CreateTemporaryCustomerAsync(string email)
@@ -250,7 +278,7 @@ public class IdentityService(
         return responseResult;
     }
 
-    public async Task<Result> UpdatePasswordAsync(UpdatePasswordCommand request)
+    public async Task<Result> UpdatePasswordAsync(ResetPasswordCommand request)
     {
         var userResult = await FindUserAsync(new(request.Email));
 

@@ -1,8 +1,8 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
-using KKBookstore.Domain.Aggregates.ProductAggregate;
-using KKBookstore.Domain.Aggregates.ShoppingCartAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.Checkout.Confirm.ConfirmCheckoutResponse;
@@ -38,10 +38,10 @@ public class ConfirmCheckoutHandler(
         var productsInCart = await ExtractDistinctProductInCart(checkoutItems);
 
         var shippingAddresses = await _dbContext.ShippingAddresses
-            .Where(ca => ca.UserId == userId)
+            .Where(ca => ca.CustomerId == userId)
             .ToListAsync(cancellationToken);
 
-        var defaultAddress = shippingAddresses.Find(ca => ca.UserId == userId && ca.IsDefault);
+        var defaultAddress = shippingAddresses.Find(ca => ca.CustomerId == userId && ca.IsDefault);
 
         int shippingFee;
         DateTimeOffset expectedDeliveryTime;
@@ -214,7 +214,7 @@ public class ConfirmCheckoutHandler(
             ShippingAddresses = shippingAddresses.Select(sa => new ShippingAddressDto
             {
                 Id = sa.Id,
-                UserId = sa.UserId,
+                UserId = sa.CustomerId,
                 ReceiverName = sa.ReceiverName,
                 PhoneNumber = sa.PhoneNumber,
                 Province = sa.Province,
@@ -222,7 +222,7 @@ public class ConfirmCheckoutHandler(
                 Commune = sa.Commune,
                 DetailAddress = sa.DetailAddress,
                 IsDefault = sa.IsDefault,
-                AddressType = sa.AddressTypeEnum.ToString()
+                AddressType = sa.Type.ToString()
             }).ToList()
         };
 

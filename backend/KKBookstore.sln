@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailQueueFunction", "MailQu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KKBookstore.DbMigrator", "KKBookstore.DbMigrator\KKBookstore.DbMigrator.csproj", "{1A363764-6E18-4745-83BA-9E3DEAA8CAAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KKBookstore.Domain.Shared", "KKBookstore.Domain.Shared\KKBookstore.Domain.Shared.csproj", "{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,12 @@ Global
 		{1A363764-6E18-4745-83BA-9E3DEAA8CAAD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A363764-6E18-4745-83BA-9E3DEAA8CAAD}.Stage|Any CPU.ActiveCfg = Stage|Any CPU
 		{1A363764-6E18-4745-83BA-9E3DEAA8CAAD}.Stage|Any CPU.Build.0 = Stage|Any CPU
+		{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}.Stage|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7DBF0A-C456-4DC7-A6C2-A44706CE7B23}.Stage|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

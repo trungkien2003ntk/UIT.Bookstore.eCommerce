@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Aggregates.OrderAggregate;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
+using KKBookstore.Domain.Shared.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;

@@ -70,6 +70,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Seeders\JsonData\Branches\" />
-	  <Folder Include="Seeders\JsonData\Customers\" />
+	  <Folder Include="Seeders\JsonData\Users\" />
 	</ItemGroup>
 </Project>

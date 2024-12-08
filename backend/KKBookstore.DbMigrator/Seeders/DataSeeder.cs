@@ -20,14 +20,13 @@ namespace KKBookstore.DbMigrator.Seeders;
 internal class DataSeeder
 {
     #region Json paths
-    // User paths
+
     private const string BASE_PATH = "./Seeders/JsonData";
-    private readonly string UserJsonPath = $"{BASE_PATH}/Users/User.json";
-    private readonly string ShippingAddressJsonPath = $"{BASE_PATH}/Users/ShippingAddress.json";
 
     // Customer paths
     private readonly string CustomerJsonPath = $"{BASE_PATH}/Customers/Customers.json";
     private readonly string CustomerTypeJsonPath = $"{BASE_PATH}/Customers/CustomerTypes.json";
+    private readonly string ShippingAddressJsonPath = $"{BASE_PATH}/Customers/ShippingAddresses.json";
 
     // Staff paths
     private readonly string StaffJsonPath = $"{BASE_PATH}/Staffs/Staffs.json";
@@ -39,16 +38,18 @@ internal class DataSeeder
     private readonly string ProductOptionValueJsonPath = $"{BASE_PATH}/Products/ProductOptionValue.json";
     private readonly string ProductJsonPath = $"{BASE_PATH}/Products/Product.json";
     private readonly string ProductImageJsonPath = $"{BASE_PATH}/Products/ProductImage.json";
-    private readonly string ProductTypeJsonPath = $"{BASE_PATH}/Products/ProductType.json";
-    private readonly string ProductTypeAttributeJsonPath = $"{BASE_PATH}/Products/ProductTypeAttribute.json";
-    private readonly string ProductTypeAttributeMappingJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeMapping.json";
-    private readonly string ProductTypeAttributeProductValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeProductValue.json";
-    private readonly string ProductTypeAttributeValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeValue.json";
     private readonly string RatingJsonPath = $"{BASE_PATH}/Products/Rating.json";
     private readonly string RatingLikeJsonPath = $"{BASE_PATH}/Products/RatingLike.json";
     private readonly string ProductVariantJsonPath = $"{BASE_PATH}/Products/ProductVariant.json";
     private readonly string ProductVariantOptionValueJsonPath = $"{BASE_PATH}/Products/ProductVariantOptionValue.json";
     private readonly string UnitMeasureJsonPath = $"{BASE_PATH}/Products/UnitMeasure.json";
+
+    // ProductType paths
+    private readonly string ProductTypeJsonPath = $"{BASE_PATH}/Products/ProductType.json";
+    private readonly string ProductTypeAttributeJsonPath = $"{BASE_PATH}/Products/ProductTypeAttribute.json";
+    private readonly string ProductTypeAttributeMappingJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeMapping.json";
+    private readonly string ProductTypeAttributeProductValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeProductValue.json";
+    private readonly string ProductTypeAttributeValueJsonPath = $"{BASE_PATH}/Products/ProductTypeAttributeValue.json";
 
     // Order paths
     private readonly string OrderJsonPath = $"{BASE_PATH}/Orders/Order.json";
@@ -65,7 +66,6 @@ internal class DataSeeder
 
     #region Data lists
     // User related data
-    private readonly List<User> _users = [];
     private readonly List<ShippingAddress> _shippingAddresses = [];
 
     // Customer related data
@@ -107,13 +107,18 @@ internal class DataSeeder
     private readonly List<ShoppingCartItem> _shoppingCartItems = [];
     #endregion Data lists
 
+    #region Fields
     // Json option
     private readonly JsonSerializerOptions enumOption = new() { Converters = { new JsonStringEnumConverter() } };
 
+    // Constants
     private const int DEFAULT_ADMIN_ID = 1;
     private const int SEED = 1000000;
+
+    // Fields
     private readonly Faker _faker = new("vi") { Random = new Randomizer(SEED) };
     private readonly KKBookstoreDbContext _dbContext;
+    #endregion Fields
 
     public DataSeeder(KKBookstoreDbContext dbContext)
     {
@@ -157,12 +162,75 @@ internal class DataSeeder
 
         Log.Information($"\t\t4. Seeding customers");
         await SeedCustomers();
-        //await SeedUsers();
 
         Log.Information($"\t\t5. Seeding user roles");
         await SeedUserRoles();
-        //await SeedReferenceValues();
-        //await SeedShippingAddress();
+        await SeedReferenceValues();
+        await SeedShippingAddress();
+    }
+
+    private async Task SeedProductRelatedData()
+    {
+        await SeedAuthors();
+        await SeedUnitMeasures();
+        await SeedProductTypes();
+        await SeedProductTypeAttributes();
+        await SeedProductTypeAttributeMappings();
+        await SeedProductTypeAttributeValues();
+        //await SeedProducts();
+        //await SeedProductTypeAttributeProductValues();
+        //await SeedProductImages();
+        //await SeedProductVariants();
+        //await SeedBookAuthors();
+        //await SeedOptions();
+        //await SeedOptionValues();
+        //await SeedProductVariantOptionValues();
+        //await SeedRatings();
+    }
+
+    private async Task SeedOrderRelatedData()
+    {
+        await SeedOrders();
+        await SeedOrderLines();
+    }
+
+    private async Task SeedShoppingCartItemRelatedDataAsync()
+    {
+        if (_dbContext.ShoppingCartItems.Any())
+        {
+            return;
+        }
+
+        var shoppingCartItemJson = File.ReadAllText(ShoppingCartItemJsonPath, Encoding.UTF8);
+        var shoppingCartItems = JsonSerializer.Deserialize<List<ShoppingCartItem>>(shoppingCartItemJson);
+
+        AddAudit(shoppingCartItems);
+
+        _shoppingCartItems.AddRange(shoppingCartItems);
+
+        _dbContext.AddRange(_shoppingCartItems);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<ShoppingCartItem>();
+    }
+
+
+    #region Seed User related data
+    private async Task SeedRoles()
+    {
+        if (_dbContext.Roles.Any())
+        {
+            return;
+        }
+
+        var roles = new List<IdentityRole<int>>
+        {
+            new() { Id = 1, Name = "Customer", NormalizedName = "CUSTOMER" },
+            new() { Id = 2, Name = "Admin", NormalizedName = "ADMIN" },
+            new() { Id = 3, Name = "SalesStaff", NormalizedName = "SALESSTAFF" },
+            new() { Id = 4, Name = "CustomerCareStaff", NormalizedName = "CUSTOMERCARESTAFF" },
+        };
+
+        _dbContext.AddRange(roles);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<IdentityRole<int>>();
     }
 
     private async Task SeedCustomerTypes()
@@ -211,7 +279,7 @@ internal class DataSeeder
         {
             return;
         }
-        
+
         var staffJson = File.ReadAllText(StaffJsonPath, Encoding.UTF8);
         var staffs = JsonSerializer.Deserialize<List<Staff>>(staffJson, enumOption);
 
@@ -225,94 +293,6 @@ internal class DataSeeder
         _staffs.AddRange(staffs);
         _dbContext.AddRange(staffs);
         await _dbContext.SaveChangesWithIdentityInsertAsync<Staff>();
-    }
-
-
-    private async Task SeedProductRelatedData()
-    {
-        await SeedAuthors();
-        await SeedUnitMeasures();
-        await SeedProductTypes();
-        await SeedProductTypeAttributes();
-        await SeedProductTypeAttributeMappings();
-        await SeedProductTypeAttributeValues();
-        //await SeedProducts();
-        //await SeedProductTypeAttributeProductValues();
-        //await SeedProductImages();
-        //await SeedProductVariants();
-        //await SeedBookAuthors();
-        //await SeedOptions();
-        //await SeedOptionValues();
-        //await SeedProductVariantOptionValues();
-        //await SeedRatings();
-    }
-
-    private async Task SeedOrderRelatedData()
-    {
-        await SeedOrders();
-        await SeedOrderLines();
-    }
-
-    private async Task SeedShoppingCartItemRelatedDataAsync()
-    {
-        if (_dbContext.ShoppingCartItems.Any())
-        {
-            return;
-        }
-
-        var shoppingCartItemJson = File.ReadAllText(ShoppingCartItemJsonPath, Encoding.UTF8);
-        var shoppingCartItems = JsonSerializer.Deserialize<List<ShoppingCartItem>>(shoppingCartItemJson);
-
-        AddAudit(shoppingCartItems);
-
-        _shoppingCartItems.AddRange(shoppingCartItems);
-
-        _dbContext.AddRange(_shoppingCartItems);
-        await _dbContext.SaveChangesWithIdentityInsertAsync<ShoppingCartItem>();
-    }
-
-
-
-    #region Seed User related data
-    private async Task SeedRoles()
-    {
-        if (_dbContext.Roles.Any())
-        {
-            return;
-        }
-
-        var roles = new List<IdentityRole<int>>
-        {
-            new() { Id = 1, Name = "Customer", NormalizedName = "CUSTOMER" },
-            new() { Id = 2, Name = "Admin", NormalizedName = "ADMIN" },
-            new() { Id = 3, Name = "SalesStaff", NormalizedName = "SALESSTAFF" },
-            new() { Id = 4, Name = "CustomerCareStaff", NormalizedName = "CUSTOMERCARESTAFF" },
-        };
-
-        _dbContext.AddRange(roles);
-        await _dbContext.SaveChangesWithIdentityInsertAsync<IdentityRole<int>>();
-    }
-
-    private async Task SeedUsers()
-    {
-        if (_dbContext.Users.Any())
-        {
-            return;
-        }
-
-        var userJson = File.ReadAllText(UserJsonPath, Encoding.UTF8);
-        var users = JsonSerializer.Deserialize<List<User>>(userJson, enumOption);
-
-        users?.ForEach(AddAudit);
-
-        foreach (var user in users)
-        {
-            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, user.PasswordHash ?? "Abc123*");
-        }
-
-        _users.AddRange(users);
-        _dbContext.AddRange(_users);
-        await _dbContext.SaveChangesWithIdentityInsertAsync<User>();
     }
 
     private async Task SeedUserRoles()
@@ -774,8 +754,8 @@ internal class DataSeeder
         }
 
         _deliveryMethods.AddRange([
-            new DeliveryMethod { Id = 1, Name = "Giao hàng tiêu chuẩn", Description = "Giao hàng tiêu chuẩn", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
-            new DeliveryMethod { Id = 2, Name = "Giao hàng nhanh", Description = "Giao hàng nhanh", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new DeliveryMethod { Id = 1, Name = "Giao hàng nhanh", Description = "Giao hàng nhanh", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new DeliveryMethod { Id = 2, Name = "Giao hoả tốc", Description = "Giao hoả tốc", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
         ]);
 
         _dbContext.AddRange(_deliveryMethods);
@@ -787,8 +767,9 @@ internal class DataSeeder
         }
 
         _paymentMethods.AddRange([
-            new PaymentMethod { Id = 1, Name = "Thanh toán khi nhận hàng", Description = "Thanh toán khi nhận hàng", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
-            new PaymentMethod { Id = 2, Name = "Thanh toán qua thẻ", Description = "Thanh toán qua thẻ", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new PaymentMethod { Id = 1, Name = "Thanh toán khi nhận hàng (COD)", Description = "Thanh toán khi nhận hàng (COD)", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new PaymentMethod { Id = 2, Name = "Thanh toán qua VNPay", Description = "Thanh toán qua VNPay", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
+            new PaymentMethod { Id = 3, Name = "Thanh toán qua Momo", Description = "Thanh toán qua Momo", CreatorId = DEFAULT_ADMIN_ID, CreationTime = DateTimeOffset.Now, LastModifierId = DEFAULT_ADMIN_ID, LastModificationTime = DateTimeOffset.Now },
         ]);
 
         _dbContext.AddRange(_paymentMethods);
@@ -872,6 +853,8 @@ internal class DataSeeder
 
     #endregion Seed Discount related data
 
+
+    #region Helper Methods    
     private void AddAudit<TAuditableEntity>(List<TAuditableEntity> listItem) where TAuditableEntity : BaseAuditedEntity
     {
         foreach (var item in listItem)
@@ -901,9 +884,9 @@ internal class DataSeeder
 
     }
 
-
     private string CapitalizeFirstLetter(string input)
     {
         return string.Join(" ", input.Split(' ').Select(s => s.First().ToString().ToUpper() + s[1..].ToLower()));
     }
+    #endregion
 }

@@ -1,12 +1,12 @@
-[
+﻿[
   {
     "Id": 5,
-    "UserName": "johndoe",
-    "NormalizedUserName": "JOHNDOE",
-    "Email": "john.doe@example.com",
-    "NormalizedEmail": "JOHN.DOE@EXAMPLE.COM",
+    "UserName": "customer.1@example.com",
+    "NormalizedUserName": "CUSTOMER.1@EXAMPLE.COM",
+    "Email": "customer.1@example.com",
+    "NormalizedEmail": "CUSTOMER.1@EXAMPLE.COM",
     "EmailConfirmed": true,
-    "PasswordHash": "hashed_password_here",
+    "PasswordHash": "Abc123*",
     "SecurityStamp": "3986b4d2-2823-4d5a-b702-4fb5247e2ca0",
     "ConcurrencyStamp": "90cfe4d1-e793-48bc-9686-87eb8656e39b",
     "PhoneNumber": "01234567890",
@@ -15,11 +15,11 @@
     "LockoutEnd": null,
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
-    
-    "FirstName": "John",
-    "LastName": "Doe",
+
+    "FirstName": "Nguyễn",
+    "LastName": "Văn Minh",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/johndoe.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "CustomerPortal",
     "IsActive": true,
@@ -27,15 +27,14 @@
 
     "CustomerTypeId": 1
   },
-
   {
     "Id": 6,
-    "UserName": "emilybrown",
-    "NormalizedUserName": "EMILYBROWN",
-    "Email": "emily.brown@example.com",
-    "NormalizedEmail": "EMILY.BROWN@EXAMPLE.COM",
+    "UserName": "customer.2@example.com",
+    "NormalizedUserName": "CUSTOMER.2@EXAMPLE.COM",
+    "Email": "customer.2@example.com",
+    "NormalizedEmail": "CUSTOMER.2@EXAMPLE.COM",
     "EmailConfirmed": true,
-    "PasswordHash": "hashed_password_here",
+    "PasswordHash": "Abc123*",
     "SecurityStamp": "bb6e4c18-3d94-4fbd-9c4e-2f6ab56d9fa7",
     "ConcurrencyStamp": "56ab3c48-fd83-4e0b-a15d-8de5fc94c3a9",
     "PhoneNumber": "01234567890",
@@ -45,10 +44,10 @@
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
 
-    "FirstName": "Emily",
-    "LastName": "Brown",
+    "FirstName": "Trần",
+    "LastName": "Thị Hương",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/emilybrown.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "CustomerPortal",
     "IsActive": true,
@@ -58,12 +57,12 @@
   },
   {
     "Id": 7,
-    "UserName": "oliverjones",
-    "NormalizedUserName": "OLIVERJONES",
-    "Email": "oliver.jones@example.com",
-    "NormalizedEmail": "OLIVER.JONES@EXAMPLE.COM",
+    "UserName": "customer.3@example.com",
+    "NormalizedUserName": "CUSTOMER.3@EXAMPLE.COM",
+    "Email": "customer.3@example.com",
+    "NormalizedEmail": "CUSTOMER.3@EXAMPLE.COM",
     "EmailConfirmed": true,
-    "PasswordHash": "hashed_password_here",
+    "PasswordHash": "Abc123*",
     "SecurityStamp": "a7c2dbe4-1b3e-44e8-85c5-3bba14d72e79",
     "ConcurrencyStamp": "c295bd81-5d6b-41d5-906b-ec4ea05b7a9f",
     "PhoneNumber": "01234567890",
@@ -73,10 +72,10 @@
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
 
-    "FirstName": "Oliver",
-    "LastName": "Jones",
+    "FirstName": "Lê",
+    "LastName": "Đức Anh",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/oliverjones.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "CustomerPortal",
     "IsActive": true,
@@ -86,12 +85,12 @@
   },
   {
     "Id": 8,
-    "UserName": "isabellaevans",
-    "NormalizedUserName": "ISABELLAEVANS",
-    "Email": "isabella.evans@example.com",
-    "NormalizedEmail": "ISABELLA.EVANS@EXAMPLE.COM",
+    "UserName": "customer.4@example.com",
+    "NormalizedUserName": "CUSTOMER.4@EXAMPLE.COM",
+    "Email": "customer.4@example.com",
+    "NormalizedEmail": "CUSTOMER.4@EXAMPLE.COM",
     "EmailConfirmed": true,
-    "PasswordHash": "hashed_password_here",
+    "PasswordHash": "Abc123*",
     "SecurityStamp": "e9f5a812-9a24-4c51-9c93-81bc8b23f97a",
     "ConcurrencyStamp": "12df3a3a-5319-4ff5-9758-2b9fc148c2d2",
     "PhoneNumber": "01234567890",
@@ -101,10 +100,10 @@
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
 
-    "FirstName": "Isabella",
-    "LastName": "Evans",
+    "FirstName": "Phạm",
+    "LastName": "Thị Lan",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/isabellaevans.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "CustomerPortal",
     "IsActive": true,
@@ -113,4 +112,3 @@
     "CustomerTypeId": 4
   }
 ]
-

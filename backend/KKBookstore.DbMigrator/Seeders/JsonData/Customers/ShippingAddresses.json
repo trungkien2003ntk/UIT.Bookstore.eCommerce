@@ -1,0 +1,122 @@
+﻿[
+  {
+    "Id": 1,
+    "PhoneNumber": "0866919340",
+    "Province": "Long An",
+    "District": "Huyện Đức Hòa",
+    "Commune": "Xã Đức Hòa Hạ",
+    "DetailAddress": "Số nhà 394",
+    "IsDefault": false,
+    "Type": "Home",
+    "ReceiverName": "Nguyễn Trung Kiên",
+    "CustomerId": 5
+  },
+  {
+    "Id": 2,
+    "PhoneNumber": "0866919340",
+    "Province": "Hồ Chí Minh",
+    "District": "Quận Thủ Đức",
+    "Commune": "Phường Linh Trung",
+    "DetailAddress": "Ktx khu A, ĐHQG",
+    "IsDefault": true,
+    "Type": "Office",
+    "ReceiverName": "Nguyễn Trung Kiên",
+    "CustomerId": 5
+  },
+  {
+    "Id": 3,
+    "PhoneNumber": "0866919340",
+    "Province": "Long An",
+    "District": "Huyện Đức Hòa",
+    "Commune": "Xã Đức Hòa Thượng",
+    "DetailAddress": "Chung cư 977",
+    "IsDefault": false,
+    "Type": "Home",
+    "ReceiverName": "Nguyễn Truy Kích",
+    "CustomerId": 5
+  },
+  {
+    "Id": 4,
+    "PhoneNumber": "0934567891",
+    "Province": "Đà Nẵng",
+    "District": "Quận Sơn Trà",
+    "Commune": "Phường An Hải Bắc",
+    "DetailAddress": "Ngõ 12, Số 45",
+    "IsDefault": true,
+    "Type": "Home",
+    "ReceiverName": "Lê Hoàng Nam",
+    "CustomerId": 6
+  },
+  {
+    "Id": 5,
+    "PhoneNumber": "0934567891",
+    "Province": "Hà Nội",
+    "District": "Quận Hoàng Mai",
+    "Commune": "Phường Định Công",
+    "DetailAddress": "Tầng 3, số 20",
+    "IsDefault": false,
+    "Type": "Office",
+    "ReceiverName": "Lê Hoàng Nam",
+    "CustomerId": 6
+  },
+  {
+    "Id": 6,
+    "PhoneNumber": "0934567891",
+    "Province": "Hải Phòng",
+    "District": "Huyện Thuỷ Nguyên",
+    "Commune": "Xã Lưu Kiếm",
+    "DetailAddress": "Nhà số 88",
+    "IsDefault": false,
+    "Type": "Home",
+    "ReceiverName": "Lê Hoàng Nam",
+    "CustomerId": 6
+  },
+  {
+    "Id": 7,
+    "PhoneNumber": "0845671234",
+    "Province": "Khánh Hòa",
+    "District": "Thành phố Nha Trang",
+    "Commune": "Phường Vĩnh Nguyên",
+    "DetailAddress": "Căn hộ 12B",
+    "IsDefault": true,
+    "Type": "Home",
+    "ReceiverName": "Phạm Hải Dương",
+    "CustomerId": 7
+  },
+  {
+    "Id": 8,
+    "PhoneNumber": "0845671234",
+    "Province": "Cần Thơ",
+    "District": "Quận Ninh Kiều",
+    "Commune": "Phường An Bình",
+    "DetailAddress": "Số nhà 100, Đường Hoa Mai",
+    "IsDefault": false,
+    "Type": "Office",
+    "ReceiverName": "Phạm Hải Dương",
+    "CustomerId": 7
+  },
+  {
+    "Id": 9,
+    "PhoneNumber": "0845671234",
+    "Province": "Đắk Lắk",
+    "District": "Thành phố Buôn Ma Thuột",
+    "Commune": "Phường Tân Lợi",
+    "DetailAddress": "Ngõ 7, Nhà số 45",
+    "IsDefault": false,
+    "Type": "Home",
+    "ReceiverName": "Phạm Hải Dương",
+    "CustomerId": 7
+  },
+  {
+    "Id": 10,
+    "PhoneNumber": "01234567890",
+    "Province": "California",
+    "District": "Los Angeles",
+    "Commune": "Santa Monica",
+    "DetailAddress": "123 Ocean Avenue, Apt 45B",
+    "IsDefault": true,
+    "Type": "Office",
+    "ReceiverName": "John Smith",
+    "CustomerId": 6
+  }
+]

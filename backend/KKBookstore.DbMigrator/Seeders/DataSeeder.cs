@@ -128,7 +128,7 @@ internal class DataSeeder
         await SeedUsersRelatedDataAndReferenceValue();
 
         //Log.Information($"\t{++order}. Seeding product related data");
-        //await SeedProductRelatedData();
+        await SeedProductRelatedData();
 
         //Log.Information($"\t{++order}. Seeding discount related data");
         //await SeedDiscountVouchers();
@@ -236,15 +236,15 @@ internal class DataSeeder
         await SeedProductTypeAttributes();
         await SeedProductTypeAttributeMappings();
         await SeedProductTypeAttributeValues();
-        await SeedProducts();
-        await SeedProductTypeAttributeProductValues();
-        await SeedProductImages();
-        await SeedProductVariants();
-        await SeedBookAuthors();
-        await SeedOptions();
-        await SeedOptionValues();
-        await SeedProductVariantOptionValues();
-        await SeedRatings();
+        //await SeedProducts();
+        //await SeedProductTypeAttributeProductValues();
+        //await SeedProductImages();
+        //await SeedProductVariants();
+        //await SeedBookAuthors();
+        //await SeedOptions();
+        //await SeedOptionValues();
+        //await SeedProductVariantOptionValues();
+        //await SeedRatings();
     }
 
     private async Task SeedOrderRelatedData()

@@ -4,5 +4,5 @@ public enum SignInSource
 {
     Default = 0,
     CustomerPortal = 1,
-    AdminPortal = 2
+    AdminPortal = 2 
 }

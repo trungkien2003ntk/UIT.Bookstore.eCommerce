@@ -1,10 +1,10 @@
 [
   {
     "Id": 1,
-    "UserName": "billgates",
-    "NormalizedUserName": "BILLGATES",
-    "Email": "bill.gates@example.com",
-    "NormalizedEmail": "BILL.GATES@EXAMPLE.COM",
+    "UserName": "admin@example.com",
+    "NormalizedUserName": "ADMIN@EXAMPLE.COM",
+    "Email": "admin@example.com",
+    "NormalizedEmail": "ADMIN@EXAMPLE.COM",
     "EmailConfirmed": true,
     "PasswordHash": "Abc123*",
     "SecurityStamp": "7f5d8258-ca86-4991-bce0-6e04c26c72bf",
@@ -15,24 +15,22 @@
     "LockoutEnd": null,
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
-
-    "FirstName": "Bill",
-    "LastName": "Gates",
+    "FirstName": "Nguyễn",
+    "LastName": "Văn An",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/billgates.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "AdminPortal",
     "IsActive": true,
     "Status": "Active",
-
-    "Description": "Bill Gates is an American business magnate, software developer, and philanthropist. He is best known as the co-founder of Microsoft Corporation."
+    "Description": "Description"
   },
   {
     "Id": 2,
-    "UserName": "kimpossible",
-    "NormalizedUserName": "KIMPOSSIBLE",
-    "Email": "kim.possible@example.com",
-    "NormalizedEmail": "KIM.POSSIBLE@EXAMPLE.COM",
+    "UserName": "sales@example.com",
+    "NormalizedUserName": "SALES@EXAMPLE.COM",
+    "Email": "sales@example.com",
+    "NormalizedEmail": "SALES@EXAMPLE.COM",
     "EmailConfirmed": true,
     "PasswordHash": "Abc123*",
     "SecurityStamp": "3986b4d2-2823-4d5a-b702-4fb5247e2ca0",
@@ -43,24 +41,22 @@
     "LockoutEnd": null,
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
-
-    "FirstName": "Kim",
-    "LastName": "Possible",
+    "FirstName": "Trần",
+    "LastName": "Thị Lan",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/kimpossible.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "AdminPortal",
     "IsActive": true,
     "Status": "Active",
-
-    "Description": "Kim Possible is a high school student and freelance hero/vigilante. She is unusual in this in that she not only lacks a secret Identity, but also remains on good terms with various law enforcement, government, and military agencies."
+    "Description": "Description"
   },
   {
     "Id": 3,
-    "UserName": "jacksparrow",
-    "NormalizedUserName": "JACKSPARROW",
-    "Email": "jack.sparrow@example.com",
-    "NormalizedEmail": "JACK.SPARROW@EXAMPLE.COM",
+    "UserName": "customercare1@example.com",
+    "NormalizedUserName": "CUSTOMERCARE1@EXAMPLE.COM",
+    "Email": "customercare1@example.com",
+    "NormalizedEmail": "CUSTOMERCARE1@EXAMPLE.COM",
     "EmailConfirmed": true,
     "PasswordHash": "Abc123*",
     "SecurityStamp": "354cac6b-4fd2-4188-8661-172f8ca4da3b",
@@ -71,24 +67,22 @@
     "LockoutEnd": null,
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
-
-    "FirstName": "Jack",
-    "LastName": "Sparrow",
+    "FirstName": "Lê",
+    "LastName": "Văn Minh",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/jacksparrow.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "AdminPortal",
     "IsActive": true,
     "Status": "Active",
-
-    "Description": "Captain Jack Sparrow is a fictional character and the main protagonist of the Pirates of the Caribbean film series. The character was created by screenwriters Ted Elliott and Terry Rossio and is portrayed by Johnny Depp."
+    "Description": "Description"
   },
   {
     "Id": 4,
-    "UserName": "donaldtrump",
-    "NormalizedUserName": "DONALDTRUMP",
-    "Email": "donald.trump@example.com",
-    "NormalizedEmail": "DONALD.TRUMP@EXAMPLE.COM",
+    "UserName": "customercare2@example.com",
+    "NormalizedUserName": "CUSTOMERCARE2@EXAMPLE.COM",
+    "Email": "customercare2@example.com",
+    "NormalizedEmail": "CUSTOMERCARE2@EXAMPLE.COM",
     "EmailConfirmed": true,
     "PasswordHash": "Abc123*",
     "SecurityStamp": "354cac6b-4fd2-4188-8661-172f8ca4da3b",
@@ -99,16 +93,14 @@
     "LockoutEnd": null,
     "LockoutEnabled": true,
     "AccessFailedCount": 0,
-
-    "FirstName": "Donald",
-    "LastName": "Trump",
+    "FirstName": "Phạm",
+    "LastName": "Thị Hương",
     "DateOfBirth": "1990-01-15T00:00:00Z",
-    "ImageUrl": "https://example.com/profile/donaldtrump.jpg",
+    "ImageUrl": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     "LoginType": "Email",
     "SignInSource": "AdminPortal",
     "IsActive": true,
     "Status": "Active",
-
-    "Description": "Donald Trump is an American politician, media personality, and businessman who served as the 45th presIdent of the United States from 2017 to 2021."
+    "Description": "Description"
   }
 ]

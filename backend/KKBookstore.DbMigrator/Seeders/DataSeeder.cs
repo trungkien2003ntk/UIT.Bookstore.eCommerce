@@ -132,7 +132,7 @@ internal class DataSeeder
 
         await SeedUsersRelatedDataAndReferenceValue();
 
-        //Log.Information($"\t{++order}. Seeding product related data");
+        Log.Information($"\t{++order}. Seeding product related data");
         await SeedProductRelatedData();
 
         //Log.Information($"\t{++order}. Seeding discount related data");
@@ -146,45 +146,80 @@ internal class DataSeeder
 
         //Log.Information($"\t{++order}. Seeding shopping cart item related data");
         //await SeedShoppingCartItemRelatedDataAsync();
+
+        Log.Information("Data seeding completed");
     }
 
     private async Task SeedUsersRelatedDataAndReferenceValue()
     {
-        Log.Information($"\t\t1. Seeding roles");
+        Log.Information($"\t\t1.1. Seeding roles");
 
         await SeedRoles();
 
-        Log.Information($"\t\t2. Seeding staffs");
+        Log.Information($"\t\t1.2. Seeding staffs");
         await SeedStaffs();
 
-        Log.Information($"\t\t3. Seeding customer types");
+        Log.Information($"\t\t1.3. Seeding customer types");
         await SeedCustomerTypes();
 
-        Log.Information($"\t\t4. Seeding customers");
+        Log.Information($"\t\t1.4. Seeding customers");
         await SeedCustomers();
 
-        Log.Information($"\t\t5. Seeding user roles");
+        Log.Information($"\t\t1.5. Seeding user roles");
         await SeedUserRoles();
+
+        Log.Information($"\t\t1.6. Seeding reference values");
         await SeedReferenceValues();
+
+        Log.Information($"\t\t1.7. Seeding shipping addresses");
         await SeedShippingAddress();
     }
 
     private async Task SeedProductRelatedData()
     {
+        Log.Information($"\t\t2.1. Seeding authors");
         await SeedAuthors();
+
+        Log.Information($"\t\t2.2. Seeding unit measures");
         await SeedUnitMeasures();
+
+        Log.Information($"\t\t2.3. Seeding product types");
         await SeedProductTypes();
+
+        Log.Information($"\t\t2.4. Seeding product type attributes");
         await SeedProductTypeAttributes();
+
+        Log.Information($"\t\t2.5. Seeding product type attribute mappings");
         await SeedProductTypeAttributeMappings();
+
+        Log.Information($"\t\t2.6. Seeding product type attribute values");
         await SeedProductTypeAttributeValues();
+
+        //Log.Information($"\t\t2.7. Seeding products");
         //await SeedProducts();
+
+        //Log.Information($"\t\t2.8. Seeding product type attribute product values");
         //await SeedProductTypeAttributeProductValues();
+
+        //Log.Information($"\t\t2.9. Seeding product images");
         //await SeedProductImages();
+
+        //Log.Information($"\t\t2.10. Seeding product variants");
         //await SeedProductVariants();
+
+        //Log.Information($"\t\t2.11. Seeding book authors");
         //await SeedBookAuthors();
+
+        //Log.Information($"\t\t2.12. Seeding options");
         //await SeedOptions();
+
+        //Log.Information($"\t\t2.13. Seeding option values");
         //await SeedOptionValues();
+
+        //Log.Information($"\t\t2.14. Seeding product variant option values");
         //await SeedProductVariantOptionValues();
+
+        //Log.Information($"\t\t2.15. Seeding ratings");
         //await SeedRatings();
     }
 
@@ -343,7 +378,7 @@ internal class DataSeeder
         }
 
         var shippingAddressJson = File.ReadAllText(ShippingAddressJsonPath, Encoding.UTF8);
-        var shippingAddresses = JsonSerializer.Deserialize<List<ShippingAddress>>(shippingAddressJson);
+        var shippingAddresses = JsonSerializer.Deserialize<List<ShippingAddress>>(shippingAddressJson, enumOption);
 
         AddAudit(shippingAddresses);
 

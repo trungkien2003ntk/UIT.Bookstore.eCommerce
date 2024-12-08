@@ -369,7 +369,7 @@ public class IdentityService(
         }
 
         var refreshToken = refreshTokenResult.Value;
-        var basicUserInfo = new BasicUserInfoDto(user.Id, user.Email!, user.FullName, roleName);
+        var basicUserInfo = new BasicUserInfoDto(user.Id, user.ImageUrl!, user.FullName, user.Email, roleName);
 
         return Result.Success(new AuthenticationResponse(
             AccessToken: new JwtSecurityTokenHandler().WriteToken(accessToken),

@@ -194,6 +194,12 @@ internal class DataSeeder
 
         customers?.ForEach(AddAudit);
 
+        foreach (var user in customers)
+        {
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, user.PasswordHash ?? "Abc123*");
+        }
+
+
         _customers.AddRange(customers);
         _dbContext.AddRange(customers);
         await _dbContext.SaveChangesWithIdentityInsertAsync<Customer>();
@@ -210,6 +216,11 @@ internal class DataSeeder
         var staffs = JsonSerializer.Deserialize<List<Staff>>(staffJson, enumOption);
 
         staffs?.ForEach(AddAudit);
+
+        foreach (var user in staffs)
+        {
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, user.PasswordHash ?? "Abc123*");
+        }
 
         _staffs.AddRange(staffs);
         _dbContext.AddRange(staffs);

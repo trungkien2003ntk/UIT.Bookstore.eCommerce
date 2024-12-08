@@ -27,7 +27,7 @@ public class SignInCommandHandler(
             result.AccessToken,
             result.AccessTokenExpiration,
             result.RefreshToken,
-            new BasicUserInfoDto(userInfo.UserId, userInfo.ImageUrl, userInfo.FullName, userInfo.RoleName)
+            new BasicUserInfoDto(userInfo.UserId, userInfo.ImageUrl, userInfo.FullName, userInfo.Email, userInfo.RoleName)
             ));
         
         return response;

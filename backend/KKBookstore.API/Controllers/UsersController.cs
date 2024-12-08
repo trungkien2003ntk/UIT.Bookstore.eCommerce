@@ -23,7 +23,7 @@ public class UsersController(
     ISender sender
 ) : ApiController(sender)
 {
-    [Authorize(Roles = Role.Admin)]
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetUsersAsync(
         [FromQuery] GetUserListRequest query,

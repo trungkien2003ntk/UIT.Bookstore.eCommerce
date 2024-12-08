@@ -1,15 +1,15 @@
-using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Common.Models;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Shared.Users;
 using MediatR;
 
 namespace KKBookstore.Application.Features.Users.SignIn;
 
-public record SignInCommand(string Email, string Password) : IRequest<Result<SignInResponse>>;
+public record SignInCommand(string Email, string Password, SignInSource SignInSource) : IRequest<Result<SignInResponse>>;
 
 public class SignInCommandHandler(
-    IIdentityService identityService,
-    IMapper mapper
+    IIdentityService identityService
 ) : IRequestHandler<SignInCommand, Result<SignInResponse>>
 {
     public async Task<Result<SignInResponse>> Handle(SignInCommand request, CancellationToken cancellationToken)
@@ -20,8 +20,16 @@ public class SignInCommandHandler(
             return Result.Failure<SignInResponse>(signInResult.Error);
         }
 
-        var response = mapper.Map<SignInResponse>(signInResult.Value);
+        var result = signInResult.Value;
+        var userInfo = result.BasicUserInfo;
 
+        var response = Result.Success(new SignInResponse(
+            result.AccessToken,
+            result.AccessTokenExpiration,
+            result.RefreshToken,
+            new BasicUserInfoDto(userInfo.UserId, userInfo.ImageUrl, userInfo.FullName, userInfo.RoleName)
+            ));
+        
         return response;
     }
 }

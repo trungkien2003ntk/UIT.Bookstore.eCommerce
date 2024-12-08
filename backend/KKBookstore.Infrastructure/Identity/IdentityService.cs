@@ -11,6 +11,7 @@ using KKBookstore.Application.Features.Users.UpdatePassword;
 using KKBookstore.Application.Features.Users.UpdateUser;
 using KKBookstore.Domain.Constants;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Shared.Users;
 using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -48,21 +49,21 @@ public class IdentityService(
             : Result.Success(user);
     }
 
-    public async Task<Result<TokenResponse>> GenerateJwtToken(string email)
+    public async Task<Result<AuthenticationResponse>> GenerateJwtToken(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            return Result.Failure<TokenResponse>(UserErrors.NotFound);
+            return Result.Failure<AuthenticationResponse>(UserErrors.NotFound);
         }
 
         var roles = await _userManager.GetRolesAsync(user);
         if (roles.Count == 0)
         {
-            return Result.Failure<TokenResponse>(UserErrors.MissingRole);
+            return Result.Failure<AuthenticationResponse>(UserErrors.MissingRole);
         }
 
-        var responseResult = await GenerateTokenResponse(user);
+        var responseResult = await GenerateTokenResponse(user, roles.ElementAt(0));
 
         return responseResult;
     }
@@ -144,20 +145,20 @@ public class IdentityService(
         return Result.Success(user);
     }
 
-    public async Task<Result<TokenResponse>> CreateUserAsync(RegisterCommand request)
+    public async Task<Result<AuthenticationResponse>> CreateUserAsync(RegisterCommand request)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
         var searchResult = await FindUserAsync(new(request.Email));
         if (searchResult.IsSuccess)
         {
-            return Result.Failure<TokenResponse>(UserErrors.AlreadyExists);
+            return Result.Failure<AuthenticationResponse>(UserErrors.AlreadyExists);
         }
 
         var role = await _roleManager.FindByNameAsync(request.Role);
         if (role == null)
         {
-            return Result.Failure<TokenResponse>(UserErrors.InvalidRole);
+            return Result.Failure<AuthenticationResponse>(UserErrors.InvalidRole);
         }
 
         var user = request.ToEntity();
@@ -168,7 +169,7 @@ public class IdentityService(
         {
             var errors = result.ToErrors();
             await transaction.RollbackAsync();
-            return Result.Failure<TokenResponse>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
+            return Result.Failure<AuthenticationResponse>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
         }
 
         var assignRoleResult = await _userManager.AddToRoleAsync(user, role.Name!);
@@ -176,13 +177,13 @@ public class IdentityService(
         {
             var errors = result.ToErrors();
             await transaction.RollbackAsync();
-            return Result.Failure<TokenResponse>(errors.FirstOrDefault() ?? UserErrors.AssignRoleFailed);
+            return Result.Failure<AuthenticationResponse>(errors.FirstOrDefault() ?? UserErrors.AssignRoleFailed);
         }
 
         await transaction.CommitAsync();
 
         // create a token response
-        var responseResult = await GenerateTokenResponse(user);
+        var responseResult = await GenerateTokenResponse(user, role.Name!);
 
 
         return responseResult;
@@ -229,34 +230,40 @@ public class IdentityService(
         return Result.Success();
     }
 
-    public async Task<Result<TokenResponse>> SignInAsync(SignInCommand request)
+    public async Task<Result<AuthenticationResponse>> SignInAsync(SignInCommand request)
     {
         var result = await FindUserAsync(new(request.Email));
         if (result.IsFailure)
         {
-            return Result.Failure<TokenResponse>(UserErrors.InvalidCredentials);
+            return Result.Failure<AuthenticationResponse>(UserErrors.InvalidCredentials);
         }
 
         var user = result.Value;
+
+        if (user.SignInSource != request.SignInSource)
+        {
+            return Result.Failure<AuthenticationResponse>(UserErrors.InvalidCredentials);
+        }
+
         var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!passwordValid)
         {
-            return Result.Failure<TokenResponse>(UserErrors.InvalidCredentials);
+            return Result.Failure<AuthenticationResponse>(UserErrors.InvalidCredentials);
         }
 
         // get user roles to include inside the claims
         var roles = await _userManager.GetRolesAsync(user);
         if (roles.Count == 0)
         {
-            return Result.Failure<TokenResponse>(UserErrors.MissingRole);
+            return Result.Failure<AuthenticationResponse>(UserErrors.MissingRole);
         }
 
-        var responseResult = await GenerateTokenResponse(user);
+        var responseResult = await GenerateTokenResponse(user, roles.ElementAt(0));
 
         return responseResult;
     }
 
-    public async Task<Result<TokenResponse>> RefreshAccessToken(RefreshAccessToken request)
+    public async Task<Result<AuthenticationResponse>> RefreshAccessToken(RefreshAccessToken request)
     {
         // get the user send this
         var existingRefreshToken = await _dbContext.RefreshTokens
@@ -264,16 +271,22 @@ public class IdentityService(
 
         if (existingRefreshToken == null)
         {
-            return Result.Failure<TokenResponse>(TokenErrors.InvalidRefreshToken);
+            return Result.Failure<AuthenticationResponse>(TokenErrors.InvalidRefreshToken);
         }
 
         var user = await _userManager.FindByIdAsync(existingRefreshToken.UserId.ToString());
         if (user == null)
         {
-            return Result.Failure<TokenResponse>(UserErrors.NotFound);
+            return Result.Failure<AuthenticationResponse>(UserErrors.NotFound);
         }
 
-        var responseResult = await GenerateTokenResponse(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles.Count == 0)
+        {
+            return Result.Failure<AuthenticationResponse>(UserErrors.MissingRole);
+        }
+
+        var responseResult = await GenerateTokenResponse(user, roles.ElementAt(0));
 
         return responseResult;
     }
@@ -344,7 +357,7 @@ public class IdentityService(
         return user != null && await _userManager.IsInRoleAsync(user, role);
     }
 
-    private async Task<Result<TokenResponse>> GenerateTokenResponse(User user)
+    private async Task<Result<AuthenticationResponse>> GenerateTokenResponse(User user, string roleName)
     {
         JwtSecurityToken accessToken = await GenerateAccessToken(user);
         var expires = accessToken.ValidTo;
@@ -352,15 +365,17 @@ public class IdentityService(
         var refreshTokenResult = await GetRefreshToken(user.Id);
         if (refreshTokenResult.IsFailure)
         {
-            return Result.Failure<TokenResponse>(refreshTokenResult.Error);
+            return Result.Failure<AuthenticationResponse>(refreshTokenResult.Error);
         }
 
         var refreshToken = refreshTokenResult.Value;
+        var basicUserInfo = new BasicUserInfoDto(user.Id, user.Email!, user.FullName, roleName);
 
-        return Result.Success(new TokenResponse(
+        return Result.Success(new AuthenticationResponse(
             AccessToken: new JwtSecurityTokenHandler().WriteToken(accessToken),
             AccessTokenExpiration: expires,
-            RefreshToken: refreshToken.Token
+            RefreshToken: refreshToken.Token,
+            BasicUserInfo: basicUserInfo
         ));
     }
 

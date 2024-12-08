@@ -67,4 +67,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Seeders\JsonData\Branches\" />
+	  <Folder Include="Seeders\JsonData\Customers\" />
+	</ItemGroup>
 </Project>

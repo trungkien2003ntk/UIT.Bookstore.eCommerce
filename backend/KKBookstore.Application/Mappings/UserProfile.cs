@@ -25,7 +25,7 @@ public class UserProfile : Profile
         CreateMap<PaginatedResult<User>, PaginatedResult<GetUserListResponse>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
-        CreateMap<TokenResponse, RegisterResponse>().ReverseMap();
+        CreateMap<AuthenticationResponse, RegisterResponse>().ReverseMap();
 
         CreateMap<UpdateUserCommand, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

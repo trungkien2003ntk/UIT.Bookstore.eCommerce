@@ -2,7 +2,8 @@
 
 public enum LoginType
 {
-    Email,
-    Facebook,
-    Google
+    Default = 0,
+    Email = 1,
+    Facebook = 2,
+    Google = 3
 }

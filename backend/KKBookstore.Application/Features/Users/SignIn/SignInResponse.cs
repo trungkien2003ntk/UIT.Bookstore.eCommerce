@@ -1,3 +1,7 @@
-﻿namespace KKBookstore.Application.Features.Users.SignIn;
+﻿using KKBookstore.Application.Common.Models;
 
-public record SignInResponse(string AccessToken, DateTime AccessTokenExpiration, string RefreshToken);
+namespace KKBookstore.Application.Features.Users.SignIn;
+
+public record SignInResponse(string AccessToken, DateTime AccessTokenExpiration, string RefreshToken, BasicUserInfoDto BasicUserInfo)
+{
+}

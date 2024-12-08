@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Domain.Interfaces;
+using KKBookstore.Domain.Shared.Users;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,8 +12,6 @@ public class User : IdentityUser<int>, IFullAuditedObject
         FirstName = "";
         LastName = "";
         IsActive = true;
-        IsEmployee = false;
-        IsAdmin = false;
     }
 
     public string FirstName { get; set; }
@@ -28,14 +27,14 @@ public class User : IdentityUser<int>, IFullAuditedObject
 
     public LoginType LoginType { get; set; }
 
+    public SignInSource SignInSource { get; set; }
+
     public bool IsActive { get; set; }
 
-    public bool IsEmployee { get; set; }
-
-    public bool IsAdmin { get; set; }
-
     public UserStatus Status { get; set; }
-    
+
+
+    // Auditing
     public bool IsDeleted { get; set; }
     
     public int? DeleterId { get; set; }

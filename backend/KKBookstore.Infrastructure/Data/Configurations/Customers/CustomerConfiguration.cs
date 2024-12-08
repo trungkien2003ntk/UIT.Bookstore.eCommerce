@@ -9,7 +9,6 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
-        builder.ToTable("Customers");
         builder.HasBaseType<User>();
 
         builder.Property(x => x.CustomerTypeId).HasColumnName(nameof(Customer.CustomerTypeId)).IsRequired();

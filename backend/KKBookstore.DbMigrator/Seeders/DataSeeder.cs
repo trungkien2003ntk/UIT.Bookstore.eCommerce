@@ -5,6 +5,7 @@ using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ProductTypes;
 using KKBookstore.Domain.ShoppingCarts;
+using KKBookstore.Domain.Staffs;
 using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using KKBookstore.Infrastructure.Data.Extensions;
@@ -23,6 +24,13 @@ internal class DataSeeder
     private const string BASE_PATH = "./Seeders/JsonData";
     private readonly string UserJsonPath = $"{BASE_PATH}/Users/User.json";
     private readonly string ShippingAddressJsonPath = $"{BASE_PATH}/Users/ShippingAddress.json";
+
+    // Customer paths
+    private readonly string CustomerJsonPath = $"{BASE_PATH}/Customers/Customers.json";
+    private readonly string CustomerTypeJsonPath = $"{BASE_PATH}/Customers/CustomerTypes.json";
+
+    // Staff paths
+    private readonly string StaffJsonPath = $"{BASE_PATH}/Staffs/Staffs.json";
 
     // Product paths
     private readonly string AuthorJsonPath = $"{BASE_PATH}/Products/Author.json";
@@ -60,6 +68,13 @@ internal class DataSeeder
     private readonly List<User> _users = [];
     private readonly List<ShippingAddress> _shippingAddresses = [];
 
+    // Customer related data
+    private readonly List<Customer> _customers = [];
+    private readonly List<CustomerType> _customerTypes = [];
+
+    // Staff related data
+    private readonly List<Staff> _staffs = [];
+
     // Product related data
     private readonly List<Author> _authors = [];
     private readonly List<UnitMeasure> _unitMeasures = [];
@@ -95,7 +110,7 @@ internal class DataSeeder
     // Json option
     private readonly JsonSerializerOptions enumOption = new() { Converters = { new JsonStringEnumConverter() } };
 
-    private const int DEFAULT_ADMIN_ID = 2;
+    private const int DEFAULT_ADMIN_ID = 1;
     private const int SEED = 1000000;
     private readonly Faker _faker = new("vi") { Random = new Randomizer(SEED) };
     private readonly KKBookstoreDbContext _dbContext;
@@ -112,30 +127,95 @@ internal class DataSeeder
 
         await SeedUsersRelatedDataAndReferenceValue();
 
-        Log.Information($"\t{++order}. Seeding product related data");
-        await SeedProductRelatedData();
+        //Log.Information($"\t{++order}. Seeding product related data");
+        //await SeedProductRelatedData();
 
-        Log.Information($"\t{++order}. Seeding discount related data");
-        await SeedDiscountVouchers();
+        //Log.Information($"\t{++order}. Seeding discount related data");
+        //await SeedDiscountVouchers();
 
-        Log.Information($"\t{++order}. Seeding order related data");
-        await SeedOrderRelatedData();
+        //Log.Information($"\t{++order}. Seeding order related data");
+        //await SeedOrderRelatedData();
 
-        Log.Information($"\t{++order}. Seeding voucher usages");
-        await SeedVoucherUsages();
+        //Log.Information($"\t{++order}. Seeding voucher usages");
+        //await SeedVoucherUsages();
 
-        Log.Information($"\t{++order}. Seeding shopping cart item related data");
-        await SeedShoppingCartItemRelatedDataAsync();
+        //Log.Information($"\t{++order}. Seeding shopping cart item related data");
+        //await SeedShoppingCartItemRelatedDataAsync();
     }
 
     private async Task SeedUsersRelatedDataAndReferenceValue()
     {
+        Log.Information($"\t\t1. Seeding roles");
+
         await SeedRoles();
-        await SeedUsers();
+
+        Log.Information($"\t\t2. Seeding staffs");
+        await SeedStaffs();
+
+        Log.Information($"\t\t3. Seeding customer types");
+        await SeedCustomerTypes();
+
+        Log.Information($"\t\t4. Seeding customers");
+        await SeedCustomers();
+        //await SeedUsers();
+
+        Log.Information($"\t\t5. Seeding user roles");
         await SeedUserRoles();
-        await SeedReferenceValues();
-        await SeedShippingAddress();
+        //await SeedReferenceValues();
+        //await SeedShippingAddress();
     }
+
+    private async Task SeedCustomerTypes()
+    {
+        if (_dbContext.CustomerTypes.Any())
+        {
+            return;
+        }
+
+        var customerTypeJson = File.ReadAllText(CustomerTypeJsonPath, Encoding.UTF8);
+        var customerTypes = JsonSerializer.Deserialize<List<CustomerType>>(customerTypeJson, enumOption);
+
+        AddAudit(customerTypes);
+
+        _customerTypes.AddRange(customerTypes);
+        _dbContext.AddRange(customerTypes);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<CustomerType>();
+    }
+
+    private async Task SeedCustomers()
+    {
+        if (_dbContext.Customers.Any())
+        {
+            return;
+        }
+
+        var customerJson = File.ReadAllText(CustomerJsonPath, Encoding.UTF8);
+        var customers = JsonSerializer.Deserialize<List<Customer>>(customerJson, enumOption);
+
+        customers?.ForEach(AddAudit);
+
+        _customers.AddRange(customers);
+        _dbContext.AddRange(customers);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Customer>();
+    }
+
+    private async Task SeedStaffs()
+    {
+        if (_dbContext.Staffs.Any())
+        {
+            return;
+        }
+        
+        var staffJson = File.ReadAllText(StaffJsonPath, Encoding.UTF8);
+        var staffs = JsonSerializer.Deserialize<List<Staff>>(staffJson, enumOption);
+
+        staffs?.ForEach(AddAudit);
+
+        _staffs.AddRange(staffs);
+        _dbContext.AddRange(staffs);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Staff>();
+    }
+
 
     private async Task SeedProductRelatedData()
     {
@@ -212,13 +292,7 @@ internal class DataSeeder
         var userJson = File.ReadAllText(UserJsonPath, Encoding.UTF8);
         var users = JsonSerializer.Deserialize<List<User>>(userJson, enumOption);
 
-        foreach (var user in users)
-        {
-            user.LastModificationTime = DateTimeOffset.Now;
-            user.CreationTime = DateTimeOffset.Now;
-            user.CreatorId = null;
-            user.LastModifierId = null;
-        }
+        users?.ForEach(AddAudit);
 
         foreach (var user in users)
         {
@@ -236,28 +310,35 @@ internal class DataSeeder
         {
             return;
         }
+        var adminRoleId = 2;
+        var salesStaffRoleId = 3;
+        var customerCareStaffRoleId = 4;
+        var customerRoleId = 1;
 
-        var userRoles = new List<IdentityUserRole<int>>
+        var userRoles = new List<IdentityUserRole<int>>();
+        var addedStaffCount = 0;
+        // we need 1 admin, 1 sales staff, others is customer care staffs frorm list _staffs, we'll take it from top to bottom
+        foreach (var staff in _staffs)
         {
-            new() { UserId = 1, RoleId = 2 }, // admin
-            new() { UserId = 2, RoleId = 3 }, // sales staff
-            new() { UserId = 3, RoleId = 4 }, // customer care staff
-        };
-
-        // set role for other users as Customer
-        foreach (var user in _users)
-        {
-            switch (user.Id)
+            if (addedStaffCount == 0)
             {
-                case 1:
-                case 2:
-                case 3:
-                    break;
-                default:
-                    userRoles.Add(new() { UserId = user.Id, RoleId = 1 });
-                    break;
+                userRoles.Add(new IdentityUserRole<int> { UserId = staff.Id, RoleId = adminRoleId });
+                addedStaffCount++;
+            }
+            else if (addedStaffCount == 1)
+            {
+                userRoles.Add(new IdentityUserRole<int> { UserId = staff.Id, RoleId = salesStaffRoleId });
+                addedStaffCount++;
+            }
+            else
+            {
+                userRoles.Add(new IdentityUserRole<int> { UserId = staff.Id, RoleId = customerCareStaffRoleId });
             }
         }
+
+        // set role for _customers
+        var customerRoles = _customers.Select(c => new IdentityUserRole<int> { UserId = c.Id, RoleId = customerRoleId });
+        userRoles.AddRange(customerRoles);
 
         _dbContext.AddRange(userRoles);
         await _dbContext.SaveChangesAsync();
@@ -794,6 +875,21 @@ internal class DataSeeder
             item.LastModificationTime = lastEditedWhen;
         }
     }
+
+    private void AddAudit(User user)
+    {
+        // createWhen using Bogus 
+
+        var createdWhen = _faker.Date.PastOffset(2);
+        var lastEditedWhen = _faker.Date.BetweenOffset(createdWhen, createdWhen.AddYears(1)); // Generate a random date between createdWhen and now
+
+        user.CreatorId = DEFAULT_ADMIN_ID;
+        user.CreationTime = createdWhen;
+        user.LastModifierId = DEFAULT_ADMIN_ID;
+        user.LastModificationTime = lastEditedWhen;
+
+    }
+
 
     private string CapitalizeFirstLetter(string input)
     {

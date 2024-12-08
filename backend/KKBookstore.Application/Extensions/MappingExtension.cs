@@ -29,8 +29,6 @@ public static class MappingExtension
             UserName = request.Email,
             DateOfBirth = request.DateOfBirth,
             PhoneNumber = request.PhoneNumber,
-            IsEmployee = false,
-            IsAdmin = false,
             IsDeleted = false,
             IsActive = true,
             LoginType = LoginType.Email,

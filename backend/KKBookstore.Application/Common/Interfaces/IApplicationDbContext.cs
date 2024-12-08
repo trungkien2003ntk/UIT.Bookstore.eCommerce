@@ -3,6 +3,7 @@ using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ProductTypes;
 using KKBookstore.Domain.ShoppingCarts;
+using KKBookstore.Domain.Staffs;
 using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,8 @@ public interface IApplicationDbContext
     public DbSet<IdentityUserRole<int>> UserRoles { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<CustomerType> CustomerTypes { get; set; }
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
     public DbSet<DiscountVoucher> DiscountVouchers { get; set; }
     public DbSet<VoucherUsage> VoucherUsages { get; set; }
@@ -38,6 +41,7 @@ public interface IApplicationDbContext
     public DbSet<RatingLike> RatingLikes { get; set; }
     public DbSet<ShippingAddress> ShippingAddresses { get; set; }
     public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+    public DbSet<Staff> Staffs { get; set; }
     public DbSet<ProductVariant> ProductVariants { get; set; }
     public DbSet<ProductVariantOptionValue> ProductVariantOptionValues { get; set; }
     public DbSet<Transaction> Transactions { get; set; }

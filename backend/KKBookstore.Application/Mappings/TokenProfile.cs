@@ -9,7 +9,7 @@ public class TokenProfile : Profile
 {
     public TokenProfile()
     {
-        CreateMap<TokenResponse, SignInResponse>().ReverseMap();
-        CreateMap<TokenResponse, RefreshAccessTokenResponse>().ReverseMap();
+        CreateMap<AuthenticationResponse, SignInResponse>().ReverseMap();
+        CreateMap<AuthenticationResponse, RefreshAccessTokenResponse>().ReverseMap();
     }
 }

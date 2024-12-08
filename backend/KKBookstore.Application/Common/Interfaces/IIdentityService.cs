@@ -17,12 +17,12 @@ public interface IIdentityService
     Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
     Task<Result<User>> FindUserAsync(FindUserDto findUserDto);
     Task<Result<User>> CreateTemporaryCustomerAsync(string email);
-    Task<Result<TokenResponse>> CreateUserAsync(RegisterCommand request);
+    Task<Result<AuthenticationResponse>> CreateUserAsync(RegisterCommand request);
     Task<Result> UpdateUserAsync(UpdateUserCommand command);
     Task<Result> ReplaceUserAsync(ReplaceUserCommand request);
-    Task<Result<TokenResponse>> SignInAsync(SignInCommand request);
-    Task<Result<TokenResponse>> GenerateJwtToken(string email);
-    Task<Result<TokenResponse>> RefreshAccessToken(RefreshAccessToken request);
+    Task<Result<AuthenticationResponse>> SignInAsync(SignInCommand request);
+    Task<Result<AuthenticationResponse>> GenerateJwtToken(string email);
+    Task<Result<AuthenticationResponse>> RefreshAccessToken(RefreshAccessToken request);
     Task<bool> IsInRoleAsync(int userId, string role);
     Task<Result> UpdatePasswordAsync(ResetPasswordCommand request);
     Task<Result> ChangePasswordAsync(ChangePasswordCommand request);

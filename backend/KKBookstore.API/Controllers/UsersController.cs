@@ -1,6 +1,7 @@
 ﻿
 using KKBookstore.API.Abstractions;
 using KKBookstore.API.Contracts.Requests;
+using KKBookstore.API.Contracts.Requests.Users;
 using KKBookstore.Application.Features.Users.AddShippingAddress;
 using KKBookstore.Application.Features.Users.GetUser;
 using KKBookstore.Application.Features.Users.GetUserList;
@@ -26,10 +27,19 @@ public class UsersController(
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetUsersAsync(
-        [FromQuery] GetUserListRequest query,
+        [FromQuery] GetUserListRequest request,
         CancellationToken cancellationToken = default
     )
     {
+        var query = new GetUserListQuery
+        {
+            UserIds = request.UserIds,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            SortBy = request.SortBy,
+            SortDirection = request.SortDirection
+        };
+
         var result = await Sender.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);

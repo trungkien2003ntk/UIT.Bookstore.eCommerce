@@ -8,12 +8,13 @@ using MediatR;
 
 namespace KKBookstore.Application.Features.Users.GetUserList;
 
-public record GetUserListRequest()
+public record GetUserListQuery()
     : IRequest<Result<PaginatedResult<GetUserListResponse>>>, IPaginatedQuery, ISortableQuery
 {
+    public List<int>? UserIds { get; init; }
     public int PageNumber { get; init; }
     public int PageSize { get; init; }
-    public string SortBy { get; init; } = "CreatedWhen";
+    public string SortBy { get; init; } = "CreationTime";
     public string SortDirection { get; init; } = "desc";
 
     // filter
@@ -23,14 +24,26 @@ public record GetUserListRequest()
 public class GetUserListHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetUserListRequest, Result<PaginatedResult<GetUserListResponse>>>
+) : IRequestHandler<GetUserListQuery, Result<PaginatedResult<GetUserListResponse>>>
 {
-    public async Task<Result<PaginatedResult<GetUserListResponse>>> Handle(GetUserListRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResult<GetUserListResponse>>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
     {
         IQueryable<User> query = dbContext.Users;
 
-        var validSortProperties = new List<string> { "Id", "FirstName", "LastName", "Email", "PhoneNumber" };
+        var validSortProperties = new List<string>
+        {
+            nameof(User.Id),
+            nameof(User.FirstName),
+            nameof(User.LastName),
+            nameof(User.Email),
+            nameof(User.PhoneNumber),
+            nameof(User.CreationTime)
+        };
+
         string sortProperty = request.SortBy;
+
+        if (request.UserIds is not null && request.UserIds.Count > 0)
+            query = query.Where(x => request.UserIds.Contains(x.Id));
 
         PaginatedResult<User> paginatedUsers;
 

@@ -13,7 +13,7 @@ namespace KKBookstore.Application.Features.Orders.GetOrderList;
 
 public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderGeneralInformation>>>
 {
-    public string SortBy { get; init; } = "CreatedWhen";
+    public string SortBy { get; init; } = "CreationTime";
     public string SortDirection { get; init; } = "desc";
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 12;

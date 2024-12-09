@@ -205,7 +205,7 @@ internal class DataSeeder
         //await SeedProductImages();
 
         //Log.Information($"\t\t2.10. Seeding product variants");
-        //await SeedProductVariants();
+        //await SeedProductVariants(); 
 
         //Log.Information($"\t\t2.11. Seeding book authors");
         //await SeedBookAuthors();

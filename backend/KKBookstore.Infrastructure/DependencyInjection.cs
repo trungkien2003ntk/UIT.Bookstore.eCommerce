@@ -35,8 +35,9 @@ public static class DependencyInjection
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
 #if DEBUG
-            options.UseSqlServer(connectionString)
-                /*.EnableSensitiveDataLogging()*/;
+            options
+                .UseSqlServer(connectionString);
+            ;
 #endif
         });
 

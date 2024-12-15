@@ -4,6 +4,7 @@ using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Extensions;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +15,15 @@ public record GetProductListQuery()
 {
     public string SortBy { get; init; }
     public string SortDirection { get; init; }
-    public int PageNumber { get; init; }
-    public int PageSize { get; init; }
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 12;
 
     // other properties for filtering 
-    public List<int> ProductTypeIds { get; set; } = [];
-    public List<int> ExcludeProductIds { get; set; } = [];
+    public List<int>? ProductTypeIds { get; set; }
+    public List<int>? ExcludeProductIds { get; set; }
     public PriceRange? PriceRange { get; set; }
     public Dictionary<string, List<string>> CustomFilters { get; set; } = [];
-    public string? Search { get; set; }
+    public string? SearchQuery { get; set; }
 }
 
 
@@ -55,7 +56,12 @@ public class GetProductListQueryHandler(
 
 
         // Apply sorting
-        var validSortProperties = new List<string> { "CreatedWhen", "Name", "Id" };
+        var validSortProperties = new List<string>
+        {
+            nameof(Product.CreationTime),
+            nameof(Product.Name),
+            nameof(Product.Id)
+        };
         string sortProperty = request.SortBy;
 
         PaginatedResult<Product> paginatedProducts;
@@ -108,7 +114,7 @@ public class GetProductListQueryHandler(
 
     }
 
-    private IQueryable<Product> ApplyExcludeProducts(IQueryable<Product> query, List<int> excludeProductIds)
+    private IQueryable<Product> ApplyExcludeProducts(IQueryable<Product> query, List<int>? excludeProductIds)
     {
         if (excludeProductIds.Count > 0)
         {
@@ -118,9 +124,9 @@ public class GetProductListQueryHandler(
         return query;
     }
 
-    private IQueryable<Product> ApplyProductIdsFilter(IQueryable<Product> query, List<int> productTypeIds)
+    private IQueryable<Product> ApplyProductIdsFilter(IQueryable<Product> query, List<int>? productTypeIds)
     {
-        if (productTypeIds.Count > 0)
+        if (productTypeIds?.Count > 0)
         {
             var productTypeIdsWithChilds = GetChildProductTypeIds(productTypeIds);
 
@@ -140,28 +146,41 @@ public class GetProductListQueryHandler(
         return query;
     }
 
-    // Implemented an optimization to reduce database roundtrips by batching queries and using in-memory filtering, improving performance significantly.
-    private async Task<Result<IQueryable<Product>>> ApplyCustomFiltersAsync(IQueryable<Product> query, Dictionary<string, List<string>> customFilters, CancellationToken cancellationToken = default)
+    public async Task<Result<IQueryable<Product>>> ApplyCustomFiltersAsync(
+    IQueryable<Product> query,
+    Dictionary<string, List<string>> customFilters,
+    CancellationToken cancellationToken = default)
     {
-        if (customFilters.Count <= 0)
+        if (customFilters == null || customFilters.Count == 0)
         {
             return Result.Success(query);
         }
 
-        // define this attributeFilters for better code readability
-        var attributeFilters = customFilters
-            .Select(kvp => new
-            {
-                AttributeName = kvp.Key,
-                AttributeValues = kvp.Value
-            })
-            .ToList();
+        try
+        {
+            var filterContext = await PrepareFilterContextAsync(customFilters, cancellationToken);
 
+            var validProductIds = FilterProductIds(filterContext);
+
+            if (validProductIds.Count == 0)
+            {
+                return Result.Failure<IQueryable<Product>>(ProductErrors.NotFound);
+            }
+
+            return Result.Success(query.Where(p => validProductIds.Contains(p.Id)));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Result.Failure<IQueryable<Product>>(ProductErrors.InvalidAttribute(ex.Message));
+        }
+    }
+
+    private async Task<FilterContext> PrepareFilterContextAsync(
+        Dictionary<string, List<string>> customFilters,
+        CancellationToken cancellationToken)
+    {
         var attributeNames = customFilters.Keys.ToList();
 
-        var validProductIds = new HashSet<int>(dbContext.Products.Select(p => p.Id));
-
-        // fetch all attributes and their values in a single query
         var allAttributes = await dbContext.ProductTypeAttributes
             .Include(pa => pa.Values)
             .Where(pa => attributeNames.Contains(pa.Name))
@@ -169,43 +188,47 @@ public class GetProductListQueryHandler(
 
         var allValues = allAttributes.SelectMany(pa => pa.Values).ToList();
 
-        // fetch all PAV in a single query
         var allRelevantProductAttributeValues = await dbContext.ProductTypeAttributeProductValues
             .Where(apv => allValues.Select(v => v.Id).Contains(apv.AttributeValueId))
             .ToListAsync(cancellationToken);
 
-        // Now this is where the optimization happens
-        // the below code is in-memory filtering instead of querying the database for each attribute filter
-        foreach (var attributeFilter in attributeFilters)
+        return new FilterContext
         {
-            var currFilterAttribute = allAttributes.Find(a => string.Equals(a.Name, attributeFilter.AttributeName, StringComparison.OrdinalIgnoreCase));
+            CustomFilters = customFilters,
+            AllAttributes = allAttributes,
+            AllProductAttributeValues = allRelevantProductAttributeValues
+        };
+    }
 
-            if (currFilterAttribute is null)
-            {
-                return Result.Failure<IQueryable<Product>>(ProductErrors.InvalidAttribute(attributeFilter.AttributeName));
-            }
+    private HashSet<int> FilterProductIds(FilterContext context)
+    {
+        var validProductIds = new HashSet<int>(dbContext.Products.Select(p => p.Id));
 
-            var currFilterAttributeValueIds = currFilterAttribute.Values
-                .Where(av => attributeFilter.AttributeValues.Contains(av.Value))
+        foreach (var filter in context.CustomFilters)
+        {
+            var currentAttribute = context.AllAttributes
+                .FirstOrDefault(a => string.Equals(a.Name, filter.Key, StringComparison.OrdinalIgnoreCase))
+                ?? throw new InvalidOperationException(filter.Key);
+
+            var matchingValueIds = currentAttribute.Values
+                .Where(av => filter.Value.Contains(av.Value))
                 .Select(av => av.Id)
                 .ToList();
 
-            var productIds = allRelevantProductAttributeValues
-                .Where(pv => currFilterAttributeValueIds.Contains(pv.AttributeValueId))
+            var matchingProductIds = context.AllProductAttributeValues
+                .Where(pv => matchingValueIds.Contains(pv.AttributeValueId))
                 .Select(pv => pv.ProductId)
                 .ToList();
 
-            validProductIds.IntersectWith(productIds);
+            validProductIds.IntersectWith(matchingProductIds);
 
             if (validProductIds.Count == 0)
             {
-                return Result.Failure<IQueryable<Product>>(ProductErrors.NotFound);
+                break;
             }
         }
 
-        query = query.Where(p => validProductIds.Contains(p.Id));
-
-        return Result.Success(query);
+        return validProductIds;
     }
 
     private HashSet<int> GetChildProductTypeIds(List<int> parentProductTypeIds)
@@ -233,4 +256,12 @@ public class GetProductListQueryHandler(
 
         return childProductTypeIds;
     }
+
+    private class FilterContext
+    {
+        public Dictionary<string, List<string>> CustomFilters { get; set; } = null!;
+        public List<ProductTypeAttribute> AllAttributes { get; set; } = null!;
+        public List<ProductTypeAttributeProductValue> AllProductAttributeValues { get; set; } = null!;
+    }
 }
+

@@ -18,7 +18,7 @@ public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderGeneralIn
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 12;
     public List<string> OrderStatuses { get; init; } = [];
-    public string Search { get; init; } = string.Empty;
+    public string SearchQuery { get; init; } = string.Empty;
 }
 
 public class GetOrderListHandler(

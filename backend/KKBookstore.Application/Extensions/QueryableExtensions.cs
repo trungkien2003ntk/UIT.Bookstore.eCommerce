@@ -15,6 +15,7 @@ public static class QueryableExtensions
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default)
+        where T : class
     {
         // Apply sorting
         try

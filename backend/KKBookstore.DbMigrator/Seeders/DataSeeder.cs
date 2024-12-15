@@ -892,16 +892,18 @@ internal class DataSeeder
     #region Helper Methods    
     private void AddAudit<TAuditableEntity>(List<TAuditableEntity> listItem) where TAuditableEntity : BaseAuditedEntity
     {
-        foreach (var item in listItem)
-        {
-            // createWhen using Bogus 
-            var createdWhen = _faker.Date.PastOffset(2);
-            var lastEditedWhen = _faker.Date.BetweenOffset(createdWhen, createdWhen.AddYears(1)); // Generate a random date between createdWhen and now
+        var orderedItems = listItem.OrderBy(x => x.Id).ToList();
+        DateTimeOffset baseTime = _faker.Date.PastOffset(2);
 
-            item.CreatorId = DEFAULT_ADMIN_ID;
-            item.CreationTime = createdWhen;
-            item.LastModifierId = DEFAULT_ADMIN_ID;
-            item.LastModificationTime = lastEditedWhen;
+        for (int i = 0; i < orderedItems.Count; i++)
+        {
+            var createdWhen = baseTime.AddMinutes(i * 5); // Increment by 5 minutes per item
+            var lastEditedWhen = _faker.Date.BetweenOffset(createdWhen, createdWhen.AddYears(1));
+
+            orderedItems[i].CreatorId = DEFAULT_ADMIN_ID;
+            orderedItems[i].CreationTime = createdWhen;
+            orderedItems[i].LastModifierId = DEFAULT_ADMIN_ID;
+            orderedItems[i].LastModificationTime = lastEditedWhen;
         }
     }
 

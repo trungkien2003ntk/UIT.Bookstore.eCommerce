@@ -48,6 +48,8 @@ public interface IApplicationDbContext
     public DbSet<UnitMeasure> UnitMeasures { get; set; }
 
     EntityEntry Entry(object entity);
+    EntityEntry<TEntity> Entry<TEntity>(TEntity entity)
+        where TEntity : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
 

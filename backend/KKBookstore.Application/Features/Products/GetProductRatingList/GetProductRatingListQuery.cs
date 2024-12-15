@@ -47,9 +47,9 @@ public class GetProductRatingListQueryHandler(
         PaginatedResult<Rating> paginatedRatings;
 
         paginatedRatings = await query.SortAndPaginateAsync(
-            "CreatedWhen",
+            "CreationTime",
             "desc",
-            ["CreatedWhen"],
+            ["CreationTime"],
             request.PageNumber,
             request.PageSize,
             cancellationToken);

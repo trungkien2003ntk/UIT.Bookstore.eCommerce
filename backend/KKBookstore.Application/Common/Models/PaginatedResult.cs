@@ -5,6 +5,7 @@ public class PaginatedResult<T>(
     int totalCount,
     int pageSize,
     int pageNumber)
+    where T : class
 {
     public List<T> Items { get; set; } = items;
     public int TotalCount { get; set; } = totalCount;

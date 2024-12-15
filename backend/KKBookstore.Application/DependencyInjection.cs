@@ -3,6 +3,7 @@ using KKBookstore.Application.Common.Behaviours;
 using KKBookstore.Application.Features.Checkout.PlaceOrder;
 using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
 using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+using KKBookstore.Application.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +20,9 @@ public static class DependencyInjection
         services.AddScoped<IGetShoppingCartMappingService, GetShoppingCartMappingService>();
 
         services.AddScoped<DefaultOrderProcessor>();
+
+        // Services
+        services.AddScoped<ProductTypeAttributeService>();
 
         // todo: Refactor the code to get rid of AutoMapper
         services.AddAutoMapper(assembly);

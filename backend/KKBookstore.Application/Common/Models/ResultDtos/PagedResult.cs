@@ -1,6 +1,6 @@
-﻿namespace KKBookstore.Application.Common.Models;
+﻿namespace KKBookstore.Application.Common.Models.ResultDtos;
 
-public class PaginatedResult<T>(
+public class PagedResult<T>(
     List<T> items,
     int totalCount,
     int pageSize,

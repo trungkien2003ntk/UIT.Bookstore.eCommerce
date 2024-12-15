@@ -1,4 +1,6 @@
-﻿namespace KKBookstore.Application.Common.Models;
+﻿using KKBookstore.Application.Common.Models.ResultDtos;
+
+namespace KKBookstore.Application.Common.Models.Responses;
 
 public class AuthenticationResponse(string AccessToken, DateTime AccessTokenExpiration, string RefreshToken, BasicUserInfoDto BasicUserInfo)
 {

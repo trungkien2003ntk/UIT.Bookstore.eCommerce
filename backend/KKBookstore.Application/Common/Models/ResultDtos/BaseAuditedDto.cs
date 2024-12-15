@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 
-namespace KKBookstore.Application.Common.Models;
+namespace KKBookstore.Application.Common.Models.ResultDtos;
 
 public abstract record BaseAuditedDto : BaseDto, IAuditedDto
 {

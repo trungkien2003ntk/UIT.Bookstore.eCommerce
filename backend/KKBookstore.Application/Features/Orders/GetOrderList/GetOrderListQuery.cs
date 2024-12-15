@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace KKBookstore.Application.Features.Orders.GetOrderList;
 
-public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderGeneralInformation>>>
+public record GetOrderListQuery : IRequest<Result<PagedResult<OrderGeneralInformation>>>
 {
     public string SortBy { get; init; } = "CreationTime";
     public string SortDirection { get; init; } = "desc";
@@ -24,9 +24,9 @@ public record GetOrderListQuery : IRequest<Result<PaginatedResult<OrderGeneralIn
 public class GetOrderListHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetOrderListQuery, Result<PaginatedResult<OrderGeneralInformation>>>
+) : IRequestHandler<GetOrderListQuery, Result<PagedResult<OrderGeneralInformation>>>
 {
-    public async Task<Result<PaginatedResult<OrderGeneralInformation>>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<OrderGeneralInformation>>> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
     {
         var query = dbContext.Orders
             .Include(o => o.PaymentMethod)
@@ -52,7 +52,7 @@ public class GetOrderListHandler(
 
         var sortProperty = request.SortBy;
         var validSortProperties = new List<string> { nameof(Order.CreationTime), nameof(Order.Id), nameof(Order.Status) };
-        PaginatedResult<Order> paginatedOrders;
+        PagedResult<Order> paginatedOrders;
 
         try
         {
@@ -67,10 +67,10 @@ public class GetOrderListHandler(
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return Result.Failure<PaginatedResult<OrderGeneralInformation>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
+            return Result.Failure<PagedResult<OrderGeneralInformation>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
         }
 
-        var result = mapper.Map<PaginatedResult<OrderGeneralInformation>>(paginatedOrders);
+        var result = mapper.Map<PagedResult<OrderGeneralInformation>>(paginatedOrders);
 
         return Result.Success(result);
     }

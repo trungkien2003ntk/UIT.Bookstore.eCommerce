@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Models;
+﻿namespace KKBookstore.Application.Common.Models.ResultDtos;
 
 public record BasicUserInfoDto(int UserId, string ImageUrl, string FullName, string Email, string RoleName)
 {

@@ -1,5 +1,5 @@
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
 using MediatR;
@@ -29,7 +29,7 @@ public class SignInCommandHandler(
             result.RefreshToken,
             new BasicUserInfoDto(userInfo.UserId, userInfo.ImageUrl, userInfo.FullName, userInfo.Email, userInfo.RoleName)
             ));
-        
+
         return response;
     }
 }

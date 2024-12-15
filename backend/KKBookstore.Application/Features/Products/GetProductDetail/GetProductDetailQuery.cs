@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
@@ -13,8 +12,7 @@ namespace KKBookstore.Application.Features.Products.GetProductDetail;
 public record GetProductDetailQuery(int ProductId) : IRequest<Result<GetProductDetailResponse>>;
 
 public class GetProductDetailQueryHandler(
-    IApplicationDbContext dbContext,
-    IMapper mapper
+    IApplicationDbContext dbContext
 ) : IRequestHandler<GetProductDetailQuery, Result<GetProductDetailResponse>>
 {
     private readonly IApplicationDbContext _dbContext = dbContext;
@@ -23,10 +21,20 @@ public class GetProductDetailQueryHandler(
     {
         // Query to fetch the product and related data
         var product = await _dbContext.Products
+            .AsNoTracking()
+            .AsSplitQuery()
             .Where(p => p.IsActive && !p.IsDeleted && p.Id == request.ProductId)
             .Include(p => p.ProductType)
             .Include(p => p.UnitMeasure)
             .Include(p => p.ProductImages)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)
+                    .ThenInclude(pov => pov.Option)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)
+                    .ThenInclude(pov => pov.OptionValue)
+            .Include(p => p.BookAuthors)
+                .ThenInclude(ba => ba.Author)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (product is null)
@@ -34,16 +42,13 @@ public class GetProductDetailQueryHandler(
             return Result.Failure<GetProductDetailResponse>(ProductErrors.NotFound);
         }
 
-        // fetch the product variants
-        product.ProductVariants = await GetProductVariants(product, cancellationToken);
+        var productResponse = await MapToResponseAsync(product, cancellationToken);
 
-        // fetch the book authors if the product is a book
-        if (product.IsBook)
-        {
-            product.BookAuthors = await GetBookAuthors(product, cancellationToken);
-        }
+        return Result.Success(productResponse);
+    }
 
-        // fetch ProductTypeAttributes
+    public async Task<GetProductDetailResponse> MapToResponseAsync(Product product, CancellationToken cancellationToken)
+    {
         var productTypeAttributeValues = await _dbContext.ProductTypeAttributeProductValues
             .Where(apv => apv.ProductId == product.Id)
             .Include(apv => apv.AttributeValue)
@@ -68,15 +73,10 @@ public class GetProductDetailQueryHandler(
             })
             .ToListAsync(cancellationToken);
 
-        // hand map:
-        var productDtoHandMap = new GetProductDetailResponse
+        var productResponse = new GetProductDetailResponse
         {
             Id = product.Id,
             Name = product.Name,
-            //MinUnitPrice = productDto.MinUnitPrice,
-            //MaxUnitPrice = productDto.MaxUnitPrice,
-            //MinRecommendedRetailPrice = productDto.MinRecommendedRetailPrice,
-            //MaxRecommendedRetailPrice = productDto.MaxRecommendedRetailPrice,
             UnitMeasureName = product.UnitMeasure.Name,
             Description = product.Description,
             ProductTypeId = product.ProductTypeId,
@@ -115,14 +115,14 @@ public class GetProductDetailQueryHandler(
                     LargeImageUrls = g.Select(pov => pov.OptionValue.LargeImageUrl)
                 }),
             ProductTypeAttributes = productTypeAttributeValues
-            .Select(pav => new GetProductDetailResponse.ProductTypeAttribute()
-            {
-                ProductTypeId = pav.Product.ProductTypeId,
-                AttributeValueId = pav.AttributeValueId,
-                AttributeId = pav.AttributeValue.ProductTypeAttribute.Id,
-                Name = pav.AttributeValue.ProductTypeAttribute.Name,
-                Value = pav.AttributeValue.Value
-            }),
+                .Select(pav => new GetProductDetailResponse.ProductTypeAttribute()
+                {
+                    ProductTypeId = pav.Product.ProductTypeId,
+                    AttributeValueId = pav.AttributeValueId,
+                    AttributeId = pav.AttributeValue.ProductTypeAttribute.Id,
+                    Name = pav.AttributeValue.ProductTypeAttribute.Name,
+                    Value = pav.AttributeValue.Value
+                }),
             ProductTypes = await _dbContext.ProductTypes
                 .Where(pt => pt.Id == product.ProductTypeId)
                 .OrderBy(pt => pt.Level)
@@ -138,33 +138,12 @@ public class GetProductDetailQueryHandler(
         // Calculate min and max prices
         if (product.ProductVariants.Count != 0)
         {
-            productDtoHandMap.MinUnitPrice = product.ProductVariants.Min(s => s.UnitPrice);
-            productDtoHandMap.MaxUnitPrice = product.ProductVariants.Max(s => s.UnitPrice);
-            productDtoHandMap.MinRecommendedRetailPrice = product.ProductVariants.Min(s => s.RecommendedRetailPrice);
-            productDtoHandMap.MaxRecommendedRetailPrice = product.ProductVariants.Max(s => s.RecommendedRetailPrice);
+            productResponse.MinUnitPrice = productResponse.ProductVariants.Min(s => s.UnitPrice);
+            productResponse.MaxUnitPrice = productResponse.ProductVariants.Max(s => s.UnitPrice);
+            productResponse.MinRecommendedRetailPrice = productResponse.ProductVariants.Min(s => s.RecommendedRetailPrice);
+            productResponse.MaxRecommendedRetailPrice = productResponse.ProductVariants.Max(s => s.RecommendedRetailPrice);
         }
 
-        return Result.Success(productDtoHandMap);
-    }
-
-    private async Task<List<ProductVariant>> GetProductVariants(Product? product, CancellationToken cancellationToken)
-    {
-        return await _dbContext.ProductVariants
-                    .Where(s => s.ProductId == product.Id && s.IsActive)
-                    .Include(s => s.ProductVariantOptionValues)
-                        .ThenInclude(so => so.Option)
-                    .Include(s => s.ProductVariantOptionValues)
-                        .ThenInclude(so => so.OptionValue)
-                    .Include(s => s.SkuValue)
-                    .Include(s => s.Dimension)
-                    .ToListAsync(cancellationToken);
-    }
-
-    private async Task<List<BookAuthor>> GetBookAuthors(Product product, CancellationToken cancellationToken)
-    {
-        return await _dbContext.BookAuthors
-                        .Include(ab => ab.Author)
-                        .Where(wb => wb.BookId == product.Id)
-                        .ToListAsync(cancellationToken);
+        return productResponse;
     }
 }

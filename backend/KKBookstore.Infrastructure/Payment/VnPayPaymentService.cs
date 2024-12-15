@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using Microsoft.Extensions.Options;
 
 namespace KKBookstore.Infrastructure.Payment;

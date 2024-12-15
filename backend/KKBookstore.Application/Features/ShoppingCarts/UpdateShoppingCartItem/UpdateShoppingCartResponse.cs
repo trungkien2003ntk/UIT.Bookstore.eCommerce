@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Models;
+﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
 namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 

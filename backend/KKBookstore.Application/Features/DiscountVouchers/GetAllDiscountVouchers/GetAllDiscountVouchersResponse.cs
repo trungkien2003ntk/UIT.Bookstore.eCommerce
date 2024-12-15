@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Models;
+﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Shared.Orders;
 
 namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchers;

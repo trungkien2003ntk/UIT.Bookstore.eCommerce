@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.Responses;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.SignIn;
 

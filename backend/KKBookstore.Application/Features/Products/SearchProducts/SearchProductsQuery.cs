@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.RequestDtos;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

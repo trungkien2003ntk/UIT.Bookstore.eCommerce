@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Products.GetProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
@@ -32,7 +32,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.DisplayName))
             .ForMember(dest => dest.ThumbnailImageUrl, opt => opt.MapFrom(src => src.GetFirstThumbnailImageUrl()));
 
-        CreateMap<PaginatedResult<Product>, PaginatedResult<ProductSummary>>()
+        CreateMap<PagedResult<Product>, PagedResult<ProductSummary>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
         CreateMap<Author, AuthorDto>();
@@ -51,7 +51,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Option.Name));
 
-        CreateMap<(PaginatedResult<Rating>, List<Rating>), ProductRatingSummary>()
+        CreateMap<(PagedResult<Rating>, List<Rating>), ProductRatingSummary>()
             .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Item1))
             .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.Item2.Average(r => new decimal(r.RatingValue))))
             .ForMember(dest => dest.TotalApprovedRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.Status == RatingStatus.Approved)))
@@ -63,7 +63,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Total1StarRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.RatingValue == 1)))
             .ForMember(dest => dest.TotalRating, opt => opt.MapFrom(src => src.Item2.Count));
 
-        CreateMap<PaginatedResult<Rating>, PaginatedResult<ProductRatingDto>>()
+        CreateMap<PagedResult<Rating>, PagedResult<ProductRatingDto>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
         CreateMap<Rating, ProductRatingDto>()

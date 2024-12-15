@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Models;
+﻿namespace KKBookstore.Application.Common.Models.ResultDtos;
 
 public class ListResult<T>
     where T : class

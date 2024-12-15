@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
@@ -9,7 +9,7 @@ using MediatR;
 namespace KKBookstore.Application.Features.Users.GetUserList;
 
 public record GetUserListQuery()
-    : IRequest<Result<PaginatedResult<GetUserListResponse>>>, IPaginatedQuery, ISortableQuery
+    : IRequest<Result<PagedResult<GetUserListResponse>>>, IPaginatedQuery, ISortableQuery
 {
     public List<int>? UserIds { get; init; }
     public int PageNumber { get; init; }
@@ -24,9 +24,9 @@ public record GetUserListQuery()
 public class GetUserListHandler(
     IApplicationDbContext dbContext,
     IMapper mapper
-) : IRequestHandler<GetUserListQuery, Result<PaginatedResult<GetUserListResponse>>>
+) : IRequestHandler<GetUserListQuery, Result<PagedResult<GetUserListResponse>>>
 {
-    public async Task<Result<PaginatedResult<GetUserListResponse>>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<GetUserListResponse>>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
     {
         IQueryable<User> query = dbContext.Users;
 
@@ -45,7 +45,7 @@ public class GetUserListHandler(
         if (request.UserIds is not null && request.UserIds.Count > 0)
             query = query.Where(x => request.UserIds.Contains(x.Id));
 
-        PaginatedResult<User> paginatedUsers;
+        PagedResult<User> paginatedUsers;
 
         try
         {
@@ -59,10 +59,10 @@ public class GetUserListHandler(
         }
         catch
         {
-            return Result.Failure<PaginatedResult<GetUserListResponse>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
+            return Result.Failure<PagedResult<GetUserListResponse>>(Error.InvalidSortProperty(sortProperty, string.Join(',', validSortProperties)));
         }
 
-        var mappedPaginatedUsers = mapper.Map<PaginatedResult<GetUserListResponse>>(paginatedUsers);
+        var mappedPaginatedUsers = mapper.Map<PagedResult<GetUserListResponse>>(paginatedUsers);
 
         return Result.Success(mappedPaginatedUsers);
     }

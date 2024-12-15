@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Models;
+﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Products.Models;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 

@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;

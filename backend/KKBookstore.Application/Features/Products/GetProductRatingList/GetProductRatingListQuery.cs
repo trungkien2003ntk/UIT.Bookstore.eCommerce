@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
@@ -44,7 +44,7 @@ public class GetProductRatingListQueryHandler(
 
         var allRatings = await query.ToListAsync(cancellationToken);
 
-        PaginatedResult<Rating> paginatedRatings;
+        PagedResult<Rating> paginatedRatings;
 
         paginatedRatings = await query.SortAndPaginateAsync(
             "CreationTime",

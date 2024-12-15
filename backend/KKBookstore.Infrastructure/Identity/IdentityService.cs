@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.RequestDtos;
+using KKBookstore.Application.Common.Models.Responses;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
 using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
@@ -11,7 +13,6 @@ using KKBookstore.Application.Features.Users.UpdatePassword;
 using KKBookstore.Application.Features.Users.UpdateUser;
 using KKBookstore.Domain.Constants;
 using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Users;
 using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@ public class IdentityService(
     private readonly IOptions<JwtSettings> _jwtSettings = jwtSettings;
     private readonly KKBookstoreDbContext _dbContext = dbContext;
 
-    public async Task<Result<User>> FindUserAsync(FindUserDto findUserDto)
+    public async Task<Result<User>> FindUserAsync(FindUserRequest findUserDto)
     {
         var user = await _userManager.FindByEmailAsync(findUserDto.Email);
 

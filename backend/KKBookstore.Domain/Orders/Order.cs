@@ -111,6 +111,11 @@ public class Order : BaseAuditedEntity
         return subtotal + shippingFee - shippingDiscount - priceDiscount;
     }
 
+    public bool IsCompleted()
+    {
+        return Status == OrderStatus.Received || Status == OrderStatus.Delivered;
+    }
+
     public static Result<Order> Create(
         int customerId,
         int shippingAddressId,

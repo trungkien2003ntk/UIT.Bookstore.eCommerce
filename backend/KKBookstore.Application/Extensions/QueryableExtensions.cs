@@ -1,4 +1,5 @@
-﻿using KKBookstore.Application.Common.Models;
+﻿using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,7 +8,38 @@ namespace KKBookstore.Application.Extensions;
 
 public static class QueryableExtensions
 {
-    public static async Task<PaginatedResult<T>> SortAndPaginateAsync<T>(
+    public static async Task<Result<PagedResult<T>>> SortAndPaginateWithResultAsync<T>(
+        this IQueryable<T> query,
+        string sortBy,
+        string sortDirection,
+        List<string> validSortProperties,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        // Apply sorting
+        try
+        {
+            query = query.OrderBy(sortBy, sortDirection, validSortProperties);
+        }
+        catch
+        {
+            return Result.Failure<PagedResult<T>>(Error.InvalidSortProperty(sortBy, string.Join(',', validSortProperties)));
+        }
+
+        // Create paginated result
+        var totalItemsCount = await query.CountAsync(cancellationToken);
+
+        // Apply pagination
+        var paginatedItems = await query.PaginateAsync(pageNumber, pageSize, cancellationToken);
+
+        var result = new PagedResult<T>(paginatedItems, totalItemsCount, pageSize, pageNumber);
+
+        return result;
+    }
+
+    public static async Task<PagedResult<T>> SortAndPaginateAsync<T>(
         this IQueryable<T> query,
         string sortBy,
         string sortDirection,
@@ -32,7 +64,7 @@ public static class QueryableExtensions
 
         // Create paginated result
         var totalItemsCount = await query.CountAsync(cancellationToken);
-        var result = new PaginatedResult<T>(paginatedItems, totalItemsCount, pageSize, pageNumber);
+        var result = new PagedResult<T>(paginatedItems, totalItemsCount, pageSize, pageNumber);
 
         return result;
     }

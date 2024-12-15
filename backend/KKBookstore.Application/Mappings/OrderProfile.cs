@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Orders.GetOrderDetail;
 using KKBookstore.Application.Features.Orders.GetOrderList;
 using KKBookstore.Application.Features.Orders.Models;
@@ -13,7 +13,7 @@ public class OrderProfile : Profile
 {
     public OrderProfile()
     {
-        CreateMap<PaginatedResult<Order>, PaginatedResult<OrderGeneralInformation>>()
+        CreateMap<PagedResult<Order>, PagedResult<OrderGeneralInformation>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
         CreateMap<Order, GetOrderDetailResponse>()

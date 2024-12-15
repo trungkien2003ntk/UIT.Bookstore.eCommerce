@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models;
+using KKBookstore.Application.Common.Models.Responses;
+using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Users.AddShippingAddress;
 using KKBookstore.Application.Features.Users.GetUserList;
 using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
@@ -22,7 +23,7 @@ public class UserProfile : Profile
             .ReverseMap()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Enum.Parse<UserStatus>(src.Status)));
 
-        CreateMap<PaginatedResult<User>, PaginatedResult<GetUserListResponse>>()
+        CreateMap<PagedResult<User>, PagedResult<GetUserListResponse>>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
         CreateMap<AuthenticationResponse, RegisterResponse>().ReverseMap();

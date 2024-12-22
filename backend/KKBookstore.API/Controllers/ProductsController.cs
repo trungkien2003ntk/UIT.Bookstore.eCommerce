@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using KKBookstore.API.Abstractions;
 using KKBookstore.API.Contracts.Requests;
+using KKBookstore.Application.Features.Products.CreateProduct;
 using KKBookstore.Application.Features.Products.GetProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.GetTrendyProductList;
+using KKBookstore.Application.Features.Products.GetUnitMeasures;
 using KKBookstore.Application.Features.Products.SearchProducts;
 using KKBookstore.Domain.Models;
 using MediatR;
@@ -84,12 +86,25 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateProductAsync(
 
+    [HttpGet("unit-measures")]
+    public async Task<IActionResult> GetUnitMeasures(
+        CancellationToken cancellationToken = default
     )
     {
+        var result = await Sender.Send(new GetUnitMeasuresQuery(), cancellationToken);
 
-        return Created();
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateProductAsync(
+        [FromBody] CreateProductCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 }

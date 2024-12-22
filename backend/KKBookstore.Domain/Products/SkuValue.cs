@@ -6,7 +6,7 @@ public class SkuValue : ValueObject
 {
     public SkuValue()
     {
-
+        Value = "";
     }
     private SkuValue(string value)
     {

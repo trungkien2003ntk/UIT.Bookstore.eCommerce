@@ -17,10 +17,10 @@ internal class BranchConfiguration : IEntityTypeConfiguration<Branch>
         builder.Property(t => t.Description).HasColumnName(nameof(Branch.Description)).HasMaxLength(BranchConsts.DescriptionMaxLength).IsRequired();
         builder.Property(t => t.AddressId).HasColumnName(nameof(Branch.AddressId)).IsRequired();
         builder.Property(t => t.IsDefault).HasColumnName(nameof(Branch.IsDefault)).IsRequired();
-        
+
         builder.HasIndex(t => t.Name)
             .IsUnique();
-
+        builder.HasOne(x => x.Address).WithOne().HasForeignKey<Branch>(x => x.AddressId);
         builder.ConfigureAuditing();
     }
 }

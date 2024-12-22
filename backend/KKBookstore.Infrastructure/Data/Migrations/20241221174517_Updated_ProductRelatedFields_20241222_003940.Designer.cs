@@ -4,6 +4,7 @@ using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241221174517_Updated_ProductRelatedFields_20241222_003940")]
+    partial class Updated_ProductRelatedFields_20241222_003940
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,8 +89,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("CreatorId");
 
@@ -1351,6 +1353,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .HasColumnName("IsDeleted");
 
                     b.Property<string>("LargeImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("LargeImageUrl");
 
@@ -1366,6 +1369,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ThumbnailImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ThumbnailImageUrl");
 
@@ -2293,17 +2297,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Branches.BranchAddress", b =>
-                {
-                    b.HasBaseType("KKBookstore.Domain.Users.Address");
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int")
-                        .HasColumnName("BranchId");
-
-                    b.HasDiscriminator().HasValue("BranchAddress");
-                });
-
             modelBuilder.Entity("KKBookstore.Domain.Customers.ShippingAddress", b =>
                 {
                     b.HasBaseType("KKBookstore.Domain.Users.Address");
@@ -2351,9 +2344,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("KKBookstore.Domain.Branches.Branch", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Branches.BranchAddress", "Address")
-                        .WithOne()
-                        .HasForeignKey("KKBookstore.Domain.Branches.Branch", "AddressId")
+                    b.HasOne("KKBookstore.Domain.Users.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

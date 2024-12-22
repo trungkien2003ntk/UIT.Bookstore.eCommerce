@@ -22,6 +22,8 @@ public static class ProductErrors
     public static readonly Error NegativeWidth = Error.Validation("Product.NegativeWidth", "Width cannot be negative.");
     public static readonly Error NegativeLength = Error.Validation("Product.NegativeLength", "Length cannot be negative.");
 
+    public static readonly Error CreateProductFailed = Error.Failure("Product.CreateProductFailed", "Failed to create product.");
+
     public static Error InvalidAttribute(string attributeName)
     {
         return Error.Validation("Product.InvalidAttribute", $"Invalid attribute: {attributeName}");
@@ -30,5 +32,10 @@ public static class ProductErrors
     public static Error InvalidAttributeValue(string attributeName, IEnumerable<string> validAttributeValues)
     {
         return Error.Validation("Product.InvalidAttributeValue", $"Invalid value for attribute: {attributeName}, valid values: [{string.Join(",", validAttributeValues)}]");
+    }
+
+    public static Error ProductAlreadyExists(string name)
+    {
+        return Error.Conflict("Product.ProductAlreadyExists", $"Product with name '{name}' already exists.");
     }
 }

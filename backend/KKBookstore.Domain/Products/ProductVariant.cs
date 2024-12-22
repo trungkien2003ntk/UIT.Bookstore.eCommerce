@@ -8,6 +8,29 @@ public class ProductVariant : BaseFullAuditedEntity
 {
     protected ProductVariant() : base() { }
 
+    public ProductVariant(
+        SkuValue skuValue,
+        decimal recommendedRetailPrice,
+        decimal unitPrice,
+        int weight,
+        Dimension dimension,
+        decimal taxRate,
+        string comment
+    ) : base()
+    {
+        SkuValue = skuValue;
+        Barcode = skuValue.Value;
+        RecommendedRetailPrice = recommendedRetailPrice;
+        Dimension = dimension;
+        Weight = weight;
+        UnitPrice = unitPrice;
+        TaxRate = taxRate;
+        Comment = comment;
+        Tags = "";
+        ValidFrom = DateTimeOffset.UtcNow;
+        IsActive = true;
+    }
+
     public ProductVariant(int productId) : base()
     {
         ProductId = productId;
@@ -45,19 +68,26 @@ public class ProductVariant : BaseFullAuditedEntity
     public int ProductId { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
     public decimal UnitPrice { get; set; }
-    [NotMapped]
-    public decimal BasicDiscountRate => (RecommendedRetailPrice - UnitPrice) / RecommendedRetailPrice * 100;
     public decimal TaxRate { get; set; }
     public string Comment { get; set; }
     public DateTimeOffset ValidFrom { get; set; }
     public DateTimeOffset? ValidTo { get; set; }
     public DateTimeOffset? DiscontinuedWhen { get; set; }
-    public int Quantity { get; set; }
-    public int AvailableQuantity => Quantity;
+
     public int Weight { get; set; }
     public Dimension Dimension { get; set; }
     public bool IsActive { get; set; }
     public string Tags { get; set; }
+
+    // Calculated properties
+    [NotMapped]
+    public decimal BasicDiscountRate => (RecommendedRetailPrice - UnitPrice) / RecommendedRetailPrice * 100;
+
+    [NotMapped]
+    public int StockQuantity => Inventories.Sum(i => i.StockQuantity);
+
+    [NotMapped]
+    public int AvailableQuantity => Inventories.Sum(i => i.IsActive ? i.StockQuantity : 0);
 
     // navigation properties
     public Product Product { get; set; }
@@ -69,7 +99,7 @@ public class ProductVariant : BaseFullAuditedEntity
     For the listing of purchase price in the create order page, we order this list by the creationTime, then select the first one
     based on the selected branch that the customer chose.
      */
-    public ICollection<Inventory> Inventories { get; set; } = []; 
+    public ICollection<Inventory> Inventories { get; set; } = [];
 
     // calculated properties
     public string VariantName => string.Join(", ", ProductVariantOptionValues.Select(sov => sov.OptionValue.Value));

@@ -9,6 +9,12 @@ public class ListResult<T>
         TotalCount = totalCount;
     }
 
+    public ListResult(IList<T> items)
+    {
+        Items = items;
+        TotalCount = items.Count;
+    }
+
     public IEnumerable<object> Items { get; set; }
     public int TotalCount { get; set; }
 }

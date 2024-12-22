@@ -36,7 +36,8 @@ public static class DependencyInjection
 
 #if DEBUG
             options
-                .UseSqlServer(connectionString);
+                .UseSqlServer(connectionString)
+                .EnableSensitiveDataLogging();
             ;
 #endif
         });

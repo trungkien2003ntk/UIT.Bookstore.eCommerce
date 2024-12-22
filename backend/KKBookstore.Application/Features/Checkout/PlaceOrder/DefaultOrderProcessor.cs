@@ -32,7 +32,7 @@ public class DefaultOrderProcessor(
     {
         foreach (var item in checkoutItems)
         {
-            if (item.ProductVariant.Quantity < item.Quantity)
+            if (item.ProductVariant.StockQuantity < item.Quantity)
             {
                 return false;
             }
@@ -44,7 +44,7 @@ public class DefaultOrderProcessor(
     {
         foreach (var item in checkoutItems)
         {
-            item.ProductVariant.Quantity -= item.Quantity;
+            //item.ProductVariant.Quantity -= item.Quantity;
         }
     }
 

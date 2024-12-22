@@ -1,0 +1,24 @@
+﻿[
+  {
+    "Id": 11,
+    "PhoneNumber": "123456789",
+    "Province": "Tp. Hồ Chí Minh",
+    "District": "Quận 7",
+    "Commune": "Phường Phú Mỹ",
+    "DetailAddress": "45 Huỳnh Văn Luỹ",
+    "IsDefault": true,
+    "Type": "Office",
+    "BranchId": 1
+  },
+  {
+    "Id": 12,
+    "PhoneNumber": "123456789",
+    "Province": "Tp. Hồ Chí Minh",
+    "District": "Quận 2",
+    "Commune": "Phương Thảo Điền",
+    "DetailAddress": "Vincom Thảo Điền",
+    "IsDefault": false,
+    "Type": "Office",
+    "BranchId": 2
+  }
+]

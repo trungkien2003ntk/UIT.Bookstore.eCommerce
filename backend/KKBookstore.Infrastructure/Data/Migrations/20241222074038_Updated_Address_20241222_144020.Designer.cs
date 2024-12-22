@@ -4,6 +4,7 @@ using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241222074038_Updated_Address_20241222_144020")]
+    partial class Updated_Address_20241222_144020
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

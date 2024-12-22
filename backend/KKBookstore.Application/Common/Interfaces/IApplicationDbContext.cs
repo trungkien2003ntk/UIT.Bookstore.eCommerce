@@ -1,4 +1,5 @@
-﻿using KKBookstore.Domain.Customers;
+﻿using KKBookstore.Domain.Branches;
+using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ProductTypes;
@@ -19,6 +20,8 @@ public interface IApplicationDbContext
     public DbSet<IdentityUserRole<int>> UserRoles { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
+    public DbSet<Branch> Branches { get; set; }
+    public DbSet<BranchAddress> BranchAddresses { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<CustomerType> CustomerTypes { get; set; }
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }

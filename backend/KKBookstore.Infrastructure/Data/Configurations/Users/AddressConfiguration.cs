@@ -1,4 +1,5 @@
-﻿using KKBookstore.Domain.Customers;
+﻿using KKBookstore.Domain.Branches;
+using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.Shared.Users;
 using KKBookstore.Domain.Users;
@@ -26,6 +27,7 @@ internal class AddressConfiguration : IEntityTypeConfiguration<Address>
 
         builder.HasDiscriminator<string>("Discriminator")
             .HasValue<Address>(nameof(Address))
+            .HasValue<BranchAddress>(nameof(BranchAddress))
             .HasValue<ShippingAddress>(nameof(ShippingAddress));
     }
 }

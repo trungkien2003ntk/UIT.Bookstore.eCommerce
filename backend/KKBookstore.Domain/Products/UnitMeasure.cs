@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Domain.Products;
 
@@ -16,7 +15,6 @@ public class UnitMeasure : BaseFullAuditedEntity
     {
         Name = name;
         Description = description;
-        IsDeleted = false;
     }
 
     public string Name { get; set; }

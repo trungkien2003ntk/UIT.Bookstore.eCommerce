@@ -1,5 +1,4 @@
 ﻿using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Users;
 
 namespace KKBookstore.Domain.Branches;
 
@@ -11,5 +10,5 @@ public class Branch : BaseFullAuditedEntity
     public int AddressId { get; set; }
     public bool IsDefault { get; set; }
 
-    public Address Address { get; set; } = null!;
+    public BranchAddress Address { get; set; } = null!;
 }

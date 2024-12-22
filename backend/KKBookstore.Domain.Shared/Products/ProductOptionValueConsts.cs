@@ -1,4 +1,7 @@
-﻿namespace KKBookstore.Domain.Shared.Products;
+﻿
+
+
+namespace KKBookstore.Domain.Shared.Products;
 
 public static class ProductOptionValueConsts
 {

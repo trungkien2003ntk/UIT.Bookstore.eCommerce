@@ -3,7 +3,6 @@ using KKBookstore.Domain.Shared.Products;
 using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KKBookstore.Infrastructure.Data.Configurations.Products;
 
@@ -20,7 +19,6 @@ internal class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVar
         builder.Property(t => t.UnitPrice).HasColumnName(nameof(ProductVariant.UnitPrice)).HasPrecision(18, 2).IsRequired();
         builder.Property(t => t.TaxRate).HasColumnName(nameof(ProductVariant.TaxRate)).HasPrecision(18, 2);
         builder.Property(t => t.Weight).HasColumnName(nameof(ProductVariant.Weight)).HasPrecision(18, 2).IsRequired();
-        builder.Property(t => t.Quantity).HasColumnName(nameof(ProductVariant.Quantity)).IsRequired();
         builder.Property(t => t.Comment).HasColumnName(nameof(ProductVariant.Comment)).HasMaxLength(ProductVariantConsts.CommentMaxLength);
 
         // Value Objects

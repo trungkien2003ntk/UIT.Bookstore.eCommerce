@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Models;
 
 namespace KKBookstore.Domain.Products;
 
@@ -21,8 +20,8 @@ public class ProductOptionValue : BaseFullAuditedEntity
 
     public int OptionId { get; set; }
     public string Value { get; set; }
-    public string ThumbnailImageUrl { get; set; }
-    public string LargeImageUrl { get; set; }
+    public string? ThumbnailImageUrl { get; set; }
+    public string? LargeImageUrl { get; set; }
 
     //navigation properties
     public ProductOption Option { get; set; }

@@ -4,6 +4,7 @@ using KKBookstore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241221175123_Updated_ProductOptionValue_20241222_005140")]
+    partial class Updated_ProductOptionValue_20241222_005140
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,8 +89,7 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("CreatorId");
 
@@ -2293,17 +2295,6 @@ namespace KKBookstore.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Domain.Branches.BranchAddress", b =>
-                {
-                    b.HasBaseType("KKBookstore.Domain.Users.Address");
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int")
-                        .HasColumnName("BranchId");
-
-                    b.HasDiscriminator().HasValue("BranchAddress");
-                });
-
             modelBuilder.Entity("KKBookstore.Domain.Customers.ShippingAddress", b =>
                 {
                     b.HasBaseType("KKBookstore.Domain.Users.Address");
@@ -2351,9 +2342,9 @@ namespace KKBookstore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("KKBookstore.Domain.Branches.Branch", b =>
                 {
-                    b.HasOne("KKBookstore.Domain.Branches.BranchAddress", "Address")
-                        .WithOne()
-                        .HasForeignKey("KKBookstore.Domain.Branches.Branch", "AddressId")
+                    b.HasOne("KKBookstore.Domain.Users.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

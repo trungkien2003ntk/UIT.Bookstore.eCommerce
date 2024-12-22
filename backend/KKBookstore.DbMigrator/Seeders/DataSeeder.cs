@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using KKBookstore.Domain.Branches;
 using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
@@ -62,6 +63,12 @@ internal class DataSeeder
 
     // ShoppingCartItem paths
     private readonly string ShoppingCartItemJsonPath = $"{BASE_PATH}/ShoppingCartItems/ShoppingCartItem.json";
+
+    // Branches paths
+    private readonly string BranchJsonPath = $"{BASE_PATH}/Branches/Branches.json";
+    private readonly string BranchAddressJsonPath = $"{BASE_PATH}/Branches/BranchAddresses.json";
+
+    // Users paths
     #endregion Json paths
 
     #region Data lists
@@ -105,6 +112,11 @@ internal class DataSeeder
 
     // ShoppingCartItem related data
     private readonly List<ShoppingCartItem> _shoppingCartItems = [];
+
+    // Branches related data
+    private readonly List<Branch> _branches = [];
+    private readonly List<BranchAddress> _branchAddresses = [];
+
     #endregion Data lists
 
     #region Fields
@@ -134,6 +146,9 @@ internal class DataSeeder
 
         Log.Information($"\t{++order}. Seeding product related data");
         await SeedProductRelatedData();
+
+        Log.Information($"\t{++order}. Seeding branch related data");
+        await SeedBranches();
 
         //Log.Information($"\t{++order}. Seeding discount related data");
         //await SeedDiscountVouchers();
@@ -173,6 +188,9 @@ internal class DataSeeder
 
         Log.Information($"\t\t1.7. Seeding shipping addresses");
         await SeedShippingAddress();
+
+        Log.Information($"\t\t1.8. Seeding branch addresses");
+        await SeedBranchAddresses();
     }
 
     private async Task SeedProductRelatedData()
@@ -221,6 +239,24 @@ internal class DataSeeder
 
         //Log.Information($"\t\t2.15. Seeding ratings");
         //await SeedRatings();
+    }
+
+    private async Task SeedBranches()
+    {
+        if (_dbContext.Branches.Any())
+        {
+            return;
+        }
+
+        var branchJson = File.ReadAllText(BranchJsonPath, Encoding.UTF8);
+        var branches = JsonSerializer.Deserialize<List<Branch>>(branchJson);
+
+        AddAudit(branches);
+
+        _branches.AddRange(branches);
+
+        _dbContext.AddRange(_branches);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<Branch>();
     }
 
     private async Task SeedOrderRelatedData()
@@ -386,6 +422,24 @@ internal class DataSeeder
 
         _dbContext.AddRange(_shippingAddresses);
         await _dbContext.SaveChangesWithIdentityInsertAsync<ShippingAddress>();
+    }
+
+    private async Task SeedBranchAddresses()
+    {
+        if (_dbContext.BranchAddresses.Any())
+        {
+            return;
+        }
+
+        var addressJson = File.ReadAllText(BranchAddressJsonPath, Encoding.UTF8);
+        var addresses = JsonSerializer.Deserialize<List<BranchAddress>>(addressJson, enumOption);
+
+        AddAudit(addresses);
+
+        _branchAddresses.AddRange(addresses);
+
+        _dbContext.AddRange(_branchAddresses);
+        await _dbContext.SaveChangesWithIdentityInsertAsync<BranchAddress>();
     }
     #endregion Seed User related data
 

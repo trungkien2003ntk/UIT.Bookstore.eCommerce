@@ -1,5 +1,18 @@
 [
   {
-
+    "Id": 1,
+    "Name": "BQ1",
+    "Description": "Chi nhánh quận 7",
+    "Email": "kkbookstore1@gmail.com",
+    "AddressId": 11,
+    "IsDefault": true
+  },
+  {
+    "Id": 2,
+    "Name": "BQ2",
+    "Description": "Chi nhánh quận 2",
+    "Email": "kkbookstore2@gmail.com",
+    "AddressId": 12,
+    "IsDefault": false
   }
 ]

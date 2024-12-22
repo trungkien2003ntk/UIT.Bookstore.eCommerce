@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Domain.Branches;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.Domain.Stocks;
 
@@ -13,9 +14,16 @@ public class Inventory : BaseFullAuditedEntity
 
     // not updatable
     public int PurchasePrice { get; set; }
-    public StockStatus StockStatus { get; set; }
     public bool IsActive { get; set; }
 
     public ProductVariant ProductVariant { get; set; } = null!;
     public Branch Warehouse { get; set; } = null!;
+
+    [NotMapped]
+    public StockStatus StockStatus => IsActive && StockQuantity > 0 ? StockStatus.InStock : StockStatus.OutOfStock;
+
+    public Inventory() : base()
+    {
+
+    }
 }

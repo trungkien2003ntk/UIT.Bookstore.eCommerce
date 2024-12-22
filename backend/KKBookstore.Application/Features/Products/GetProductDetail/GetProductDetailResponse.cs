@@ -1,6 +1,5 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Products.Models;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace KKBookstore.Application.Features.Products.GetProductDetail;
 
@@ -20,7 +19,7 @@ public record GetProductDetailResponse : BaseDto
     public IEnumerable<string> LargeImageUrls { get; set; } = [];
     public IEnumerable<ProductTypeAttribute>? ProductTypeAttributes { get; set; }
     public IEnumerable<AuthorDto>? Authors { get; set; }
-    public IEnumerable<ProductVariantDto> ProductVariants { get; set; } = [];
+    public IEnumerable<CustomerProductVariantDto> ProductVariants { get; set; } = [];
 
     // list of options that each variant can have
     public IEnumerable<ProductVariantOption> ProductVariantOptions { get; set; } = [];
@@ -45,12 +44,5 @@ public record GetProductDetailResponse : BaseDto
         public IEnumerable<string> Values { get; set; } = [];
         public IEnumerable<string>? ThumbnailImageUrls { get; set; }
         public IEnumerable<string>? LargeImageUrls { get; set; }
-    }
-
-    public sealed class ProductTypeDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Level { get; set; }
     }
 }

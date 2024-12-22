@@ -1,22 +1,25 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Domain.Products;
 
 namespace KKBookstore.Application.Features.Products.Models;
 
-public record ProductVariantDto : BaseDto
+public sealed record ProductVariantDto : BaseDto
 {
-    public string SkuValue { get; set; }
-    public decimal UnitPrice { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
-    public decimal BasicDiscountRate { get; set; }
-    public string Barcode { get; set; }
-    public decimal Quantity { get; set; }
-    public string Status { get; set; }
-    public decimal Weight { get; set; }
-    public decimal Width { get; set; }
-    public decimal Height { get; set; }
-    public decimal Length { get; set; }
-    public string ThumbnailImageUrl { get; set; }
-    public string LargeImageUrl { get; set; }
-    public IEnumerable<OptionValueDto>? OptionValues { get; set; }
+    public decimal UnitPrice { get; set; }
+    public int Weight { get; set; }
+    public Dimension Dimension { get; set; }
+    public decimal TaxRate { get; set; }
+    public string Comment { get; set; }
+
+    public ICollection<VariantOptionDto> VariantOptions { get; set; } = [];
+
+    public sealed record VariantOptionDto : BaseDto
+    {
+        public int ProductOptionId { get; set; }
+        public int ProductOptionValueId { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
 }
 

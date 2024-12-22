@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Models;
 using KKBookstore.Domain.ProductTypes;
 
 namespace KKBookstore.Domain.Products;
@@ -43,6 +42,7 @@ public class Product : BaseFullAuditedEntity
     public ICollection<ProductVariant> ProductVariants { get; set; } = [];
     public ICollection<Rating> Ratings { get; set; } = [];
     public ICollection<ProductImage> ProductImages { get; set; } = [];
+    public ICollection<ProductTypeAttributeProductValue> AttributeProductValues { get; set; } = [];
 
     public static Result<Product> Create(
         string name,

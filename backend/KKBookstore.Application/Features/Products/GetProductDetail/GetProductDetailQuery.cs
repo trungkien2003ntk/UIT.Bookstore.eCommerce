@@ -89,7 +89,7 @@ public class GetProductDetailQueryHandler(
                 Id = ba.Author.Id,
                 Name = ba.Author.Name
             }) : null,
-            ProductVariants = product.ProductVariants.Select(pv => new ProductVariantDto()
+            ProductVariants = product.ProductVariants.Select(pv => new CustomerProductVariantDto()
             {
                 Id = pv.Id,
                 SkuValue = pv.SkuValue.Value,
@@ -129,7 +129,7 @@ public class GetProductDetailQueryHandler(
                 .Select(pt => new ProductTypeDto()
                 {
                     Id = pt.Id,
-                    Name = pt.DisplayName,
+                    DisplayName = pt.DisplayName,
                     Level = pt.Level
                 })
                 .ToListAsync(cancellationToken)

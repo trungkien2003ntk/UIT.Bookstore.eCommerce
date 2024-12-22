@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Domain.Branches;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
@@ -10,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace KKBookstore.Application.Features.Products.CreateProduct;
 
-public record CreateProductCommand : IRequest<Result<CreateProductResponse>>
+public record CreateProductCommand : IRequest<Result<AdminProductDto>>
 {
     [Required]
     public string Name { get; set; } = null!;
@@ -25,6 +26,8 @@ public record CreateProductCommand : IRequest<Result<CreateProductResponse>>
 
     public int? UnitMeasureId { get; set; }
 
+    [Required]
+    public ICollection<AttributeProductValueCreateDto> AttributeProductValues { get; set; } = null!;
     public ICollection<AuthorDto>? BookAuthors { get; set; }
     [Required]
     public ICollection<ProductVariantCreateDto> ProductVariants { get; set; } = null!;
@@ -34,6 +37,14 @@ public record CreateProductCommand : IRequest<Result<CreateProductResponse>>
     {
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
+    }
+
+    public class AttributeProductValueCreateDto
+    {
+        [Required]
+        public int AttributeId { get; set; }
+        [Required]
+        public string Value { get; set; } = null!;
     }
 
     public class ProductVariantCreateDto
@@ -64,7 +75,7 @@ public record CreateProductCommand : IRequest<Result<CreateProductResponse>>
     }
 }
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<AdminProductDto>>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -73,7 +84,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         _dbContext = dbContext;
     }
 
-    public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AdminProductDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         using var transaction = await _dbContext.BeginTransactionAsync(cancellationToken);
 
@@ -83,7 +94,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             var productType = await _dbContext.ProductTypes.FindAsync(request.ProductTypeId);
             if (productType == null)
             {
-                return Result.Failure<CreateProductResponse>(ProductTypeErrors.NotFound);
+                return Result.Failure<AdminProductDto>(ProductTypeErrors.NotFound);
             }
 
             // 2. Get unit measure
@@ -96,7 +107,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             var productExists = await _dbContext.Products.AnyAsync(p => p.Name == request.Name, cancellationToken);
             if (productExists)
             {
-                return Result.Failure<CreateProductResponse>(ProductErrors.ProductAlreadyExists(request.Name));
+                return Result.Failure<AdminProductDto>(ProductErrors.ProductAlreadyExists(request.Name));
             }
 
             // 4. Create main product entity first
@@ -111,6 +122,15 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             };
 
             _dbContext.Products.Add(product);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            var createAttributeValuesResult = await CreateAttributeValuesAsync(request.AttributeProductValues, product);
+            if (createAttributeValuesResult.IsFailure)
+            {
+                return Result.Failure<AdminProductDto>(createAttributeValuesResult.Error);
+            }
+            var attributeValues = createAttributeValuesResult.Value;
+            _dbContext.ProductTypeAttributeProductValues.AddRange(attributeValues);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             // 5. Create and save product options
@@ -137,8 +157,47 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         catch (Exception ex)
         {
             await transaction.RollbackAsync(cancellationToken);
-            return Result.Failure<CreateProductResponse>(ProductErrors.CreateProductFailed);
+            return Result.Failure<AdminProductDto>(ProductErrors.CreateProductFailed);
         }
+    }
+
+    private async Task<Result<List<ProductTypeAttributeProductValue>>> CreateAttributeValuesAsync(
+        ICollection<CreateProductCommand.AttributeProductValueCreateDto> attributeProductValues,
+        Product product)
+    {
+        var attributeIds = attributeProductValues.Select(apv => apv.AttributeId).ToList();
+        // Fetch all matching ProductTypeAttributes in one query
+        var productTypeAttributes = await _dbContext.ProductTypeAttributes
+            .Where(pta => attributeIds.Contains(pta.Id))
+            .Include(pta => pta.Values)
+            .ToListAsync();
+
+        var existingIds = productTypeAttributes.Select(pta => pta.Id).ToHashSet();
+        var missingIds = attributeIds.Except(existingIds).ToList();
+        if (missingIds.Count != 0)
+        {
+            return Result.Failure<List<ProductTypeAttributeProductValue>>(ProductErrors.AttributeNotFound(missingIds));
+        }
+
+        var existingValues = productTypeAttributes.SelectMany(pta => pta.Values).ToList();
+
+        return attributeProductValues.Select(apv =>
+        {
+            var existingValue = existingValues.FirstOrDefault(v => v.Value == apv.Value);
+
+            return new ProductTypeAttributeProductValue
+            {
+                ProductId = product.Id,
+                Product = product,
+                AttributeValueId = apv.AttributeId,
+                AttributeValue = existingValue ?? new()
+                {
+                    ProductTypeAttributeId = apv.AttributeId,
+                    ProductTypeAttribute = productTypeAttributes.First(a => a.Id == apv.AttributeId),
+                    Value = apv.Value
+                }
+            };
+        }).ToList();
     }
 
     private List<ProductOption> CreateProductOptions(CreateProductCommand request, Product product)
@@ -242,9 +301,9 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         }).ToList();
     }
 
-    private CreateProductResponse CreateResponse(Product product, ProductType productType, UnitMeasure unitMeasure)
+    private AdminProductDto CreateResponse(Product product, ProductType productType, UnitMeasure unitMeasure)
     {
-        return new CreateProductResponse
+        return new AdminProductDto
         {
             Id = product.Id,
             Name = product.Name,
@@ -253,7 +312,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             IsBook = product.IsBook,
             ProductTypeId = product.ProductTypeId,
             UnitMeasureId = product.UnitMeasureId,
-            ProductType = new CreateProductResponse.ProductTypeDto
+            ProductType = new ProductTypeDto
             {
                 Id = productType.Id,
                 ProductTypeCode = productType.ProductTypeCode,
@@ -262,13 +321,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 Description = productType.Description,
                 ParentProductTypeId = productType.ParentProductTypeId
             },
-            UnitMeasure = new CreateProductResponse.UnitMeasureDto
+            UnitMeasure = new UnitMeasureDto
             {
                 Id = unitMeasure.Id,
                 Name = unitMeasure.Name,
                 Description = unitMeasure.Description
             },
-            ProductVariants = product.ProductVariants.Select(v => new CreateProductResponse.ProductVariantDto
+            ProductVariants = product.ProductVariants.Select(v => new ProductVariantDto
             {
                 Id = v.Id,
                 RecommendedRetailPrice = v.RecommendedRetailPrice,
@@ -277,11 +336,26 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 Dimension = v.Dimension,
                 TaxRate = v.TaxRate,
                 Comment = v.Comment,
-                VariantOptions = v.ProductVariantOptionValues.Select(vo => new CreateProductResponse.VariantOptionDto
+                VariantOptions = v.ProductVariantOptionValues.Select(vo => new ProductVariantDto.VariantOptionDto
                 {
+                    ProductOptionId = vo.OptionId,
+                    ProductOptionValueId = vo.OptionValueId,
                     Name = vo.Option.Name,
                     Value = vo.OptionValue.Value
                 }).ToList()
+            }).ToList(),
+            ProductImages = product.ProductImages.Select(pi => new ProductImageDto
+            {
+                Id = pi.Id,
+                ThumbnailImageUrl = pi.ThumbnailImageUrl,
+                LargeImageUrl = pi.LargeImageUrl
+            }).ToList(),
+            AttributeProductValues = product.AttributeProductValues.Select(pav => new ProductTypeAttributeProductValueDto
+            {
+                AttributeId = pav.AttributeValue.ProductTypeAttribute.Id,
+                AttributeValueId = pav.AttributeValueId,
+                Name = pav.AttributeValue.ProductTypeAttribute.Name,
+                Value = pav.AttributeValue.Value
             }).ToList()
         };
     }

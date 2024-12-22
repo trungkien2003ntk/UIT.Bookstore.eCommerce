@@ -24,6 +24,11 @@ public static class ProductErrors
 
     public static readonly Error CreateProductFailed = Error.Failure("Product.CreateProductFailed", "Failed to create product.");
 
+    public static Error AttributeNotFound(List<int> missingIds)
+    {
+        return Error.NotFound("Product.AttributeNotFound", $"Attributes with ids [{string.Join(",", missingIds)}] were not found.");
+    }
+
     public static Error InvalidAttribute(string attributeName)
     {
         return Error.Validation("Product.InvalidAttribute", $"Invalid attribute: {attributeName}");

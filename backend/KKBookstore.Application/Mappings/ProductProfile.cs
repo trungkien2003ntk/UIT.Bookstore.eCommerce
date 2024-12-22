@@ -37,7 +37,7 @@ public class ProductProfile : Profile
 
         CreateMap<Author, AuthorDto>();
 
-        CreateMap<ProductVariant, ProductVariantDto>()
+        CreateMap<ProductVariant, CustomerProductVariantDto>()
             .ForMember(dest => dest.SkuValue, opt => opt.MapFrom(src => src.SkuValue.Value))
             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Dimension.Height))
             .ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.Dimension.Width))

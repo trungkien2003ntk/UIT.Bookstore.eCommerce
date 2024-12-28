@@ -2,12 +2,15 @@
 using KKBookstore.API.Abstractions;
 using KKBookstore.API.Contracts.Requests;
 using KKBookstore.Application.Features.Products.CreateProduct;
-using KKBookstore.Application.Features.Products.GetProductDetail;
+using KKBookstore.Application.Features.Products.GetAdminProductDetail;
+using KKBookstore.Application.Features.Products.GetCustomerProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.GetTrendyProductList;
 using KKBookstore.Application.Features.Products.GetUnitMeasures;
 using KKBookstore.Application.Features.Products.SearchProducts;
+using KKBookstore.Application.Features.Products.UpdateProduct;
+using KKBookstore.Domain.Constants;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +40,16 @@ public class ProductsController(
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductDetail(int id)
     {
-        var result = await Sender.Send(new GetProductDetailQuery(id));
+        var isAdmin = !User.IsInRole(Role.Customer);
+
+        if (isAdmin)
+        {
+            var resultAdmin = await Sender.Send(new GetAdminProductDetailQuery(id));
+
+            return resultAdmin.IsSuccess ? Ok(resultAdmin.Value) : ToActionResult(resultAdmin);
+        }
+
+        var result = await Sender.Send(new GetCustomerProductDetailQuery(id));
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
@@ -100,6 +112,17 @@ public class ProductsController(
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync(
         [FromBody] CreateProductCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateProductAsync(
+        [FromBody] UpdateProductCommand command,
         CancellationToken cancellationToken = default
     )
     {

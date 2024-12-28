@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Products.GetProductDetail;
+using KKBookstore.Application.Features.Products.GetCustomerProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.Models;
@@ -13,7 +13,7 @@ public class ProductProfile : Profile
 {
     public ProductProfile()
     {
-        CreateMap<Product, GetProductDetailResponse>()
+        CreateMap<Product, GetCustomerProductDetailResponse>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.ProductTypeId, opt => opt.MapFrom(src => src.ProductTypeId))

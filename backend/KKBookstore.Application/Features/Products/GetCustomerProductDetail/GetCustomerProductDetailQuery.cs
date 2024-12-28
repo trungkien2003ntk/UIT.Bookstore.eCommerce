@@ -5,19 +5,19 @@ using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.Products.GetProductDetail.GetProductDetailResponse;
+using static KKBookstore.Application.Features.Products.GetCustomerProductDetail.GetCustomerProductDetailResponse;
 
-namespace KKBookstore.Application.Features.Products.GetProductDetail;
+namespace KKBookstore.Application.Features.Products.GetCustomerProductDetail;
 
-public record GetProductDetailQuery(int ProductId) : IRequest<Result<GetProductDetailResponse>>;
+public record GetCustomerProductDetailQuery(int ProductId) : IRequest<Result<GetCustomerProductDetailResponse>>;
 
-public class GetProductDetailQueryHandler(
+public class GetCustomerProductDetailQueryHandler(
     IApplicationDbContext dbContext
-) : IRequestHandler<GetProductDetailQuery, Result<GetProductDetailResponse>>
+) : IRequestHandler<GetCustomerProductDetailQuery, Result<GetCustomerProductDetailResponse>>
 {
     private readonly IApplicationDbContext _dbContext = dbContext;
 
-    public async Task<Result<GetProductDetailResponse>> Handle(GetProductDetailQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetCustomerProductDetailResponse>> Handle(GetCustomerProductDetailQuery request, CancellationToken cancellationToken)
     {
         // Query to fetch the product and related data
         var product = await _dbContext.Products
@@ -39,7 +39,7 @@ public class GetProductDetailQueryHandler(
 
         if (product is null)
         {
-            return Result.Failure<GetProductDetailResponse>(ProductErrors.NotFound);
+            return Result.Failure<GetCustomerProductDetailResponse>(ProductErrors.NotFound);
         }
 
         var productResponse = await MapToResponseAsync(product, cancellationToken);
@@ -47,7 +47,7 @@ public class GetProductDetailQueryHandler(
         return Result.Success(productResponse);
     }
 
-    public async Task<GetProductDetailResponse> MapToResponseAsync(Product product, CancellationToken cancellationToken)
+    public async Task<GetCustomerProductDetailResponse> MapToResponseAsync(Product product, CancellationToken cancellationToken)
     {
         var productTypeAttributeValues = await _dbContext.ProductTypeAttributeProductValues
             .Where(apv => apv.ProductId == product.Id)
@@ -73,7 +73,7 @@ public class GetProductDetailQueryHandler(
             })
             .ToListAsync(cancellationToken);
 
-        var productResponse = new GetProductDetailResponse
+        var productResponse = new GetCustomerProductDetailResponse
         {
             Id = product.Id,
             Name = product.Name,
@@ -115,7 +115,7 @@ public class GetProductDetailQueryHandler(
                     LargeImageUrls = g.Select(pov => pov.OptionValue.LargeImageUrl)
                 }),
             ProductTypeAttributes = productTypeAttributeValues
-                .Select(pav => new GetProductDetailResponse.ProductTypeAttribute()
+                .Select(pav => new GetCustomerProductDetailResponse.ProductTypeAttribute()
                 {
                     ProductTypeId = pav.Product.ProductTypeId,
                     AttributeValueId = pav.AttributeValueId,

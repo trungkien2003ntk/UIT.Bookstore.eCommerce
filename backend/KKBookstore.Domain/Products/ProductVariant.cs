@@ -6,7 +6,7 @@ namespace KKBookstore.Domain.Products;
 
 public class ProductVariant : BaseFullAuditedEntity
 {
-    protected ProductVariant() : base() { }
+    public ProductVariant() : base() { }
 
     public ProductVariant(
         SkuValue skuValue,

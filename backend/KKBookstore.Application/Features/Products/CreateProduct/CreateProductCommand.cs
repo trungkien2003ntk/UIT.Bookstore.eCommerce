@@ -191,7 +191,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
         return attributeProductValues.Select(apv =>
         {
-            var existingValue = existingValues.FirstOrDefault(v => v.Value == apv.Value);
+            var existingValue = existingValues.FirstOrDefault(v => v.Value == apv.Value && v.ProductTypeAttributeId == apv.AttributeId);
 
             return new ProductTypeAttributeProductValue
             {

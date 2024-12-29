@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
 namespace UpdateThumbnailUrlFunction;
 
@@ -12,9 +11,9 @@ public class ProductRepository : IProductRepository
 {
     private readonly string _connectionString;
 
-    public ProductRepository(IConfiguration configuration)
+    public ProductRepository()
     {
-        _connectionString = configuration.GetConnectionString("SqlConnectionString")!;
+        _connectionString = Environment.GetEnvironmentVariable("SqlConnectionString")!;
     }
 
     public async Task UpdateThumbnailImageUrlsAsync(int productId, IEnumerable<(int ImageId, string ThumbnailImageUrl)> images)
@@ -36,5 +35,7 @@ public class ProductRepository : IProductRepository
 
             await command.ExecuteNonQueryAsync();
         }
+
+        await connection.CloseAsync();
     }
 }

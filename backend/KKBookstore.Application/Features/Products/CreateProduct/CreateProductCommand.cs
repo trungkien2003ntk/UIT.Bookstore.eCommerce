@@ -163,7 +163,9 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             }
 
             _logger.LogInformation("Sending product created event for product {ProductId}", product.Id);
-            var productCreatedEvent = new ProductCreatedEvent(product.Id, product.ProductImages.Select(i => i.ThumbnailImageUrl));
+            var productCreatedEvent = new ProductCreatedEvent(
+                product.Id,
+                product.ProductImages.Select(i => new ImageDto(i.Id, i.ThumbnailImageUrl)));
             await _serviceBus.SendMessageAsync(productCreatedEvent, ServiceBusConsts.ProductCreatedQueueName);
 
 

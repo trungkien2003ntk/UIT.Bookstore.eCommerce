@@ -10,4 +10,9 @@ public class ThumbnailGeneratedEvent
         ProductId = productId;
         Images = images.ToList();
     }
+
+    public ThumbnailGeneratedEvent()
+    {
+
+    }
 }

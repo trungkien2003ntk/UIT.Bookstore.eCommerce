@@ -189,7 +189,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             {
                 ProductId = product.Id,
                 Product = product,
-                AttributeValueId = apv.AttributeId,
+                AttributeValueId = existingValue?.Id ?? 0,
                 AttributeValue = existingValue ?? new()
                 {
                     ProductTypeAttributeId = apv.AttributeId,

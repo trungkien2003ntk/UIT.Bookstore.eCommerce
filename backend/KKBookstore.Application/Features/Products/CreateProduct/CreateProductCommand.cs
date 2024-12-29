@@ -155,11 +155,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
 
-            await transaction.CommitAsync(cancellationToken);
-
             var productCreatedEvent = new ProductCreatedEvent(product.Id, product.ProductImages.Select(i => i.ThumbnailImageUrl));
             await _serviceBus.SendMessageAsync(productCreatedEvent, ServiceBusConsts.ProductCreatedQueueName);
 
+            await transaction.CommitAsync(cancellationToken);
             return CreateResponse(product, productType, unitMeasure);
         }
         catch (Exception ex)

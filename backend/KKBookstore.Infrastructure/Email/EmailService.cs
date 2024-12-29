@@ -98,7 +98,7 @@ public class EmailService(
             }
         );
 
-        await Send(message);
+        await SendAsync(message);
     }
 
     public async Task SendOrderConfirmation(string email, string customerName, Order orderWithItems)
@@ -116,8 +116,8 @@ public class EmailService(
             }
         );
 
-        await Send(message);
-        
+        await SendAsync(message);
+
     }
 
     public async Task SendPasswordResetLink(string email, string token)
@@ -138,7 +138,7 @@ public class EmailService(
             }
         );
 
-        await Send(message);
+        await SendAsync(message);
     }
 
     private MimeMessage CreateEmailMessage(string subject, string body, string toEmail, Dictionary<string, string>? placeholders = null)
@@ -162,7 +162,7 @@ public class EmailService(
         return message;
     }
 
-    private async Task Send(MimeMessage emailMessage)
+    private async Task SendAsync(MimeMessage emailMessage)
     {
         var emailQueueClient = await GetQueueClient(_QUEUE_NAME);
 

@@ -5,6 +5,7 @@ using KKBookstore.Application.Features.Products.CreateProduct;
 using KKBookstore.Application.Features.Products.GetAdminProductDetail;
 using KKBookstore.Application.Features.Products.GetCustomerProductDetail;
 using KKBookstore.Application.Features.Products.GetProductList;
+using KKBookstore.Application.Features.Products.GetProductOptions;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Application.Features.Products.GetTrendyProductList;
 using KKBookstore.Application.Features.Products.GetUnitMeasures;
@@ -109,6 +110,17 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
+    [HttpGet("{id}/options")]
+    public async Task<IActionResult> GetProductOptions(
+        [FromRoute] int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(new GetProductOptionsQuery(id), cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync(
         [FromBody] CreateProductCommand command,
@@ -130,4 +142,5 @@ public class ProductsController(
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
+
 }

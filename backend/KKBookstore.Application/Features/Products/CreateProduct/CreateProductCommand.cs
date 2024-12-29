@@ -1,8 +1,10 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Application.Common.Constants;
+using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Domain.Branches;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
+using KKBookstore.Domain.Products.Events;
 using KKBookstore.Domain.ProductTypes;
 using KKBookstore.Domain.Stocks;
 using MediatR;
@@ -78,10 +80,12 @@ public record CreateProductCommand : IRequest<Result<AdminProductDto>>
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<AdminProductDto>>
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly IServiceBus _serviceBus;
 
-    public CreateProductCommandHandler(IApplicationDbContext dbContext)
+    public CreateProductCommandHandler(IApplicationDbContext dbContext, IServiceBus serviceBus)
     {
         _dbContext = dbContext;
+        _serviceBus = serviceBus;
     }
 
     public async Task<Result<AdminProductDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -152,6 +156,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             }
 
             await transaction.CommitAsync(cancellationToken);
+
+            var productCreatedEvent = new ProductCreatedEvent(product.Id, product.ProductImages.Select(i => i.ThumbnailImageUrl));
+            await _serviceBus.SendMessageAsync(productCreatedEvent, ServiceBusConsts.ProductCreatedQueueName);
+
             return CreateResponse(product, productType, unitMeasure);
         }
         catch (Exception ex)
@@ -202,16 +210,19 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     private List<ProductOption> CreateProductOptions(CreateProductCommand request, Product product)
     {
-        return request.ProductVariants
+        var productOptions = request.ProductVariants
             .Where(v => v.VariantOptions is not null)
             .SelectMany(v => v.VariantOptions!)
             .GroupBy(vo => vo.Name)
             .Select(group => new ProductOption
             {
                 Name = group.Key,
-                ProductId = product.Id
+                ProductId = product.Id,
+                Product = product
             })
             .ToList();
+
+        return productOptions;
     }
 
     private async Task<List<ProductVariant>> CreateProductVariants(

@@ -7,6 +7,7 @@ using KKBookstore.Infrastructure.Identity;
 using KKBookstore.Infrastructure.Payment;
 using KKBookstore.Infrastructure.Search;
 using KKBookstore.Infrastructure.Shipping;
+using KKBookstore.Infrastructure.Storage;
 using KKBookstore.Infrastructure.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -121,16 +122,17 @@ public static class DependencyInjection
         services.AddScoped<ISearchService, SearchService>();
 
 
-        var blobConnectionString = configuration["StorageConnectionString:blob"];
-        var queueConnectionString = configuration["StorageConnectionString:queue"];
-        services.AddAzureClients(clientBuilder =>
+        var storageConnectionString = configuration.GetConnectionString("AzureStorage");
+        services.AddAzureClients(builder =>
         {
-            clientBuilder.AddBlobServiceClient(blobConnectionString!, preferMsi: true);
-            clientBuilder.AddQueueServiceClient(queueConnectionString!, preferMsi: true);
+            builder.AddBlobServiceClient(storageConnectionString);
+
+            builder.AddQueueServiceClient(storageConnectionString);
         });
 
-
-
+        services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
+        services.AddScoped<IQueueStorageService, AzureQueueStorageService>();
+        services.AddScoped<IServiceBus, AzureServiceBus>();
         return services;
     }
 }

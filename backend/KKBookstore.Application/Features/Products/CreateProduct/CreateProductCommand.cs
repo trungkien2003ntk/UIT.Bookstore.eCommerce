@@ -9,6 +9,7 @@ using KKBookstore.Domain.ProductTypes;
 using KKBookstore.Domain.Stocks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
 namespace KKBookstore.Application.Features.Products.CreateProduct;
@@ -81,11 +82,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IServiceBus _serviceBus;
+    private readonly ILogger<CreateProductCommandHandler> _logger;
 
-    public CreateProductCommandHandler(IApplicationDbContext dbContext, IServiceBus serviceBus)
+    public CreateProductCommandHandler(IApplicationDbContext dbContext, IServiceBus serviceBus, ILogger<CreateProductCommandHandler> logger)
     {
         _dbContext = dbContext;
         _serviceBus = serviceBus;
+        _logger = logger;
     }
 
     public async Task<Result<AdminProductDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -136,16 +139,19 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             var attributeValues = createAttributeValuesResult.Value;
             _dbContext.ProductTypeAttributeProductValues.AddRange(attributeValues);
             await _dbContext.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Attribute values created for product {ProductId}", product.Id);
 
             // 5. Create and save product options
             var productOptions = CreateProductOptions(request, product);
             _dbContext.ProductOptions.AddRange(productOptions);
             await _dbContext.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Product options created for product {ProductId}", product.Id);
 
             // 6. Create and save product variants with their options
             var variants = await CreateProductVariants(request, product, productOptions, branches);
             _dbContext.ProductVariants.AddRange(variants);
             await _dbContext.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Product variants created for product {ProductId}", product.Id);
 
             // 7. Create and save product images if any
             if (request.ProductImages != null)
@@ -153,10 +159,14 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 var productImages = CreateProductImages(request, product);
                 _dbContext.ProductImages.AddRange(productImages);
                 await _dbContext.SaveChangesAsync(cancellationToken);
+                _logger.LogInformation("Product images created for product {ProductId}", product.Id);
             }
 
+            _logger.LogInformation("Sending product created event for product {ProductId}", product.Id);
             var productCreatedEvent = new ProductCreatedEvent(product.Id, product.ProductImages.Select(i => i.ThumbnailImageUrl));
             await _serviceBus.SendMessageAsync(productCreatedEvent, ServiceBusConsts.ProductCreatedQueueName);
+
+
 
             await transaction.CommitAsync(cancellationToken);
             return CreateResponse(product, productType, unitMeasure);
@@ -164,6 +174,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         catch (Exception ex)
         {
             await transaction.RollbackAsync(cancellationToken);
+            _logger.LogError(ex, "Create product failed");
             return Result.Failure<AdminProductDto>(ProductErrors.CreateProductFailed);
         }
     }

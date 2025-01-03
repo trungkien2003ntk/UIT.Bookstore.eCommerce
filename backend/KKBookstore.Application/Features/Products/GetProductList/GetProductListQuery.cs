@@ -6,6 +6,7 @@ using KKBookstore.Application.Extensions;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ProductTypes;
+using KKBookstore.Domain.Shared.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -171,7 +172,7 @@ public class GetProductListQueryHandler(
     private async Task<Dictionary<int, int>> GetSoldCountsAsync(CancellationToken cancellationToken)
     {
         return await dbContext.OrderLines
-            .Where(ol => ol.Order.IsCompleted())
+            .Where(ol => ol.Order.Status == OrderStatus.Received || ol.Order.Status == OrderStatus.Delivered)
             .GroupBy(ol => ol.ProductVariant.ProductId)
             .Select(g => new { ProductId = g.Key, SoldCount = g.Count() })
             .ToDictionaryAsync(x => x.ProductId, x => x.SoldCount, cancellationToken);

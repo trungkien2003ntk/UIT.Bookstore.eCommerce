@@ -35,9 +35,13 @@ public class UploadImagesCommandHandler : IRequestHandler<UploadImagesCommand, R
         foreach (var file in request.Files)
         {
             using var fileStream = new MemoryStream(file.Data);
+
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var fileName = $"{StorageConsts.ImageFileNamePrefix}_{timestamp}_{Guid.NewGuid()}";
+
             var imageUrl = await blobStorageService.UploadFileAsync(
                 StorageConsts.ImageContainerName,
-                file.FileName,
+                fileName,
                 fileStream,
                 file.ContentType
             );

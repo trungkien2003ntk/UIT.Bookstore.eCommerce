@@ -40,6 +40,8 @@ public static class DependencyInjection
                 .UseSqlServer(connectionString)
                 .EnableSensitiveDataLogging();
             ;
+#else
+            options.UseSqlServer(connectionString);
 #endif
         });
 

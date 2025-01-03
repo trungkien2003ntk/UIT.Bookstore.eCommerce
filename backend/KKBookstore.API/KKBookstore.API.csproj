@@ -46,18 +46,14 @@
 		<Optimize>true</Optimize>
 		<EnvironmentName>Staging</EnvironmentName>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<Content Remove="appsettings.json" />
 		<Content Remove="appsettings.*.json" />
 	</ItemGroup>
-	<ItemGroup>
-		<Content Remove="appsettings.json" />
-		<Content Remove="appsettings.*.json" />
-	</ItemGroup>
+
 	<ItemGroup>
 		<Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
-		<Content Include="appsettings.*.json" Exclude="appsettings.$(EnvironmentName).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Never" />
 		<Content Include="appsettings.$(EnvironmentName).json" DependentUpon="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup>

@@ -2,6 +2,9 @@
   "dependencies": {
     "secrets1": {
       "type": "secrets"
+    },
+    "apis1": {
+      "type": "apis"
     }
   }
 }

@@ -13,7 +13,7 @@ public record ProductSummary : BaseDto
     public int SoldCount { get; set; }
     public decimal MinUnitPrice { get; set; }
     public decimal MinRecommendedRetailPrice { get; set; }
-    public decimal MinDiscountRate => (MinRecommendedRetailPrice - MinUnitPrice) / MinRecommendedRetailPrice * 100;
+    public decimal MinDiscountRate => MinRecommendedRetailPrice == 0 ? 0 : (MinRecommendedRetailPrice - MinUnitPrice) / MinRecommendedRetailPrice * 100;
     public decimal AverageRating { get; set; }
     public bool IsActive { get; set; }
 }

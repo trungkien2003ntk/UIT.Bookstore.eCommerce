@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
+using KKBookstore.Application.Common.Constants;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Infrastructure.Email.EmailTemplates;
@@ -17,7 +18,6 @@ public class EmailService(
 {
     private const string _SENDER_NAME = "KKBookstore";
     private const string _RECEIVER_NAME = "Customer";
-    private const string _QUEUE_NAME = "email-general-info";
     private const string _BLOB_CONTAINER_NAME = "email-body";
     private const string _EMAIL_CONTENT_TYPE = "plain";
     private const string _EMAIL_BLOB_PREFIX = "mail-body-";
@@ -164,9 +164,9 @@ public class EmailService(
 
     private async Task SendAsync(MimeMessage emailMessage)
     {
-        var emailQueueClient = await GetQueueClient(_QUEUE_NAME);
+        var emailQueueClient = await GetQueueClient(StorageConsts.EmailQueueName);
 
-        var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_BLOB_CONTAINER_NAME);
+        var blobContainerClient = _blobServiceClient.GetBlobContainerClient(StorageConsts.EmailBodyContainerName);
         var blobName = _EMAIL_BLOB_PREFIX + Guid.NewGuid().ToString();
 
         using (var stream = new MemoryStream())

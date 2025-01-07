@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đơn hàng đang được vận chuyển</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid #00bf63;
+        }
+
+        .header {
+            display: flex;
+            justify-items: center;
+            align-items: center;
+            flex-direction: column;
+            height: 70px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .product {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+            .product img {
+                width: 80px;
+                height: auto;
+                margin-right: 15px;
+            }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .price {
+            color: #00bf63;
+            font-weight: bold;
+        }
+
+        .address {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #c1ff72;
+        }
+
+        .total {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .shipping-info {
+            background: #e8f5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .footer {
+            background: linear-gradient(45deg, #00bf63, #7ed957);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+        }
+
+        .social-links {
+            margin: 20px 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+            .social-links li {
+                display: inline-block;
+            }
+
+            .social-links a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        .contact-info {
+            margin: 15px 0;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-note {
+            font-size: 12px;
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://uitbookstorestorage.blob.core.windows.net/images/logo.jpg"
+                 alt="Logo"
+                 class="logo"
+                 style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto" />
+        </div>
+
+        <div class="content">
+            <h2>Đơn hàng đang được vận chuyển</h2>
+            <p>Chào bạn! Đơn hàng của bạn đã được giao cho đơn vị vận chuyển.</p>
+
+            <div class="shipping-info">
+                <h3>Thông tin vận chuyển:</h3>
+                <p>
+                    <strong>Đơn vị vận chuyển:</strong> Giao Hàng Nhanh<br />
+                    <strong>Mã vận đơn:</strong> GHN123456789<br />
+                    <strong>Thời gian dự kiến giao hàng:</strong> 2-3 ngày làm việc
+                </p>
+            </div>
+
+            <h3>Chi tiết đơn hàng:</h3>
+            <div class="product">
+                <img src="https://uitbookstorestorage.blob.core.windows.net/images/book-17.webp" alt="Bố Già" />
+                <div class="product-details">
+                    <h3>Bố Già</h3>
+                    <p class="price">60,000₫ x 1</p>
+                </div>
+            </div>
+
+            <div class="product">
+                <img src="https://uitbookstorestorage.blob.core.windows.net/images/book-6.webp" alt="Cô Gái Đến Từ Hôm Qua" />
+                <div class="product-details">
+                    <h3>Cô Gái Đến Từ Hôm Qua</h3>
+                    <p class="price">115,000₫ x 2</p>
+                </div>
+            </div>
+
+            <div class="address">
+                <h3>Địa chỉ giao hàng:</h3>
+                <p>
+                    Nguyễn Văn An (Nhà ở)<br />
+                    19034 Đường Lê Lợi Căn hộ 164<br />
+                    Hà Nội, VN<br />
+                    SĐT: 0391234567
+                </p>
+            </div>
+
+            <div class="total">
+                <p><strong>Tổng tiền hàng:</strong> 290,000₫</p>
+                <p><strong>Giảm giá:</strong> -</p>
+                <p><strong>Phí vận chuyển:</strong> Miễn phí</p>
+                <p><strong>Tổng cộng:</strong> 290,000₫</p>
+                <p><em>(Đã bao gồm VAT 8%)</em></p>
+            </div>
+
+            <p style="margin-top: 20px">
+                <strong>Lưu ý:</strong> Vui lòng chuẩn bị CMND/CCCD và kiểm tra kỹ hàng hóa trước khi nhận hàng. Nếu có bất kỳ
+                vấn đề gì, hãy liên hệ ngay với chúng tôi.
+            </p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-content">
+                <h3>Cảm ơn bạn đã mua sắm cùng chúng tôi!</h3>
+                <p>Mọi thắc mắc về đơn hàng, xin vui lòng liên hệ với chúng tôi</p>
+
+                <ul class="social-links">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+
+                <div class="contact-info">
+                    <p>Email: support@bookstore.com</p>
+                    <p>Hotline: 1900 xxxx</p>
+                    <p>Địa chỉ: Khu phố 6, P.Linh Trung, Tp.Thủ Đức, Tp.Hồ Chí Minh</p>
+                </div>
+
+                <p class="footer-note">Email này được gửi tự động từ hệ thống. Vui lòng không trả lời email này.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

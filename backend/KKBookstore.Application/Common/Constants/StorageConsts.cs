@@ -6,4 +6,5 @@ public static class StorageConsts
     public const string EmailBodyContainerName = "email-bodies";
     public const string EmailQueueName = "email-metadata";
     public const string ImageFileNamePrefix = "kkbookstore_image_";
+    public const string EmailBodyFileNamePrefix = "mail-body-";
 }

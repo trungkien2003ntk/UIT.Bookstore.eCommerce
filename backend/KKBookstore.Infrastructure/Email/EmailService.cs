@@ -31,6 +31,11 @@ public class EmailService(
         Subject = "Your Order Confirmation - KKBookstore"
     };
 
+    private readonly EmailTemplate orderShippedTemplate = new()
+    {
+        Subject = "Your Order Has Been Shipped - KKBookstore"
+    };
+
     private readonly EmailTemplate sendOtpEmailTemplate = new()
     {
         Subject = "Your One-Time Passcode(OTP) - KKBookstore",
@@ -120,6 +125,32 @@ public class EmailService(
 
     }
 
+    public async Task SendOrderConfirmation(string email)
+    {
+        orderConfirmationTemplate.Body = EmailBodyHelper.BuildOrderConfirmationEmailBody();
+
+        var message = CreateEmailMessage(
+            orderConfirmationTemplate.Subject,
+            orderConfirmationTemplate.Body,
+            email
+        );
+
+        await SendAsync(message);
+    }
+
+    public async Task SendOrderShippedEmailAsync(string email)
+    {
+        orderShippedTemplate.Body = EmailBodyHelper.BuildOrderShippedEmailBody();
+
+        var message = CreateEmailMessage(
+            orderShippedTemplate.Subject,
+            orderShippedTemplate.Body,
+            email
+        );
+
+        await SendAsync(message);
+    }
+
     public async Task SendPasswordResetLink(string email, string token)
     {
         var resetPasswordTemplate = new EmailTemplate
@@ -167,7 +198,7 @@ public class EmailService(
         var emailQueueClient = await GetQueueClient(StorageConsts.EmailQueueName);
 
         var blobContainerClient = _blobServiceClient.GetBlobContainerClient(StorageConsts.EmailBodyContainerName);
-        var blobName = _EMAIL_BLOB_PREFIX + Guid.NewGuid().ToString();
+        var blobName = StorageConsts.EmailBodyFileNamePrefix + Guid.NewGuid().ToString();
 
         using (var stream = new MemoryStream())
         {

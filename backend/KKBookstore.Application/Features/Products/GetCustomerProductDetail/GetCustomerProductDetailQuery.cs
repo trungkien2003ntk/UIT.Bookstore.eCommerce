@@ -33,6 +33,8 @@ public class GetCustomerProductDetailQueryHandler(
             .Include(p => p.ProductVariants)
                 .ThenInclude(pv => pv.ProductVariantOptionValues)
                     .ThenInclude(pov => pov.OptionValue)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Inventories)
             .Include(p => p.BookAuthors)
                 .ThenInclude(ba => ba.Author)
             .FirstOrDefaultAsync(cancellationToken);
@@ -98,6 +100,7 @@ public class GetCustomerProductDetailQueryHandler(
                 Height = pv.Dimension.Height,
                 Width = pv.Dimension.Width,
                 Length = pv.Dimension.Length,
+                StockQuantity = pv.StockQuantity,
                 OptionValues = pv.ProductVariantOptionValues.Select(pov => new OptionValueDto()
                 {
                     Name = pov.Option.Name,
@@ -110,9 +113,9 @@ public class GetCustomerProductDetailQueryHandler(
                 {
                     Id = g.Key,
                     Name = g.First().Option.Name,
-                    Values = g.Select(pov => pov.OptionValue.Value),
-                    ThumbnailImageUrls = g.Select(pov => pov.OptionValue.ThumbnailImageUrl),
-                    LargeImageUrls = g.Select(pov => pov.OptionValue.LargeImageUrl)
+                    Values = g.Select(pov => pov.OptionValue.Value).Distinct(),
+                    ThumbnailImageUrls = g.Select(pov => pov.OptionValue.ThumbnailImageUrl).Distinct(),
+                    LargeImageUrls = g.Select(pov => pov.OptionValue.LargeImageUrl).Distinct()
                 }),
             ProductTypeAttributes = productTypeAttributeValues
                 .Select(pav => new GetCustomerProductDetailResponse.ProductTypeAttribute()

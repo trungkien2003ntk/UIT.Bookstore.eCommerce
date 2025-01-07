@@ -46,17 +46,18 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             {
                 return Result.Failure<AdminProductDto>(ProductErrors.NotFound);
             }
-            var productTypeExists = await _dbContext.ProductTypes.AnyAsync(x => x.Id == request.ProductTypeId, cancellationToken);
-            if (!productTypeExists)
+            var productType = await _dbContext.ProductTypes.FirstOrDefaultAsync(x => x.Id == request.ProductTypeId, cancellationToken);
+            if (productType is null)
             {
                 return Result.Failure<AdminProductDto>(ProductTypeErrors.NotFound);
             }
 
-            var unitMeasureExists = await _dbContext.UnitMeasures.AnyAsync(x => x.Id == request.UnitMeasureId, cancellationToken);
-            if (!unitMeasureExists)
+            var unitMeasure = await _dbContext.UnitMeasures.FirstOrDefaultAsync(x => x.Id == request.UnitMeasureId, cancellationToken);
+            if (unitMeasure is null)
             {
                 return Result.Failure<AdminProductDto>(UnitMeasureErrors.NotFound);
             }
+
 
             _logger.LogInformation("Updating product with ID {ProductId}", request.Id);
             product.Name = request.Name;
@@ -67,9 +68,24 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.UnitMeasureId = request.UnitMeasureId;
 
             _logger.LogInformation("Updating Product Type");
+            request.ProductType ??= new ProductTypeDto()
+            {
+                Description = productType.Description,
+                DisplayName = productType.DisplayName,
+                ProductTypeCode = productType.ProductTypeCode,
+                ParentProductTypeId = productType.ParentProductTypeId,
+                Level = productType.Level,
+                Id = productType.Id
+            };
             UpdateProductType(product, request.ProductType);
 
             _logger.LogInformation("Updating Unit Measure");
+            request.UnitMeasure ??= new UnitMeasureDto()
+            {
+                Description = unitMeasure.Description,
+                Name = unitMeasure.Name,
+                Id = unitMeasure.Id
+            };
             UpdateUnitMeasure(product, request.UnitMeasure);
 
             _logger.LogInformation("Updating Attribute Product Values");

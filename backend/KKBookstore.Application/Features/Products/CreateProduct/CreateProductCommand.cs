@@ -58,6 +58,7 @@ public record CreateProductCommand : IRequest<Result<AdminProductDto>>
         public Dimension Dimension { get; set; } = null!;
         public decimal TaxRate { get; set; }
         public string? Comment { get; set; }
+        public int StockQuantity { get; set; }
 
         public ICollection<VariantOptionCreateDto>? VariantOptions { get; set; }
     }
@@ -262,6 +263,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         }
         else
         {
+            List<ProductVariantOptionValue> cachedOptionValues = [];
+
             foreach (var variantRequest in request.ProductVariants)
             {
                 var variant = new ProductVariant(
@@ -282,30 +285,44 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                     foreach (var optionRequest in variantRequest.VariantOptions)
                     {
                         var option = savedOptions.First(o => o.Name == optionRequest.Name);
-                        var optionValue = new ProductOptionValue { Value = optionRequest.Value, OptionId = option.Id };
 
-                        variant.ProductVariantOptionValues.Add(new ProductVariantOptionValue
+                        // Check if the option value already exists for this product and option
+                        var existingOptionValue = cachedOptionValues
+                            .FirstOrDefault(v => v.OptionValue.Value == optionRequest.Value
+                                                   && v.OptionId == option.Id
+                                                   && v.Option.ProductId == product.Id);
+
+                        var valueToAdd = new ProductVariantOptionValue
                         {
                             OptionId = option.Id,
                             Option = option,
-                            OptionValue = optionValue,
+                            OptionValue = existingOptionValue?.OptionValue ?? new ProductOptionValue
+                            {
+                                Value = optionRequest.Value,
+                                OptionId = option.Id,
+                                Option = option
+                            },
                             ProductVariant = variant
-                        });
+                        };
+
+                        variant.ProductVariantOptionValues.Add(valueToAdd);
+
+                        if (existingOptionValue == null)
+                        {
+                            cachedOptionValues.Add(valueToAdd);
+                        }
                     }
                 }
 
-                // Add inventories for each branch
-                foreach (var branch in branches)
+                // Add inventory for the variant
+                variant.Inventories.Add(new Inventory
                 {
-                    variant.Inventories.Add(new Inventory
-                    {
-                        WarehouseId = branch.Id,
-                        PurchaseOrderLineId = null,
-                        StockQuantity = 0,
-                        PurchasePrice = 0,
-                        IsActive = true
-                    });
-                }
+                    WarehouseId = branches.First().Id,
+                    PurchaseOrderLineId = null,
+                    StockQuantity = variantRequest.StockQuantity,
+                    PurchasePrice = 0,
+                    IsActive = true
+                });
 
                 variants.Add(variant);
             }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KKBookstore.API.Abstractions;
 using KKBookstore.Application.Features.Orders.GetOrderDetail;
+using KKBookstore.Application.Features.Orders.SendOrderEmail;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,17 @@ public class OrdersController(
         var result = await Sender.Send(new GetOrderDetailQuery(id), cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    // send email for order
+    [HttpPost("send-email")]
+    public async Task<IActionResult> SendEmailAsync(
+        SendOrderEmailCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await Sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 
     //[HttpPost("place-order")]

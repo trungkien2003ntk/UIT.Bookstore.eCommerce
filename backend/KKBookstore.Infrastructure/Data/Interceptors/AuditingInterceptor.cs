@@ -2,7 +2,6 @@
 using KKBookstore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Threading;
 
 namespace KKBookstore.Infrastructure.Data.Interceptors;
 
@@ -25,6 +24,7 @@ public class AuditingInterceptor : SaveChangesInterceptor
         if (context is null)
             return base.SavingChangesAsync(eventData, result, cancellationToken);
 
+        context.ChangeTracker.DetectChanges();
         var entries = context.ChangeTracker.Entries();
 
         foreach (var entry in entries)

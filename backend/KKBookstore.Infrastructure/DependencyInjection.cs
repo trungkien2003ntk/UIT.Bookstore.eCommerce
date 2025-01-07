@@ -29,7 +29,6 @@ public static class DependencyInjection
         /// Config DbContext
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-
         services.AddScoped<ISaveChangesInterceptor, AuditingInterceptor>();
         services.AddDbContext<KKBookstoreDbContext>((sp, options) =>
         {

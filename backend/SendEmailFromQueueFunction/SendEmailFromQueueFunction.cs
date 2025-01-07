@@ -4,23 +4,28 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace MailQueueFunction;
+namespace SendEmailFromQueueFunction;
 
-public class SendEmailFromQueueFunction(
-    ILogger<SendEmailFromQueueFunction> logger
-)
+public class SendEmailFromQueueFunction
 {
-    private readonly ILogger<SendEmailFromQueueFunction> _logger = logger;
+    private readonly ILogger<SendEmailFromQueueFunction> _logger;
+
+    public SendEmailFromQueueFunction(ILogger<SendEmailFromQueueFunction> logger)
+    {
+        _logger = logger;
+    }
 
     [Function(nameof(SendEmailFromQueueFunction))]
-    public async Task Run(
-        [QueueTrigger("email-metadata", Connection = "StorageConnectionString")] string mailBodyBlobName)
+    public async Task Run([QueueTrigger("email-metadata", Connection = "StorageConnectionString")] string message)
     {
         try
         {
             // queue message is blob uri of the email message
             var blobConnectionString = GetEnvironmentVariable("StorageConnectionString");
-            var blobClient = new BlobClient(blobConnectionString, "mail-bodies", mailBodyBlobName);
+            var blobClient = new BlobClient(blobConnectionString, "email-bodies", message);
+            _logger.LogInformation("Processing queue message: {Message}", message);
+            _logger.LogInformation("Processing on blob: {BlobName}", blobClient.Name);
+            _logger.LogInformation("Processing on container: {ContainerName}", blobClient.BlobContainerName);
 
             MemoryStream stream = new();
             await blobClient.DownloadToAsync(stream);
@@ -30,10 +35,17 @@ public class SendEmailFromQueueFunction(
             MimeEntity htmlBody = new TextPart("html") { Text = mailMessage.GetTextBody(MimeKit.Text.TextFormat.Plain) };
 
             var mailMessageHtml = new MimeMessage(mailMessage.From.AsEnumerable(), mailMessage.To.AsEnumerable(), mailMessage.Subject, htmlBody);
+            _logger.LogInformation("Processing email message: {Subject}", mailMessage.Subject);
 
             var server = GetEnvironmentVariable("SMTP_SERVER");
+            _logger.LogInformation("SMTP Server: {Server}", server);
+
             var port = int.Parse(GetEnvironmentVariable("SMTP_PORT"));
+            _logger.LogInformation("SMTP Port: {Port}", port);
+
             var username = GetEnvironmentVariable("SMTP_USERNAME");
+            _logger.LogInformation("SMTP Username: {Username}", username);
+
             var password = GetEnvironmentVariable("SMTP_PASSWORD");
 
             // 2. Send Email using SMTP Client
@@ -52,8 +64,6 @@ public class SendEmailFromQueueFunction(
         }
     }
 
-
-
     private static string GetEmailFromMailMessageEmail(InternetAddressList internetAddress)
     {
         string emailString = internetAddress.ToString();
@@ -68,4 +78,3 @@ public class SendEmailFromQueueFunction(
         return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process) ?? "";
     }
 }
-

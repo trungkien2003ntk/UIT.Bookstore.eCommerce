@@ -10,6 +10,10 @@ var configuration = builder.Configuration;
 
 //HelperConstantsModel.LoadConfig(configuration);
 
+// config to use appSetting.<env>.json
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
 // Add services to the container.
 // add mapper profiles
 builder.Services.AddAutoMapper(typeof(RequestProfile));

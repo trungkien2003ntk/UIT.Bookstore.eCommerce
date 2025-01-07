@@ -34,6 +34,8 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
             .Include(x => x.ProductVariants)
                 .ThenInclude(x => x.ProductVariantOptionValues)
                         .ThenInclude(x => x.OptionValue)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Inventories)
             .Include(x => x.ProductImages)
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -56,7 +58,8 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                 Level = product.ProductType.Level,
                 DisplayName = product.ProductType.DisplayName,
                 Description = product.ProductType.Description,
-                ParentProductTypeId = product.ProductType.ParentProductTypeId
+                ParentProductTypeId = product.ProductType.ParentProductTypeId,
+                ProductTypeCode = product.ProductType.ProductTypeCode
             },
             UnitMeasure = new UnitMeasureDto
             {
@@ -79,9 +82,9 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                 Dimension = pv.Dimension,
                 TaxRate = pv.TaxRate,
                 Comment = pv.Comment,
+                StockQuantity = pv.StockQuantity,
                 VariantOptions = pv.ProductVariantOptionValues.Select(pov => new ProductVariantDto.VariantOptionDto
                 {
-                    Id = pov.OptionId,
                     ProductOptionId = pov.OptionId,
                     ProductOptionValueId = pov.OptionValueId,
                     Value = pov.OptionValue.Value,

@@ -8,20 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Email\EmailTemplates\OrderConfirmationTemplate.html" />
-    <None Remove="Email\EmailTemplates\OrderItemTemplate.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Email\EmailTemplates\OrderConfirmationTemplate.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Email\EmailTemplates\OrderItemTemplate.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.2" />
     <PackageReference Include="Azure.Search.Documents" Version="11.6.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.21.2" />
@@ -50,8 +36,12 @@
     <ProjectReference Include="..\KKBookstore.Application\KKBookstore.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<Content Remove="Email\EmailTemplates\*.*"/>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<EmbeddedResource Include="Email\EmailTemplates\*.*" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+	
 </Project>

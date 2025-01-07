@@ -79,4 +79,22 @@ internal static class EmailBodyHelper
 
 
     }
+
+    public static string BuildOrderConfirmationEmailBody()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderConfirmationTemplate_New.html");
+        using var reader = new StreamReader(stream);
+
+        return reader.ReadToEnd();
+    }
+
+    public static string BuildOrderShippedEmailBody()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderShippedTemplate.html");
+        using var reader = new StreamReader(stream);
+
+        return reader.ReadToEnd();
+    }
 }

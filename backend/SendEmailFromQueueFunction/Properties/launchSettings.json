@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "SendEmailFromQueueFunction": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7189",
+      "launchBrowser": false
+    }
+  }
+}

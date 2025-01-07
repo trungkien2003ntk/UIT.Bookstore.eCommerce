@@ -11,10 +11,11 @@ public sealed record ProductVariantDto : BaseDto
     public Dimension Dimension { get; set; }
     public decimal TaxRate { get; set; }
     public string Comment { get; set; }
+    public int StockQuantity { get; set; }
 
     public ICollection<VariantOptionDto> VariantOptions { get; set; } = [];
 
-    public sealed record VariantOptionDto : BaseDto
+    public sealed record VariantOptionDto
     {
         public int ProductOptionId { get; set; }
         public int ProductOptionValueId { get; set; }

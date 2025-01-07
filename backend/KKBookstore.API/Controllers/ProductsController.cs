@@ -41,7 +41,7 @@ public class ProductsController(
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductDetail(int id)
     {
-        var isAdmin = !User.IsInRole(Role.Customer);
+        var isAdmin = User.IsInRole(Role.Admin) || User.IsInRole(Role.SalesStaff) || User.IsInRole(Role.CustomerCareStaff);
 
         if (isAdmin)
         {
@@ -132,12 +132,18 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProductAsync(
+        [FromRoute] int id,
         [FromBody] UpdateProductCommand command,
         CancellationToken cancellationToken = default
     )
     {
+        if (id != command.Id)
+        {
+            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
+            return ToActionResult(resultTemp);
+        }
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);

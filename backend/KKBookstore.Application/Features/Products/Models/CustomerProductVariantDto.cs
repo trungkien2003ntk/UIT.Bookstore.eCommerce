@@ -9,7 +9,7 @@ public record CustomerProductVariantDto : BaseDto
     public decimal RecommendedRetailPrice { get; set; }
     public decimal BasicDiscountRate { get; set; }
     public string Barcode { get; set; }
-    public decimal Quantity { get; set; }
+    public decimal StockQuantity { get; set; }
     public string Status { get; set; }
     public decimal Weight { get; set; }
     public decimal Width { get; set; }

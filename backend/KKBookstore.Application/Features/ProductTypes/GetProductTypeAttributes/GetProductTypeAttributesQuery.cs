@@ -18,7 +18,19 @@ public class GetProductTypeAttributesQueryHandler(
         return attributesResult.IsSuccess
             ? new GetProductTypeAttributesResponse
             {
-                ListAttributes = [.. attributesResult.Value]
+                ListAttributes = attributesResult.Value.Select(x => new GetProductTypeAttributesResponse.ProductTypeAttributeDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    IsInherited = x.IsInherited,
+                    Values = x.Values.Select(v => new GetProductTypeAttributesResponse.ProductTypeAttributeDto.ProductTypeAttributeValueDto
+                    {
+                        AttributeId = v.ProductTypeAttributeId,
+                        AttributeValueId = v.Id,
+                        Name = x.Name,
+                        Value = v.Value
+                    }).ToList()
+                }).ToList()
             }
             : Result.Failure<GetProductTypeAttributesResponse>(attributesResult.Error);
     }

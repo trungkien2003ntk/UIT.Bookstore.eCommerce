@@ -37,11 +37,11 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Remove="Email\EmailTemplates\*.*"/>
+		<Content Remove="Emailing\EmailTemplates\*.*" />
 	</ItemGroup>
 	
 	<ItemGroup>
-		<EmbeddedResource Include="Email\EmailTemplates\*.*" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Emailing\EmailTemplates\*.*" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 	
 </Project>

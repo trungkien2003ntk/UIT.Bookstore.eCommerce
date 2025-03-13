@@ -1,18 +1,19 @@
 ﻿using KKBookstore.Application.Common;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Features.Users.VerifyOtp;
+using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace KKBookstore.Infrastructure.Email;
+namespace KKBookstore.Infrastructure.Emailing;
 public class OtpService(
     IMemoryCache cache,
-    IEmailService emailService,
+    IEmailSender emailService,
     IIdentityService identityService
 ) : IOtpService
 {
     private readonly IMemoryCache _cache = cache;
-    private readonly IEmailService _emailService = emailService;
+    private readonly IEmailSender _emailService = emailService;
 
     public Result<string> GenerateOtp(string emailAddress)
     {

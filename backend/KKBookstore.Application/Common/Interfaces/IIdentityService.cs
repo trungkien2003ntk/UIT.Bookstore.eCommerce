@@ -27,4 +27,6 @@ public interface IIdentityService
     Task<bool> IsInRoleAsync(int userId, string role);
     Task<Result> UpdatePasswordAsync(ResetPasswordCommand request);
     Task<Result> ChangePasswordAsync(ChangePasswordCommand request);
+    string GenerateRegistrationToken(string email);
+    string? ValidateRegistrationToken(string token);
 }

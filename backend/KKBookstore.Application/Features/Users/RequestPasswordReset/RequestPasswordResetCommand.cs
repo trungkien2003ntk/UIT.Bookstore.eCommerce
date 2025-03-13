@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using MediatR;
 
@@ -8,11 +9,11 @@ public record RequestPasswordResetCommand(string Email) : IRequest<Result>;
 
 public class RequestPasswordResetCommandHandler(
     IIdentityService identityService,
-    IEmailService emailService
+    IEmailSender emailService
 ) : IRequestHandler<RequestPasswordResetCommand, Result>
 {
     private readonly IIdentityService _identityService = identityService;
-    private readonly IEmailService _emailService = emailService;
+    private readonly IEmailSender _emailService = emailService;
 
     public async Task<Result> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
     {

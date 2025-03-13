@@ -32,7 +32,7 @@ public class SendEmailFromQueueFunction
             stream.Position = 0; // Reset stream position
             var mailMessage = MimeMessage.Load(stream);
 
-            MimeEntity htmlBody = new TextPart("html") { Text = mailMessage.GetTextBody(MimeKit.Text.TextFormat.Plain) };
+            MimeEntity htmlBody = new TextPart("html") { Text = mailMessage.HtmlBody ?? mailMessage.TextBody };
 
             var mailMessageHtml = new MimeMessage(mailMessage.From.AsEnumerable(), mailMessage.To.AsEnumerable(), mailMessage.Subject, htmlBody);
             _logger.LogInformation("Processing email message: {Subject}", mailMessage.Subject);

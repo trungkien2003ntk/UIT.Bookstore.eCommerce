@@ -109,8 +109,9 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 
+    [AllowAnonymous]
     [HttpPost]
-    [Route("send-signup-email")]
+    [Route("send-sign-up-email")]
     public async Task<IActionResult> SendSignUpEmailAsync(
         [FromBody] SendSignUpEmailCommand command,
         CancellationToken cancellationToken = default
@@ -118,5 +119,17 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
         return result.IsSuccess ? Ok() : ToActionResult(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("sign-up")]
+    public async Task<IActionResult> SignUpAsync(
+        [FromBody] SignUpCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 }

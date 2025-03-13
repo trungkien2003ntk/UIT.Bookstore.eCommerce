@@ -336,19 +336,74 @@ public class IdentityService(
         return Result.Success();
     }
 
-    public async Task<bool> IsValidRefreshToken(int userId, string refreshToken)
+    /// <summary>
+    /// Generates a JWT token to be used in the registration URL.
+    /// </summary>
+    public string GenerateRegistrationToken(string email)
     {
-        var utcNow = DateTimeOffset.UtcNow;
+        var jwtSettings = _jwtSettings.Value;
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var existingRefreshToken = await _dbContext.RefreshTokens
-            .FirstOrDefaultAsync(rt => rt.UserId == userId && rt.ExpiryDate > utcNow);
-
-        if (existingRefreshToken != null)
+        var claims = new[]
         {
-            return true;
+            new Claim(JwtRegisteredClaimNames.Sub, email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
+            new Claim("purpose", "register") // Custom claim to verify token purpose
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: jwtSettings.Issuer,
+            audience: jwtSettings.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1), // Token expires in 1 hour
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    /// <summary>
+    /// Validates the registration token and extracts the email.
+    /// </summary>
+    public string? ValidateRegistrationToken(string token)
+    {
+        var jwtSettings = _jwtSettings.Value;
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret));
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParams = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = securityKey
+        };
+
+        try
+        {
+            var principal = tokenHandler.ValidateToken(token, validationParams, out var validatedToken);
+
+            if (validatedToken is JwtSecurityToken jwtToken)
+            {
+                var purposeClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "purpose")?.Value;
+                if (purposeClaim != "register")
+                {
+                    throw new SecurityTokenException("Invalid token purpose.");
+                }
+
+                return jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            }
+        }
+        catch
+        {
+            return null; // Return null if token is invalid
         }
 
-        return false;
+        return null;
     }
 
     public async Task<bool> IsInRoleAsync(int userId, string role)

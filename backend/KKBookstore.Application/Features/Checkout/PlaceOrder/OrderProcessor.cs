@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.ShoppingCarts;
@@ -8,12 +9,12 @@ namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
 public abstract class OrderProcessor(
     IApplicationDbContext dbContext,
     IPaymentService paymentService,
-    IEmailService emailService
+    IEmailSender emailService
 )
 {
     protected readonly IApplicationDbContext _dbContext = dbContext;
     protected readonly IPaymentService _paymentService = paymentService;
-    protected readonly IEmailService _emailService = emailService;
+    protected readonly IEmailSender _emailService = emailService;
 
     public async Task<Result<PlaceOrderResponse>> ProcessOrder(PlaceOrderCommand request, CancellationToken cancellationToken)
     {

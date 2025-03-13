@@ -1,0 +1,25 @@
+﻿<p>Xin chào bạn mới,</p>
+
+<p>Cảm ơn bạn đã đăng ký tài khoản tại KKBooks! Để hoàn tất quá trình đăng ký, vui lòng nhấn vào nút bên dưới:</p>
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+        <td align="center" style="padding: 15px">
+            <a href="{{ model.registration_url }}" style="
+                display: inline-block;
+                background-color: #01bf65;
+                color: #ffffff;
+                text-decoration: none;
+                font-weight: bold;
+                padding: 12px 20px;
+                border-radius: 5px;">
+                Xác nhận ngay
+            </a>
+        </td>
+    </tr>
+</table>
+
+<p>Liên kết này sẽ hết hạn sau <strong>60 phút</strong>. Nếu bạn không yêu cầu đăng ký, vui lòng bỏ qua email này.</p>
+
+<p>Trân trọng,</p>
+<p>Đội ngũ KKBooks.</p>

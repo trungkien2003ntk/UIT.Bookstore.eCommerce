@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+  <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+  <head>
+    <title>KKBooks Email</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #e8f5e9; font-size: 14px">
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="background-color: #e8f5e9">
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="
+              background-color: #ffffff;
+              border-radius: 8px;
+              padding: 20px;
+              font-family: Arial, sans-serif;
+              color: #333;
+            ">
+            <tr>
+              <td
+                align="left"
+                style="
+                  padding: 15px 20px;
+                  height: 60px;
+                  border-radius: 8px 8px 0 0;
+                  color: #ffffff;
+                  font-size: 20px;
+                  font-weight: bold;
+                ">
+                <img
+                  src="https://uitbookstorestorage.blob.core.windows.net/images/logo.jpg"
+                  alt="KKBooks Logo"
+                  class="m_-999112447989606707logo CToWUd"
+                  style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto"
+                  data-bit="iit" />
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 20px; line-height: 1.6">
+                {{ content }}
+                <p style="margin: 10px 0; opacity: 0.8">
+                  <i>**Email này được gửi tự động từ hệ thống. Vui lòng không trả lời email này**</i>
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 20px;
+                  background: linear-gradient(90deg, #01bf65, #7fd955);
+                  color: #ffffff;
+                  border-radius: 0 0 8px 8px;
+                ">
+                <p style="margin: 10px 0">
+                  <a href="#" style="text-decoration: none; margin: 0 8px">
+                    <img src="https://img.icons8.com/ios-filled/24/ffffff/facebook.png" alt="Facebook" />
+                  </a>
+                  <a href="#" style="text-decoration: none; margin: 0 8px">
+                    <img src="https://img.icons8.com/ios-filled/24/ffffff/instagram-new.png" alt="Instagram" />
+                  </a>
+                  <a href="#" style="text-decoration: none; margin: 0 8px">
+                    <img src="https://img.icons8.com/ios-filled/24/ffffff/twitter.png" alt="X (Twitter)" />
+                  </a>
+                  <a href="#" style="text-decoration: none; margin: 0 8px">
+                    <img src="https://img.icons8.com/ios-filled/24/ffffff/link.png" alt="Website" />
+                  </a>
+                </p>
+
+                <p style="margin: 5px 0">Email: <a href="mailto:support@bookstore.com">support@kkbooks.com.vn</a></p>
+                <p style="margin: 5px 0">Địa chỉ: Khu phố 6, P.Linh Trung, Tp.Thủ Đức, Tp.Hồ Chí Minh</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

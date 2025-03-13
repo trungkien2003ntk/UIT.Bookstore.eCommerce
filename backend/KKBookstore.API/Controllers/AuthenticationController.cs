@@ -1,4 +1,5 @@
 ﻿using KKBookstore.API.Abstractions;
+using KKBookstore.Application.Features.Authentication;
 using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.Register;
@@ -105,6 +106,17 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
 
+        return result.IsSuccess ? Ok() : ToActionResult(result);
+    }
+
+    [HttpPost]
+    [Route("send-signup-email")]
+    public async Task<IActionResult> SendSignUpEmailAsync(
+        [FromBody] SendSignUpEmailCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(command, cancellationToken);
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;
@@ -11,7 +12,7 @@ namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
 public class DefaultOrderProcessor(
     IApplicationDbContext dbContext,
     IPaymentService paymentService,
-    IEmailService emailService
+    IEmailSender emailService
 ) : OrderProcessor(dbContext, paymentService, emailService)
 {
     protected override async Task<List<ShoppingCartItem>> GetCheckoutItems(PlaceOrderCommand request, CancellationToken cancellationToken)

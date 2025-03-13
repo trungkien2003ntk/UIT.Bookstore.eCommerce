@@ -14,10 +14,15 @@
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Scriban" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\KKBookstore.Domain.Shared\KKBookstore.Domain.Shared.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<None Remove=".\Emailing\Templates\*.sbn" />
+		<EmbeddedResource Include=".\Emailing\Templates\*.sbn" CopyToOutputDirectory="Always" />
+	</ItemGroup>
 </Project>

@@ -1,29 +1,89 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using KKBookstore.Application.Common.Constants;
-using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Domain.Emailing;
+using KKBookstore.Domain.Emailing.Models;
 using KKBookstore.Domain.Orders;
-using KKBookstore.Infrastructure.Email.EmailTemplates;
+using KKBookstore.Domain.Shared.Emailing;
+using KKBookstore.Infrastructure.Emailing.EmailTemplates;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Text;
 
-namespace KKBookstore.Infrastructure.Email;
+namespace KKBookstore.Infrastructure.Emailing;
 
-public class EmailService(
+public class DefaultEmailSender(
     IOptions<EmailConfiguration> emailConfiguration,
     QueueServiceClient queueServiceClient,
     BlobServiceClient blobServiceClient
-) : IEmailService
+) : IEmailSender
 {
-    private const string _SENDER_NAME = "KKBookstore";
-    private const string _RECEIVER_NAME = "Customer";
-    private const string _BLOB_CONTAINER_NAME = "email-body";
-    private const string _EMAIL_CONTENT_TYPE = "plain";
-    private const string _EMAIL_BLOB_PREFIX = "mail-body-";
     private readonly EmailConfiguration _emailConfig = emailConfiguration.Value;
     private readonly QueueServiceClient _queueServiceClient = queueServiceClient;
     private readonly BlobServiceClient _blobServiceClient = blobServiceClient;
+
+
+    public async Task SendAsync(string to, string? subject, string? body, bool isBodyHtml = true, AdditionalEmailSendingArgs? additionalEmailSendingArgs = null)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(EmailConsts.SenderName, _emailConfig.From));
+        message.To.Add(new MailboxAddress(EmailConsts.ReceiverName, to));
+        message.Subject = subject;
+
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = isBodyHtml ? body : null,
+            TextBody = !isBodyHtml ? body : null
+        };
+
+        ProcessAdditionalArgs(additionalEmailSendingArgs, message, bodyBuilder);
+
+        message.Body = bodyBuilder.ToMessageBody();
+
+        await SendAsync(message);
+    }
+
+    public async Task SendAsync(string from, string to, string? subject, string? body, bool isBodyHtml = true, AdditionalEmailSendingArgs? additionalEmailSendingArgs = null)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(EmailConsts.SenderName, from));
+        message.To.Add(new MailboxAddress(EmailConsts.ReceiverName, to));
+        message.Subject = subject;
+
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = isBodyHtml ? body : null,
+            TextBody = !isBodyHtml ? body : null
+        };
+
+        ProcessAdditionalArgs(additionalEmailSendingArgs, message, bodyBuilder);
+
+        message.Body = bodyBuilder.ToMessageBody();
+
+        await SendAsync(message);
+    }
+
+    private static void ProcessAdditionalArgs(AdditionalEmailSendingArgs? additionalEmailSendingArgs, MimeMessage message, BodyBuilder bodyBuilder)
+    {
+        if (additionalEmailSendingArgs?.Attachments != null)
+        {
+            foreach (var attachment in additionalEmailSendingArgs.Attachments)
+            {
+                bodyBuilder.Attachments.Add(attachment.Name, attachment.File);
+            }
+        }
+
+        var cc = additionalEmailSendingArgs?.CC;
+        if (cc is not null && cc.Count > 0)
+        {
+            foreach (var ccEmail in cc)
+            {
+                message.Cc.Add(new MailboxAddress("", ccEmail));
+            }
+        }
+    }
+
+
 
     // email templates
     private readonly EmailTemplate orderConfirmationTemplate = new()
@@ -175,8 +235,8 @@ public class EmailService(
     private MimeMessage CreateEmailMessage(string subject, string body, string toEmail, Dictionary<string, string>? placeholders = null)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress(_SENDER_NAME, _emailConfig.From));
-        message.To.Add(new MailboxAddress(_RECEIVER_NAME, toEmail));
+        message.From.Add(new MailboxAddress(EmailConsts.SenderName, _emailConfig.From));
+        message.To.Add(new MailboxAddress(EmailConsts.ReceiverName, toEmail));
         message.Subject = subject;
 
 
@@ -188,7 +248,7 @@ public class EmailService(
             }
         }
 
-        message.Body = new TextPart(_EMAIL_CONTENT_TYPE) { Text = body };
+        message.Body = new TextPart(EmailConsts.DefaultContentType) { Text = body };
 
         return message;
     }

@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using MediatR;
 
@@ -14,7 +14,7 @@ public enum EmailType
 public record SendOrderEmailCommand(EmailType EmailType, string Email) : IRequest<Result>;
 
 public class SendOrderEmailCommandHandler(
-    IEmailService emailService
+    IEmailSender emailService
 ) : IRequestHandler<SendOrderEmailCommand, Result>
 {
     public async Task<Result> Handle(SendOrderEmailCommand request, CancellationToken cancellationToken)

@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
 using KKBookstore.Infrastructure.Data.Interceptors;
-using KKBookstore.Infrastructure.Email;
+using KKBookstore.Infrastructure.Emailing;
 using KKBookstore.Infrastructure.Identity;
 using KKBookstore.Infrastructure.Payment;
 using KKBookstore.Infrastructure.Search;
@@ -90,7 +91,7 @@ public static class DependencyInjection
 
         /// Config Email
         services.Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)));
-        services.AddTransient<IEmailService, EmailService>();
+        services.AddSingleton<IEmailSender, DefaultEmailSender>();
 
         /// Config Shipping
         services.Configure<ShippingConfiguration>(configuration.GetSection(nameof(ShippingConfiguration)));

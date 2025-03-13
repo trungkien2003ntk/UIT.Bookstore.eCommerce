@@ -3,7 +3,7 @@ using KKBookstore.Domain.Orders;
 using System.Reflection;
 using System.Text;
 
-namespace KKBookstore.Infrastructure.Email.EmailTemplates;
+namespace KKBookstore.Infrastructure.Emailing.EmailTemplates;
 
 internal static class EmailBodyHelper
 {

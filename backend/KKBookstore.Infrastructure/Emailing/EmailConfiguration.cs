@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Infrastructure.Email;
+﻿namespace KKBookstore.Infrastructure.Emailing;
 
 public class EmailConfiguration
 {

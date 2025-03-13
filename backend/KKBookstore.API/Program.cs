@@ -1,6 +1,7 @@
 using KKBookstore.API.Infrastructure;
 using KKBookstore.API.Mappings;
 using KKBookstore.Application;
+using KKBookstore.Domain;
 using KKBookstore.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -77,7 +78,8 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddApplicationServices()
-    .AddInfrastructureServices(builder.Configuration);
+    .AddInfrastructureServices(builder.Configuration)
+    .AddDomainServices();
 
 
 // add serilog to builder

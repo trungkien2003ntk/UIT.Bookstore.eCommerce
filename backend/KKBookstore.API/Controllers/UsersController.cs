@@ -3,6 +3,7 @@ using KKBookstore.API.Abstractions;
 using KKBookstore.API.Contracts.Requests;
 using KKBookstore.API.Contracts.Requests.Users;
 using KKBookstore.Application.Features.Users.AddShippingAddress;
+using KKBookstore.Application.Features.Users.DeleteShippingAddress;
 using KKBookstore.Application.Features.Users.GetUser;
 using KKBookstore.Application.Features.Users.GetUserList;
 using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
@@ -114,30 +115,41 @@ public class UsersController(
     }
 
     [Authorize(Roles = Role.Customer)]
-    [HttpGet("addresses/get-address-list")]
+    [HttpGet("{userId}/addresses/get-address-list")]
     public async Task<IActionResult> GetUserShippingAddressesAsync(
+        int userId,
         CancellationToken cancellationToken = default
     )
     {
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        var userIdFromClaims = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        if (userIdFromClaims != userId)
+        {
+            return BadRequest();
+        }
 
-        var result = await Sender.Send(new GetUserShippingAddressesQuery(userId), cancellationToken);
+        var result = await Sender.Send(new GetUserShippingAddressesQuery(userIdFromClaims), cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
     [Authorize(Roles = Role.Customer)]
-    [HttpPost("addresses/create-address")]
+    [HttpPost("{userId}/addresses/create-address")]
     public async Task<IActionResult> AddUserShippingAddressAsync(
+        int userId,
         [FromBody] AddShippingAddressRequest request,
         CancellationToken cancellationToken = default
     )
     {
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        var userIdFromClaims = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        if (userIdFromClaims != userId)
+        {
+            return BadRequest();
+        }
+
 
         var command = new AddShippingAddressCommand
         {
-            UserId = userId,
+            UserId = userIdFromClaims,
             Province = request.Province,
             District = request.District,
             Commune = request.Commune,
@@ -150,25 +162,47 @@ public class UsersController(
 
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? CreatedAtAction(nameof(GetUserShippingAddressesAsync), new { userId }, result.Value) : ToActionResult(result);
+        return result.IsSuccess ? CreatedAtAction(nameof(GetUserShippingAddressesAsync), new { userIdFromClaims }, result.Value) : ToActionResult(result);
     }
 
-    [HttpPut("addresses/{id}")]
+    [Authorize(Roles = Role.Customer)]
+    [HttpPut]
+    [Route("{userId}/addresses/{id}")]
     public async Task<IActionResult> UpdateUserShippingAddressAsync(
+        int userId,
         int id,
         [FromBody] UpdateShippingAddressCommand command,
         CancellationToken cancellationToken = default
     )
     {
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        var userIdFromClaims = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
 
-        if (command.UserId != userId || command.Id != id)
+        if (command.UserId != userIdFromClaims || userId != userIdFromClaims || command.Id != id)
         {
             return BadRequest();
         }
 
         var result = await Sender.Send(command, cancellationToken);
 
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
+    }
+
+    [Authorize(Roles = Role.Customer)]
+    [HttpDelete]
+    [Route("{userId}/addresses/{addressId}")]
+    public async Task<IActionResult> DeleteUserShippingAddressAsync(
+        int userId,
+        int addressId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var userIdFromClaims = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        if (userIdFromClaims != userId)
+        {
+            return BadRequest();
+        }
+
+        var result = await Sender.Send(new DeleteShippingAddressCommand(addressId), cancellationToken);
         return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 }

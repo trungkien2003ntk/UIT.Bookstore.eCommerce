@@ -14,4 +14,5 @@ public static class UserErrors
     public static readonly Error UpdateFailed = Error.Failure("User.UpdateFailed", "User update failed.");
     public static readonly Error Unknown = Error.Failure("User.Unknown", "An unknown error occurred.");
     public static readonly Error ShippingAddressNotFound = Error.NotFound("User.ShippingAddressNotFound", "Shipping address was not found.");
+    public static readonly Error DeleteShippingAddressFailed = Error.Failure("User.DeleteShippingAddressFailed", "Deleting shipping address failed.");
 }

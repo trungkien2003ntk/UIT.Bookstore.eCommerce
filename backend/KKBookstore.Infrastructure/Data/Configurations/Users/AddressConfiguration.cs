@@ -18,9 +18,12 @@ internal class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.ConfigureAuditing();
 
         builder.Property(t => t.PhoneNumber).HasColumnName(nameof(Address.PhoneNumber)).HasMaxLength(AddressConsts.PhoneNumberMaxLength).IsRequired();
-        builder.Property(t => t.Province).HasColumnName(nameof(Address.Province)).HasMaxLength(AddressConsts.ProvinceMaxLength).IsRequired();
-        builder.Property(t => t.District).HasColumnName(nameof(Address.District)).HasMaxLength(AddressConsts.DistrictMaxLength).IsRequired();
-        builder.Property(t => t.Commune).HasColumnName(nameof(Address.Commune)).HasMaxLength(AddressConsts.CommuneMaxLength).IsRequired();
+        builder.Property(t => t.ProvinceId).HasColumnName(nameof(Address.ProvinceId)).IsRequired();
+        builder.Property(t => t.ProvinceName).HasColumnName(nameof(Address.ProvinceName)).HasMaxLength(AddressConsts.ProvinceNameMaxLength).IsRequired();
+        builder.Property(t => t.DistrictId).HasColumnName(nameof(Address.DistrictId)).IsRequired();
+        builder.Property(t => t.DistrictName).HasColumnName(nameof(Address.DistrictName)).HasMaxLength(AddressConsts.DistrictNameMaxLength).IsRequired();
+        builder.Property(t => t.CommuneCode).HasColumnName(nameof(Address.CommuneCode)).IsRequired();
+        builder.Property(t => t.CommuneName).HasColumnName(nameof(Address.CommuneName)).HasMaxLength(AddressConsts.CommuneNameMaxLength).IsRequired();
         builder.Property(t => t.DetailAddress).HasColumnName(nameof(Address.DetailAddress)).HasMaxLength(AddressConsts.DetailAddressMaxLength).IsRequired();
         builder.Property(t => t.IsDefault).HasColumnName(nameof(Address.IsDefault)).IsRequired();
         builder.Property(t => t.Type).HasColumnName(nameof(Address.Type)).HasConversion<EnumToStringConverter<AddressType>>();

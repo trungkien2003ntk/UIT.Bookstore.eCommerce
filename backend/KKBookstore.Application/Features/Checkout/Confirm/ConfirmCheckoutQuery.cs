@@ -52,19 +52,19 @@ public class ConfirmCheckoutHandler(
         }
         else
         {
-            var getCustomerProvinceIdResult = await _shippingService.FindProvinceAsync(defaultAddress.Province, cancellationToken);
+            var getCustomerProvinceIdResult = await _shippingService.FindProvinceAsync(defaultAddress.ProvinceName, cancellationToken);
             if (getCustomerProvinceIdResult.IsFailure)
             {
                 return Result.Failure<ConfirmCheckoutResponse>(getCustomerProvinceIdResult.Error);
             }
 
-            var getCustomerDistrictIdResult = await _shippingService.FindDistrictIdAsync(getCustomerProvinceIdResult.Value, defaultAddress.District, cancellationToken);
+            var getCustomerDistrictIdResult = await _shippingService.FindDistrictIdAsync(getCustomerProvinceIdResult.Value, defaultAddress.DistrictName, cancellationToken);
             if (getCustomerDistrictIdResult.IsFailure)
             {
                 return Result.Failure<ConfirmCheckoutResponse>(getCustomerDistrictIdResult.Error);
             }
 
-            var getCustomerCommuneCodeResult = await _shippingService.FindCommuneCodeAsync(getCustomerDistrictIdResult.Value, defaultAddress.Commune, cancellationToken);
+            var getCustomerCommuneCodeResult = await _shippingService.FindCommuneCodeAsync(getCustomerDistrictIdResult.Value, defaultAddress.CommuneName, cancellationToken);
             if (getCustomerCommuneCodeResult.IsFailure)
             {
                 return Result.Failure<ConfirmCheckoutResponse>(getCustomerCommuneCodeResult.Error);
@@ -217,9 +217,9 @@ public class ConfirmCheckoutHandler(
                 UserId = sa.CustomerId,
                 ReceiverName = sa.ReceiverName,
                 PhoneNumber = sa.PhoneNumber,
-                Province = sa.Province,
-                District = sa.District,
-                Commune = sa.Commune,
+                Province = sa.ProvinceName,
+                District = sa.DistrictName,
+                Commune = sa.CommuneName,
                 DetailAddress = sa.DetailAddress,
                 IsDefault = sa.IsDefault,
                 AddressType = sa.Type.ToString()

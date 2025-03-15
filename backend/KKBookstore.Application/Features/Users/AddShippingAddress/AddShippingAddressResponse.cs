@@ -1,15 +1,20 @@
-﻿namespace KKBookstore.Application.Features.Users.AddShippingAddress;
+﻿using KKBookstore.Domain.Shared.Orders;
+
+namespace KKBookstore.Application.Features.Users.AddShippingAddress;
 
 public record AddShippingAddressResponse
 {
     public int Id { get; set; }
-    public int UserId { get; set; }
+    public int CustomerId { get; set; }
     public string ReceiverName { get; set; }
     public string PhoneNumber { get; set; }
-    public string Province { get; set; }
-    public string District { get; set; }
-    public string Commune { get; set; }
+    public int ProvinceId { get; set; }
+    public string ProvinceName { get; set; }
+    public int DistrictId { get; set; }
+    public string DistrictName { get; set; }
+    public string CommuneCode { get; set; }
+    public string CommuneName { get; set; }
     public string DetailAddress { get; set; }
     public bool IsDefault { get; set; }
-    public string AddressType { get; set; }
+    public AddressType Type { get; set; }
 }

@@ -150,9 +150,9 @@ public class UsersController(
         var command = new AddShippingAddressCommand
         {
             UserId = userIdFromClaims,
-            Province = request.Province,
-            District = request.District,
-            Commune = request.Commune,
+            ProvinceName = request.Province,
+            DistrictName = request.District,
+            CommuneName = request.Commune,
             IsDefault = request.IsDefault,
             Type = request.Type,
             ReceiverName = request.ReceiverName,

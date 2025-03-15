@@ -6,8 +6,8 @@ public static class AddressConsts
     public static string GetDefaultSorting() => DefaultSorting;
 
     public const int PhoneNumberMaxLength = 13;
-    public const int ProvinceMaxLength = 125;
-    public const int DistrictMaxLength = 125;
-    public const int CommuneMaxLength = 125; 
-    public const int DetailAddressMaxLength = 1024;
+    public const int ProvinceNameMaxLength = 1024;
+    public const int DistrictNameMaxLength = 1024;
+    public const int CommuneNameMaxLength = 1024;
+    public const int DetailAddressMaxLength = 2048;
 }

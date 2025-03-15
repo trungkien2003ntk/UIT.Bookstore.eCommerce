@@ -24,7 +24,7 @@ public class OrderProfile : Profile
             .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.OrderLines));
 
         CreateMap<ShippingAddress, ShippingAddressDto>()
-            .ForMember(dest => dest.DetailedFullAddress, opt => opt.MapFrom(src => $"{src.DetailAddress}, {src.Commune}, {src.District}, {src.Province}")); ;
+            .ForMember(dest => dest.DetailedFullAddress, opt => opt.MapFrom(src => $"{src.DetailAddress}, {src.CommuneName}, {src.DistrictName}, {src.ProvinceName}")); ;
 
         CreateMap<Order, OrderGeneralInformation>()
             .ForMember(dest => dest.DeliveryMethodName, opt => opt.MapFrom(src => src.DeliveryMethod.Name))

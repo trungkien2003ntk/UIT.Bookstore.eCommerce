@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -40,12 +39,12 @@ public class UpdateShippingAddressCommandHandler(
         shippingAddress.CustomerId = request.UserId;
         shippingAddress.ReceiverName = request.ReceiverName;
         shippingAddress.PhoneNumber = request.PhoneNumber;
-        shippingAddress.Province = request.Province;
-        shippingAddress.District = request.District;
-        shippingAddress.Commune = request.Commune;
+        shippingAddress.ProvinceName = request.Province;
+        shippingAddress.DistrictName = request.District;
+        shippingAddress.CommuneName = request.Commune;
         shippingAddress.DetailAddress = request.DetailAddress;
         shippingAddress.IsDefault = request.IsDefault;
-        
+
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -55,9 +54,12 @@ public class UpdateShippingAddressCommandHandler(
             shippingAddress.CustomerId,
             shippingAddress.ReceiverName,
             shippingAddress.PhoneNumber,
-            shippingAddress.Province,
-            shippingAddress.District,
-            shippingAddress.Commune,
+            shippingAddress.ProvinceId,
+            shippingAddress.ProvinceName,
+            shippingAddress.DistrictId,
+            shippingAddress.DistrictName,
+            shippingAddress.CommuneCode,
+            shippingAddress.CommuneName,
             shippingAddress.DetailAddress,
             shippingAddress.IsDefault,
             shippingAddress.Type.ToString()

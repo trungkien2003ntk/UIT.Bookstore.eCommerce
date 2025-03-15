@@ -22,13 +22,16 @@ public class ShippingAddress : Address
         int userId,
         string receiverName,
         string phoneNumber,
+        int provinceId,
         string province,
+        int districtId,
         string district,
+        string communeCode,
         string commune,
         bool isDefault,
         string detailAddress,
         AddressType addressType
-    ) : base(phoneNumber, province, district, commune, detailAddress, isDefault, addressType)
+    ) : base(phoneNumber, provinceId, province, districtId, district, communeCode, commune, detailAddress, isDefault, addressType)
     {
         CustomerId = userId;
         ReceiverName = receiverName;
@@ -40,8 +43,11 @@ public class ShippingAddress : Address
         int userId,
         string name,
         string phoneNumber,
+        int provinceId,
         string province,
+        int districtId,
         string district,
+        string communeCode,
         string commune,
         bool isDefault = false,
         string detailAddress = "",
@@ -49,7 +55,7 @@ public class ShippingAddress : Address
     )
     {
         // validation
-        return new ShippingAddress(userId, name, phoneNumber, province, district, commune, isDefault, detailAddress, addressType);
+        return new ShippingAddress(userId, name, phoneNumber, provinceId, province, districtId, district, communeCode, commune, isDefault, detailAddress, addressType);
     }
 
     public void SetAsDefault()

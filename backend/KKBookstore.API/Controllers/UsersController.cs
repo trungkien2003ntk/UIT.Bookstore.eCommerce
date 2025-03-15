@@ -177,7 +177,7 @@ public class UsersController(
     {
         var userIdFromClaims = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
 
-        if (command.UserId != userIdFromClaims || userId != userIdFromClaims || command.Id != id)
+        if (command.CustomerId != userIdFromClaims || userId != userIdFromClaims || command.Id != id)
         {
             return BadRequest();
         }

@@ -1,4 +1,6 @@
-﻿namespace KKBookstore.Application.Features.Users.UpdateShippingAddress;
+﻿using KKBookstore.Domain.Shared.Orders;
+
+namespace KKBookstore.Application.Features.Users.UpdateShippingAddress;
 
 public record UpdateShippingAddressResponse(
     int Id,
@@ -13,5 +15,5 @@ public record UpdateShippingAddressResponse(
     string CommuneName,
     string DetailAddress,
     bool IsDefault,
-    string AddressType
+    AddressType AddressType
 );

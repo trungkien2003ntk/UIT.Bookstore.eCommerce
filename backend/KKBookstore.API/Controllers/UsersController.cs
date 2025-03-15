@@ -133,7 +133,7 @@ public class UsersController(
     }
 
     [Authorize(Roles = Role.Customer)]
-    [HttpPost("{userId}/addresses/create-address")]
+    [HttpPost("{userId}/addresses")]
     public async Task<IActionResult> AddUserShippingAddressAsync(
         int userId,
         [FromBody] AddShippingAddressRequest request,
@@ -149,14 +149,17 @@ public class UsersController(
 
         var command = new AddShippingAddressCommand
         {
-            UserId = userIdFromClaims,
-            ProvinceName = request.Province,
-            DistrictName = request.District,
-            CommuneName = request.Commune,
-            IsDefault = request.IsDefault,
-            Type = request.Type,
+            CustomerId = userIdFromClaims,
             ReceiverName = request.ReceiverName,
             PhoneNumber = request.PhoneNumber,
+            ProvinceId = request.ProvinceId,
+            ProvinceName = request.ProvinceName,
+            DistrictId = request.DistrictId,
+            DistrictName = request.DistrictName,
+            CommuneCode = request.CommuneCode,
+            CommuneName = request.CommuneName,
+            IsDefault = request.IsDefault,
+            Type = request.Type,
             DetailAddress = request.DetailAddress
         };
 

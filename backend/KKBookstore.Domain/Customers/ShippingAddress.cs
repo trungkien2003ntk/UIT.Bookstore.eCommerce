@@ -19,7 +19,7 @@ public class ShippingAddress : Address
     }
 
     private ShippingAddress(
-        int userId,
+        int customerId,
         string receiverName,
         string phoneNumber,
         int provinceId,
@@ -33,14 +33,14 @@ public class ShippingAddress : Address
         AddressType addressType
     ) : base(phoneNumber, provinceId, province, districtId, district, communeCode, commune, detailAddress, isDefault, addressType)
     {
-        CustomerId = userId;
+        CustomerId = customerId;
         ReceiverName = receiverName;
         IsDeleted = false;
     }
 
     // factory method
     public static Result<ShippingAddress> Create(
-        int userId,
+        int customerId,
         string name,
         string phoneNumber,
         int provinceId,
@@ -55,7 +55,7 @@ public class ShippingAddress : Address
     )
     {
         // validation
-        return new ShippingAddress(userId, name, phoneNumber, provinceId, province, districtId, district, communeCode, commune, isDefault, detailAddress, addressType);
+        return new ShippingAddress(customerId, name, phoneNumber, provinceId, province, districtId, district, communeCode, commune, isDefault, detailAddress, addressType);
     }
 
     public void SetAsDefault()

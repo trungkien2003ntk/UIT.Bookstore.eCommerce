@@ -1,18 +1,19 @@
-﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Customers;
 using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.Shared.Users;
+using KKBookstore.Domain.Users;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
 namespace KKBookstore.Application.Features.Users.AddShippingAddress;
 
 public record AddShippingAddressCommand : IRequest<Result<AddShippingAddressResponse>>
 {
-    public int UserId { get; init; }
+    public int CustomerId { get; init; }
 
     [Required]
     [StringLength(ShippingAddressConsts.ReceiverNameMaxLength)]
@@ -52,33 +53,68 @@ public record AddShippingAddressCommand : IRequest<Result<AddShippingAddressResp
 
 public class AddShippingAddressCommandHandler(
     IApplicationDbContext dbContext,
-    IMapper mapper
+    ILogger<AddShippingAddressCommandHandler> logger
 ) : IRequestHandler<AddShippingAddressCommand, Result<AddShippingAddressResponse>>
 {
     public async Task<Result<AddShippingAddressResponse>> Handle(AddShippingAddressCommand request, CancellationToken cancellationToken)
     {
-        var shippingAddress = mapper.Map<ShippingAddress>(request);
+        var createShippingAddressResult = ShippingAddress.Create(
+            request.CustomerId,
+            request.ReceiverName,
+            request.PhoneNumber,
+            request.ProvinceId,
+            request.ProvinceName,
+            request.DistrictId,
+            request.DistrictName,
+            request.CommuneCode,
+            request.CommuneName,
+            request.IsDefault,
+            request.DetailAddress,
+            request.Type
+        );
 
-        dbContext.ShippingAddresses.Add(shippingAddress);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        var response = new AddShippingAddressResponse()
+        if (createShippingAddressResult.IsFailure)
         {
-            Id = shippingAddress.Id,
-            CustomerId = shippingAddress.CustomerId,
-            ReceiverName = shippingAddress.ReceiverName,
-            PhoneNumber = shippingAddress.PhoneNumber,
-            ProvinceId = shippingAddress.ProvinceId,
-            ProvinceName = shippingAddress.ProvinceName,
-            DistrictId = shippingAddress.DistrictId,
-            DistrictName = shippingAddress.DistrictName,
-            CommuneCode = shippingAddress.CommuneCode,
-            CommuneName = shippingAddress.CommuneName,
-            DetailAddress = shippingAddress.DetailAddress,
-            IsDefault = shippingAddress.IsDefault,
-            Type = shippingAddress.Type,
-        };
+            return Result.Failure<AddShippingAddressResponse>(createShippingAddressResult.Error);
+        }
 
-        return Result.Success(response);
+        var shippingAddress = createShippingAddressResult.Value;
+        // start transaction
+        using var transaction = await dbContext.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            dbContext.ShippingAddresses.Add(shippingAddress);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            var response = new AddShippingAddressResponse()
+            {
+                Id = shippingAddress.Id,
+                CustomerId = shippingAddress.CustomerId,
+                ReceiverName = shippingAddress.ReceiverName,
+                PhoneNumber = shippingAddress.PhoneNumber,
+                ProvinceId = shippingAddress.ProvinceId,
+                ProvinceName = shippingAddress.ProvinceName,
+                DistrictId = shippingAddress.DistrictId,
+                DistrictName = shippingAddress.DistrictName,
+                CommuneCode = shippingAddress.CommuneCode,
+                CommuneName = shippingAddress.CommuneName,
+                DetailAddress = shippingAddress.DetailAddress,
+                IsDefault = shippingAddress.IsDefault,
+                Type = shippingAddress.Type,
+            };
+
+            await transaction.CommitAsync(cancellationToken);
+
+            logger.LogInformation("Added shipping address with id {ShippingAddressId}", shippingAddress.Id);
+
+            return Result.Success(response);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error adding shipping address with id {ShippingAddressId}", shippingAddress.Id);
+            await transaction.RollbackAsync(cancellationToken);
+            return Result.Failure<AddShippingAddressResponse>(UserErrors.AddShippingAddressFailed);
+        }
     }
 }

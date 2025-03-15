@@ -115,7 +115,7 @@ public class UsersController(
     }
 
     [Authorize(Roles = Role.Customer)]
-    [HttpGet("{userId}/addresses/get-address-list")]
+    [HttpGet("{userId}/addresses")]
     public async Task<IActionResult> GetUserShippingAddressesAsync(
         int userId,
         CancellationToken cancellationToken = default

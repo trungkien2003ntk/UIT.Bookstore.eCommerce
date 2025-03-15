@@ -5,7 +5,7 @@ namespace KKBookstore.Application.Features.Users.GetUserShippingAddresses;
 
 public record GetUserShippingAddressesResponse : BaseDto
 {
-    public int UserId { get; set; }
+    public int CustomerId { get; set; }
     public string ReceiverName { get; set; }
     public string PhoneNumber { get; set; }
     public int ProvinceId { get; set; }

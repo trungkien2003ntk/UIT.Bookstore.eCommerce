@@ -5,8 +5,8 @@ using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.Register;
 using KKBookstore.Application.Features.Users.RequestOtp;
 using KKBookstore.Application.Features.Users.RequestPasswordReset;
+using KKBookstore.Application.Features.Users.ResetPassword;
 using KKBookstore.Application.Features.Users.SignIn;
-using KKBookstore.Application.Features.Users.UpdatePassword;
 using KKBookstore.Application.Features.Users.VerifyOtp;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -36,7 +36,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? Ok() : ToActionResult(result);
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
     [AllowAnonymous]
@@ -82,7 +82,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? Ok() : ToActionResult(result);
+        return NoContent();
     }
 
 
@@ -94,7 +94,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? Ok() : ToActionResult(result);
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
     // need authorize
@@ -106,7 +106,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? Ok() : ToActionResult(result);
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
     [AllowAnonymous]
@@ -118,7 +118,7 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     )
     {
         var result = await Sender.Send(command, cancellationToken);
-        return result.IsSuccess ? Ok() : ToActionResult(result);
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
     [AllowAnonymous]

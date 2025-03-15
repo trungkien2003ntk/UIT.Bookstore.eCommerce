@@ -27,6 +27,14 @@ public class EmailTemplateDefinitionProvider
             EmailConsts.AccountRegistrationEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
         ));
+
+        // Forgot password email template
+        AddTemplate(new TemplateDefinition(
+            EmailConsts.ForgotPasswordEmailTemplateName,
+            EmailConsts.ForgotPasswordEmailAsmNamespace,
+            layout: EmailConsts.LayoutTemplateName
+        ));
+
     }
 
     private void AddTemplate(TemplateDefinition templateDefinition)

@@ -39,7 +39,7 @@ public class Order : BaseAuditedEntity
     public string? Comment { get; set; }
     public string? DeliveryInstruction { get; set; } = string.Empty;
     public int CustomerId { get; set; }
-    public int ShippingAddressId { get; set; }
+    public int? ShippingAddressId { get; set; }
     public int? DeliveryMethodId { get; set; }
     public decimal ShippingFee { get; set; }
     public int? PriceDiscountVoucherId { get; set; }

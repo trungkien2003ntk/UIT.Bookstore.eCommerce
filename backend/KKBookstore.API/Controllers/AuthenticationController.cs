@@ -1,4 +1,5 @@
 ﻿using KKBookstore.API.Abstractions;
+using KKBookstore.API.Contracts.Requests.Users;
 using KKBookstore.Application.Features.Authentication;
 using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
@@ -11,6 +12,7 @@ using KKBookstore.Application.Features.Users.VerifyOtp;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace KKBookstore.API.Controllers;
 
@@ -98,12 +100,22 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     }
 
     // need authorize
-    [HttpPost("change-password")]
+    [Authorize]
+    [HttpPost("{userId}/change-password")]
     public async Task<IActionResult> ChangePasswordAsync(
-        [FromBody] ChangePasswordCommand command,
+        int userId,
+        [FromBody] ChangePasswordRequest request,
         CancellationToken cancellationToken = default
     )
     {
+        var userIdfromToken = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+
+        if (userIdfromToken != userId)
+        {
+            return BadRequest();
+        }
+
+        var command = new ChangePasswordCommand(userId, request.Email, request.CurrentPassword, request.NewPassword);
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? NoContent() : ToActionResult(result);

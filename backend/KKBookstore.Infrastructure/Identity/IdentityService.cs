@@ -8,7 +8,6 @@ using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.Register;
 using KKBookstore.Application.Features.Users.ReplaceUser;
-using KKBookstore.Application.Features.Users.ResetPassword;
 using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Application.Features.Users.UpdateUser;
 using KKBookstore.Domain.Constants;
@@ -294,31 +293,17 @@ public class IdentityService(
         return responseResult;
     }
 
-    public async Task<Result> UpdatePasswordAsync(ResetPasswordCommand request)
-    {
-        var userResult = await FindUserAsync(new(request.Email));
-
-        if (userResult.IsFailure)
-        {
-            return Result.Failure(userResult.Error);
-        }
-
-        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(userResult.Value);
-        var result = await _userManager.ResetPasswordAsync(userResult.Value, resetToken, request.NewPassword);
-        if (!result.Succeeded)
-        {
-            return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
-        }
-
-        return Result.Success();
-    }
-
     public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
     {
         var userResult = await FindUserAsync(new(request.Email));
         if (userResult.IsFailure)
         {
             return Result.Failure(userResult.Error);
+        }
+
+        if (userResult.Value.Id != request.UserId)
+        {
+            return Result.Failure(UserErrors.AuthenticatedUserMismatchError);
         }
 
         var passwordValid = await _userManager.CheckPasswordAsync(userResult.Value, request.CurrentPassword);

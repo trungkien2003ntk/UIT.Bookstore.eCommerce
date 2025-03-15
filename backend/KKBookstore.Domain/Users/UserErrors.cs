@@ -10,6 +10,7 @@ public static class UserErrors
     public static readonly Error AlreadyExists = Error.Conflict("User.AlreadyExists", "User already exists.");
     public static readonly Error InvalidRole = Error.Validation("User.InvalidRole", "An invalid role was provided.");
     public static readonly Error MissingRole = Error.Validation("User.MissingRole", "A role for this user was not provided.");
+    public static readonly Error AuthenticatedUserMismatchError = Error.Validation("User.AuthenticatedUserMismatchError", "Authenticated user does not match the account associated with this email.");
     public static readonly Error InvalidCredentials = Error.Unauthorized("User.InvalidCredentials", "Invalid credentials were provided.");
     public static readonly Error UpdateFailed = Error.Failure("User.UpdateFailed", "User update failed.");
     public static readonly Error Unknown = Error.Failure("User.Unknown", "An unknown error occurred.");

@@ -4,7 +4,6 @@ using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.Register;
 using KKBookstore.Application.Features.Users.ReplaceUser;
-using KKBookstore.Application.Features.Users.ResetPassword;
 using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Application.Features.Users.UpdateUser;
 using KKBookstore.Domain.Models;
@@ -25,7 +24,6 @@ public interface IIdentityService
     Task<Result<AuthenticationResponse>> GenerateJwtToken(string email);
     Task<Result<AuthenticationResponse>> RefreshAccessToken(RefreshAccessToken request);
     Task<bool> IsInRoleAsync(int userId, string role);
-    Task<Result> UpdatePasswordAsync(ResetPasswordCommand request);
     Task<Result> ChangePasswordAsync(ChangePasswordCommand request);
     string GenerateRegistrationToken(string email);
     string? ValidateRegistrationToken(string token);

@@ -166,7 +166,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
             if (attributeProductValue is null)
             {
-                product.AttributeProductValues.Remove(existingAttributeProductValue);
+                _dbContext.ProductTypeAttributeProductValues.Remove(existingAttributeProductValue);
             }
         }
     }
@@ -210,7 +210,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             var productVariant = productVariants.FirstOrDefault(x => x.Id == existingProductVariant.Id);
             if (productVariant is null)
             {
-                product.ProductVariants.Remove(existingProductVariant);
+                _dbContext.ProductVariants.Remove(existingProductVariant);
             }
         }
     }
@@ -242,7 +242,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             if (productImage is null)
             {
                 _logger.LogInformation("Removing product image with ID {ImageId}", existingProductImage.Id);
-                product.ProductImages.Remove(existingProductImage);
+                _dbContext.ProductImages.Remove(existingProductImage);
             }
         }
     }

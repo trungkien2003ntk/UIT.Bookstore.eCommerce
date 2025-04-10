@@ -19,10 +19,10 @@ public class RequestPasswordResetCommandHandler(
     public async Task<Result> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
     {
         var result = await identityService.GenerateResetPasswordTokenAsync(request.Email);
-        var user = await identityService.FindUserAsync(new(request.Email));
+        var userResult = await identityService.FindUserAsync(new(request.Email));
 
 
-        if (result.IsFailure || user.IsFailure)
+        if (result.IsFailure || userResult.IsFailure)
         {
             // just log this out, we still return Success for security reasons
             logger.LogWarning("Failed to generate reset password token for {Email}. Reason: {Error}", request.Email, result.Error);
@@ -30,9 +30,10 @@ public class RequestPasswordResetCommandHandler(
         }
 
         var token = result.Value;
-        var redirectUrl = $"{request.RedirectUrlBase}?token={token}";
+        var user = userResult.Value;
+        var redirectUrl = $"{request.RedirectUrlBase}/{user.Id}?token={token}";
 
-        var emailModel = new ForgotPasswordEmailModel(user.Value.FullName, redirectUrl);
+        var emailModel = new ForgotPasswordEmailModel(user.FullName, redirectUrl);
         await emailService.SendAsync(
             request.Email,
             emailModel.Subject,

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Shared.Users;
 using MediatR;
 
 namespace KKBookstore.Application.Features.Users.Register;
@@ -12,6 +13,7 @@ public record RegisterCommand(
     string PhoneNumber,
     string Password,
     DateTimeOffset DateOfBirth,
+    Gender Gender,
     string Role
 ) : IRequest<Result<RegisterResponse>>;
 

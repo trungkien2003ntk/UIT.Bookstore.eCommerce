@@ -7,9 +7,9 @@ using KKBookstore.Application.Extensions;
 using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Application.Features.Users.UpdateUser;
+using KKBookstore.Application.Features.Users.UpdateUserPartial;
 using KKBookstore.Domain.Constants;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
@@ -45,6 +45,14 @@ public class IdentityService(
     {
         var user = await _userManager.FindByEmailAsync(findUserDto.Email);
 
+        return user == null
+            ? Result.Failure<User>(UserErrors.NotFound)
+            : Result.Success(user);
+    }
+
+    public async Task<Result<User>> FindUserByPhoneNumberAsync(string phoneNumber)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         return user == null
             ? Result.Failure<User>(UserErrors.NotFound)
             : Result.Success(user);
@@ -191,12 +199,26 @@ public class IdentityService(
         return responseResult;
     }
 
-    public async Task<Result> UpdateUserAsync(UpdateUserCommand command)
+    public async Task<Result> UpdateUserPartialAsync(UpdateUserPartialCommand command)
     {
         var user = await _userManager.FindByIdAsync(command.Id.ToString());
         if (user == null)
         {
             return Result.Failure(UserErrors.NotFound);
+        }
+
+        // Check if email already exists
+        var existingUserByEmail = await _userManager.FindByEmailAsync(command.Email);
+        if (existingUserByEmail != null && existingUserByEmail.Id != command.Id)
+        {
+            return Result.Failure(UserErrors.EmailAlreadyExists);
+        }
+
+        // Check if phone number already exists
+        var existingUserByPhoneNumber = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == command.PhoneNumber);
+        if (existingUserByPhoneNumber != null && existingUserByPhoneNumber.Id != command.Id)
+        {
+            return Result.Failure(UserErrors.PhoneNumberAlreadyExists);
         }
 
         // Update the user's properties
@@ -211,7 +233,7 @@ public class IdentityService(
         return Result.Success();
     }
 
-    public async Task<Result> ReplaceUserAsync(ReplaceUserCommand request)
+    public async Task<Result> UpdateUserAsync(UpdateUserCommand request)
     {
         var user = await _userManager.FindByIdAsync(request.Id.ToString());
         if (user == null)
@@ -219,9 +241,7 @@ public class IdentityService(
             return Result.Failure(UserErrors.NotFound);
         }
 
-        // Update the user's properties
-        mapper.Map(request, user);
-
+        ApplyUpdate(request, user);
 
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
@@ -276,7 +296,8 @@ public class IdentityService(
             return Result.Failure<AuthenticationResponse>(TokenErrors.InvalidRefreshToken);
         }
 
-        var user = await _userManager.FindByIdAsync(existingRefreshToken.UserId.ToString());
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == existingRefreshToken.UserId);
         if (user == null)
         {
             return Result.Failure<AuthenticationResponse>(UserErrors.NotFound);
@@ -496,5 +517,20 @@ public class IdentityService(
         return refreshToken;
     }
 
+    private void ApplyUpdate(UpdateUserCommand request, User user)
+    {
+        UserHelper.ConvertFullNameToFirstAndLastName(request.FullName, out var firstName, out var lastName);
+        user.FirstName = firstName;
+        user.LastName = lastName;
+        user.Email = request.Email;
+        user.DateOfBirth = request.DateOfBirth;
+        user.PhoneNumber = request.PhoneNumber;
+        user.Gender = request.Gender;
+        if (Enum.TryParse<UserStatus>(request.Status, out var newStatus))
+        {
+            user.Status = newStatus;
+        }
+        user.ImageUrl = request.ImageUrl;
+    }
 
 }

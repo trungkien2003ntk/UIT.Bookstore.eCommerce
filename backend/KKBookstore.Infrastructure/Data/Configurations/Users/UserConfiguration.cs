@@ -21,10 +21,12 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Status).HasColumnName(nameof(User.Status));
         builder.Property(u => u.Status).HasColumnName(nameof(User.Status));
         builder.Property(u => u.SignInSource).HasColumnName(nameof(User.SignInSource));
+        builder.Property(u => u.Gender).HasColumnName(nameof(User.Gender));
 
         builder.Property(u => u.SignInSource).HasConversion<EnumToStringConverter<SignInSource>>();
         builder.Property(u => u.LoginType).HasConversion<EnumToStringConverter<LoginType>>();
         builder.Property(u => u.Status).HasConversion<EnumToStringConverter<UserStatus>>();
+        builder.Property(u => u.Gender).HasConversion<EnumToStringConverter<Gender>>().HasDefaultValue(Gender.Male);
 
         builder.HasDiscriminator(u => u.SignInSource)
             .HasValue<User>(SignInSource.Default)

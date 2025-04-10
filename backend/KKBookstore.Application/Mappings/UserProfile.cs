@@ -5,9 +5,9 @@ using KKBookstore.Application.Features.Users.AddShippingAddress;
 using KKBookstore.Application.Features.Users.GetUserList;
 using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
 using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.UpdateShippingAddress;
 using KKBookstore.Application.Features.Users.UpdateUser;
+using KKBookstore.Application.Features.Users.UpdateUserPartial;
 using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Users;
@@ -28,10 +28,10 @@ public class UserProfile : Profile
 
         CreateMap<AuthenticationResponse, RegisterResponse>().ReverseMap();
 
-        CreateMap<UpdateUserCommand, User>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<UpdateUserPartialCommand, User>()
+            .ForAllMembers(opts => opts.Condition((UpdateUserPartialCommand src, User dest, object srcMember) => srcMember != null));
 
-        CreateMap<ReplaceUserCommand, User>();
+        CreateMap<UpdateUserCommand, User>();
 
         CreateMap<ShippingAddress, GetUserShippingAddressesResponse>();
 

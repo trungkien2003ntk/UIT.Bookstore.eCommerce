@@ -7,9 +7,9 @@ using KKBookstore.Application.Features.Users.DeleteShippingAddress;
 using KKBookstore.Application.Features.Users.GetUser;
 using KKBookstore.Application.Features.Users.GetUserList;
 using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
-using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.UpdateShippingAddress;
 using KKBookstore.Application.Features.Users.UpdateUser;
+using KKBookstore.Application.Features.Users.UpdateUserPartial;
 using KKBookstore.Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -73,9 +73,9 @@ public class UsersController(
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> ReplaceUserAsync(
+    public async Task<IActionResult> UpdateUserAsync(
         int id,
-        [FromBody] ReplaceUserCommand command,
+        [FromBody] UpdateUserCommand command,
         CancellationToken cancellationToken = default
     )
     {
@@ -92,7 +92,7 @@ public class UsersController(
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateUserPartialAsync(
         int id,
-        [FromBody] JsonPatchDocument<UpdateUserCommand> patchDoc,
+        [FromBody] JsonPatchDocument<UpdateUserPartialCommand> patchDoc,
         CancellationToken cancellationToken = default
     )
     {
@@ -101,7 +101,7 @@ public class UsersController(
             return BadRequest();
         }
 
-        var command = new UpdateUserCommand { Id = id };
+        var command = new UpdateUserPartialCommand { Id = id };
         patchDoc.ApplyTo(command, (error) => ModelState.AddModelError("", error.ErrorMessage));
 
         if (!ModelState.IsValid)
@@ -165,7 +165,7 @@ public class UsersController(
 
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? CreatedAtAction(nameof(GetUserShippingAddressesAsync), new { userIdFromClaims }, result.Value) : ToActionResult(result);
+        return result.IsSuccess ? Created() : ToActionResult(result);
     }
 
     [Authorize(Roles = Role.Customer)]

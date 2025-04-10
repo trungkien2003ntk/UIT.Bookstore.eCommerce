@@ -44,6 +44,23 @@ public class UpdateShippingAddressCommandHandler(
 
         try
         {
+            if (shippingAddress.IsDefault && !request.IsDefault)
+            {
+                return Result.Failure<UpdateShippingAddressResponse>(UserErrors.CannotUnsetDefaultAddress);
+            }
+
+            if (request.IsDefault)
+            {
+                var otherAddresses = await dbContext.ShippingAddresses
+                    .Where(sa => sa.CustomerId == request.CustomerId && sa.Id != request.Id)
+                    .ToListAsync(cancellationToken);
+
+                foreach (var address in otherAddresses)
+                {
+                    address.IsDefault = false;
+                }
+            }
+
             shippingAddress.CustomerId = request.CustomerId;
             shippingAddress.ReceiverName = request.ReceiverName;
             shippingAddress.PhoneNumber = request.PhoneNumber;

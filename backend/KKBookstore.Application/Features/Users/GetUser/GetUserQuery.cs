@@ -38,6 +38,7 @@ public class GetUserQueryHandler(
             Email = user.Email!,
             PhoneNumber = user.PhoneNumber,
             DateOfBirth = user.DateOfBirth,
+            Gender = user.Gender,
             FullName = user.FullName,
             Status = user.Status.ToString(),
             ImageUrl = user.ImageUrl,

@@ -5,6 +5,7 @@ using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Domain.Authentication;
 using KKBookstore.Domain.Constants;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Shared.Users;
 using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,9 @@ public record SignUpCommand(
     string Token,
     string Password,
     string FullName,
-    string? PhoneNumber
+    string? PhoneNumber,
+    DateTimeOffset DateOfBirth,
+    Gender Gender
 ) : IRequest<Result<SignInResponse>>;
 
 public class SignUpCommandHandler(
@@ -42,10 +45,8 @@ public class SignUpCommandHandler(
 
         // Create a new user with Customer role
         var fullName = request.FullName?.Trim() ?? "";
-        var nameParts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        string firstName = nameParts.Length > 0 ? nameParts[^1] : "";
-        string lastName = nameParts.Length > 1 ? string.Join(" ", nameParts[..^1]) : "";
+        string firstName, lastName;
+        UserHelper.ConvertFullNameToFirstAndLastName(fullName, out firstName, out lastName);
         var registerCommand = new RegisterCommand(
             FirstName: firstName, // These can be updated later by the user
             LastName: lastName,
@@ -53,6 +54,7 @@ public class SignUpCommandHandler(
             PhoneNumber: request.PhoneNumber ?? "",
             Password: request.Password,
             DateOfBirth: DateTimeOffset.UtcNow, // Default value, can be updated later
+            Gender: request.Gender,
             Role: Role.Customer
         );
 
@@ -87,6 +89,5 @@ public class SignUpCommandHandler(
                 return Result.Failure<SignInResponse>(AuthErrors.Unknown);
             }
         }
-
     }
 }

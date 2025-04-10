@@ -3,9 +3,9 @@ using KKBookstore.Application.Common.Models.Responses;
 using KKBookstore.Application.Features.Users.ChangePassword;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Application.Features.Users.ReplaceUser;
 using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Application.Features.Users.UpdateUser;
+using KKBookstore.Application.Features.Users.UpdateUserPartial;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 
@@ -16,10 +16,11 @@ public interface IIdentityService
     Task<Result<string>> GenerateResetPasswordTokenAsync(string email);
     Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
     Task<Result<User>> FindUserAsync(FindUserRequest findUserDto);
+    Task<Result<User>> FindUserByPhoneNumberAsync(string phoneNumber);
     Task<Result<User>> CreateTemporaryCustomerAsync(string email);
     Task<Result<AuthenticationResponse>> CreateUserAsync(RegisterCommand request);
-    Task<Result> UpdateUserAsync(UpdateUserCommand command);
-    Task<Result> ReplaceUserAsync(ReplaceUserCommand request);
+    Task<Result> UpdateUserPartialAsync(UpdateUserPartialCommand command);
+    Task<Result> UpdateUserAsync(UpdateUserCommand request);
     Task<Result<AuthenticationResponse>> SignInAsync(SignInCommand request);
     Task<Result<AuthenticationResponse>> GenerateJwtToken(string email);
     Task<Result<AuthenticationResponse>> RefreshAccessToken(RefreshAccessToken request);

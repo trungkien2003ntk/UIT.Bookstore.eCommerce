@@ -1,14 +1,17 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Users;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KKBookstore.Application.Features.Users.ResetPassword;
 
-public record ResetPasswordCommand(string Email, string Token, string NewPassword) : IRequest<Result>;
+public record ResetPasswordCommand(int UserId, string Token, string NewPassword) : IRequest<Result>;
 
 public class ResetPasswordCommandHandler(
     IIdentityService identityService,
+    IApplicationDbContext dbContext,
     ILogger<ResetPasswordCommandHandler> logger
 ) : IRequestHandler<ResetPasswordCommand, Result>
 {
@@ -17,12 +20,18 @@ public class ResetPasswordCommandHandler(
     public async Task<Result> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         // TODO: Implement a cooldown mechanism to prevent brute force attacks
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
-        var result = await _identityService.ResetPasswordAsync(request.Email, request.Token, request.NewPassword);
+        if (user is null)
+        {
+            return Result.Failure(UserErrors.NotFound);
+        }
+
+        var result = await _identityService.ResetPasswordAsync(user.Email!, request.Token, request.NewPassword);
 
         if (result.IsFailure)
         {
-            logger.LogError("Failed to reset password for {Email}. Reason: {Error}", request.Email, result.Error);
+            logger.LogError("Failed to reset password for {Email}. Reason: {Error}", user.Email!, result.Error);
             return Result.Failure(result.Error);
         }
 

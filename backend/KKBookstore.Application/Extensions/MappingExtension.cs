@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Features.Users.Register;
+using KKBookstore.Application.Features.Users.UpdateUser;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
@@ -28,10 +29,23 @@ public static class MappingExtension
             Email = request.Email,
             UserName = request.Email,
             DateOfBirth = request.DateOfBirth,
+            Gender = request.Gender,
             PhoneNumber = request.PhoneNumber,
             IsDeleted = false,
             IsActive = true,
             LoginType = LoginType.Email,
             Status = UserStatus.Active
         };
+
+    public static User ToEntity(this UpdateUserCommand request) =>
+        new()
+        {
+            Id = request.Id,
+            FirstName = request.FullName,
+            LastName = request.FullName,
+            Email = request.Email,
+            DateOfBirth = request.DateOfBirth
+        };
 }
+
+

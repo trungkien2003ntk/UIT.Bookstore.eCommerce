@@ -25,6 +25,8 @@ public class User : IdentityUser<int>, IFullAuditedObject
 
     public string? UserPreferences { get; set; }
 
+    public Gender Gender { get; set; }
+
     public LoginType LoginType { get; set; }
 
     public SignInSource SignInSource { get; set; }
@@ -36,25 +38,25 @@ public class User : IdentityUser<int>, IFullAuditedObject
 
     // Auditing
     public bool IsDeleted { get; set; }
-    
+
     public int? DeleterId { get; set; }
-    
+
     [NotMapped]
     public User? Deleter { get; set; }
-    
+
     public DateTimeOffset? DeletionTime { get; set; }
-    
+
     public DateTimeOffset? CreationTime { get; set; }
-    
+
     public int? CreatorId { get; set; }
 
     [NotMapped]
     public User? Creator { get; set; }
-    
+
     public int? LastModifierId { get; set; }
-    
+
     [NotMapped]
     public User? LastModifier { get; set; }
-    
+
     public DateTimeOffset? LastModificationTime { get; set; }
 }

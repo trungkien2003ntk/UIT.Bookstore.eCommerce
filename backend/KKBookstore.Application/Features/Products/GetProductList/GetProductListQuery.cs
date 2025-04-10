@@ -94,8 +94,8 @@ public class GetProductListQueryHandler(
                 ThumbnailImageUrl = p.GetFirstThumbnailImageUrl(),
                 IsBook = p.IsBook,
                 SoldCount = soldCounts.TryGetValue(p.Id, out var count) ? count : 0,
-                MinUnitPrice = p.ProductVariants.Min(s => s.UnitPrice),
-                MinRecommendedRetailPrice = p.ProductVariants.Min(s => s.RecommendedRetailPrice),
+                MinUnitPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.UnitPrice) : 0,
+                MinRecommendedRetailPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.RecommendedRetailPrice) : 0,
                 AverageRating = (decimal)(p.Ratings.Count > 0 ? p.Ratings.Average(r => r.RatingValue) : 0),
                 IsActive = p.IsActive
             }).ToList(),

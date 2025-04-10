@@ -1,4 +1,5 @@
 ﻿using KKBookstore.API.Abstractions;
+using KKBookstore.API.Contracts.Requests.Auth;
 using KKBookstore.API.Contracts.Requests.Users;
 using KKBookstore.Application.Features.Authentication;
 using KKBookstore.Application.Features.Users.ChangePassword;
@@ -88,12 +89,15 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     }
 
 
-    [HttpPost("reset-password")]
+    [HttpPost("{userId}/reset-password")]
     public async Task<IActionResult> ResetPasswordAsync(
-        [FromBody] ResetPasswordCommand command,
+        int userId,
+        [FromBody] ResetPasswordRequest request,
         CancellationToken cancellationToken = default
     )
     {
+        var command = new ResetPasswordCommand(userId, request.Token, request.NewPassword);
+
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? NoContent() : ToActionResult(result);

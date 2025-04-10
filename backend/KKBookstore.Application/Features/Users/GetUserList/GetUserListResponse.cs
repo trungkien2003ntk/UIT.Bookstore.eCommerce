@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Domain.Shared.Users;
 
 namespace KKBookstore.Application.Features.Users.GetUserList;
 
@@ -10,6 +11,7 @@ public record GetUserListResponse : BaseDto
     public string Email { get; init; }
     public string PhoneNumber { get; init; }
     public DateTimeOffset DateOfBirth { get; init; }
+    public Gender Gender { get; init; }
     public string Status { get; init; }
     public string? ImageUrl { get; init; }
 }

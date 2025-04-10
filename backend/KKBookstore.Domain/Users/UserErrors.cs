@@ -18,4 +18,7 @@ public static class UserErrors
     public static readonly Error DeleteShippingAddressFailed = Error.Failure("User.DeleteShippingAddressFailed", "Deleting shipping address failed.");
     public static readonly Error UpdateShippingAddressFailed = Error.Failure("User.UpdateShippingAddressFailed", "Updating shipping address failed.");
     public static readonly Error AddShippingAddressFailed = Error.Failure("User.AddShippingAddressFailed", "Adding shipping address failed.");
+    public static readonly Error EmailAlreadyExists = Error.Conflict("User.EmailAlreadyExists", "Email already exists.");
+    public static readonly Error PhoneNumberAlreadyExists = Error.Conflict("User.PhoneNumberAlreadyExists", "Phone number already exists.");
+    public static readonly Error CannotUnsetDefaultAddress = Error.Validation("User.CannotUnsetDefaultAddress", "Cannot unset the default shipping address.");
 }

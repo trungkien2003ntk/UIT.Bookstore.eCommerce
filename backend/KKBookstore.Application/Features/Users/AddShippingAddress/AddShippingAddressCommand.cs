@@ -6,6 +6,7 @@ using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.Shared.Users;
 using KKBookstore.Domain.Users;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
@@ -84,6 +85,18 @@ public class AddShippingAddressCommandHandler(
 
         try
         {
+            if (shippingAddress.IsDefault)
+            {
+                var otherAddresses = await dbContext.ShippingAddresses
+                    .Where(sa => sa.CustomerId == request.CustomerId)
+                    .ToListAsync(cancellationToken);
+
+                foreach (var address in otherAddresses)
+                {
+                    address.IsDefault = false;
+                }
+            }
+
             dbContext.ShippingAddresses.Add(shippingAddress);
             await dbContext.SaveChangesAsync(cancellationToken);
 

@@ -36,6 +36,8 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                         .ThenInclude(x => x.OptionValue)
             .Include(p => p.ProductVariants)
                 .ThenInclude(pv => pv.Inventories)
+                    .ThenInclude(i => i.Warehouse)
+                        .ThenInclude(w => w.Address)
             .Include(x => x.ProductImages)
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -89,6 +91,27 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                     ProductOptionValueId = pov.OptionValueId,
                     Value = pov.OptionValue.Value,
                     Name = pov.Option.Name,
+                }).ToList(),
+                StockBreakdowns = pv.Inventories.Select(inv => new StockBreakdownDto
+                {
+                    Id = inv.Id,
+                    BranchId = inv.WarehouseId ?? 0,
+                    BranchName = inv.Warehouse?.Name ?? "Unknown",
+                    Description = inv.Warehouse?.Description ?? string.Empty,
+                    StockQuantity = inv.StockQuantity,
+                    IsActive = inv.IsActive,
+                    Address = inv.Warehouse?.Address != null ? new BranchAddressDto
+                    {
+                        PhoneNumber = inv.Warehouse.Address.PhoneNumber,
+                        ProvinceId = inv.Warehouse.Address.ProvinceId,
+                        ProvinceName = inv.Warehouse.Address.ProvinceName,
+                        DistrictId = inv.Warehouse.Address.DistrictId,
+                        DistrictName = inv.Warehouse.Address.DistrictName,
+                        CommuneCode = inv.Warehouse.Address.CommuneCode,
+                        CommuneName = inv.Warehouse.Address.CommuneName,
+                        DetailAddress = inv.Warehouse.Address.DetailAddress,
+                        Type = inv.Warehouse.Address.Type
+                    } : null
                 }).ToList()
             }).ToList(),
             ProductImages = product.ProductImages.Select(pi => new ProductImageDto

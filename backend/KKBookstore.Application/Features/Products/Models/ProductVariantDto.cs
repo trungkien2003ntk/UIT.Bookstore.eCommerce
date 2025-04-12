@@ -14,6 +14,7 @@ public sealed record ProductVariantDto : BaseDto
     public int StockQuantity { get; set; }
 
     public ICollection<VariantOptionDto> VariantOptions { get; set; } = [];
+    public ICollection<StockBreakdownDto> StockBreakdowns { get; set; } = [];
 
     public sealed record VariantOptionDto
     {

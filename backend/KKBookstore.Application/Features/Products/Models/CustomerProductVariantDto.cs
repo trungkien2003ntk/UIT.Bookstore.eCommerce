@@ -18,5 +18,6 @@ public record CustomerProductVariantDto : BaseDto
     public string ThumbnailImageUrl { get; set; }
     public string LargeImageUrl { get; set; }
     public IEnumerable<OptionValueDto>? OptionValues { get; set; }
+    public IEnumerable<StockBreakdownDto> StockBreakdowns { get; set; } = [];
 }
 

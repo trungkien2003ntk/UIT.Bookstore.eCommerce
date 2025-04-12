@@ -35,6 +35,8 @@ public class GetCustomerProductDetailQueryHandler(
                     .ThenInclude(pov => pov.OptionValue)
             .Include(p => p.ProductVariants)
                 .ThenInclude(pv => pv.Inventories)
+                    .ThenInclude(i => i.Warehouse)
+                        .ThenInclude(w => w.Address)
             .Include(p => p.BookAuthors)
                 .ThenInclude(ba => ba.Author)
             .FirstOrDefaultAsync(cancellationToken);
@@ -105,6 +107,27 @@ public class GetCustomerProductDetailQueryHandler(
                 {
                     Name = pov.Option.Name,
                     Value = pov.OptionValue.Value
+                }),
+                StockBreakdowns = pv.Inventories.Select(inv => new StockBreakdownDto
+                {
+                    Id = inv.Id,
+                    BranchId = inv.WarehouseId ?? 0,
+                    BranchName = inv.Warehouse?.Name ?? "Unknown",
+                    Description = inv.Warehouse?.Description ?? string.Empty,
+                    StockQuantity = inv.StockQuantity,
+                    IsActive = inv.IsActive,
+                    Address = inv.Warehouse?.Address != null ? new BranchAddressDto
+                    {
+                        PhoneNumber = inv.Warehouse.Address.PhoneNumber,
+                        ProvinceId = inv.Warehouse.Address.ProvinceId,
+                        ProvinceName = inv.Warehouse.Address.ProvinceName,
+                        DistrictId = inv.Warehouse.Address.DistrictId,
+                        DistrictName = inv.Warehouse.Address.DistrictName,
+                        CommuneCode = inv.Warehouse.Address.CommuneCode,
+                        CommuneName = inv.Warehouse.Address.CommuneName,
+                        DetailAddress = inv.Warehouse.Address.DetailAddress,
+                        Type = inv.Warehouse.Address.Type
+                    } : null
                 })
             }),
             ProductVariantOptions = product.ProductVariants.SelectMany(pv => pv.ProductVariantOptionValues)

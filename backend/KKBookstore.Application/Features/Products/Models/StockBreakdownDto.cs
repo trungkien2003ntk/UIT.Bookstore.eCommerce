@@ -1,5 +1,5 @@
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Domain.Shared.Orders;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Orders;
 
 namespace KKBookstore.Features.Products.Models;
 
@@ -25,6 +25,6 @@ public record BranchAddressDto
     public string CommuneName { get; set; } = null!;
     public string DetailAddress { get; set; } = null!;
     public AddressType Type { get; set; }
-    
+
     public string FormattedAddress => $"{DetailAddress}, {CommuneName}, {DistrictName}, {ProvinceName}";
 }

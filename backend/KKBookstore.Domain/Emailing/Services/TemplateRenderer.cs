@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Emailing;
-using Scriban;
+﻿using Scriban;
 using Scriban.Syntax;
 using System.Collections.Concurrent;
 using System.Reflection;

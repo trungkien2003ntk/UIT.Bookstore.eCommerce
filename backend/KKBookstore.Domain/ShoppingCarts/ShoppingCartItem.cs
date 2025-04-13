@@ -1,7 +1,6 @@
-﻿using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Products;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Customers;
+using KKBookstore.Models;
+using KKBookstore.Products;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.ShoppingCarts;

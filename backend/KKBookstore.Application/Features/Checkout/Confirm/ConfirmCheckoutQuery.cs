@@ -1,12 +1,11 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Checkout.Confirm;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.Products;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
+using KKBookstore.Orders;
+using KKBookstore.Products;
+using KKBookstore.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.Checkout.Confirm.ConfirmCheckoutResponse;
+using static KKBookstore.Features.Checkout.Confirm.ConfirmCheckoutResponse;
 
 namespace KKBookstore.Features.Checkout.Confirm;
 

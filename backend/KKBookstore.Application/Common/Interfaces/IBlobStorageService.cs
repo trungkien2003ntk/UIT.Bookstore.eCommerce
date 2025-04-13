@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Models;
+﻿using KKBookstore.Common.Models;
 
 namespace KKBookstore.Common.Interfaces;
 

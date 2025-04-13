@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using KKBookstore.API.Abstractions;
-using KKBookstore.Application.Features.Orders.GetOrderDetail;
-using KKBookstore.Application.Features.Orders.SendOrderEmail;
+using KKBookstore.Abstractions;
+using KKBookstore.Features.Orders.GetOrderDetail;
+using KKBookstore.Features.Orders.GetOrderList;
+using KKBookstore.Features.Orders.SendOrderEmail;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class OrdersController(
         [FromQuery] Contracts.Requests.GetOrderListRequest filter,
         CancellationToken cancellationToken = default)
     {
-        var query = mapper.Map<Application.Features.Orders.GetOrderList.GetOrderListQuery>(filter);
+        var query = mapper.Map<GetOrderListQuery>(filter);
 
         var result = await Sender.Send(query, cancellationToken);
 

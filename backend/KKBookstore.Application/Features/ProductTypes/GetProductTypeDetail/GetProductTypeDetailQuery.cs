@@ -1,10 +1,9 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.ProductTypes;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
+using KKBookstore.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail.GetProductTypeDetailResponse;
+using static KKBookstore.Features.ProductTypes.GetProductTypeDetail.GetProductTypeDetailResponse;
 
 namespace KKBookstore.Features.ProductTypes.GetProductTypeDetail;
 
@@ -28,8 +27,8 @@ public class GetProductTypeDetailQueryHandler(IApplicationDbContext dbContext)
             .ToListAsync(cancellationToken);
 
         var productTypeLookup = allProductTypes.ToLookup(pt => pt.ParentProductTypeId);
-        var result = new GetProductTypeDetailResponse() 
-        { 
+        var result = new GetProductTypeDetailResponse()
+        {
             ListItem = [
                 new() {
                     Id = productType.Id,

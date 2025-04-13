@@ -1,10 +1,10 @@
-﻿using KKBookstore.Domain.Models;
+﻿using KKBookstore.Models;
 
 namespace KKBookstore.Orders;
 
 public static class OrderErrors
 {
-    // list all possible order error using the KKBookstore.Domain.Common.Error record
+    // list all possible order error using the KKBookstore.Common.Error record
     public static readonly Error OrderNotFound = Error.NotFound("Order.Error.OrderNotFound", "Order was not found");
     public static readonly Error OrderAlreadyCancelled = Error.Conflict("Order.Error.OrderAlreadyCancelled", "Order was already cancelled");
     public static readonly Error OrderAlreadyDelivered = Error.Conflict("Order.Error.OrderAlreadyDelivered", "Order was already delivered");

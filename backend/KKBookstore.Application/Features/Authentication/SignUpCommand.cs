@@ -1,12 +1,11 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Application.Features.Users.SignIn;
-using KKBookstore.Domain.Authentication;
-using KKBookstore.Domain.Constants;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Users;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Authentication;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Constants;
+using KKBookstore.Features.Users.Register;
+using KKBookstore.Features.Users.SignIn;
+using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

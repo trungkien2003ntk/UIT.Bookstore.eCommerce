@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.ProductTypes;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Features.ProductTypes.GetProductTypeAttributes;
+using KKBookstore.Models;
+using KKBookstore.ProductTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Services;

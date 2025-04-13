@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Products;
-using KKBookstore.Domain.Shared.Products;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Data.Extensions;
+using KKBookstore.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +13,7 @@ internal class UnitMeasureConfiguration : IEntityTypeConfiguration<UnitMeasure>
         builder.ConfigureAuditing();
         builder.Property(t => t.Name).HasColumnName(nameof(UnitMeasure.Name)).HasMaxLength(UnitMeasureConsts.NameMaxLength).IsRequired();
         builder.Property(t => t.Description).HasColumnName(nameof(UnitMeasure.Description)).HasMaxLength(UnitMeasureConsts.DescriptionMaxLength);
-        
+
         builder.HasIndex(t => t.Name).IsUnique();
     }
 }

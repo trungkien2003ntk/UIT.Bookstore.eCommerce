@@ -1,6 +1,5 @@
-﻿using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
-using KKBookstore.Application.Services;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Models;
+using KKBookstore.Services;
 using MediatR;
 
 namespace KKBookstore.Features.ProductTypes.GetProductTypeAttributes;

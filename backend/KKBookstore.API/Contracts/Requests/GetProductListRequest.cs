@@ -1,4 +1,4 @@
-﻿using KKBookstore.API.HelperModels;
+﻿using KKBookstore.HelperModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KKBookstore.Contracts.Requests;

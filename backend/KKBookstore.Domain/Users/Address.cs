@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Orders;
+﻿using KKBookstore.Models;
+using KKBookstore.Orders;
 
 namespace KKBookstore.Users;
 

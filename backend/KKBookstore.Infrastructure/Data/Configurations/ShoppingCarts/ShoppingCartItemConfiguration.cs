@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.ShoppingCarts;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Data.Extensions;
+using KKBookstore.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

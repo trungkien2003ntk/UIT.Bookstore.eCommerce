@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+﻿using KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 
 namespace KKBookstore.Contracts.Requests.ShoppingCart;
 

@@ -1,6 +1,5 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Products.Models;
-using KKBookstore.Domain.Products;
+﻿using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Products;
 
 namespace KKBookstore.Features.Products.Models;
 

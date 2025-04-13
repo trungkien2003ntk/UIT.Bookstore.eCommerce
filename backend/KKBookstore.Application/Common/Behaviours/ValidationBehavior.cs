@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using KKBookstore.Domain.Models;
+using KKBookstore.Models;
 using MediatR;
 
 namespace KKBookstore.Common.Behaviours;

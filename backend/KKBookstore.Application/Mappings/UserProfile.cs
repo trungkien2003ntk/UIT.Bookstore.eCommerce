@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models.Responses;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Users.AddShippingAddress;
-using KKBookstore.Application.Features.Users.GetUserList;
-using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
-using KKBookstore.Application.Features.Users.Register;
-using KKBookstore.Application.Features.Users.UpdateShippingAddress;
-using KKBookstore.Application.Features.Users.UpdateUser;
-using KKBookstore.Application.Features.Users.UpdateUserPartial;
-using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.Users;
+using KKBookstore.Common.Models.Responses;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Customers;
+using KKBookstore.Features.Users.AddShippingAddress;
+using KKBookstore.Features.Users.GetUserList;
+using KKBookstore.Features.Users.GetUserShippingAddresses;
+using KKBookstore.Features.Users.Register;
+using KKBookstore.Features.Users.UpdateShippingAddress;
+using KKBookstore.Features.Users.UpdateUser;
+using KKBookstore.Features.Users.UpdateUserPartial;
+using KKBookstore.Users;
 
 namespace KKBookstore.Mappings;
 public class UserProfile : Profile

@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace KKBookstore.Orders;
+﻿namespace KKBookstore.Orders;
 
 public static class DiscountVoucherConsts
 {

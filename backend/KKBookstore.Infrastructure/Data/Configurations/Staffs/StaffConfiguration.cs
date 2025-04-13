@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Shared.Staffs;
-using KKBookstore.Domain.Staffs;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Staffs;
+using KKBookstore.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

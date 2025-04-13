@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Interfaces;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

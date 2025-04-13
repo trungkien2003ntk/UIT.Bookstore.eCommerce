@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Products;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Data.Extensions;
+using KKBookstore.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +11,7 @@ internal class ProductVariantOptionValueConfiguration : IEntityTypeConfiguration
     {
         builder.ToTable("ProductVariantOptionValues");
         builder.ConfigureAuditing();
-        
+
         builder.HasIndex(t => new { t.ProductVariantId, t.OptionId, t.OptionValueId }).IsUnique();
         builder.Property(t => t.ProductVariantId).IsRequired();
         builder.Property(t => t.OptionId).IsRequired();

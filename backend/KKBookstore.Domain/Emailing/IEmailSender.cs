@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Emailing.Models;
-using KKBookstore.Domain.Orders;
+﻿using KKBookstore.Emailing.Models;
+using KKBookstore.Orders;
 
 namespace KKBookstore.Emailing;
 

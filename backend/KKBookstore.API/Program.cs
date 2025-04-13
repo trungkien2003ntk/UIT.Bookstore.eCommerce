@@ -1,8 +1,6 @@
-using KKBookstore.API.Infrastructure;
-using KKBookstore.API.Mappings;
-using KKBookstore.Application;
-using KKBookstore.Domain;
+using KKBookstore;
 using KKBookstore.Infrastructure;
+using KKBookstore.Mappings;
 using Microsoft.OpenApi.Models;
 using Serilog;
 

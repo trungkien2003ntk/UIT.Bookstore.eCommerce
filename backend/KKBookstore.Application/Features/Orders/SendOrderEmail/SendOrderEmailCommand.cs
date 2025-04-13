@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Emailing;
+using KKBookstore.Models;
 using MediatR;
 
 namespace KKBookstore.Features.Orders.SendOrderEmail;

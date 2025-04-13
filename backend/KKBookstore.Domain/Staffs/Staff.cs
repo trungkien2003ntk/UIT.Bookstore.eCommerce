@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Users;
+﻿using KKBookstore.Users;
 
 namespace KKBookstore.Staffs;
 

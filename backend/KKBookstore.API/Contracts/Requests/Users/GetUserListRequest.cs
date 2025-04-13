@@ -1,5 +1,5 @@
-﻿using KKBookstore.API.HelperModels;
-using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.HelperModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KKBookstore.Contracts.Requests.Users;

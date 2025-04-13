@@ -1,5 +1,4 @@
-﻿using KKBookstore.Application.Features.Checkout.PlaceOrder;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Models;
 using MediatR;
 
 namespace KKBookstore.Features.Checkout.PlaceOrder;

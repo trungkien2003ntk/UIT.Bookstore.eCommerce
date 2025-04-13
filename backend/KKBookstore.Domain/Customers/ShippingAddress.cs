@@ -1,7 +1,6 @@
-﻿using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Orders;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Models;
+using KKBookstore.Orders;
+using KKBookstore.Users;
 
 namespace KKBookstore.Customers;
 

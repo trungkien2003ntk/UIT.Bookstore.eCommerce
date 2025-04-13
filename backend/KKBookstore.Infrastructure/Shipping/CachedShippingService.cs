@@ -1,6 +1,5 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Models;
-using KKBookstore.Infrastructure.Shipping;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace KKBookstore.Shipping;

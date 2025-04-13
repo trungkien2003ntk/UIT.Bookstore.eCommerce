@@ -1,13 +1,12 @@
-﻿using KKBookstore.Application.Common.Constants;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Products;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Common.Constants;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
+using KKBookstore.Products;
+using KKBookstore.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse;
-using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.DiscountDetailDto;
-using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.ShoppingCartItemDto;
+using static KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse;
+using static KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.DiscountDetailDto;
+using static KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.ShoppingCartItemDto;
 
 namespace KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 

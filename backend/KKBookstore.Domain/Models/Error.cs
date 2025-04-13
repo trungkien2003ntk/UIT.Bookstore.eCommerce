@@ -1,6 +1,4 @@
-﻿using KKBookstore.Domain.Models;
-
-namespace KKBookstore.Models;
+﻿namespace KKBookstore.Models;
 
 public record Error
 {

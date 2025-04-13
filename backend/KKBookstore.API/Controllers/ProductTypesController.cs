@@ -1,7 +1,7 @@
-﻿using KKBookstore.API.Abstractions;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
+﻿using KKBookstore.Abstractions;
+using KKBookstore.Features.ProductTypes.GetProductTypeAttributes;
+using KKBookstore.Features.ProductTypes.GetProductTypeDetail;
+using KKBookstore.Features.ProductTypes.GetProductTypeList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

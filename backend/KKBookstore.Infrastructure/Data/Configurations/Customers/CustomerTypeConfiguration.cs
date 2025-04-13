@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Shared.Customers;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Customers;
+using KKBookstore.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -15,7 +14,7 @@ internal class CustomerTypeConfiguration : IEntityTypeConfiguration<CustomerType
         builder.ConfigureAuditing();
 
         builder.Property(x => x.Name).HasColumnName(nameof(CustomerType.Name)).HasMaxLength(CustomerTypeConsts.NameMaxLength).IsRequired();
-        builder.Property(x => x.MinSpending).HasColumnName(nameof(CustomerType.MinSpending)).HasPrecision(18,2).IsRequired();
+        builder.Property(x => x.MinSpending).HasColumnName(nameof(CustomerType.MinSpending)).HasPrecision(18, 2).IsRequired();
         builder.Property(x => x.Tier).HasColumnName(nameof(CustomerType.Tier)).HasConversion<EnumToStringConverter<CustomerTier>>().IsRequired();
 
         builder.HasIndex(x => x.Name)

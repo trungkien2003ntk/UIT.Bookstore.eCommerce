@@ -1,9 +1,9 @@
-﻿using KKBookstore.API.Abstractions;
-using KKBookstore.API.Contracts.Requests;
-using KKBookstore.API.Extensions;
-using KKBookstore.Application.Features.Checkout.Confirm;
-using KKBookstore.Application.Features.Checkout.HandleIPN;
-using KKBookstore.Application.Features.Checkout.PlaceOrder;
+﻿using KKBookstore.Abstractions;
+using KKBookstore.Contracts.Requests;
+using KKBookstore.Extensions;
+using KKBookstore.Features.Checkout.Confirm;
+using KKBookstore.Features.Checkout.HandleIPN;
+using KKBookstore.Features.Checkout.PlaceOrder;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

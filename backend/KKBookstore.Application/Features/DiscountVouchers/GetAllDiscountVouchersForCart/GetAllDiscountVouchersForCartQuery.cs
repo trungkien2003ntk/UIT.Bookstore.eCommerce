@@ -1,8 +1,7 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Orders;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
+using KKBookstore.Orders;
+using KKBookstore.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

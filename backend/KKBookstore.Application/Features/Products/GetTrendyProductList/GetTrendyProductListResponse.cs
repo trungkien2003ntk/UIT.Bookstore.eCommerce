@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
+﻿using KKBookstore.Common.Models.ResultDtos;
 
 namespace KKBookstore.Features.Products.GetTrendyProductList;
 

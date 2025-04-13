@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Shared.Customers;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Customers;
+using KKBookstore.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

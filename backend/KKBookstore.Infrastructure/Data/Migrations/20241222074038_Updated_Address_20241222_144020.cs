@@ -2,46 +2,45 @@
 
 #nullable disable
 
-namespace KKBookstore.Infrastructure.Data.Migrations
+namespace KKBookstore.Data.Migrations;
+
+/// <inheritdoc />
+public partial class Updated_Address_20241222_144020 : Migration
 {
     /// <inheritdoc />
-    public partial class Updated_Address_20241222_144020 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropIndex(
-                name: "IX_Branchs_AddressId",
-                table: "Branchs");
+        migrationBuilder.DropIndex(
+            name: "IX_Branchs_AddressId",
+            table: "Branchs");
 
-            migrationBuilder.AddColumn<int>(
-                name: "BranchId",
-                table: "Addresses",
-                type: "int",
-                nullable: true);
+        migrationBuilder.AddColumn<int>(
+            name: "BranchId",
+            table: "Addresses",
+            type: "int",
+            nullable: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Branchs_AddressId",
-                table: "Branchs",
-                column: "AddressId",
-                unique: true);
-        }
+        migrationBuilder.CreateIndex(
+            name: "IX_Branchs_AddressId",
+            table: "Branchs",
+            column: "AddressId",
+            unique: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropIndex(
-                name: "IX_Branchs_AddressId",
-                table: "Branchs");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropIndex(
+            name: "IX_Branchs_AddressId",
+            table: "Branchs");
 
-            migrationBuilder.DropColumn(
-                name: "BranchId",
-                table: "Addresses");
+        migrationBuilder.DropColumn(
+            name: "BranchId",
+            table: "Addresses");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Branchs_AddressId",
-                table: "Branchs",
-                column: "AddressId");
-        }
+        migrationBuilder.CreateIndex(
+            name: "IX_Branchs_AddressId",
+            table: "Branchs",
+            column: "AddressId");
     }
 }

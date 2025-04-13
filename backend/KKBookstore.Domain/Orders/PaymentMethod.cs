@@ -1,6 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Orders;
+﻿using KKBookstore.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.Orders;

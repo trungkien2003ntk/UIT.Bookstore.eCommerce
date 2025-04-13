@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Extensions;
-using KKBookstore.Domain.Orders;
+﻿using KKBookstore.Extensions;
+using KKBookstore.Orders;
 using System.Reflection;
 using System.Text;
 
@@ -7,8 +7,8 @@ namespace KKBookstore.Emailing.EmailTemplates;
 
 internal static class EmailBodyHelper
 {
-    //private static readonly string _orderConfirmationTemplate = "../KKBookstore.Infrastructure/Email/EmailTemplates/OrderConfirmationTemplate.html";
-    //private static readonly string _orderItemTemplate = "../KKBookstore.Infrastructure/Email/EmailTemplates/OrderItemTemplate.html";
+    //private static readonly string _orderConfirmationTemplate = "../KKBookstore/Email/EmailTemplates/OrderConfirmationTemplate.html";
+    //private static readonly string _orderItemTemplate = "../KKBookstore/Email/EmailTemplates/OrderItemTemplate.html";
     private static readonly string _deliveryTimePlaceholder = "{{DeliveryTime}}";
     private static readonly string _orderTimePlaceholder = "{{OrderTime}}";
     private static readonly string _orderItemImageSourcePlaceholder = "{{OrderItemImageSource}}";
@@ -27,14 +27,14 @@ internal static class EmailBodyHelper
 
         string orderConfirmationTemplate;
         var assembly = Assembly.GetExecutingAssembly();
-        using (var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderConfirmationTemplate.html"))
+        using (var stream = assembly.GetManifestResourceStream("KKBookstore.Email.EmailTemplates.OrderConfirmationTemplate.html"))
         using (var reader = new StreamReader(stream))
         {
             orderConfirmationTemplate = reader.ReadToEnd();
         }
 
         string orderItemTemplate;
-        using (var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderItemTemplate.html"))
+        using (var stream = assembly.GetManifestResourceStream("KKBookstore.Email.EmailTemplates.OrderItemTemplate.html"))
         using (var reader = new StreamReader(stream))
         {
             orderItemTemplate = reader.ReadToEnd();
@@ -83,7 +83,7 @@ internal static class EmailBodyHelper
     public static string BuildOrderConfirmationEmailBody()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        using var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderConfirmationTemplate_New.html");
+        using var stream = assembly.GetManifestResourceStream("KKBookstore.Email.EmailTemplates.OrderConfirmationTemplate_New.html");
         using var reader = new StreamReader(stream);
 
         return reader.ReadToEnd();
@@ -92,7 +92,7 @@ internal static class EmailBodyHelper
     public static string BuildOrderShippedEmailBody()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        using var stream = assembly.GetManifestResourceStream("KKBookstore.Infrastructure.Email.EmailTemplates.OrderShippedTemplate.html");
+        using var stream = assembly.GetManifestResourceStream("KKBookstore.Email.EmailTemplates.OrderShippedTemplate.html");
         using var reader = new StreamReader(stream);
 
         return reader.ReadToEnd();

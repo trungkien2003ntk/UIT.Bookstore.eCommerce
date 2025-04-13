@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Features.Users.GetUserList;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Users;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Extensions;
+using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 
 namespace KKBookstore.Features.Users.GetUserList;

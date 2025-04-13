@@ -1,8 +1,7 @@
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Users.SignIn;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Users;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 
 namespace KKBookstore.Features.Users.SignIn;

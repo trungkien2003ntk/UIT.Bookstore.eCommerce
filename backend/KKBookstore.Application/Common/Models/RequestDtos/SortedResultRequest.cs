@@ -1,4 +1,4 @@
-﻿using KKBookstore.Application.Common.Interfaces;
+﻿using KKBookstore.Common.Interfaces;
 
 namespace KKBookstore.Common.Models.RequestDtos;
 

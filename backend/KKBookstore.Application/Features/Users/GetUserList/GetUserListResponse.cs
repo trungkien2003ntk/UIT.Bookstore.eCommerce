@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Domain.Shared.Users;
+﻿using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Users;
 
 namespace KKBookstore.Features.Users.GetUserList;
 

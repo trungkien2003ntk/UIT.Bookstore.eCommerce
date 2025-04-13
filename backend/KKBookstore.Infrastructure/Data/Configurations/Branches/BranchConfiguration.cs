@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Branches;
-using KKBookstore.Domain.Shared.Branches;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Branches;
+using KKBookstore.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

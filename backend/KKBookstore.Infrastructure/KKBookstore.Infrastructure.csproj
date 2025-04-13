@@ -33,16 +33,16 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\KKBookstore.Application\KKBookstore.Application.csproj" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<Content Remove="Emailing\EmailTemplates\*.*" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<EmbeddedResource Include="Emailing\EmailTemplates\*.*" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\KKBookstore.Application\KKBookstore.Application.csproj" />
 	</ItemGroup>
 	
 </Project>

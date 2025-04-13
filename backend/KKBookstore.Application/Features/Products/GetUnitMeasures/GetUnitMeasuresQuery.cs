@@ -1,7 +1,6 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Products.GetUnitMeasures;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

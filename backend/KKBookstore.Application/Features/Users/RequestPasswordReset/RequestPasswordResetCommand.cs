@@ -1,7 +1,7 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Emailing.TemplateModels;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Emailing;
+using KKBookstore.Emailing.TemplateModels;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

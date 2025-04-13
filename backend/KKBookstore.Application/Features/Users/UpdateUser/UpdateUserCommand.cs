@@ -1,6 +1,6 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Shared.Users;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 
 namespace KKBookstore.Features.Users.UpdateUser;

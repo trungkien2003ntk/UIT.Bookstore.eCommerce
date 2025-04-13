@@ -1,6 +1,6 @@
-﻿using KKBookstore.Domain.Branches;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Products;
+﻿using KKBookstore.Branches;
+using KKBookstore.Models;
+using KKBookstore.Products;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.Stocks;

@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Shared.Orders;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Orders;
+using KKBookstore.Users;
 
 namespace KKBookstore.Branches;
 

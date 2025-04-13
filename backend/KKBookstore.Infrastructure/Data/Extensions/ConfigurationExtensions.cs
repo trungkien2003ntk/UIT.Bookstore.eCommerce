@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
+﻿using KKBookstore.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Query;

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Features.Orders.GetOrderList;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.Shared.Orders;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Extensions;
+using KKBookstore.Models;
+using KKBookstore.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;

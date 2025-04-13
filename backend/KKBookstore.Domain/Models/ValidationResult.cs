@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Interfaces;
 
 namespace KKBookstore.Models;
 

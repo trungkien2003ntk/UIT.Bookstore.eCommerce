@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace KKBookstore.Infrastructure.Data.Migrations
+namespace KKBookstore.Data.Migrations;
+
+/// <inheritdoc />
+public partial class Updated_ProductOptionValue_20241222_004920 : Migration
 {
     /// <inheritdoc />
-    public partial class Updated_ProductOptionValue_20241222_004920 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

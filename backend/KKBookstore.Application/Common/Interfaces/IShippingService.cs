@@ -1,5 +1,5 @@
 ﻿
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public partial interface IShippingService
 {

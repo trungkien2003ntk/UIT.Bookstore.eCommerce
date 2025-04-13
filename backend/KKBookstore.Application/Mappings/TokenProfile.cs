@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models.Responses;
-using KKBookstore.Application.Features.Users.RefreshAccessToken;
-using KKBookstore.Application.Features.Users.SignIn;
+using KKBookstore.Common.Models.Responses;
+using KKBookstore.Features.Users.RefreshAccessToken;
+using KKBookstore.Features.Users.SignIn;
 
 namespace KKBookstore.Mappings;
 

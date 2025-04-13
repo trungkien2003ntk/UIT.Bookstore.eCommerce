@@ -1,4 +1,7 @@
-﻿namespace KKBookstore.Suppliers;
+﻿using KKBookstore.Models;
+using KKBookstore.Users;
+
+namespace KKBookstore.Suppliers;
 
 public class Supplier : BaseFullAuditedEntity, IActivatable
 {

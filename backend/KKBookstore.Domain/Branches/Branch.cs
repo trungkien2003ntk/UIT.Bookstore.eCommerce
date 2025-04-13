@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Branches;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Models;
 
 namespace KKBookstore.Branches;
 

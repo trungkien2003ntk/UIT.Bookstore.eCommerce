@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Models;
-using KKBookstore.Domain.ProductTypes;
+﻿using KKBookstore.Models;
 
 namespace KKBookstore.ProductTypes;
 

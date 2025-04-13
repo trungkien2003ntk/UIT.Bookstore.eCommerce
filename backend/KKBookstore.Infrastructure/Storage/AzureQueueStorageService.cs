@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
-using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Common.Interfaces;
 
 namespace KKBookstore.Storage;
 

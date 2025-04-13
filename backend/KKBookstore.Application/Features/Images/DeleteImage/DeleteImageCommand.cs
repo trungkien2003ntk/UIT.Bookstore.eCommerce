@@ -1,6 +1,6 @@
-﻿using KKBookstore.Application.Common.Constants;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Common.Constants;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

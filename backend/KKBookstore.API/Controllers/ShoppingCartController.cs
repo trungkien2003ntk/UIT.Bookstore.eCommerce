@@ -1,14 +1,14 @@
-﻿using KKBookstore.API.Abstractions;
-using KKBookstore.API.Contracts.Requests.ShoppingCart;
-using KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
-using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
-using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
-using KKBookstore.Domain.Constants;
+﻿using KKBookstore.Abstractions;
+using KKBookstore.Constants;
+using KKBookstore.Contracts.Requests.ShoppingCart;
+using KKBookstore.Features.ShoppingCarts.AddShoppingCartItem;
+using KKBookstore.Features.ShoppingCarts.GetShoppingCartItemList;
+using KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
+using static KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
 
 namespace KKBookstore.Controllers;
 

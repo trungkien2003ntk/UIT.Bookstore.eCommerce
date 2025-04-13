@@ -1,7 +1,7 @@
-﻿using KKBookstore.Domain.Models;
+﻿using KKBookstore.Models;
 using System.Text.Json.Serialization;
 
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public partial interface IShippingService
 {

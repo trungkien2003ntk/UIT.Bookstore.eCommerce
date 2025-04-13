@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Features.Users.VerifyOtp;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Features.Users.VerifyOtp;
+using KKBookstore.Models;
 
 namespace KKBookstore.Common.Interfaces;
 

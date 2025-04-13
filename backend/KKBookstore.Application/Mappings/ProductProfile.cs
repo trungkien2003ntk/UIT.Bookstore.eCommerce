@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Products.GetCustomerProductDetail;
-using KKBookstore.Application.Features.Products.GetProductList;
-using KKBookstore.Application.Features.Products.GetProductRatingList;
-using KKBookstore.Application.Features.Products.Models;
-using KKBookstore.Application.Mappings.Helpers;
-using KKBookstore.Domain.Products;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Features.Products.GetCustomerProductDetail;
+using KKBookstore.Features.Products.GetProductList;
+using KKBookstore.Features.Products.GetProductRatingList;
+using KKBookstore.Features.Products.Models;
+using KKBookstore.Mappings.Helpers;
+using KKBookstore.Products;
 
 namespace KKBookstore.Mappings;
 

@@ -1,9 +1,8 @@
-﻿using KKBookstore.Domain.Branches;
-using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Shared.Orders;
-using KKBookstore.Domain.Shared.Users;
-using KKBookstore.Domain.Users;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Branches;
+using KKBookstore.Customers;
+using KKBookstore.Data.Extensions;
+using KKBookstore.Orders;
+using KKBookstore.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

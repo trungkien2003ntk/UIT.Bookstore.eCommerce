@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Domain.Shared.Orders;
+﻿using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Orders;
 
 namespace KKBookstore.Features.Users.GetUserShippingAddresses;
 

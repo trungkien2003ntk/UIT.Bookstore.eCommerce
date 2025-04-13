@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Emailing.Services;
+﻿using KKBookstore.Emailing;
+using KKBookstore.Emailing.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace KKBookstore;

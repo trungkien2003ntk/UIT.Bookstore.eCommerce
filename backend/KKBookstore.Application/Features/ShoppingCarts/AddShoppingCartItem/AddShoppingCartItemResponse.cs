@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.ShoppingCarts;
 
 namespace KKBookstore.Features.ShoppingCarts.AddShoppingCartItem;
 

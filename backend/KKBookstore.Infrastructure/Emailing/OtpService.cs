@@ -1,8 +1,7 @@
-﻿using KKBookstore.Application.Common;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Users.VerifyOtp;
-using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Common;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Features.Users.VerifyOtp;
+using KKBookstore.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace KKBookstore.Emailing;

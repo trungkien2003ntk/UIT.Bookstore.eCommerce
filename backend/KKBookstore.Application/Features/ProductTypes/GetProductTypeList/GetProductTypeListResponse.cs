@@ -1,10 +1,10 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
+﻿using KKBookstore.Common.Models.ResultDtos;
 
 namespace KKBookstore.Features.ProductTypes.GetProductTypeList;
 
 public record GetProductTypeListResponse
-    {
-        public List<ProductTypeGeneralDto> ListItem { get; init; }
+{
+    public List<ProductTypeGeneralDto> ListItem { get; init; }
 
     public record ProductTypeGeneralDto : BaseDto
     {

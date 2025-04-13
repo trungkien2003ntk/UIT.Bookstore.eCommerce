@@ -1,6 +1,4 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Shared.Users;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 

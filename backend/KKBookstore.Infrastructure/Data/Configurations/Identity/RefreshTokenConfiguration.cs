@@ -1,4 +1,4 @@
-﻿using KKBookstore.Infrastructure.Identity;
+﻿using KKBookstore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

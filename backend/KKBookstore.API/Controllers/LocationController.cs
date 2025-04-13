@@ -1,7 +1,7 @@
-﻿using KKBookstore.API.Abstractions;
-using KKBookstore.Application.Features.Locations.GetCommuneList;
-using KKBookstore.Application.Features.Locations.GetDistrictList;
-using KKBookstore.Application.Features.Locations.GetProvinceList;
+﻿using KKBookstore.Abstractions;
+using KKBookstore.Features.Locations.GetCommuneList;
+using KKBookstore.Features.Locations.GetDistrictList;
+using KKBookstore.Features.Locations.GetProvinceList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

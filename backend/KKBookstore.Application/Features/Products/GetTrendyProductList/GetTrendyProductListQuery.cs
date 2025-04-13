@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Products.GetTrendyProductList;
-using KKBookstore.Domain.Models;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.Products.GetTrendyProductList.GetTrendyProductListResponse;
+using static KKBookstore.Features.Products.GetTrendyProductList.GetTrendyProductListResponse;
 
 namespace KKBookstore.Features.Products.GetTrendyProductList;
 

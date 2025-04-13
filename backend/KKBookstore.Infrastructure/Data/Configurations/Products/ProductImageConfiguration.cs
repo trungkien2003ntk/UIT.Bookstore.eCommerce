@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Products;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Data.Extensions;
+using KKBookstore.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

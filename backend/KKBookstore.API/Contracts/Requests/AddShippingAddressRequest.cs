@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Shared.Orders;
+﻿using KKBookstore.Orders;
 
 namespace KKBookstore.Contracts.Requests;
 

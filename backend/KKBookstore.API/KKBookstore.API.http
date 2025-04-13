@@ -1,6 +1,6 @@
-@KKBookstore.API_HostAddress = http://localhost:5234
+@KKBookstore_HostAddress = http://localhost:5234
 
-GET {{KKBookstore.API_HostAddress}}/weatherforecast/
+GET {{KKBookstore_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

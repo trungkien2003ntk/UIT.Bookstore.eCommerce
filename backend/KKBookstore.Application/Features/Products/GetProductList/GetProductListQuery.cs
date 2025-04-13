@@ -1,13 +1,12 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models;
-using KKBookstore.Application.Common.Models.RequestDtos;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Extensions;
-using KKBookstore.Application.Features.Products.GetProductList;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Products;
-using KKBookstore.Domain.ProductTypes;
-using KKBookstore.Domain.Shared.Orders;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models;
+using KKBookstore.Common.Models.RequestDtos;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Extensions;
+using KKBookstore.Models;
+using KKBookstore.Orders;
+using KKBookstore.Products;
+using KKBookstore.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,9 +1,8 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Checkout.PlaceOrder;
-using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Emailing;
+using KKBookstore.Models;
+using KKBookstore.Orders;
+using KKBookstore.ShoppingCarts;
 
 namespace KKBookstore.Features.Checkout.PlaceOrder;
 

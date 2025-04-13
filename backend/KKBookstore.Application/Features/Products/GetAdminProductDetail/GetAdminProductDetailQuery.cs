@@ -1,7 +1,7 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Products.Models;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Products;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Features.Products.Models;
+using KKBookstore.Models;
+using KKBookstore.Products;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

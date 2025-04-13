@@ -1,5 +1,5 @@
-﻿using KKBookstore.Domain.Interfaces;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Interfaces;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

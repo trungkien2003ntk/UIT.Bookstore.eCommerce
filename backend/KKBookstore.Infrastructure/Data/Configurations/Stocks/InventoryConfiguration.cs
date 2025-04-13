@@ -1,4 +1,4 @@
-﻿using KKBookstore.Domain.Stocks;
+﻿using KKBookstore.Stocks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace

@@ -1,11 +1,9 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Checkout.PlaceOrder;
-using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.Shared.Orders;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Emailing;
+using KKBookstore.Models;
+using KKBookstore.Orders;
+using KKBookstore.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Features.Checkout.PlaceOrder;

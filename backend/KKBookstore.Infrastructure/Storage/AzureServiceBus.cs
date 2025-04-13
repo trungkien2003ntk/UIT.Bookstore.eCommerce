@@ -1,5 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
-using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace KKBookstore.Storage;

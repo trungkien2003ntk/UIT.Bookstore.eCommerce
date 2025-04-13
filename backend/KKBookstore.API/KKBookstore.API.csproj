@@ -59,6 +59,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\KKBookstore.Application\KKBookstore.Application.csproj" />
+	  <ProjectReference Include="..\KKBookstore.Domain\KKBookstore.Domain.csproj" />
 	  <ProjectReference Include="..\KKBookstore.Infrastructure\KKBookstore.Infrastructure.csproj" />
 	</ItemGroup>
 </Project>

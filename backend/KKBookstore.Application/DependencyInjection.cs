@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using KKBookstore.Application.Common.Behaviours;
-using KKBookstore.Application.Features.Checkout.PlaceOrder;
-using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
-using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
-using KKBookstore.Application.Services;
+using KKBookstore.Common.Behaviours;
+using KKBookstore.Features.Checkout.PlaceOrder;
+using KKBookstore.Features.ShoppingCarts.GetShoppingCartItemList;
+using KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
+using KKBookstore.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

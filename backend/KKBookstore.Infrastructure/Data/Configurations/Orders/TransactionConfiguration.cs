@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.Shared.Orders;
+﻿using KKBookstore.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

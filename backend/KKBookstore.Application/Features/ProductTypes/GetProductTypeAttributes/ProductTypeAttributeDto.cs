@@ -1,5 +1,4 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
+﻿using KKBookstore.Common.Models.ResultDtos;
 
 namespace KKBookstore.Features.ProductTypes.GetProductTypeAttributes;
 

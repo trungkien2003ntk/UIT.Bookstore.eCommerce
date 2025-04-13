@@ -1,7 +1,4 @@
-﻿using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Shared.Emailing;
-
-namespace KKBookstore.Emailing.TemplateModels;
+﻿namespace KKBookstore.Emailing.TemplateModels;
 
 public class ForgotPasswordEmailModel : IEmailModel
 {

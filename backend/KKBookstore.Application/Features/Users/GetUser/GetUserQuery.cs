@@ -1,7 +1,6 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Users.GetUser;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

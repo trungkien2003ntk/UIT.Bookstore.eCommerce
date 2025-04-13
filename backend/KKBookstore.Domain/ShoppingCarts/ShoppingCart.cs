@@ -1,5 +1,4 @@
-﻿using KKBookstore.Domain.Models;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.ShoppingCarts;

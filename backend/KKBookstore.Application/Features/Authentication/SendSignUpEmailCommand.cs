@@ -1,8 +1,8 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Emailing.TemplateModels;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Users;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Emailing;
+using KKBookstore.Emailing.TemplateModels;
+using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 
 namespace KKBookstore.Features.Authentication;

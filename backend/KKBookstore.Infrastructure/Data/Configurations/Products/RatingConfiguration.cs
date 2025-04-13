@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Products;
-using KKBookstore.Domain.Shared.Products;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Data.Extensions;
+using KKBookstore.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -19,7 +18,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.Property(t => t.Comment).HasColumnName(nameof(Rating.Comment)).HasMaxLength(RatingConsts.CommentMaxLength);
         builder.Property(t => t.Response).HasColumnName(nameof(Rating.Response)).HasMaxLength(RatingConsts.ResponseMaxLength);
         builder.Property(t => t.Status).HasColumnName(nameof(Rating.Status)).HasConversion<EnumToStringConverter<RatingStatus>>().IsRequired();
-        
+
         builder.HasOne(t => t.ProductVariant).WithMany(t => t.Ratings).HasForeignKey(t => t.ProductVariantId);
         builder.HasOne(t => t.Customer).WithMany().HasForeignKey(t => t.CustomerId);
     }

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using KKBookstore.API.Contracts.Requests;
-using KKBookstore.Application.Common.Models;
-using KKBookstore.Application.Features.Products.GetProductList;
-using KKBookstore.Application.Features.Products.GetProductRatingList;
+using KKBookstore.Common.Models;
+using KKBookstore.Contracts.Requests;
+using KKBookstore.Features.Orders.GetOrderList;
+using KKBookstore.Features.Products.GetProductList;
+using KKBookstore.Features.Products.GetProductRatingList;
 
 namespace KKBookstore.Mappings;
 
@@ -15,7 +16,7 @@ public class RequestProfile : Profile
             .ForMember(dest => dest.CustomFilters, opt => opt.MapFrom(src => src.CustomFilters != null ? src.CustomFilters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()) : new Dictionary<string, List<string>>()));
 
         // OrderStatuses is a list of integers in string, so we need to check if it's null before mapping it
-        CreateMap<Contracts.Requests.GetOrderListRequest, Application.Features.Orders.GetOrderList.GetOrderListQuery>()
+        CreateMap<GetOrderListRequest, GetOrderListQuery>()
             .ForMember(dest => dest.OrderStatuses, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.OrderStatuses) ? src.OrderStatuses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>()));
 
         CreateMap<GetProductRatingListRequest, GetProductRatingListQuery>()

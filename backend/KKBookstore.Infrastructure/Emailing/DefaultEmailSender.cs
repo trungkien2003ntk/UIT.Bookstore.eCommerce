@@ -1,12 +1,9 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
-using KKBookstore.Application.Common.Constants;
-using KKBookstore.Domain.Emailing;
-using KKBookstore.Domain.Emailing.Models;
-using KKBookstore.Domain.Orders;
-using KKBookstore.Domain.Shared.Emailing;
-using KKBookstore.Infrastructure.Emailing;
-using KKBookstore.Infrastructure.Emailing.EmailTemplates;
+using KKBookstore.Common.Constants;
+using KKBookstore.Emailing.EmailTemplates;
+using KKBookstore.Emailing.Models;
+using KKBookstore.Orders;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Text;

@@ -1,5 +1,5 @@
-﻿using KKBookstore.DbMigrator.Seeders;
-using KKBookstore.Infrastructure.Data;
+﻿using KKBookstore.Data;
+using KKBookstore.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

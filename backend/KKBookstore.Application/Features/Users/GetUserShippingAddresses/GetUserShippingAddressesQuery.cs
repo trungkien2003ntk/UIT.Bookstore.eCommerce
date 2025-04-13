@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
-using KKBookstore.Domain.Models;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

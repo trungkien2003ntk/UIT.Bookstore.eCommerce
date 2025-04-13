@@ -1,10 +1,9 @@
 ﻿using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.RequestDtos;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Infrastructure.Search;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.RequestDtos;
+using KKBookstore.Common.Models.ResultDtos;
 using Microsoft.Extensions.Options;
 
 namespace KKBookstore.Search;

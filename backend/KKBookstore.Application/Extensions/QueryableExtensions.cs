@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;

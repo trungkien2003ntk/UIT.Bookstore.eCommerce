@@ -1,11 +1,10 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.RequestDtos;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Products.SearchProducts;
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.RequestDtos;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.Products.SearchProducts.SearchProductsResponse;
+using static KKBookstore.Features.Products.SearchProducts.SearchProductsResponse;
 
 namespace KKBookstore.Features.Products.SearchProducts;
 

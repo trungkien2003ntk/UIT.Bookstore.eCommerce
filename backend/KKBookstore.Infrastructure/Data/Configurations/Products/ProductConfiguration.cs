@@ -1,6 +1,5 @@
-﻿using KKBookstore.Domain.Products;
-using KKBookstore.Domain.Shared.Products;
-using KKBookstore.Infrastructure.Data.Extensions;
+﻿using KKBookstore.Data.Extensions;
+using KKBookstore.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,7 +19,7 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(t => t.UnitMeasureId).HasColumnName(nameof(Product.UnitMeasureId)).IsRequired();
         builder.Property(t => t.IsBook).HasColumnName(nameof(Product.IsBook)).IsRequired();
         builder.Property(t => t.IsActive).HasColumnName(nameof(Product.IsActive)).IsRequired();
-        
+
         builder.HasIndex(t => t.Name).IsUnique();
         builder.HasIndex(t => t.ProductTypeId);
 

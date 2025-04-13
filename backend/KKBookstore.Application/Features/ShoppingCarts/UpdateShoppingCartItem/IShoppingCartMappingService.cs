@@ -1,6 +1,5 @@
-﻿using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.ShoppingCarts;
+﻿using KKBookstore.Models;
+using KKBookstore.ShoppingCarts;
 
 namespace KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Orders.GetOrderDetail;
-using KKBookstore.Application.Features.Orders.GetOrderList;
-using KKBookstore.Application.Features.Orders.Models;
-using KKBookstore.Application.Mappings.Helpers;
-using KKBookstore.Domain.Customers;
-using KKBookstore.Domain.Orders;
+using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Customers;
+using KKBookstore.Features.Orders.GetOrderDetail;
+using KKBookstore.Features.Orders.GetOrderList;
+using KKBookstore.Features.Orders.Models;
+using KKBookstore.Mappings.Helpers;
+using KKBookstore.Orders;
 
 namespace KKBookstore.Mappings;
 

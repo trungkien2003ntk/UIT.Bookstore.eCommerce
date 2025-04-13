@@ -1,10 +1,10 @@
-﻿using KKBookstore.API.Abstractions;
-using KKBookstore.Application.Features.Images.DeleteImage;
-using KKBookstore.Application.Features.Images.UploadImages;
+﻿using KKBookstore.Abstractions;
+using KKBookstore.Features.Images.DeleteImage;
+using KKBookstore.Features.Images.UploadImages;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using static KKBookstore.Application.Features.Images.UploadImages.UploadImagesCommand;
+using static KKBookstore.Features.Images.UploadImages.UploadImagesCommand;
 
 namespace KKBookstore.Controllers;
 

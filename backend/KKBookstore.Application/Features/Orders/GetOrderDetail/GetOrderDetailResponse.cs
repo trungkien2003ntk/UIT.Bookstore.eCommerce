@@ -1,5 +1,5 @@
-﻿using KKBookstore.Application.Common.Models.ResultDtos;
-using KKBookstore.Application.Features.Orders.Models;
+﻿using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Features.Orders.Models;
 
 namespace KKBookstore.Features.Orders.GetOrderDetail;
 

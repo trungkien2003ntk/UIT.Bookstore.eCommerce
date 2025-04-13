@@ -18,12 +18,12 @@
     <PackageReference Include="Scriban" Version="6.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\KKBookstore.Domain.Shared\KKBookstore.Domain.Shared.csproj" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<None Remove=".\Emailing\Templates\*.sbn" />
 		<EmbeddedResource Include=".\Emailing\Templates\*.sbn" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\KKBookstore.Domain.Shared\KKBookstore.Domain.Shared.csproj" />
 	</ItemGroup>
 </Project>

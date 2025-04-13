@@ -1,6 +1,4 @@
-﻿using KKBookstore.Domain.Emailing.Models;
-
-namespace KKBookstore.Emailing.Models;
+﻿namespace KKBookstore.Emailing.Models;
 
 [Serializable]
 public class AdditionalEmailSendingArgs

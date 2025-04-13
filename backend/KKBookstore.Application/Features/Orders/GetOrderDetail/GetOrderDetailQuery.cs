@@ -1,8 +1,7 @@
-﻿using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Features.Orders.GetOrderDetail;
-using KKBookstore.Application.Features.Orders.Models;
-using KKBookstore.Domain.Models;
-using KKBookstore.Domain.Orders;
+﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Features.Orders.Models;
+using KKBookstore.Models;
+using KKBookstore.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

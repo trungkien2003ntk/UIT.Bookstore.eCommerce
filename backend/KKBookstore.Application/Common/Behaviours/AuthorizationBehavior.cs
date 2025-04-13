@@ -1,6 +1,6 @@
-﻿using KKBookstore.Application.Common.Exceptions;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Security;
+﻿using KKBookstore.Common.Exceptions;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Security;
 using MediatR;
 using System.Reflection;
 

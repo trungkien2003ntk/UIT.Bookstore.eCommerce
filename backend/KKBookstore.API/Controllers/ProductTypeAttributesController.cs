@@ -1,7 +1,7 @@
-﻿using KKBookstore.API.Abstractions;
-using KKBookstore.Application.Features.ProductTypeAttributes.CreateProductAttributeValue;
-using KKBookstore.Application.Features.ProductTypeAttributes.DeleteProductAttributeValue;
-using KKBookstore.Application.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
+﻿using KKBookstore.Abstractions;
+using KKBookstore.Features.ProductTypeAttributes.CreateProductAttributeValue;
+using KKBookstore.Features.ProductTypeAttributes.DeleteProductAttributeValue;
+using KKBookstore.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

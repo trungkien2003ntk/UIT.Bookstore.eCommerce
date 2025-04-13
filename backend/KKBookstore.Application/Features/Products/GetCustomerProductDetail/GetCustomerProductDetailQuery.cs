@@ -81,6 +81,7 @@ public class GetCustomerProductDetailQueryHandler(
         {
             Id = product.Id,
             Name = product.Name,
+            Sku = product.Sku?.Value,
             UnitMeasureName = product.UnitMeasure.Name,
             Description = product.Description,
             ProductTypeId = product.ProductTypeId,
@@ -96,7 +97,7 @@ public class GetCustomerProductDetailQueryHandler(
             ProductVariants = product.ProductVariants.Select(pv => new CustomerProductVariantDto()
             {
                 Id = pv.Id,
-                SkuValue = pv.SkuValue.Value,
+                Sku = pv.SkuValue.Value,
                 UnitPrice = pv.UnitPrice,
                 RecommendedRetailPrice = pv.RecommendedRetailPrice,
                 Height = pv.Dimension.Height,

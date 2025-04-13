@@ -5,6 +5,7 @@ namespace KKBookstore.Features.Products.GetCustomerProductDetail;
 
 public record GetCustomerProductDetailResponse : BaseDto
 {
+    public string? Sku { get; set; } = null!;
     public string Name { get; set; } = null!;
     public decimal MinUnitPrice { get; set; }
     public decimal MaxUnitPrice { get; set; }

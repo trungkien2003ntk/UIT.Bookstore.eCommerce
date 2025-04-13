@@ -36,7 +36,7 @@ public static class ProductErrors
 
     public static Error InvalidAttributeValue(string attributeName, IEnumerable<string> validAttributeValues)
     {
-        return Error.Validation("Product.InvalidAttributeValue", $"Invalid value for attribute: {attributeName}, valid values: [{string.Join(",", validAttributeValues)}]");
+        return Error.Validation("Product.InvalidAttributeValue", $"Invalid value for attribute: {attributeName}, valid values: {string.Join(", ", validAttributeValues)}");
     }
 
     public static Error ProductAlreadyExists(string name)

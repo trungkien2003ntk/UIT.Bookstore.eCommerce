@@ -15,6 +15,7 @@ public class ProductProfile : Profile
     {
         CreateMap<Product, GetCustomerProductDetailResponse>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Sku, opt => opt.MapFrom(src => src.Sku == null ? null : src.Sku.Value))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.ProductTypeId, opt => opt.MapFrom(src => src.ProductTypeId))
             .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.ProductType.DisplayName))
@@ -38,7 +39,7 @@ public class ProductProfile : Profile
         CreateMap<Author, AuthorDto>();
 
         CreateMap<ProductVariant, CustomerProductVariantDto>()
-            .ForMember(dest => dest.SkuValue, opt => opt.MapFrom(src => src.SkuValue.Value))
+            .ForMember(dest => dest.Sku, opt => opt.MapFrom(src => src.SkuValue.Value))
             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Dimension.Height))
             .ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.Dimension.Width))
             .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Dimension.Length))

@@ -4,6 +4,7 @@ namespace KKBookstore.Features.Products.Models;
 
 public record AdminProductDto : BaseDto
 {
+    public string? Sku { get; set; }
     public string Name { get; set; } = null!;
     public int ProductTypeId { get; set; }
     public string? Description { get; set; }

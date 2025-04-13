@@ -4,7 +4,7 @@ namespace KKBookstore.Features.Products.Models;
 
 public record CustomerProductVariantDto : BaseDto
 {
-    public string SkuValue { get; set; }
+    public string? Sku { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
     public decimal BasicDiscountRate { get; set; }

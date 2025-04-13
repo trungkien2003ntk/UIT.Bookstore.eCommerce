@@ -33,6 +33,7 @@ public class Product : BaseFullAuditedEntity
     public bool IsBook { get; set; }
     public bool IsActive { get; set; }
     public int UnitMeasureId { get; set; }
+    public SkuValue? Sku { get; set; }
 
     // navigation properties
     public ProductType ProductType { get; set; }

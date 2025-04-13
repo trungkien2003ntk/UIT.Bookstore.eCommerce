@@ -8,9 +8,9 @@ public class SkuValue : ValueObject
     {
         Value = "";
     }
-    private SkuValue(string value)
+    public SkuValue(string? value)
     {
-        Value = value;
+        Value = value ?? string.Empty;
     }
 
     public string Value { get; set; }
@@ -23,8 +23,15 @@ public class SkuValue : ValueObject
         return new SkuValue(value);
     }
 
+    public static Result<SkuValue> Create(string sku)
+    {
+        string value = sku;
+
+        return new SkuValue(value);
+    }
+
     protected override IEnumerable<object> GetAtomicValues()
     {
-        throw new NotImplementedException();
+        yield return Value;
     }
 }

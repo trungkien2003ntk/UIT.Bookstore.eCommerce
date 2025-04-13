@@ -23,6 +23,8 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(t => t.Name).IsUnique();
         builder.HasIndex(t => t.ProductTypeId);
 
+        builder.OwnsOne(t => t.Sku).Property(sv => sv.Value).HasMaxLength(ProductVariantConsts.SkuMaxLength).IsRequired();
+
         builder.HasOne(t => t.ProductType).WithMany().HasForeignKey(t => t.ProductTypeId);
         builder.HasOne(t => t.UnitMeasure).WithMany().HasForeignKey(t => t.UnitMeasureId);
     }

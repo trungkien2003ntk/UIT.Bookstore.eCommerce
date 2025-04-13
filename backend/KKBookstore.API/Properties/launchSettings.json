@@ -19,7 +19,7 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
-    "KKBookstore": {
+    "KKBookstore.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

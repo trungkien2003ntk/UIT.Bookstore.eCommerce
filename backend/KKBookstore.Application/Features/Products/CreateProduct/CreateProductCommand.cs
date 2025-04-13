@@ -6,7 +6,7 @@ using KKBookstore.Models;
 using KKBookstore.Products;
 using KKBookstore.Products.Events;
 using KKBookstore.ProductTypes;
-using KKBookstore.Stocks;
+using KKBookstore.StockTransactions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -52,13 +52,14 @@ public record CreateProductCommand : IRequest<Result<AdminProductDto>>
 
     public class ProductVariantCreateDto
     {
+        [Required]
+        public string Sku { get; set; } = null!;
         public decimal RecommendedRetailPrice { get; set; }
         public decimal UnitPrice { get; set; }
         public int Weight { get; set; }
         public Dimension Dimension { get; set; } = null!;
         public decimal TaxRate { get; set; }
         public string? Comment { get; set; }
-        public int StockQuantity { get; set; }
 
         public ICollection<VariantOptionCreateDto>? VariantOptions { get; set; }
     }
@@ -149,7 +150,12 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             _logger.LogInformation("Product options created for product {ProductId}", product.Id);
 
             // 6. Create and save product variants with their options
-            var variants = await CreateProductVariants(request, product, productOptions, branches);
+            var variantsResult = CreateProductVariants(request, product, productOptions, branches);
+            if (variantsResult.IsFailure)
+            {
+                return Result.Failure<AdminProductDto>(variantsResult.Error);
+            }
+            var variants = variantsResult.Value;
             _dbContext.ProductVariants.AddRange(variants);
             await _dbContext.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Product variants created for product {ProductId}", product.Id);
@@ -238,7 +244,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         return productOptions;
     }
 
-    private async Task<List<ProductVariant>> CreateProductVariants(
+    private Result<List<ProductVariant>> CreateProductVariants(
         CreateProductCommand request,
         Product product,
         List<ProductOption> savedOptions,
@@ -249,8 +255,15 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         if (request.ProductVariants.Count == 1)
         {
             var variantRequest = request.ProductVariants.First();
+            var skuValue = SkuValue.Create(variantRequest.Sku);
+            if (skuValue.IsFailure)
+            {
+                return Result.Failure<List<ProductVariant>>(skuValue.Error);
+            }
+            var sku = skuValue.Value;
+
             variants.Add(new ProductVariant(
-                new SkuValue(),
+                sku,
                 variantRequest.RecommendedRetailPrice,
                 variantRequest.UnitPrice,
                 variantRequest.Weight,
@@ -267,8 +280,14 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
             foreach (var variantRequest in request.ProductVariants)
             {
+                var skuValue = SkuValue.Create(variantRequest.Sku);
+                if (skuValue.IsFailure)
+                {
+                    return Result.Failure<List<ProductVariant>>(skuValue.Error);
+                }
+                var sku = skuValue.Value;
                 var variant = new ProductVariant(
-                    new SkuValue(),
+                    sku,
                     variantRequest.RecommendedRetailPrice,
                     variantRequest.UnitPrice,
                     variantRequest.Weight,
@@ -315,14 +334,18 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 }
 
                 // Add inventory for the variant
-                variant.Inventories.Add(new Inventory
+                foreach (var branch in branches)
                 {
-                    WarehouseId = branches.First().Id,
-                    PurchaseOrderLineId = null,
-                    StockQuantity = variantRequest.StockQuantity,
-                    PurchasePrice = 0,
-                    IsActive = true
-                });
+                    variant.Inventories.Add(new Inventory(
+                        productVariantId: 0,
+                        initialQuantity: 0,
+                        unitCost: 0,
+                        isActive: true,
+                        warehouseId: branch.Id,
+                        originalCreatedDate: DateTimeOffset.Now,
+                        purchaseOrderLineId: null
+                    ));
+                }
 
                 variants.Add(variant);
             }
@@ -347,6 +370,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         {
             Id = product.Id,
             Name = product.Name,
+            Sku = product.Sku?.Value,
             Description = product.Description,
             IsActive = product.IsActive,
             IsBook = product.IsBook,

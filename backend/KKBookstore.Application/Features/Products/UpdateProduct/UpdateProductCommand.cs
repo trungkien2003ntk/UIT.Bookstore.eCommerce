@@ -60,6 +60,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
 
             _logger.LogInformation("Updating product with ID {ProductId}", request.Id);
+
+            product.Sku = new SkuValue(request.Sku);
             product.Name = request.Name;
             product.ProductTypeId = request.ProductTypeId;
             product.Description = request.Description ?? "";
@@ -253,6 +255,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             Id = product.Id,
             Name = product.Name,
+            Sku = product.Sku?.Value,
             ProductTypeId = product.ProductTypeId,
             Description = product.Description,
             IsBook = product.IsBook,

@@ -49,6 +49,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
         {
             Id = product.Id,
             Name = product.Name,
+            Sku = product.Sku?.Value,
             ProductTypeId = product.ProductTypeId,
             Description = product.Description,
             IsBook = product.IsBook,

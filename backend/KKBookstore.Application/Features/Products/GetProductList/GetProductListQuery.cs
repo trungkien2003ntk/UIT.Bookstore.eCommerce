@@ -3,6 +3,7 @@ using KKBookstore.Common.Models;
 using KKBookstore.Common.Models.RequestDtos;
 using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Extensions;
+using KKBookstore.Features.Products.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using KKBookstore.Products;
@@ -22,7 +23,6 @@ public record GetProductListQuery()
     public Dictionary<string, List<string>> CustomFilters { get; set; } = [];
     public string? SearchQuery { get; set; }
 }
-
 
 // todo: this class is doing too much, consider refactoring
 public class GetProductListQueryHandler(
@@ -47,47 +47,128 @@ public class GetProductListQueryHandler(
         query = result.Value
             .Include(p => p.ProductImages)
             .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)
+                    .ThenInclude(pov => pov.Option)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)
+                    .ThenInclude(pov => pov.OptionValue)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Inventories)
+                    .ThenInclude(i => i.Warehouse)
             .Include(p => p.ProductType)
             .Include(p => p.Ratings);
 
         // Apply sorting
-        var validSortProperties = new List<string>
+        var dtoValidSortProperties = new List<string>
+        {
+            nameof(ProductSummary.MinUnitPrice),
+            nameof(ProductSummary.MinRecommendedRetailPrice)
+        };
+
+        var internalValidSortProperties = new List<string>
         {
             nameof(Product.CreationTime),
             nameof(Product.Name),
             nameof(Product.Id)
         };
+
         string sortProperty = request.SortBy;
+        var sortValidateResult = ValidateSortProperty(sortProperty, [.. internalValidSortProperties, .. dtoValidSortProperties]);
+        if (sortValidateResult.IsFailure)
+        {
+            return Result.Failure<PagedResult<ProductSummary>>(sortValidateResult.Error);
+        }
+
 
         PagedResult<Product> paginatedProducts;
 
-        var sortAndPagingResult = await query.SortAndPaginateWithResultAsync(
-            sortProperty,
-            request.SortDirection,
-            validSortProperties,
-            request.PageNumber,
-            request.PageSize,
-            cancellationToken);
-
-        if (sortAndPagingResult.IsFailure)
+        // Handle special DTO properties that need custom sorting logic
+        if (sortProperty == nameof(ProductSummary.MinUnitPrice))
         {
-            return Result.Failure<PagedResult<ProductSummary>>(sortAndPagingResult.Error);
+            // Apply custom sorting for MinUnitPrice directly on the query
+            query = request.SortDirection.ToLower() == "asc"
+                ? query.OrderBy(p => p.ProductVariants.Min(pv => pv.UnitPrice))
+                : query.OrderByDescending(p => p.ProductVariants.Min(pv => pv.UnitPrice));
+
+            // Paginate the sorted query
+            var totalItemsCount = await query.CountAsync(cancellationToken);
+            var paginatedItems = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
+            paginatedProducts = new PagedResult<Product>(paginatedItems, totalItemsCount, request.PageSize, request.PageNumber);
+
+            if (paginatedProducts.Items.Count == 0)
+            {
+                return Result.Failure<PagedResult<ProductSummary>>(ProductErrors.NotFound);
+            }
+        }
+        else if (sortProperty == nameof(ProductSummary.MinRecommendedRetailPrice))
+        {
+            // Apply custom sorting for MinRecommendedRetailPrice directly on the query
+            query = request.SortDirection.ToLower() == "asc"
+                ? query.OrderBy(p => p.ProductVariants.Min(pv => pv.RecommendedRetailPrice))
+                : query.OrderByDescending(p => p.ProductVariants.Min(pv => pv.RecommendedRetailPrice));
+
+            // Paginate the sorted query
+            var totalItemsCount = await query.CountAsync(cancellationToken);
+            var paginatedItems = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
+            paginatedProducts = new PagedResult<Product>(paginatedItems, totalItemsCount, request.PageSize, request.PageNumber);
+        }
+        else
+        {
+            // For standard properties, use the existing method
+
+            var sortAndPagingResult = await query.SortAndPaginateWithResultAsync(
+                sortProperty,
+                request.SortDirection,
+                internalValidSortProperties,
+                request.PageNumber,
+                request.PageSize,
+                cancellationToken);
+
+            if (sortAndPagingResult.IsFailure)
+            {
+                return Result.Failure<PagedResult<ProductSummary>>(sortAndPagingResult.Error);
+            }
+
+            paginatedProducts = sortAndPagingResult.Value;
         }
 
-        paginatedProducts = sortAndPagingResult.Value;
 
         if (paginatedProducts.Items.Count == 0)
         {
             return Result.Failure<PagedResult<ProductSummary>>(ProductErrors.NotFound);
         }
-
         var soldCounts = await GetSoldCountsAsync(cancellationToken);
 
-        var mappedPaginatedProducts = new PagedResult<ProductSummary>(
+        var mappedPaginatedProducts = MapToProductSummaryResult(paginatedProducts, soldCounts);
+
+        return Result.Success(mappedPaginatedProducts);
+    }
+
+    private Result ValidateSortProperty(string sortProperty, List<string> validSortProperties)
+    {
+        if (string.IsNullOrWhiteSpace(sortProperty))
+        {
+            return Result.Success();
+        }
+
+        if (!validSortProperties.Contains(sortProperty, StringComparer.OrdinalIgnoreCase))
+        {
+            return Result.Failure<ProductSummary>(ProductErrors.InvalidAttributeValue(nameof(GetProductListQuery.SortBy), validSortProperties));
+        }
+        else
+        {
+            return Result.Success();
+        }
+    }
+
+    private PagedResult<ProductSummary> MapToProductSummaryResult(PagedResult<Product> paginatedProducts, Dictionary<int, int> soldCounts)
+    {
+        return new PagedResult<ProductSummary>(
             paginatedProducts.Items.Select(p => new ProductSummary()
             {
                 Id = p.Id,
                 Name = p.Name,
+                Sku = p.Sku?.Value ?? string.Empty,
                 Description = p.Description,
                 ProductTypeId = p.ProductTypeId,
                 ProductTypeName = p.ProductType.DisplayName,
@@ -97,15 +178,37 @@ public class GetProductListQueryHandler(
                 MinUnitPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.UnitPrice) : 0,
                 MinRecommendedRetailPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.RecommendedRetailPrice) : 0,
                 AverageRating = (decimal)(p.Ratings.Count > 0 ? p.Ratings.Average(r => r.RatingValue) : 0),
-                IsActive = p.IsActive
+                CreationTime = p.CreationTime,
+                IsActive = p.IsActive,
+                TotalStockQuantity = p.ProductVariants.Sum(pv => pv.StockQuantity),
+                Variants = p.ProductVariants.Select(pv => new ProductVariantSummaryDto
+                {
+                    Id = pv.Id,
+                    Sku = pv.SkuValue.Value,
+                    UnitPrice = pv.UnitPrice,
+                    RecommendedRetailPrice = pv.RecommendedRetailPrice,
+                    StockQuantity = pv.StockQuantity,
+                    ThumbnailImageUrl = pv.GetThumbnailImageUrl() ?? string.Empty,
+                    OptionValues = pv.ProductVariantOptionValues.Select(pov => new OptionValueDto
+                    {
+                        Name = pov.Option.Name,
+                        Value = pov.OptionValue.Value
+                    }),
+                    StockBreakdowns = pv.Inventories
+                        .Where(i => i.IsActive)
+                        .Select(inv => new StockSummaryDto
+                        {
+                            BranchId = inv.WarehouseId ?? 0,
+                            BranchName = inv.Warehouse?.Name ?? "Unknown",
+                            StockQuantity = inv.StockQuantity,
+                            IsActive = inv.IsActive
+                        })
+                }).ToList()
             }).ToList(),
             paginatedProducts.TotalCount,
             paginatedProducts.PageSize,
             paginatedProducts.PageNumber
-            );
-
-        return Result.Success(mappedPaginatedProducts);
-
+        );
     }
 
     private IQueryable<Product> ApplyExcludeProducts(IQueryable<Product> query, List<int>? excludeProductIds)

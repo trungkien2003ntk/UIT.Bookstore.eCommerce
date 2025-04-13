@@ -38,7 +38,6 @@ public class HandleIPNHandler(
             // todo: Handle the signature
 
 
-
             // based on the ipn result, persist the transaction to the database
             var responseCode = request.ResponseCode;
             var isSuccess = responseCode == "00";

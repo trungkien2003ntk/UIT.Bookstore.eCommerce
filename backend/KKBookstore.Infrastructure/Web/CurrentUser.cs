@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace KKBookstore.Infrastructure.Web;
+namespace KKBookstore.Web;
 
 public class CurrentUser : ICurrentUser
 {

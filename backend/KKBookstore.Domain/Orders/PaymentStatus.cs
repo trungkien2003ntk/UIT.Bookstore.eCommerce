@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Orders;
+﻿namespace KKBookstore.Orders;
 
 public enum PaymentStatus
 {

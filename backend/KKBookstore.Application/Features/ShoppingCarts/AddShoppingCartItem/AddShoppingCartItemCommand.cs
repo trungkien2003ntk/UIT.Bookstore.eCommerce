@@ -1,10 +1,11 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
+namespace KKBookstore.Features.ShoppingCarts.AddShoppingCartItem;
 
 public record AddShoppingCartItemCommand(int CustomerId, int ProductVariantId, int Quantity) : IRequest<Result<AddShoppingCartItemResponse>>;
 

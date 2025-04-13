@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Infrastructure.Shipping;
+﻿namespace KKBookstore.Shipping;
 
 public class ShippingConfiguration
 {

@@ -1,9 +1,10 @@
 ﻿using KKBookstore.Domain.Interfaces;
 using KKBookstore.Domain.Shared.Users;
+using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Domain.Users;
+namespace KKBookstore.Users;
 
 public class User : IdentityUser<int>, IFullAuditedObject
 {

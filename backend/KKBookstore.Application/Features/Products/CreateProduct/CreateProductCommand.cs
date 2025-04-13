@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
-namespace KKBookstore.Application.Features.Products.CreateProduct;
+namespace KKBookstore.Features.Products.CreateProduct;
 
 public record CreateProductCommand : IRequest<Result<AdminProductDto>>
 {

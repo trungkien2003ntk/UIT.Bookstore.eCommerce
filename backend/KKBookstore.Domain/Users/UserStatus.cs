@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Users;
+﻿namespace KKBookstore.Users;
 
 public enum UserStatus
 {

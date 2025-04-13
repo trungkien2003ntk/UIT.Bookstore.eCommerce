@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 
-namespace KKBookstore.Infrastructure.Data.Extensions;
+namespace KKBookstore.Data.Extensions;
 
 internal static class ConfigurationExtensions
 {

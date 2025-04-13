@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Models.RequestDtos;
+﻿namespace KKBookstore.Common.Models.RequestDtos;
 
 public record SearchRequest
 {

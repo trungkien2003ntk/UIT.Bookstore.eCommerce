@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.Products.GetTrendyProductList;
+namespace KKBookstore.Features.Products.GetTrendyProductList;
 
 public record GetTrendyProductListResponse
 {

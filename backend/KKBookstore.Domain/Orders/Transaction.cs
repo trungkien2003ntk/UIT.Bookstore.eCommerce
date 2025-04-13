@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Domain.Orders;
+namespace KKBookstore.Orders;
 
 public class Transaction : BaseEntity
 {

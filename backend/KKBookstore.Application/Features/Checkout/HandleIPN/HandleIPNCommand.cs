@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Checkout.HandleIPN;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;
@@ -6,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
-namespace KKBookstore.Application.Features.Checkout.HandleIPN;
+namespace KKBookstore.Features.Checkout.HandleIPN;
 
 public record HandleIPNCommand : IRequest<Result<HandleIPNResponse>>
 {

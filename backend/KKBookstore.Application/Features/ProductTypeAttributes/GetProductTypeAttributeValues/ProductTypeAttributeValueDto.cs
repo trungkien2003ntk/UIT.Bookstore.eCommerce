@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
+namespace KKBookstore.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
 
 public record ProductTypeAttributeValueDto : BaseDto
 {

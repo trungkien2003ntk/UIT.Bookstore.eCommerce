@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.Customers;
+﻿namespace KKBookstore.Customers;
 
 public static class CustomerConsts
 {

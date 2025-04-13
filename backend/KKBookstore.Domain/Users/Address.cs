@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.Domain.Users;
+namespace KKBookstore.Users;
 
 public class Address : BaseFullAuditedEntity
 {

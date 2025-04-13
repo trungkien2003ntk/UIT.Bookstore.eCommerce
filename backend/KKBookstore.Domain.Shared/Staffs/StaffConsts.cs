@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.Staffs;
+﻿namespace KKBookstore.Staffs;
 
 public static class StaffConsts
 {

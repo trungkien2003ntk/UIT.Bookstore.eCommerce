@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Staffs;
+namespace KKBookstore.Staffs;
 
 public class Staff : User
 {

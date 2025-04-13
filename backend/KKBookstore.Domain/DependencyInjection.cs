@@ -2,7 +2,7 @@
 using KKBookstore.Domain.Emailing.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace KKBookstore.Domain;
+namespace KKBookstore;
 
 public static class DependencyInjection
 {

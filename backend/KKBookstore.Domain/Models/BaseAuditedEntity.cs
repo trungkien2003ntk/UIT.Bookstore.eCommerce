@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Domain.Interfaces;
+using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Models;
+namespace KKBookstore.Models;
 
 public abstract class BaseAuditedEntity : BaseEntity, IAuditedObject
 {

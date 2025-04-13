@@ -1,6 +1,6 @@
 ﻿//using KKBookstore.Model.Base;
 
-namespace KKBookstore.API.HelperModels;
+namespace KKBookstore.HelperModels;
 
 public class HelperConstantsModel
 {

@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Infrastructure.Emailing;
+﻿namespace KKBookstore.Emailing;
 
 internal class EmailTemplate
 {

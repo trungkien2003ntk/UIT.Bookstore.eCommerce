@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ShoppingCarts;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList.GetShoppingCartResponse;
 using static KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList.GetShoppingCartResponse.ShoppingCartItemDto;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
+namespace KKBookstore.Features.ShoppingCarts.GetShoppingCartItemList;
 
 public class GetShoppingCartMappingService(
     IApplicationDbContext _dbContext

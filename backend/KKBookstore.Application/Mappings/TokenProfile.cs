@@ -3,7 +3,7 @@ using KKBookstore.Application.Common.Models.Responses;
 using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Application.Features.Users.SignIn;
 
-namespace KKBookstore.Application.Mappings;
+namespace KKBookstore.Mappings;
 
 public class TokenProfile : Profile
 {

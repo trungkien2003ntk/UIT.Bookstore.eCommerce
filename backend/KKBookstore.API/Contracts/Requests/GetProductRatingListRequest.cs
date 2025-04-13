@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.API.Contracts.Requests;
+﻿namespace KKBookstore.Contracts.Requests;
 
 public class GetProductRatingListRequest
 {

@@ -4,7 +4,7 @@ using KKBookstore.Application.Common.Models;
 using KKBookstore.Application.Features.Products.GetProductList;
 using KKBookstore.Application.Features.Products.GetProductRatingList;
 
-namespace KKBookstore.API.Mappings;
+namespace KKBookstore.Mappings;
 
 public class RequestProfile : Profile
 {

@@ -1,10 +1,11 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Users.GetUser;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Users.GetUser;
+namespace KKBookstore.Features.Users.GetUser;
 
 public record GetUserQuery(int UserId) : IRequest<Result<GetUserResponse>>;
 

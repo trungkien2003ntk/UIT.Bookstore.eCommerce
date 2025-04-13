@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Branches;
+namespace KKBookstore.Branches;
 
 public class BranchAddress : Address
 {

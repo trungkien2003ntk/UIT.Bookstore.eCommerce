@@ -1,5 +1,4 @@
-﻿
-using KKBookstore.API.Abstractions;
+﻿using KKBookstore.API.Abstractions;
 using KKBookstore.API.Contracts.Requests;
 using KKBookstore.API.Contracts.Requests.Users;
 using KKBookstore.Application.Features.Users.AddShippingAddress;
@@ -17,7 +16,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [Route("api/users")]
 [Authorize]

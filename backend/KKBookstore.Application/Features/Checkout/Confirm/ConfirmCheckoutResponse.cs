@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.Checkout.Confirm;
+namespace KKBookstore.Features.Checkout.Confirm;
 
 public record ConfirmCheckoutResponse
 {

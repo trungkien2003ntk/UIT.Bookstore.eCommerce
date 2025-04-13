@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Customers;
+using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Customers;
+namespace KKBookstore.Customers;
 
 public class Customer : User
 {

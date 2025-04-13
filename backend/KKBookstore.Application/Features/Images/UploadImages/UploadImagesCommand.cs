@@ -1,10 +1,11 @@
 ﻿using KKBookstore.Application.Common.Constants;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Images.UploadImages;
 using KKBookstore.Domain.Models;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 
-namespace KKBookstore.Application.Features.Images.UploadImages;
+namespace KKBookstore.Features.Images.UploadImages;
 
 public record UploadImagesCommand
     : IRequest<Result<UploadImagesResponse>>

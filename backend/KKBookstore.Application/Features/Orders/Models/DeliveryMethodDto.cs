@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.Orders.Models;
+namespace KKBookstore.Features.Orders.Models;
 
 public record DeliveryMethodDto : BaseDto
 {

@@ -12,7 +12,7 @@ using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Application.Mappings;
+namespace KKBookstore.Mappings;
 public class UserProfile : Profile
 {
     public UserProfile()

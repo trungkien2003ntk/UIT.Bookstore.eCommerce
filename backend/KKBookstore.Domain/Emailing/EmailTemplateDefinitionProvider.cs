@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Domain.Emailing.Models;
 using KKBookstore.Domain.Shared.Emailing;
 
-namespace KKBookstore.Domain.Emailing;
+namespace KKBookstore.Emailing;
 
 public class EmailTemplateDefinitionProvider
 {

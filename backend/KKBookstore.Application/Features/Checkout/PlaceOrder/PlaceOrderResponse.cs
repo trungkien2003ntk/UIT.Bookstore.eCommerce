@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
+﻿namespace KKBookstore.Features.Checkout.PlaceOrder;
 
 public record PlaceOrderResponse
 {

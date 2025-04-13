@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Orders.Models;
 
-namespace KKBookstore.Application.Features.Orders.GetOrderList;
+namespace KKBookstore.Features.Orders.GetOrderList;
 
 public record OrderGeneralInformation : BaseDto
 {

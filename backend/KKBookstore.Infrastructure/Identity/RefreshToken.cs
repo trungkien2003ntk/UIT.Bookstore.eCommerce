@@ -2,7 +2,7 @@
 using KKBookstore.Domain.Users;
 using System.Security.Cryptography;
 
-namespace KKBookstore.Infrastructure.Identity;
+namespace KKBookstore.Identity;
 
 public class RefreshToken
 {

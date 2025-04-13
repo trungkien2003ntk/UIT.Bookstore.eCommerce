@@ -5,7 +5,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.ProductTypes;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Services;
+namespace KKBookstore.Services;
 
 public class ProductTypeAttributeService
 {

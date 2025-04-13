@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Application.Features.Checkout.PlaceOrder;
 using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
@@ -7,7 +8,7 @@ using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
+namespace KKBookstore.Features.Checkout.PlaceOrder;
 
 public class DefaultOrderProcessor(
     IApplicationDbContext dbContext,

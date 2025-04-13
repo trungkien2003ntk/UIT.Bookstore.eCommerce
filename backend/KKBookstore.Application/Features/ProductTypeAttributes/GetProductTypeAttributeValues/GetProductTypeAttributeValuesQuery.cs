@@ -1,10 +1,11 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Application.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
+namespace KKBookstore.Features.ProductTypeAttributes.GetProductTypeAttributeValues;
 
 public record GetProductTypeAttributeValuesQuery(int ProductTypeAttributeId, string? SearchQuery = null)
     : IRequest<Result<ListResult<ProductTypeAttributeValueDto>>>;

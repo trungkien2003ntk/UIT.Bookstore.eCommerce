@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
 using KKBookstore.Domain.Stocks;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Domain.Products;
+namespace KKBookstore.Products;
 
 public class ProductVariant : BaseFullAuditedEntity
 {

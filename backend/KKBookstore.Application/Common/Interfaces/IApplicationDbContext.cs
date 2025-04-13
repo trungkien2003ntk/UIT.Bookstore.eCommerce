@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public interface IApplicationDbContext
 {

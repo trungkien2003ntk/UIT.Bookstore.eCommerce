@@ -1,7 +1,7 @@
 using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.Application.Features.Products.Models;
+namespace KKBookstore.Features.Products.Models;
 
 public record StockBreakdownDto : BaseDto
 {

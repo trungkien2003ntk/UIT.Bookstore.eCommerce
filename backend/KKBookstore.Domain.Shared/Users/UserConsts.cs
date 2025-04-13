@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.Users;
+﻿namespace KKBookstore.Users;
 
 public static class UserConsts
 {

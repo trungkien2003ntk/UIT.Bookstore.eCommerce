@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Customers;
 
-namespace KKBookstore.Domain.Customers;
+namespace KKBookstore.Customers;
 
 public class CustomerType : BaseFullAuditedEntity
 {

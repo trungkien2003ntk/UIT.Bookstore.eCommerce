@@ -1,7 +1,7 @@
 ﻿using KKBookstore.API.HelperModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Contracts.Requests;
+namespace KKBookstore.Contracts.Requests;
 
 public class GetProductListRequest
 {

@@ -4,7 +4,7 @@ using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Orders;
+namespace KKBookstore.Data.Configurations.Orders;
 
 internal class PaymentMethodConfiguration : IEntityTypeConfiguration<PaymentMethod>
 {

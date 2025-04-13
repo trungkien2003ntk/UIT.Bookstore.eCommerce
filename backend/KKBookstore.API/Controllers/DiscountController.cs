@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 
 // Note: things need to be done when add discount feature to system:

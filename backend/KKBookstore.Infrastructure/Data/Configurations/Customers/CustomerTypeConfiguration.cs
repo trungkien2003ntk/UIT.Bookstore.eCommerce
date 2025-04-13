@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Customers;
+namespace KKBookstore.Data.Configurations.Customers;
 
 internal class CustomerTypeConfiguration : IEntityTypeConfiguration<CustomerType>
 {

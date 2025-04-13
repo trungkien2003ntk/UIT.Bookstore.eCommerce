@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Infrastructure.Identity;
+namespace KKBookstore.Identity;
 
 public static class TokenErrors
 {

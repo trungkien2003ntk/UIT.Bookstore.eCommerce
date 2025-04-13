@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.ShoppingCarts;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Domain.ShoppingCarts;
+namespace KKBookstore.ShoppingCarts;
 
 [NotMapped]
 public class ShoppingCart

@@ -1,9 +1,10 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace KKBookstore.Domain.Orders;
+namespace KKBookstore.Orders;
 
 
 // TODO: Need more workarounds to make this class more complete

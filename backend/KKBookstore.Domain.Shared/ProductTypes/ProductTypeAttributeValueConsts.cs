@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.ProductTypes;
+﻿namespace KKBookstore.ProductTypes;
 
 public static class ProductTypeAttributeValueConsts
 {

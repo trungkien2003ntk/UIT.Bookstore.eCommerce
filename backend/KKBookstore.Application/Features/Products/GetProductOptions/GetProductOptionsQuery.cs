@@ -1,11 +1,12 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Application.Features.Products.GetProductOptions;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Products.GetProductOptions;
+namespace KKBookstore.Features.Products.GetProductOptions;
 
 public record GetProductOptionsQuery(int ProductId) : IRequest<Result<ListResult<ProductOptionsDto>>>;
 

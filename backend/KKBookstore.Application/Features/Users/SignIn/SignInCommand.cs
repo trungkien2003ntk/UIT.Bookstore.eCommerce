@@ -1,10 +1,11 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Application.Features.Users.SignIn;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.SignIn;
+namespace KKBookstore.Features.Users.SignIn;
 
 public record SignInCommand(string Email, string Password, SignInSource SignInSource) : IRequest<Result<SignInResponse>>;
 

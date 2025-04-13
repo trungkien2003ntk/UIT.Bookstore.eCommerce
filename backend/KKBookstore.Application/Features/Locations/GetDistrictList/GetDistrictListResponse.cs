@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Locations.GetDistrictList;
+﻿namespace KKBookstore.Features.Locations.GetDistrictList;
 
 public record GetDistrictListResponse
 {

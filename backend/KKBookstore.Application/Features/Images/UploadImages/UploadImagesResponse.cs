@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Images.UploadImages;
+﻿namespace KKBookstore.Features.Images.UploadImages;
 
 public record UploadImagesResponse
 {

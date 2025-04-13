@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.Orders;
+﻿namespace KKBookstore.Orders;
 
 public static class PaymentMethodConsts
 {

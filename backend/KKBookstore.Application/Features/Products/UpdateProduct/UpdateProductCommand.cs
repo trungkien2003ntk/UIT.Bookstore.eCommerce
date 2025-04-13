@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Application.Features.Products.UpdateProduct;
+namespace KKBookstore.Features.Products.UpdateProduct;
 
 public record UpdateProductCommand : AdminProductDto, IRequest<Result<AdminProductDto>>;
 

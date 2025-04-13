@@ -4,7 +4,7 @@ using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Branches;
+namespace KKBookstore.Data.Configurations.Branches;
 
 internal class BranchConfiguration : IEntityTypeConfiguration<Branch>
 {

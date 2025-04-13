@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace KKBookstore.API.Infrastructure;
+namespace KKBookstore.Infrastructure;
 
 
 

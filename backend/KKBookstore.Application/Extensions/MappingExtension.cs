@@ -4,7 +4,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
-namespace KKBookstore.Application.Extensions;
+namespace KKBookstore.Extensions;
 
 public static class MappingExtension
 {

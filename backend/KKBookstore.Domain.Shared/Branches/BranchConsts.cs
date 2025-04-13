@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.Branches;
+﻿namespace KKBookstore.Branches;
 
 public static class BranchConsts
 {

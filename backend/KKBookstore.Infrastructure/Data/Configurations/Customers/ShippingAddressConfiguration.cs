@@ -4,7 +4,7 @@ using KKBookstore.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Customers;
+namespace KKBookstore.Data.Configurations.Customers;
 
 internal class ShippingAddressConfiguration : IEntityTypeConfiguration<ShippingAddress>
 {

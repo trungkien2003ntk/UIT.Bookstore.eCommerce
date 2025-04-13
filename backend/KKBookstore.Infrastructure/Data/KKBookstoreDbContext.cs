@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
-namespace KKBookstore.Infrastructure.Data;
+namespace KKBookstore.Data;
 
 public class KKBookstoreDbContext(
     DbContextOptions<KKBookstoreDbContext> options

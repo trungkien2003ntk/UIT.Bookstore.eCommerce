@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
+namespace KKBookstore.Features.ShoppingCarts.AddShoppingCartItem;
 
 public sealed class AddShoppingCartItemCommandValidator : AbstractValidator<AddShoppingCartItemCommand>
 {

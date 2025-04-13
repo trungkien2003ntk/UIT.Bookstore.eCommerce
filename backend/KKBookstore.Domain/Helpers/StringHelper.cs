@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace KKBookstore.Domain.Helpers;
+namespace KKBookstore.Helpers;
 
 internal static class StringHelper
 {

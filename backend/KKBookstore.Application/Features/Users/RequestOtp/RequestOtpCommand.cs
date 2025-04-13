@@ -2,7 +2,7 @@
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.RequestOtp;
+namespace KKBookstore.Features.Users.RequestOtp;
 
 public record RequestOtpCommand(string Email) : IRequest<Result>;
 

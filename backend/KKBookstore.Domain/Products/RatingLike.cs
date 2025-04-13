@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
 
-namespace KKBookstore.Domain.Products;
+namespace KKBookstore.Products;
 
 public class RatingLike : BaseAuditedEntity
 {

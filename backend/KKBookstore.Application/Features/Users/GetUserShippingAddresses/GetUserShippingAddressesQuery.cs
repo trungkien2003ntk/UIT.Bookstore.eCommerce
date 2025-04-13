@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Users.GetUserShippingAddresses;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Users.GetUserShippingAddresses;
+namespace KKBookstore.Features.Users.GetUserShippingAddresses;
 
 public record GetUserShippingAddressesQuery(int UserId) : IRequest<Result<List<GetUserShippingAddressesResponse>>>;
 

@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Security;
+﻿namespace KKBookstore.Common.Security;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public class AuthorizeAttribute : Attribute

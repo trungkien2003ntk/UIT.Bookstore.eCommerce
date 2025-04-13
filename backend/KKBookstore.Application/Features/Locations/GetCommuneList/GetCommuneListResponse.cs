@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Locations.GetCommuneList;
+﻿namespace KKBookstore.Features.Locations.GetCommuneList;
 
 public record GetCommuneListResponse
 {

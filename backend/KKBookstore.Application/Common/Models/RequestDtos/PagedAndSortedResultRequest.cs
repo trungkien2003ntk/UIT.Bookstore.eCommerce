@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Common.Models.RequestDtos;
 
-namespace KKBookstore.Application.Common.Models.RequestDtos;
+namespace KKBookstore.Common.Models.RequestDtos;
 
 public record PagedAndSortedResultRequest : SortedResultRequest, IPaginatedQuery
 {

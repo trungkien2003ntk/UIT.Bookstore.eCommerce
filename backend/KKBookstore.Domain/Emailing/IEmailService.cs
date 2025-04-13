@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.Emailing.Models;
+﻿using KKBookstore.Domain.Emailing;
+using KKBookstore.Domain.Emailing.Models;
 
-namespace KKBookstore.Domain.Emailing;
+namespace KKBookstore.Emailing;
 
 public interface IEmailService
 {

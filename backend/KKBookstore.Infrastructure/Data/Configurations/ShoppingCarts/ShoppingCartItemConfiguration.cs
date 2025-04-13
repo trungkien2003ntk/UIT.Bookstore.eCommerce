@@ -3,7 +3,7 @@ using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.ShoppingCarts;
+namespace KKBookstore.Data.Configurations.ShoppingCarts;
 
 internal class ShoppingCartItemConfiguration : IEntityTypeConfiguration<ShoppingCartItem>
 {

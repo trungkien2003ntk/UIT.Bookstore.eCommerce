@@ -4,7 +4,7 @@ using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.ProductTypes;
+namespace KKBookstore.Data.Configurations.ProductTypes;
 
 internal class ProductTypeAttributeValueConfiguration : IEntityTypeConfiguration<ProductTypeAttributeValue>
 {

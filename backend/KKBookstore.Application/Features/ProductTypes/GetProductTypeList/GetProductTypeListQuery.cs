@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ProductTypes.GetProductTypeList.GetProductTypeListResponse;
 
-namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
+namespace KKBookstore.Features.ProductTypes.GetProductTypeList;
 
 public record GetProductTypeListQuery : IRequest<Result<GetProductTypeListResponse>>
 {

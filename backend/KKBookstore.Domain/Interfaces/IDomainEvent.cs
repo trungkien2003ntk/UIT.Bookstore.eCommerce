@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Interfaces;
+﻿namespace KKBookstore.Interfaces;
 
 public interface IDomainEvent
 {

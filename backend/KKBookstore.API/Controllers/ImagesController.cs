@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static KKBookstore.Application.Features.Images.UploadImages.UploadImagesCommand;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 
 [Route("api/images")]

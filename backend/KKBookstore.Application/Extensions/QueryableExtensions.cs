@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace KKBookstore.Application.Extensions;
+namespace KKBookstore.Extensions;
 
 public static class QueryableExtensions
 {
@@ -108,7 +108,7 @@ public static class QueryableExtensions
         var selector = Expression.Lambda(property, new ParameterExpression[] { arg });
 
         //Get System.Linq.Queryable.OrderBy() method.
-        var enumarableType = typeof(System.Linq.Queryable);
+        var enumarableType = typeof(Queryable);
         var method = enumarableType.GetMethods()
              .Where(m => m.Name == "OrderBy" && m.IsGenericMethodDefinition)
              .Where(m =>
@@ -141,7 +141,7 @@ public static class QueryableExtensions
         var selector = Expression.Lambda(property, new ParameterExpression[] { arg });
 
         //Get System.Linq.Queryable.OrderBy() method.
-        var enumarableType = typeof(System.Linq.Queryable);
+        var enumarableType = typeof(Queryable);
         var method = enumarableType.GetMethods()
              .Where(m => m.Name == "OrderByDescending" && m.IsGenericMethodDefinition)
              .Where(m =>

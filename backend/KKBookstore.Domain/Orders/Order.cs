@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.Domain.Orders;
+namespace KKBookstore.Orders;
 
 public class Order : BaseAuditedEntity
 {

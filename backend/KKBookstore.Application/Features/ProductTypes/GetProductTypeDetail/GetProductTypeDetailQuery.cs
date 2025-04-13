@@ -1,11 +1,12 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail.GetProductTypeDetailResponse;
 
-namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail;
+namespace KKBookstore.Features.ProductTypes.GetProductTypeDetail;
 
 public record GetProductTypeDetailQuery(int ProductTypeId, bool WithParent = true) : IRequest<Result<GetProductTypeDetailResponse>>;
 

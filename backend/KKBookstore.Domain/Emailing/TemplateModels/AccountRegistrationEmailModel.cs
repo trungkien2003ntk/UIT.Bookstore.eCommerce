@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.Shared.Emailing;
+﻿using KKBookstore.Domain.Emailing;
+using KKBookstore.Domain.Shared.Emailing;
 
-namespace KKBookstore.Domain.Emailing.TemplateModels;
+namespace KKBookstore.Emailing.TemplateModels;
 
 public class AccountRegistrationEmailModel : IEmailModel
 {

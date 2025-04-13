@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.Authentication;
+namespace KKBookstore.Authentication;
 
 public static class AuthErrors
 {

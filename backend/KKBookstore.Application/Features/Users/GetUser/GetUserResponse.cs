@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Shared.Users;
 
-namespace KKBookstore.Application.Features.Users.GetUser;
+namespace KKBookstore.Features.Users.GetUser;
 
 public record GetUserResponse : BaseDto
 {

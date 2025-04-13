@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Users.AddShippingAddress;
 using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Customers;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
-namespace KKBookstore.Application.Features.Users.AddShippingAddress;
+namespace KKBookstore.Features.Users.AddShippingAddress;
 
 public record AddShippingAddressCommand : IRequest<Result<AddShippingAddressResponse>>
 {

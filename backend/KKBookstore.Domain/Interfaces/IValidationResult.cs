@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.Interfaces;
+namespace KKBookstore.Interfaces;
 
 public interface IValidationResult
 {

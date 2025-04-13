@@ -2,6 +2,7 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
+using KKBookstore.Application.Features.Orders.GetOrderList;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Shared.Orders;
@@ -9,7 +10,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace KKBookstore.Application.Features.Orders.GetOrderList;
+namespace KKBookstore.Features.Orders.GetOrderList;
 
 public record GetOrderListQuery : IRequest<Result<PagedResult<OrderGeneralInformation>>>
 {

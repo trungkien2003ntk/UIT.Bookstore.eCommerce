@@ -7,7 +7,7 @@ using KKBookstore.Application.Mappings.Helpers;
 using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Orders;
 
-namespace KKBookstore.Application.Mappings;
+namespace KKBookstore.Mappings;
 
 public class OrderProfile : Profile
 {

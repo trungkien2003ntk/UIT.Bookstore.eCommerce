@@ -3,7 +3,7 @@ using KKBookstore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace KKBookstore.Infrastructure.Data.Interceptors;
+namespace KKBookstore.Data.Interceptors;
 
 public class AuditingInterceptor : SaveChangesInterceptor
 {

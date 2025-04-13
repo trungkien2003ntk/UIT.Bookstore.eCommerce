@@ -5,7 +5,7 @@ using KKBookstore.Application.Features.ProductTypeAttributes.GetProductTypeAttri
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [Route("api/product-types-attributes")]
 public class ProductTypeAttributesController(

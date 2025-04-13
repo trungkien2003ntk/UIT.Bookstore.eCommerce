@@ -4,7 +4,7 @@ using KKBookstore.Application.Common.Security;
 using MediatR;
 using System.Reflection;
 
-namespace KKBookstore.Application.Common.Behaviours;
+namespace KKBookstore.Common.Behaviours;
 
 internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {

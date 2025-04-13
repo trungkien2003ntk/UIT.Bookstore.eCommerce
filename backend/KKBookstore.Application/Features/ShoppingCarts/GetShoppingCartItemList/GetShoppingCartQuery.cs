@@ -1,10 +1,11 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
+namespace KKBookstore.Features.ShoppingCarts.GetShoppingCartItemList;
 
 public record GetShoppingCartQuery(int UserId) : IRequest<Result<GetShoppingCartResponse>>;
 

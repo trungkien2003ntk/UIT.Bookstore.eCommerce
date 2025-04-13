@@ -3,7 +3,7 @@ using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Abstractions;
+namespace KKBookstore.Abstractions;
 
 [ApiController]
 public abstract class ApiController(ISender sender) : ControllerBase

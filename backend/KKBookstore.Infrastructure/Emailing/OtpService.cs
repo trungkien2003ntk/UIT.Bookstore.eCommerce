@@ -5,7 +5,7 @@ using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace KKBookstore.Infrastructure.Emailing;
+namespace KKBookstore.Emailing;
 public class OtpService(
     IMemoryCache cache,
     IEmailSender emailService,

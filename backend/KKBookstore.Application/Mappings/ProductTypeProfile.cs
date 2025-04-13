@@ -2,7 +2,7 @@
 using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
 using KKBookstore.Domain.ProductTypes;
 
-namespace KKBookstore.Application.Mappings;
+namespace KKBookstore.Mappings;
 
 public class ProductTypeProfile : Profile
 {

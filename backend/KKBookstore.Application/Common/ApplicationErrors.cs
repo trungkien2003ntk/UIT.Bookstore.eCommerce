@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Application.Common;
+namespace KKBookstore.Common;
 
 public static class ApplicationErrors
 {

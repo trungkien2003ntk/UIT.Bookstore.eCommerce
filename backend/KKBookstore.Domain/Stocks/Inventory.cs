@@ -3,7 +3,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Domain.Stocks;
+namespace KKBookstore.Stocks;
 
 public class Inventory : BaseFullAuditedEntity
 {

@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Products.Events;
+﻿namespace KKBookstore.Products.Events;
 
 public record ProductCreatedEvent(int ProductId, IEnumerable<ImageDto> Images);
 

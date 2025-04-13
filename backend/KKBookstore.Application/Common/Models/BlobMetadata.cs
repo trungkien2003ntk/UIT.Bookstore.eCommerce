@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Models;
+﻿namespace KKBookstore.Common.Models;
 
 public class BlobMetadata
 {

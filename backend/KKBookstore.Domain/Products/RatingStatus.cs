@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Products;
+﻿namespace KKBookstore.Products;
 
 public enum RatingStatus
 {

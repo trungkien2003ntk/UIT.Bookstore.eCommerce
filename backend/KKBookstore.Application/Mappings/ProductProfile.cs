@@ -7,7 +7,7 @@ using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Application.Mappings.Helpers;
 using KKBookstore.Domain.Products;
 
-namespace KKBookstore.Application.Mappings;
+namespace KKBookstore.Mappings;
 
 public class ProductProfile : Profile
 {

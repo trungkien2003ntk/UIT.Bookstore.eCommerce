@@ -4,7 +4,7 @@ using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.ProductTypeAttributes.CreateProductAttributeValue;
+namespace KKBookstore.Features.ProductTypeAttributes.CreateProductAttributeValue;
 
 public record CreateProductTypeAttributeValueCommand(int ProductTypeAttributeId, string Value) : IRequest<Result<int>>;
 

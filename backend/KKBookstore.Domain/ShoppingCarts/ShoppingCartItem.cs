@@ -1,9 +1,10 @@
 ﻿using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ShoppingCarts;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KKBookstore.Domain.ShoppingCarts;
+namespace KKBookstore.ShoppingCarts;
 
 public class ShoppingCartItem : BaseAuditedEntity
 {

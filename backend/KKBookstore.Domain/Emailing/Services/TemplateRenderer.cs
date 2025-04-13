@@ -1,9 +1,10 @@
-﻿using Scriban;
+﻿using KKBookstore.Domain.Emailing;
+using Scriban;
 using Scriban.Syntax;
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace KKBookstore.Domain.Emailing.Services;
+namespace KKBookstore.Emailing.Services;
 
 public class TemplateRenderer : ITemplateRenderer
 {

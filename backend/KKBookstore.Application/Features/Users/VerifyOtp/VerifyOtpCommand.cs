@@ -2,7 +2,7 @@
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.VerifyOtp;
+namespace KKBookstore.Features.Users.VerifyOtp;
 
 public record VerifyOtpCommand(string Email, string Otp) : IRequest<Result>;
 

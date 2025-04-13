@@ -1,8 +1,9 @@
-﻿using KKBookstore.Application.Services;
+﻿using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
+using KKBookstore.Application.Services;
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
+namespace KKBookstore.Features.ProductTypes.GetProductTypeAttributes;
 
 public record GetProductTypeAttributesQuery(int ProductTypeId) : IRequest<Result<GetProductTypeAttributesResponse>>;
 

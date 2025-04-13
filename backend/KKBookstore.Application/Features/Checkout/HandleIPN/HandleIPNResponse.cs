@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Checkout.HandleIPN;
+﻿namespace KKBookstore.Features.Checkout.HandleIPN;
 
 public record HandleIPNResponse
 {

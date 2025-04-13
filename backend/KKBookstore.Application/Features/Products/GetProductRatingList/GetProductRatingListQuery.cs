@@ -2,12 +2,13 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
+using KKBookstore.Application.Features.Products.GetProductRatingList;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Products.GetProductRatingList;
+namespace KKBookstore.Features.Products.GetProductRatingList;
 
 public record GetProductRatingListQuery : IRequest<Result<ProductRatingSummary>>, IPaginatedQuery
 {

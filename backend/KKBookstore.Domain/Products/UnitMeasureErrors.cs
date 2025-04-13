@@ -1,7 +1,6 @@
-﻿
-using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.Products;
+namespace KKBookstore.Products;
 
 public static class UnitMeasureErrors
 {

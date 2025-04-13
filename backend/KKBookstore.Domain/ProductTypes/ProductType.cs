@@ -2,8 +2,9 @@
 using KKBookstore.Domain.Interfaces;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
+using KKBookstore.Domain.ProductTypes;
 
-namespace KKBookstore.Domain.ProductTypes;
+namespace KKBookstore.ProductTypes;
 
 
 public class ProductType : BaseFullAuditedEntity

@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Infrastructure.Shipping;
+namespace KKBookstore.Shipping;
 
 public abstract class ShippingServiceBaseDecorator(
     IShippingService wrappee

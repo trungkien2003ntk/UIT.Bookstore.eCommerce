@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Extensions;
+﻿namespace KKBookstore.Extensions;
 
 public static class DateTimeOffsetExtension
 {

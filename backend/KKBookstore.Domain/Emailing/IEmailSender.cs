@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Domain.Emailing.Models;
 using KKBookstore.Domain.Orders;
 
-namespace KKBookstore.Domain.Emailing;
+namespace KKBookstore.Emailing;
 
 public interface IEmailSender
 {

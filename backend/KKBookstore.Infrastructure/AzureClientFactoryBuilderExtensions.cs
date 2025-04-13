@@ -1,9 +1,10 @@
 using Azure.Core.Extensions;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
+using KKBookstore;
 using Microsoft.Extensions.Azure;
 
-namespace KKBookstore.Infrastructure;
+namespace KKBookstore;
 internal static class AzureClientFactoryBuilderExtensions
 {
     public static IAzureClientBuilder<BlobServiceClient, BlobClientOptions> AddBlobServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)

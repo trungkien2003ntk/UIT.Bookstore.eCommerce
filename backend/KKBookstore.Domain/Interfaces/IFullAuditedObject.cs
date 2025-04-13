@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.Users;
+﻿using KKBookstore.Domain.Interfaces;
+using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Interfaces;
+namespace KKBookstore.Interfaces;
 
 public interface IFullAuditedObject : IAuditedObject
 {

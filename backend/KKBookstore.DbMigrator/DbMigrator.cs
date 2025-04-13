@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace KKBookstore.DbMigrator;
+namespace KKBookstore;
 
 internal class DbMigrator(IServiceProvider serviceProvider, IHostEnvironment webHostEnvironment)
 {

@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Constants;
+﻿namespace KKBookstore.Common.Constants;
 
 public static class DiscountConstant
 {

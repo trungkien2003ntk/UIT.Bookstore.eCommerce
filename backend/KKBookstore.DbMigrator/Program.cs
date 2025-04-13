@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
-namespace KKBookstore.DbMigrator;
+namespace KKBookstore;
 
 internal static class Program
 {

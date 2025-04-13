@@ -2,7 +2,7 @@
 using KKBookstore.Application.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace KKBookstore.Infrastructure.Storage;
+namespace KKBookstore.Storage;
 
 public class AzureServiceBus : IServiceBus
 {

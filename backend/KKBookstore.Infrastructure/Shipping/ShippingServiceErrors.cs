@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Infrastructure.Shipping;
+namespace KKBookstore.Shipping;
 
 public static class ShippingServiceErrors
 {

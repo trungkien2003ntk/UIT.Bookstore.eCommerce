@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.ProductTypes;
 
-namespace KKBookstore.Domain.ProductTypes;
+namespace KKBookstore.ProductTypes;
 
 public class ProductTypeAttribute : BaseAuditedEntity
 {

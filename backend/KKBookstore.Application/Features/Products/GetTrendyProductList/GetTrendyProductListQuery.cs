@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Products.GetTrendyProductList;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.Products.GetTrendyProductList.GetTrendyProductListResponse;
 
-namespace KKBookstore.Application.Features.Products.GetTrendyProductList;
+namespace KKBookstore.Features.Products.GetTrendyProductList;
 
 public record GetTrendyProductListQuery(int? ProductTypeId = default) : IRequest<Result<GetTrendyProductListResponse>>;
 

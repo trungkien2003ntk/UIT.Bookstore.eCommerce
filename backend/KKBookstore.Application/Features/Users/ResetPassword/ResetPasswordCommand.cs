@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Application.Features.Users.ResetPassword;
+namespace KKBookstore.Features.Users.ResetPassword;
 
 public record ResetPasswordCommand(int UserId, string Token, string NewPassword) : IRequest<Result>;
 

@@ -16,7 +16,7 @@ using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 
 [Route("api/products")]

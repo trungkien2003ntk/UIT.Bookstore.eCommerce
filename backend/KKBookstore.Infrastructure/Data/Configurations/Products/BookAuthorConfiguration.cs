@@ -3,7 +3,7 @@ using KKBookstore.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Products;
+namespace KKBookstore.Data.Configurations.Products;
 
 internal class BookAuthorConfiguration : IEntityTypeConfiguration<BookAuthor>
 {

@@ -1,3 +1,3 @@
-﻿namespace KKBookstore.Application.Features.Users.RefreshAccessToken;
+﻿namespace KKBookstore.Features.Users.RefreshAccessToken;
 
 public record RefreshAccessTokenResponse(string AccessToken, DateTime AccessTokenExpiration);

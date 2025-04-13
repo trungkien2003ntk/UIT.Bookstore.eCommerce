@@ -3,7 +3,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.UpdateUserPartial;
+namespace KKBookstore.Features.Users.UpdateUserPartial;
 
 public record UpdateUserPartialCommand : IRequest<Result>
 {

@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
+namespace KKBookstore.Features.ShoppingCarts.GetShoppingCartItemList;
 
 public record GetShoppingCartResponse
 {

@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
+namespace KKBookstore.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
 
 public record GetAllDiscountVouchersForCartResponse
 {

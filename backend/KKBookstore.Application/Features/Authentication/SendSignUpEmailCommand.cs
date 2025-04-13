@@ -5,7 +5,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Authentication;
+namespace KKBookstore.Features.Authentication;
 
 public record SendSignUpEmailCommand(string Email, string RedirectUrlBase) : IRequest<Result>;
 

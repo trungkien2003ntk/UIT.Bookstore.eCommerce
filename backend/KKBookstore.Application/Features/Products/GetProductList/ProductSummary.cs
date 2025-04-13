@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.Products.GetProductList;
+namespace KKBookstore.Features.Products.GetProductList;
 
 public record ProductSummary : BaseDto
 {

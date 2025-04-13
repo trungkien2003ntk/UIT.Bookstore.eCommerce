@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace KKBookstore.API.Extensions;
+namespace KKBookstore.Extensions;
 
 public static class UserInformationExension
 {

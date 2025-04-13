@@ -3,7 +3,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.UpdateUser;
+namespace KKBookstore.Features.Users.UpdateUser;
 
 public record UpdateUserCommand(
     int Id,

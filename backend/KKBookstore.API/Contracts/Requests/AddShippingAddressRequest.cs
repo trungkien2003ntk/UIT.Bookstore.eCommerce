@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.API.Contracts.Requests;
+namespace KKBookstore.Contracts.Requests;
 
 public class AddShippingAddressRequest
 {

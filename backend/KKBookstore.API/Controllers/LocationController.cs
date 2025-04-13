@@ -5,7 +5,7 @@ using KKBookstore.Application.Features.Locations.GetProvinceList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [Route("api/locations")]
 public class LocationController(

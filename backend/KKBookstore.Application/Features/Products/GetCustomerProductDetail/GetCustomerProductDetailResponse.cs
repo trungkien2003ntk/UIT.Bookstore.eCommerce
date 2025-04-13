@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Products.Models;
 
-namespace KKBookstore.Application.Features.Products.GetCustomerProductDetail;
+namespace KKBookstore.Features.Products.GetCustomerProductDetail;
 
 public record GetCustomerProductDetailResponse : BaseDto
 {

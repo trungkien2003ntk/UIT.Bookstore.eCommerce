@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Application.Common.Constants;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ShoppingCarts;
@@ -8,7 +9,7 @@ using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartIt
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.DiscountDetailDto;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartResponse.ShoppingCartItemDto;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+namespace KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 
 public class UpdateShoppingCartMappingService(
     IApplicationDbContext _dbContext

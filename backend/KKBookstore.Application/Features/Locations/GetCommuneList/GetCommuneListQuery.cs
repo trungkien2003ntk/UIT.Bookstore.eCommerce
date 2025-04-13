@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Locations.GetCommuneList;
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Locations.GetCommuneList;
+namespace KKBookstore.Features.Locations.GetCommuneList;
 
 public class GetCommuneListQuery : IRequest<Result<GetCommuneListResponse>>
 {

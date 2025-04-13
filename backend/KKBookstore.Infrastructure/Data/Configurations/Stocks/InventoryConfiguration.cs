@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace
-    KKBookstore.Infrastructure.Data.Configurations.Stocks;
+    KKBookstore.Data.Configurations.Stocks;
 
 public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
 {

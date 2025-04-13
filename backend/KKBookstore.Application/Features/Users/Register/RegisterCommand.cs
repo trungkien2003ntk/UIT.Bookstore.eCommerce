@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Users.Register;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.Register;
+namespace KKBookstore.Features.Users.Register;
 
 public record RegisterCommand(
     string FirstName,

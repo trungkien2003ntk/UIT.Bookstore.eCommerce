@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Users;
+namespace KKBookstore.Data.Configurations.Users;
 
 internal class AddressConfiguration : IEntityTypeConfiguration<Address>
 {

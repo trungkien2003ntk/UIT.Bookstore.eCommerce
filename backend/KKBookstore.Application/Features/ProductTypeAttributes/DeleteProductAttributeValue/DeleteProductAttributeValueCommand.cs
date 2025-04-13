@@ -4,7 +4,7 @@ using KKBookstore.Domain.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.ProductTypeAttributes.DeleteProductAttributeValue;
+namespace KKBookstore.Features.ProductTypeAttributes.DeleteProductAttributeValue;
 
 public record DeleteProductAttributeValueCommand(int ProductTypeAttributeId, int ProductTypeAttributeValueId) : IRequest<Result>;
 

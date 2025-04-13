@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.API.Contracts.Requests.ShoppingCart;
+﻿namespace KKBookstore.Contracts.Requests.ShoppingCart;
 
 public class AddShoppingCartItemRequest
 {

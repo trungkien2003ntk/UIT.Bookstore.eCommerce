@@ -2,7 +2,7 @@
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Common.Behaviours;
+namespace KKBookstore.Common.Behaviours;
 
 public class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>

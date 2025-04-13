@@ -5,7 +5,7 @@ using KKBookstore.Application.Features.Orders.SendOrderEmail;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [Route("api/orders")]
 public class OrdersController(

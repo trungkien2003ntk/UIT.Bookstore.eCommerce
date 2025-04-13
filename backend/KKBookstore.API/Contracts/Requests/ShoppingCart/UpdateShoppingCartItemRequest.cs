@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 
-namespace KKBookstore.API.Contracts.Requests.ShoppingCart;
+namespace KKBookstore.Contracts.Requests.ShoppingCart;
 
 public class UpdateShoppingCartItemRequest
 {

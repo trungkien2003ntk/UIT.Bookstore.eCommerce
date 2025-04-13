@@ -4,9 +4,10 @@ using Azure.Search.Documents.Models;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.RequestDtos;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Infrastructure.Search;
 using Microsoft.Extensions.Options;
 
-namespace KKBookstore.Infrastructure.Search;
+namespace KKBookstore.Search;
 
 public class SearchService : ISearchService
 {

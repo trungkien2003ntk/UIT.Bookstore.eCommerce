@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace KKBookstore.Domain.Shared.Extensions;
+namespace KKBookstore.Extensions;
 
 public static class StringExtension
 {

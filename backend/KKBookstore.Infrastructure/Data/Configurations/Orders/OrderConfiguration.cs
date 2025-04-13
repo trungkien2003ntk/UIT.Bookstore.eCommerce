@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Orders;
+namespace KKBookstore.Data.Configurations.Orders;
 
 internal class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

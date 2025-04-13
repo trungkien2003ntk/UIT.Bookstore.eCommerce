@@ -3,7 +3,7 @@ using Azure.Storage.Blobs.Models;
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models;
 
-namespace KKBookstore.Infrastructure.Storage;
+namespace KKBookstore.Storage;
 
 internal class AzureBlobStorageService : IBlobStorageService
 {

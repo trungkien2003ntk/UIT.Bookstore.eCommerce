@@ -1,7 +1,8 @@
-﻿using KKBookstore.Domain.Models;
+﻿using KKBookstore.Application.Features.Checkout.PlaceOrder;
+using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
+namespace KKBookstore.Features.Checkout.PlaceOrder;
 
 public record PlaceOrderCommand : IRequest<Result<PlaceOrderResponse>>
 {

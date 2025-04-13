@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Users.Register;
+﻿namespace KKBookstore.Features.Users.Register;
 
 public class RegisterResponse(string AccessToken, DateTime AccessTokenExpiration, string RefreshToken)
 {

@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Models;
+using KKBookstore.Infrastructure.Shipping;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace KKBookstore.Infrastructure.Shipping;
+namespace KKBookstore.Shipping;
 
 public class CachedShippingService(
     IMemoryCache memoryCache,

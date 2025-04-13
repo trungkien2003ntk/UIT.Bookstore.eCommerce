@@ -4,7 +4,7 @@ using KKBookstore.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Staffs;
+namespace KKBookstore.Data.Configurations.Staffs;
 
 public class StaffConfiguration : IEntityTypeConfiguration<Staff>
 {

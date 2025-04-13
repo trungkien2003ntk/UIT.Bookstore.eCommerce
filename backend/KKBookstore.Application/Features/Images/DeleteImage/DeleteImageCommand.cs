@@ -4,7 +4,7 @@ using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Application.Features.Images.DeleteImage;
+namespace KKBookstore.Features.Images.DeleteImage;
 
 public record DeleteImageCommand(string imageName)
     : IRequest<Result>;

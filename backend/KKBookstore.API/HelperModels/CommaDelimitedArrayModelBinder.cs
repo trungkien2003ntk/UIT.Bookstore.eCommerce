@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 
-namespace KKBookstore.API.HelperModels;
+namespace KKBookstore.HelperModels;
 
 public class CommaDelimitedArrayModelBinder<T> : IModelBinder
 {

@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Products;
 
-namespace KKBookstore.Domain.Orders;
+namespace KKBookstore.Orders;
 
 
 public class OrderLine : BaseAuditedEntity

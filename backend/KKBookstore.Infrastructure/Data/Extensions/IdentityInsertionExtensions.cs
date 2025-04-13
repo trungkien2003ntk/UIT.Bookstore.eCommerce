@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Infrastructure.Data.Extensions;
+namespace KKBookstore.Data.Extensions;
 
 public static class IdentityInsertionExtensions
 {

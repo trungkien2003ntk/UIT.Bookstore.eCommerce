@@ -2,7 +2,7 @@
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Orders.SendOrderEmail;
+namespace KKBookstore.Features.Orders.SendOrderEmail;
 
 public enum EmailType
 {

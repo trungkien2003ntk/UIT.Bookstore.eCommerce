@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Interfaces;
+namespace KKBookstore.Interfaces;
 
 public interface IAuditedObject
 {

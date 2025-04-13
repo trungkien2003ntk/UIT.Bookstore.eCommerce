@@ -1,11 +1,12 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Orders.GetOrderDetail;
 using KKBookstore.Application.Features.Orders.Models;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Orders.GetOrderDetail;
+namespace KKBookstore.Features.Orders.GetOrderDetail;
 
 public record GetOrderDetailQuery(int Id) : IRequest<Result<GetOrderDetailResponse>>;
 

@@ -4,7 +4,7 @@ using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Users.DeleteShippingAddress;
+namespace KKBookstore.Features.Users.DeleteShippingAddress;
 
 public record DeleteShippingAddressCommand(int Id) : IRequest<Result>;
 

@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Features.Users.VerifyOtp;
 using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public interface IOtpService
 {

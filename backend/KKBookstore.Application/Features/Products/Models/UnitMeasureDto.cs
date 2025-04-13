@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.Products.Models;
+namespace KKBookstore.Features.Products.Models;
 
 public sealed record UnitMeasureDto : BaseDto
 {

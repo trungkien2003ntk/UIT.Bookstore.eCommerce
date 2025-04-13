@@ -9,7 +9,7 @@ using KKBookstore.Application.Features.Users.UpdateUserPartial;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public interface IIdentityService
 {

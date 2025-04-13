@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
+namespace KKBookstore.Features.ProductTypes.GetProductTypeList;
 
 public record GetProductTypeListResponse
     {

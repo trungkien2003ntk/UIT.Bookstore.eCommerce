@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Emailing.Models;
+﻿namespace KKBookstore.Emailing.Models;
 
 public class TemplateDefinition
 {

@@ -1,12 +1,13 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.RequestDtos;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Application.Features.Products.SearchProducts;
 using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.Products.SearchProducts.SearchProductsResponse;
 
-namespace KKBookstore.Application.Features.Products.SearchProducts;
+namespace KKBookstore.Features.Products.SearchProducts;
 
 public record SearchProductsQuery : IRequest<Result<SearchProductsResponse>>
 {

@@ -1,11 +1,12 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
+namespace KKBookstore.Features.DiscountVouchers.GetAllDiscountVouchersForCart;
 
 public record GetAllDiscountVouchersForCartQuery : IRequest<Result<GetAllDiscountVouchersForCartResponse>>
 {

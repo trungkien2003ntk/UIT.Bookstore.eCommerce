@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Locations.GetDistrictList;
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Locations.GetDistrictList;
+namespace KKBookstore.Features.Locations.GetDistrictList;
 
 public record GetDistrictListQuery : IRequest<Result<GetDistrictListResponse>>
 {

@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.Application.Features.Users.UpdateShippingAddress;
+namespace KKBookstore.Features.Users.UpdateShippingAddress;
 
 public record UpdateShippingAddressResponse(
     int Id,

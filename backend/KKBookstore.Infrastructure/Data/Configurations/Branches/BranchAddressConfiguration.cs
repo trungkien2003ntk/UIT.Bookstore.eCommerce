@@ -3,7 +3,7 @@ using KKBookstore.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace KKBookstore.Infrastructure.Data.Configurations.Branches;
+namespace KKBookstore.Data.Configurations.Branches;
 
 public class BranchAddressConfiguration : IEntityTypeConfiguration<BranchAddress>
 {

@@ -2,11 +2,12 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Extensions;
+using KKBookstore.Application.Features.Users.GetUserList;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Users;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.GetUserList;
+namespace KKBookstore.Features.Users.GetUserList;
 
 public record GetUserListQuery()
     : IRequest<Result<PagedResult<GetUserListResponse>>>, IPaginatedQuery, ISortableQuery

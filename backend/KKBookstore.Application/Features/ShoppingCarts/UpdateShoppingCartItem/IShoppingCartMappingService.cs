@@ -1,7 +1,8 @@
-﻿using KKBookstore.Domain.Models;
+﻿using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+using KKBookstore.Domain.Models;
 using KKBookstore.Domain.ShoppingCarts;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+namespace KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 
 public interface IUpdateShoppingCartMappingService
 {

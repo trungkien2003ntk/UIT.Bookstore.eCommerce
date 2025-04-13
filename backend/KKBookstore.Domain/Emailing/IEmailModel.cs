@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Emailing;
+﻿namespace KKBookstore.Emailing;
 
 public interface IEmailModel
 {

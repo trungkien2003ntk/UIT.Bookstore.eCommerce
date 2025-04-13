@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Infrastructure.Identity;
+﻿namespace KKBookstore.Identity;
 
 public class JwtSettings
 {

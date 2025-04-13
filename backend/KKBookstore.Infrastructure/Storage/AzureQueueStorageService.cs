@@ -2,7 +2,7 @@
 using Azure.Storage.Queues.Models;
 using KKBookstore.Application.Common.Interfaces;
 
-namespace KKBookstore.Infrastructure.Storage;
+namespace KKBookstore.Storage;
 
 internal class AzureQueueStorageService : IQueueStorageService
 {

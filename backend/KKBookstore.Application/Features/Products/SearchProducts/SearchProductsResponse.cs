@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 
-namespace KKBookstore.Application.Features.Products.SearchProducts;
+namespace KKBookstore.Features.Products.SearchProducts;
 
 public record SearchProductsResponse
 {

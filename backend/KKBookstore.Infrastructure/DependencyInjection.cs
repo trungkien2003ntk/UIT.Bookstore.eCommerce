@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Users;
+using KKBookstore.Infrastructure;
 using KKBookstore.Infrastructure.Data;
 using KKBookstore.Infrastructure.Data.Interceptors;
 using KKBookstore.Infrastructure.Emailing;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace KKBookstore.Infrastructure;
+namespace KKBookstore;
 
 public static class DependencyInjection
 {

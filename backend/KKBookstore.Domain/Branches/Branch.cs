@@ -1,6 +1,7 @@
-﻿using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Branches;
+using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.Branches;
+namespace KKBookstore.Branches;
 
 public class Branch : BaseFullAuditedEntity
 {

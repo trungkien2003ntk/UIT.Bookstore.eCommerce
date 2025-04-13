@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+﻿namespace KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 
 public enum UpdateCartActionType
 {

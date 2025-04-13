@@ -1,12 +1,11 @@
-﻿
-using KKBookstore.API.Abstractions;
+﻿using KKBookstore.API.Abstractions;
 using KKBookstore.Application.Features.ProductTypes.GetProductTypeAttributes;
 using KKBookstore.Application.Features.ProductTypes.GetProductTypeDetail;
 using KKBookstore.Application.Features.ProductTypes.GetProductTypeList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [Route("api/product-types")]
 public class ProductTypesController(

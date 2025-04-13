@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Features.Locations.GetProvinceList;
+﻿namespace KKBookstore.Features.Locations.GetProvinceList;
 
 public record GetProvinceListResponse
 {

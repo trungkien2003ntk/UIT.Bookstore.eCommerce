@@ -1,12 +1,13 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Products;
 using KKBookstore.Domain.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
+using static KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
+namespace KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
 
 public record UpdateShoppingCartItemCommand : IRequest<Result<UpdateShoppingCartResponse>>
 {

@@ -15,6 +15,7 @@ using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Users;
 using KKBookstore.Domain.Users;
 using KKBookstore.Infrastructure.Data;
+using KKBookstore.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -24,7 +25,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace KKBookstore.Infrastructure.Identity;
+namespace KKBookstore.Identity;
 
 public class IdentityService(
     UserManager<User> userManager,

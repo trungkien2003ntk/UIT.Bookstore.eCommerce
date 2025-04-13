@@ -1,6 +1,5 @@
 ﻿using KKBookstore.API.Abstractions;
 using KKBookstore.API.Contracts.Requests.ShoppingCart;
-
 using KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
 using KKBookstore.Application.Features.ShoppingCarts.GetShoppingCartItemList;
 using KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using static KKBookstore.Application.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateShoppingCartItemCommand;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [Authorize(Roles = $"{Role.Customer}")]
 [Route("api/shopping-cart/items")]

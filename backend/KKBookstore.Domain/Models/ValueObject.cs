@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Models;
+﻿namespace KKBookstore.Models;
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {

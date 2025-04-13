@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.ProductTypes;
+namespace KKBookstore.ProductTypes;
 
 public static class ProductTypeAttributeErrors
 {

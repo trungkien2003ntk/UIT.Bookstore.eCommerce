@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.ShoppingCarts;
 
-namespace KKBookstore.Application.Features.ShoppingCarts.AddShoppingCartItem;
+namespace KKBookstore.Features.ShoppingCarts.AddShoppingCartItem;
 
 public record AddShoppingCartItemResponse
 {

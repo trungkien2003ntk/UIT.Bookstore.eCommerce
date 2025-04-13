@@ -1,8 +1,9 @@
-﻿using KKBookstore.Domain.Models;
+﻿using KKBookstore.Domain.Customers;
+using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.Users;
 
-namespace KKBookstore.Domain.Customers;
+namespace KKBookstore.Customers;
 
 public class ShippingAddress : Address
 {

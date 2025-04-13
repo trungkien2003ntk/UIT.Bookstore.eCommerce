@@ -16,7 +16,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace KKBookstore.DbMigrator.Seeders;
+namespace KKBookstore.Seeders;
 
 internal class DataSeeder
 {

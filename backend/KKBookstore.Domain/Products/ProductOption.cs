@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Domain.Interfaces;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Products;
 
-namespace KKBookstore.Domain.Products;
+namespace KKBookstore.Products;
 
 public class ProductOption : BaseFullAuditedEntity
 {

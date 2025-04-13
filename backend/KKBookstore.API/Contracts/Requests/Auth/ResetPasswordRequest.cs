@@ -1,3 +1,3 @@
-﻿namespace KKBookstore.API.Contracts.Requests.Auth;
+﻿namespace KKBookstore.Contracts.Requests.Auth;
 
 public record ResetPasswordRequest(string Token, string NewPassword);

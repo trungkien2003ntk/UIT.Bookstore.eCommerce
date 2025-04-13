@@ -5,7 +5,7 @@ using KKBookstore.Domain.Products;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace KKBookstore.Application.Features.Products.GetAdminProductDetail;
+namespace KKBookstore.Features.Products.GetAdminProductDetail;
 
 public record GetAdminProductDetailQuery(int ProductId) : IRequest<Result<AdminProductDto>>;
 

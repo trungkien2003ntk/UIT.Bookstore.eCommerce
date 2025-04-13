@@ -5,7 +5,7 @@ using KKBookstore.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Application.Features.Users.RequestPasswordReset;
+namespace KKBookstore.Features.Users.RequestPasswordReset;
 
 public record RequestPasswordResetCommand(string Email, string RedirectUrlBase) : IRequest<Result>;
 

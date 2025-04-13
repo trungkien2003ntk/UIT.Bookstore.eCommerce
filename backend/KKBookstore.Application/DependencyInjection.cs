@@ -7,7 +7,7 @@ using KKBookstore.Application.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace KKBookstore.Application;
+namespace KKBookstore;
 
 public static class DependencyInjection
 {

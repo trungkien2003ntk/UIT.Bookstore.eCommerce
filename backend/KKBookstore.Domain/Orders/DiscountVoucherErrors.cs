@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.Orders;
+namespace KKBookstore.Orders;
 
 public static class DiscountVoucherErrors
 {

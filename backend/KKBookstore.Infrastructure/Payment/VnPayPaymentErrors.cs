@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Infrastructure.Payment;
+﻿namespace KKBookstore.Payment;
 
 public static class VnPayPaymentErrors
 {

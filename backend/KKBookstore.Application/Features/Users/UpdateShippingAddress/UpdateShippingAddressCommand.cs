@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Users.UpdateShippingAddress;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Shared.Orders;
 using KKBookstore.Domain.Users;
@@ -6,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Application.Features.Users.UpdateShippingAddress;
+namespace KKBookstore.Features.Users.UpdateShippingAddress;
 
 public record UpdateShippingAddressCommand(
     int Id,

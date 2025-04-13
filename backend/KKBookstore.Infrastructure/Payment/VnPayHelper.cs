@@ -3,7 +3,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace KKBookstore.Infrastructure.Payment;
+namespace KKBookstore.Payment;
 
 internal class VnPayHelper
 {

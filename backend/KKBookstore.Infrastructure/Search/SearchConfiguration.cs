@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Infrastructure.Search;
+﻿namespace KKBookstore.Search;
 
 public class SearchConfiguration
 {

@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Application.Features.Products.Models;
 using KKBookstore.Domain.Products;
 
-namespace KKBookstore.Application.Features.Products.Models;
+namespace KKBookstore.Features.Products.Models;
 
 public sealed record ProductVariantDto : BaseDto
 {

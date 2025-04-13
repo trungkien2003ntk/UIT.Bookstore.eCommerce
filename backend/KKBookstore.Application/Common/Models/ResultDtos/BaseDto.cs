@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Models.ResultDtos;
+﻿namespace KKBookstore.Common.Models.ResultDtos;
 
 public abstract record BaseDto
 {

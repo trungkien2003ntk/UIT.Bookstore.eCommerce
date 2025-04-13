@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Shared.Orders;
 
-namespace KKBookstore.Application.Features.Users.AddShippingAddress;
+namespace KKBookstore.Features.Users.AddShippingAddress;
 
 public record AddShippingAddressResponse
 {

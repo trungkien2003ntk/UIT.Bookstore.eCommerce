@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Application.Common.Exceptions;
+﻿namespace KKBookstore.Common.Exceptions;
 
 public class ForbiddenAccessException : Exception
 {

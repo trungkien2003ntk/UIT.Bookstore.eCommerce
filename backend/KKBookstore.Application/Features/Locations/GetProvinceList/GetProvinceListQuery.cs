@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Locations.GetProvinceList;
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Locations.GetProvinceList;
+namespace KKBookstore.Features.Locations.GetProvinceList;
 
 public record GetProvinceListQuery : IRequest<Result<GetProvinceListResponse>>
 {

@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.ShoppingCarts;
+namespace KKBookstore.ShoppingCarts;
 
 public static class ShoppingCartError
 {

@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using KKBookstore.Domain.Models;
+using System.Diagnostics.CodeAnalysis;
 
-namespace KKBookstore.Domain.Models;
+namespace KKBookstore.Models;
 
 public class Result
 {

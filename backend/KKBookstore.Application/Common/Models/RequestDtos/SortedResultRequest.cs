@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 
-namespace KKBookstore.Application.Common.Models.RequestDtos;
+namespace KKBookstore.Common.Models.RequestDtos;
 
 public record SortedResultRequest : ISortableQuery
 {

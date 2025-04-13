@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace KKBookstore.Infrastructure.Clients;
+namespace KKBookstore.Clients;
 
 internal class BookstoreClientService(IConfiguration configuration) : IBookstoreClientService
 {

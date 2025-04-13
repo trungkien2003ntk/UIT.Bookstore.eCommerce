@@ -1,7 +1,7 @@
 ﻿using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Application.Features.Products.Models;
 
-namespace KKBookstore.Application.Features.Products.GetProductRatingList;
+namespace KKBookstore.Features.Products.GetProductRatingList;
 
 public record ProductRatingSummary
 {

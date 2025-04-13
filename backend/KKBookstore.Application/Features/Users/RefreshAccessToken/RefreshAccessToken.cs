@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Users.RefreshAccessToken;
 using KKBookstore.Domain.Models;
 using MediatR;
 
-namespace KKBookstore.Application.Features.Users.RefreshAccessToken;
+namespace KKBookstore.Features.Users.RefreshAccessToken;
 
 public record RefreshAccessToken(string RefreshToken)
     : IRequest<Result<RefreshAccessTokenResponse>>;

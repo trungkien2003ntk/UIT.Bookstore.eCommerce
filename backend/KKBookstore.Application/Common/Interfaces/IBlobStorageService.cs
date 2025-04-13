@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Application.Common.Models;
 
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public interface IBlobStorageService
 {

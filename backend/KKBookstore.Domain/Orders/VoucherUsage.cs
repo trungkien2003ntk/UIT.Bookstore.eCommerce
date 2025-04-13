@@ -1,7 +1,8 @@
 ﻿using KKBookstore.Domain.Customers;
 using KKBookstore.Domain.Models;
+using KKBookstore.Domain.Orders;
 
-namespace KKBookstore.Domain.Orders;
+namespace KKBookstore.Orders;
 
 public sealed class VoucherUsage : BaseAuditedEntity
 {

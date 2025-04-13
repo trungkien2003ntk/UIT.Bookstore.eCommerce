@@ -2,7 +2,7 @@
 using KKBookstore.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Contracts.Requests.Users;
+namespace KKBookstore.Contracts.Requests.Users;
 
 public class GetUserListRequest : IPaginatedQuery, ISortableQuery
 {

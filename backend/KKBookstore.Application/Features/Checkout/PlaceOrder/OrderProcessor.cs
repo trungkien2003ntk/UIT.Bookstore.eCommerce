@@ -1,10 +1,11 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Checkout.PlaceOrder;
 using KKBookstore.Domain.Emailing;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.ShoppingCarts;
 
-namespace KKBookstore.Application.Features.Checkout.PlaceOrder;
+namespace KKBookstore.Features.Checkout.PlaceOrder;
 
 public abstract class OrderProcessor(
     IApplicationDbContext dbContext,

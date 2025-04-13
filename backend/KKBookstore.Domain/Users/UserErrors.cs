@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Models;
 
-namespace KKBookstore.Domain.Users;
+namespace KKBookstore.Users;
 
 public static class UserErrors
 {

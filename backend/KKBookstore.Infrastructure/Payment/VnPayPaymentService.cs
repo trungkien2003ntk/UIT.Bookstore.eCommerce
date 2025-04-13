@@ -1,8 +1,9 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Infrastructure.Payment;
 using Microsoft.Extensions.Options;
 
-namespace KKBookstore.Infrastructure.Payment;
+namespace KKBookstore.Payment;
 
 public class VnPayPaymentService(IOptions<VnPayConfiguration> options) : IPaymentService
 {

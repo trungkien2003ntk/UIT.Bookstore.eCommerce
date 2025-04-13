@@ -1,6 +1,6 @@
 ﻿using KKBookstore.Domain.Products;
 
-namespace KKBookstore.Application.Mappings.Helpers;
+namespace KKBookstore.Mappings.Helpers;
 
 internal static class MappingHelpers
 {
@@ -44,7 +44,7 @@ internal static class MappingHelpers
     public static List<string> GetOptionValuesWithImages(ProductOption productOption)
     {
         var optionValueImageMap = productOption.Product.ProductVariants
-            .SelectMany(pv => pv.ProductVariantOptionValues, (pv, sov) => new { pv=pv, sov })
+            .SelectMany(pv => pv.ProductVariantOptionValues, (pv, sov) => new { pv, sov })
             .Where(x => x.sov.OptionId == productOption.Id)
             .GroupBy(x => x.sov.OptionValueId)
             .ToDictionary(g => g.Key, g => g.First().pv);

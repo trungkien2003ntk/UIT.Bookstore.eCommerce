@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Application.Features.Checkout.Confirm;
 using KKBookstore.Domain.Models;
 using KKBookstore.Domain.Orders;
 using KKBookstore.Domain.Products;
@@ -7,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static KKBookstore.Application.Features.Checkout.Confirm.ConfirmCheckoutResponse;
 
-namespace KKBookstore.Application.Features.Checkout.Confirm;
+namespace KKBookstore.Features.Checkout.Confirm;
 
 public record ConfirmCheckoutQuery : IRequest<Result<ConfirmCheckoutResponse>>
 {

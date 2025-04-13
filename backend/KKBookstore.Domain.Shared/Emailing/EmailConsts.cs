@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.Domain.Shared.Emailing;
+﻿namespace KKBookstore.Emailing;
 
 public static class EmailConsts
 {

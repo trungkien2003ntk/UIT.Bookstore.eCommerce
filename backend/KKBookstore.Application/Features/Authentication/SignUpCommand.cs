@@ -10,7 +10,7 @@ using KKBookstore.Domain.Users;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Application.Features.Authentication;
+namespace KKBookstore.Features.Authentication;
 
 public record SignUpCommand(
     string Token,

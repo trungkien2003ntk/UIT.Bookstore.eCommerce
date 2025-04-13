@@ -7,6 +7,7 @@
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<UserSecretsId>44cb7408-c032-466d-9058-cb5947354fbb</UserSecretsId>
 		<Configurations>Debug;Release;Stage</Configurations>
+		<RootNamespace>KKBookstore</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

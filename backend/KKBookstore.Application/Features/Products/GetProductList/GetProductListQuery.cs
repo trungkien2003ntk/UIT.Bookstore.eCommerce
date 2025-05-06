@@ -21,6 +21,7 @@ public record GetProductListQuery()
     public List<int>? ExcludeProductIds { get; set; }
     public PriceRange? PriceRange { get; set; }
     public Dictionary<string, List<string>> CustomFilters { get; set; } = [];
+    public bool IsActive { get; set; } = true;
     public string? SearchQuery { get; set; }
 }
 
@@ -37,6 +38,7 @@ public class GetProductListQueryHandler(
         query = ApplyProductIdsFilter(query, request.ProductTypeIds);
         query = ApplyPriceRangeFilter(query, request.PriceRange);
         query = ApplyExcludeProducts(query, request.ExcludeProductIds);
+        query = query.Where(p => p.IsActive == request.IsActive);
         var result = await ApplyCustomFiltersAsync(query, request.CustomFilters, cancellationToken);
 
         if (result.IsFailure)
@@ -47,13 +49,13 @@ public class GetProductListQueryHandler(
         query = result.Value
             .Include(p => p.ProductImages)
             .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.ProductVariantOptionValues)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)!
                     .ThenInclude(pov => pov.Option)
             .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.ProductVariantOptionValues)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)!
                     .ThenInclude(pov => pov.OptionValue)
             .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.Inventories)
+                .ThenInclude(pv => pv.Inventories)!
                     .ThenInclude(i => i.Warehouse)
             .Include(p => p.ProductType)
             .Include(p => p.Ratings);
@@ -73,7 +75,8 @@ public class GetProductListQueryHandler(
         };
 
         string sortProperty = request.SortBy;
-        var sortValidateResult = ValidateSortProperty(sortProperty, [.. internalValidSortProperties, .. dtoValidSortProperties]);
+        List<string> sortValidProperties = [.. internalValidSortProperties, .. dtoValidSortProperties];
+        var sortValidateResult = ValidateSortProperty(sortProperty, sortValidProperties);
         if (sortValidateResult.IsFailure)
         {
             return Result.Failure<PagedResult<ProductSummary>>(sortValidateResult.Error);
@@ -119,7 +122,7 @@ public class GetProductListQueryHandler(
             var sortAndPagingResult = await query.SortAndPaginateWithResultAsync(
                 sortProperty,
                 request.SortDirection,
-                internalValidSortProperties,
+                sortValidProperties,
                 request.PageNumber,
                 request.PageSize,
                 cancellationToken);
@@ -189,12 +192,12 @@ public class GetProductListQueryHandler(
                     RecommendedRetailPrice = pv.RecommendedRetailPrice,
                     StockQuantity = pv.StockQuantity,
                     ThumbnailImageUrl = pv.GetThumbnailImageUrl() ?? string.Empty,
-                    OptionValues = pv.ProductVariantOptionValues.Select(pov => new OptionValueDto
+                    OptionValues = pv.ProductVariantOptionValues?.Select(pov => new OptionValueDto
                     {
                         Name = pov.Option.Name,
                         Value = pov.OptionValue.Value
                     }),
-                    StockBreakdowns = pv.Inventories
+                    StockBreakdowns = pv.Inventories is null ? [] : pv.Inventories
                         .Where(i => i.IsActive)
                         .Select(inv => new StockSummaryDto
                         {
@@ -213,7 +216,7 @@ public class GetProductListQueryHandler(
 
     private IQueryable<Product> ApplyExcludeProducts(IQueryable<Product> query, List<int>? excludeProductIds)
     {
-        if (excludeProductIds.Count > 0)
+        if (excludeProductIds is not null && excludeProductIds.Count > 0)
         {
             query = query.Where(p => !excludeProductIds.Contains(p.Id));
         }

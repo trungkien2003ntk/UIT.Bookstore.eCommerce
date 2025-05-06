@@ -5,11 +5,13 @@ using KKBookstore.Contracts.Requests;
 using KKBookstore.Features.Products.CreateProduct;
 using KKBookstore.Features.Products.GetAdminProductDetail;
 using KKBookstore.Features.Products.GetCustomerProductDetail;
+using KKBookstore.Features.Products.GetMonthlyTopSellingProductList;
 using KKBookstore.Features.Products.GetProductList;
 using KKBookstore.Features.Products.GetProductOptions;
 using KKBookstore.Features.Products.GetProductRatingList;
 using KKBookstore.Features.Products.GetTrendyProductList;
 using KKBookstore.Features.Products.GetUnitMeasures;
+using KKBookstore.Features.Products.GetWeeklyTopSellingProductList;
 using KKBookstore.Features.Products.SearchProducts;
 using KKBookstore.Features.Products.UpdateProduct;
 using KKBookstore.Models;
@@ -35,6 +37,26 @@ public class ProductsController(
 
         var result = await Sender.Send(query, cancellationToken);
 
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpGet("top-selling/weekly")]
+    public async Task<IActionResult> GetTopSellingProducts(
+        [FromQuery] GetWeeklyTopSellingProductListQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpGet("top-selling/monthly")]
+    public async Task<IActionResult> GetMonthlyTopSellingProducts(
+        [FromQuery] GetMonthlyTopSellingProductListQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(query, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 

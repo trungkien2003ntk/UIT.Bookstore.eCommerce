@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using KKBookstore.Common.Interfaces;
+﻿using KKBookstore.Common.Interfaces;
 using KKBookstore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +10,7 @@ public record GetTrendyProductListQuery(int? ProductTypeId = default) : IRequest
 
 // todo: considering merge this query with GetProductListQuery
 public class GetTrendyProductListQueryHandler(
-    IApplicationDbContext dbContext,
-    IMapper mapper
+    IApplicationDbContext dbContext
 ) : IRequestHandler<GetTrendyProductListQuery, Result<GetTrendyProductListResponse>>
 {
     public async Task<Result<GetTrendyProductListResponse>> Handle(GetTrendyProductListQuery request, CancellationToken cancellationToken)

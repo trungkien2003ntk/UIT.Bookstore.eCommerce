@@ -4,6 +4,7 @@ using KKBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250426055442_Updated_Products_20250426_125300")]
+    partial class Updated_Products_20250426_125300
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,7 +197,7 @@ namespace KKBookstore.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("KKBookstore.Orders.DeliveryMethod", b =>
@@ -2944,7 +2947,7 @@ namespace KKBookstore.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("KKBookstore.Products.Product.Sku#KKBookstore.Products.SkuValue", "Sku", b1 =>
+                    b.OwnsOne("KKBookstore.Products.SkuValue", "Sku", b1 =>
                         {
                             b1.Property<int>("ProductId")
                                 .HasColumnType("int");
@@ -2956,7 +2959,7 @@ namespace KKBookstore.Data.Migrations
 
                             b1.HasKey("ProductId");
 
-                            b1.ToTable("Products", (string)null);
+                            b1.ToTable("Products");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");
@@ -3111,7 +3114,7 @@ namespace KKBookstore.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("KKBookstore.Products.ProductVariant.Dimension#KKBookstore.Products.Dimension", "Dimension", b1 =>
+                    b.OwnsOne("KKBookstore.Products.Dimension", "Dimension", b1 =>
                         {
                             b1.Property<int>("ProductVariantId")
                                 .HasColumnType("int");
@@ -3130,13 +3133,13 @@ namespace KKBookstore.Data.Migrations
 
                             b1.HasKey("ProductVariantId");
 
-                            b1.ToTable("ProductVariants", (string)null);
+                            b1.ToTable("ProductVariants");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductVariantId");
                         });
 
-                    b.OwnsOne("KKBookstore.Products.ProductVariant.SkuValue#KKBookstore.Products.SkuValue", "SkuValue", b1 =>
+                    b.OwnsOne("KKBookstore.Products.SkuValue", "SkuValue", b1 =>
                         {
                             b1.Property<int>("ProductVariantId")
                                 .HasColumnType("int");
@@ -3148,7 +3151,7 @@ namespace KKBookstore.Data.Migrations
 
                             b1.HasKey("ProductVariantId");
 
-                            b1.ToTable("ProductVariants", (string)null);
+                            b1.ToTable("ProductVariants");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductVariantId");

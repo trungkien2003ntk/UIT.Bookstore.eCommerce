@@ -6,5 +6,5 @@ public static class ProductConsts
     public static string GetDefaultSorting() => DefaultSorting;
 
     public const int NameMaxLength = 256;
-    public const int DescriptionMaxLength = 1024;
+    public const int DescriptionMaxLength = -1;
 }

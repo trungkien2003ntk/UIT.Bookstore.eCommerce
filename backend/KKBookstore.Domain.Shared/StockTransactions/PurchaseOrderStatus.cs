@@ -1,7 +1,8 @@
-﻿namespace KKBookstore.Domain.PurchaseOrders;
+﻿namespace KKBookstore.StockTransactions;
 
 public enum PurchaseOrderStatus
 {
+    Draft,
     Pending,
     Completed,
     Approved,

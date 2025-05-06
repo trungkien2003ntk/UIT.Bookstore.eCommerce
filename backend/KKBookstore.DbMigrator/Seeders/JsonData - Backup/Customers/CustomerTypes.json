@@ -1,0 +1,26 @@
+﻿[
+  {
+    "Id": 1,
+    "Name": "Thường",
+    "Tier": "Regular",
+    "MinSpending": 0
+  },
+  {
+    "Id": 2,
+    "Name": "Bạc",
+    "Tier": "Silver",
+    "MinSpending": 1000000
+  },
+  {
+    "Id": 3,
+    "Name": "Vàng",
+    "Tier": "Gold",
+    "MinSpending": 5000000
+  },
+  {
+    "Id": 4,
+    "Name": "Kim cương",
+    "Tier": "Diamond",
+    "MinSpending": 10000000
+  }
+]

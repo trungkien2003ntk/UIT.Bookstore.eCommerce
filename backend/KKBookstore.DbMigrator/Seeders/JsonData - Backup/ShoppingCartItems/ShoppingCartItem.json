@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "CustomerId": 4,
+    "ProductVariantId": 1,
+    "Quantity": 3
+  },
+  {
+    "Id": 2,
+    "CustomerId": 4,
+    "ProductVariantId": 3,
+    "Quantity": 2
+  },
+  {
+    "Id": 3,
+    "CustomerId": 4,
+    "ProductVariantId": 5,
+    "Quantity": 1
+  },
+  {
+    "Id": 4,
+    "CustomerId": 5,
+    "ProductVariantId": 11,
+    "Quantity": 4
+  },
+  {
+    "Id": 5,
+    "CustomerId": 5,
+    "ProductVariantId": 10,
+    "Quantity": 1
+  }
+]

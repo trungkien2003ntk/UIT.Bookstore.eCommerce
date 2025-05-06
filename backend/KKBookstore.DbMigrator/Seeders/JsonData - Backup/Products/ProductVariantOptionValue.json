@@ -1,0 +1,152 @@
+[
+	{
+		"Id": 1,
+		"ProductVariantId": 3,
+		"OptionId": 1,
+		"OptionValueId": 1
+	},
+	{
+		"Id": 2,
+		"ProductVariantId": 4,
+		"OptionId": 1,
+		"OptionValueId": 2
+	},
+	{
+		"Id": 3,
+		"ProductVariantId": 5,
+		"OptionId": 1,
+		"OptionValueId": 3
+	},
+	{
+		"Id": 4,
+		"ProductVariantId": 6,
+		"OptionId": 1,
+		"OptionValueId": 4
+	},
+	{
+		"Id": 5,
+		"ProductVariantId": 7,
+		"OptionId": 1,
+		"OptionValueId": 5
+	},
+	{
+		"Id": 6,
+		"ProductVariantId": 8,
+		"OptionId": 1,
+		"OptionValueId": 6
+	},
+	{
+		"Id": 7,
+		"ProductVariantId": 9,
+		"OptionId": 2,
+		"OptionValueId": 7
+	},
+	{
+		"Id": 8,
+		"ProductVariantId": 10,
+		"OptionId": 2,
+		"OptionValueId": 8
+	},
+	{
+		"Id": 9,
+		"ProductVariantId": 11,
+		"OptionId": 2,
+		"OptionValueId": 9
+	},
+	{
+		"Id": 10,
+		"ProductVariantId": 12,
+		"OptionId": 2,
+		"OptionValueId": 10
+	},
+	{
+		"Id": 11,
+		"ProductVariantId": 13,
+		"OptionId": 2,
+		"OptionValueId": 11
+	},
+	{
+		"Id": 12,
+		"ProductVariantId": 15,
+		"OptionId": 3,
+		"OptionValueId": 12
+	},
+	{
+		"Id": 13,
+		"ProductVariantId": 16,
+		"OptionId": 3,
+		"OptionValueId": 13
+	},
+	{
+		"Id": 14,
+		"ProductVariantId": 17,
+		"OptionId": 3,
+		"OptionValueId": 14
+	},
+	{
+		"Id": 15,
+		"ProductVariantId": 18,
+		"OptionId": 3,
+		"OptionValueId": 15
+	},
+	{
+		"Id": 16,
+		"ProductVariantId": 19,
+		"OptionId": 3,
+		"OptionValueId": 16
+	},
+	{
+		"Id": 17,
+		"ProductVariantId": 20,
+		"OptionId": 4,
+		"OptionValueId": 17
+	},
+	{
+		"Id": 18,
+		"ProductVariantId": 21,
+		"OptionId": 4,
+		"OptionValueId": 18
+	},
+	{
+		"Id": 19,
+		"ProductVariantId": 22,
+		"OptionId": 4,
+		"OptionValueId": 19
+	},
+	{
+		"Id": 20,
+		"ProductVariantId": 23,
+		"OptionId": 4,
+		"OptionValueId": 20
+	},
+	{
+		"Id": 21,
+		"ProductVariantId": 24,
+		"OptionId": 4,
+		"OptionValueId": 21
+	},
+	{
+		"Id": 22,
+		"ProductVariantId": 25,
+		"OptionId": 4,
+		"OptionValueId": 22
+	},
+	{
+		"Id": 23,
+		"ProductVariantId": 34,
+		"OptionId": 5,
+		"OptionValueId": 23
+	},
+	{
+		"Id": 24,
+		"ProductVariantId": 35,
+		"OptionId": 5,
+		"OptionValueId": 24
+	},
+	{
+		"Id": 25,
+		"ProductVariantId": 36,
+		"OptionId": 5,
+		"OptionValueId": 25
+	}
+]

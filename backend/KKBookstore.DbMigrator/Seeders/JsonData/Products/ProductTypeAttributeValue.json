@@ -1,207 +1,797 @@
 [
-	{
-		"Id": 1,
-		"ProductTypeAttributeId": 2,
-		"Value": "Hội Nhà Văn"
-	},
-	{
-		"Id": 2,
-		"ProductTypeAttributeId": 5,
-		"Value": "144"
-	},
-	{
-		"Id": 3,
-		"ProductTypeAttributeId": 6,
-		"Value": "Bìa Mềm"
-	},
-	{
-		"Id": 4,
-		"ProductTypeAttributeId": 3,
-		"Value": "2019"
-	},
-	{
-		"Id": 5,
-		"ProductTypeAttributeId": 3,
-		"Value": "2022"
-	},
-	{
-		"Id": 6,
-		"ProductTypeAttributeId": 4,
-		"Value": "Tiếng Việt"
-	},
-	{
-		"Id": 7,
-		"ProductTypeAttributeId": 5,
-		"Value": "102"
-	},
-	{
-		"Id": 8,
-		"ProductTypeAttributeId": 2,
-		"Value": "Báo Sinh Viên Việt Nam - Hoa Học Trò"
-	},
-	{
-		"Id": 9,
-		"ProductTypeAttributeId": 3,
-		"Value": "2023"
-	},
-	{
-		"Id": 10,
-		"ProductTypeAttributeId": 5,
-		"Value": "100"
-	},
-	{
-		"Id": 11,
-		"ProductTypeAttributeId": 7,
-		"Value": "WanLongDa"
-	},
-	{
-		"Id": 12,
-		"ProductTypeAttributeId": 8,
-		"Value": "Trung Quốc"
-	},
-	{
-		"Id": 13,
-		"ProductTypeAttributeId": 9,
-		"Value": "Trung Quốc"
-	},
-	{
-		"Id": 14,
-		"ProductTypeAttributeId": 10,
-		"Value": "Nâu"
-	},
-	{
-		"Id": 15,
-		"ProductTypeAttributeId": 11,
-		"Value": "Bông"
-	},
-	{
-		"Id": 16,
-		"ProductTypeAttributeId": 10,
-		"Value": "Vàng"
-	},
-	{
-		"Id": 17,
-		"ProductTypeAttributeId": 11,
-		"Value": "Nhựa"
-	},
-	{
-		"Id": 18,
-		"ProductTypeAttributeId": 2,
-		"Value": "Thanh niên"
-	},
-	{
-		"Id": 19,
-		"ProductTypeAttributeId": 5,
-		"Value": "48"
-	},
-	{
-		"Id": 20,
-		"ProductTypeAttributeId": 2,
-		"Value": "Kim Đồng"
-	},
-	{
-		"Id": 21,
-		"ProductTypeAttributeId": 5,
-		"Value": "204"
-	},
-	{
-		"Id": 22,
-		"ProductTypeAttributeId": 2,
-		"Value": "Thế giới"
-	},
-	{
-		"Id": 23,
-		"ProductTypeAttributeId": 3,
-		"Value": "2021"
-	},
-	{
-		"Id": 24,
-		"ProductTypeAttributeId": 5,
-		"Value": "424"
-	},
-	{
-		"Id": 25,
-		"ProductTypeAttributeId": 5,
-		"Value": "344"
-	},
-	{
-		"Id": 26,
-		"ProductTypeAttributeId": 5,
-		"Value": "280"
-	},
-	{
-		"Id": 27,
-		"ProductTypeAttributeId": 2,
-		"Value": "Hồng Đức"
-	},
-	{
-		"Id": 29,
-		"ProductTypeAttributeId": 5,
-		"Value": "332"
-	},
-	{
-		"Id": 30,
-		"ProductTypeAttributeId": 5,
-		"Value": "200"
-	},
-	{
-		"Id": 31,
-		"ProductTypeAttributeId": 2,
-		"Value": "Tổng hợp TPHCM"
-	},
-	{
-		"Id": 32,
-		"ProductTypeAttributeId": 5,
-		"Value": "479"
-	},
-	{
-		"Id": 33,
-		"ProductTypeAttributeId": 7,
-		"Value": "Morning Glory"
-	},
-	{
-		"Id": 34,
-		"ProductTypeAttributeId": 8,
-		"Value": "Hàn Quốc"
-	},
-	{
-		"Id": 35,
-		"ProductTypeAttributeId": 9,
-		"Value": "Hàn Quốc"
-	},
-	{
-		"Id": 36,
-		"ProductTypeAttributeId": 11,
-		"Value": "Nhựa, Kim Loại"
-	},
-	{
-		"Id": 37,
-		"ProductTypeAttributeId": 7,
-		"Value": "OEM"
-	},
-	{
-		"Id": 38,
-		"ProductTypeAttributeId": 10,
-		"Value": "Trong suốt"
-	},
-	{
-		"Id": 39,
-		"ProductTypeAttributeId": 9,
-		"Value": "Việt Nam"
-	},
-	{
-		"Id": 40,
-		"ProductTypeAttributeId": 10,
-		"Value": "Đỏ - Đen"
-	},
-	{
-		"Id": 41,
-		"ProductTypeAttributeId": 7,
-		"Value": "Nano"
-	},
-	{
-		"Id": 42,
-		"ProductTypeAttributeId": 10,
-		"Value": "Đen"
-	}
+    {
+        "Id": 1,
+        "ProductTypeAttributeId": 1,
+        "Value": "9786043461428"
+    },
+    {
+        "Id": 2,
+        "ProductTypeAttributeId": 2,
+        "Value": "Công ty TNHH Ecoblader"
+    },
+    {
+        "Id": 3,
+        "ProductTypeAttributeId": 3,
+        "Value": "Hạo Nhiên, Quốc Khánh"
+    },
+    {
+        "Id": 4,
+        "ProductTypeAttributeId": 4,
+        "Value": "Kinh Tế TP.Hồ Chí Minh"
+    },
+    {
+        "Id": 5,
+        "ProductTypeAttributeId": 5,
+        "Value": "2023"
+    },
+    {
+        "Id": 6,
+        "ProductTypeAttributeId": 6,
+        "Value": "200"
+    },
+    {
+        "Id": 7,
+        "ProductTypeAttributeId": 7,
+        "Value": "20.5 x 14.5 cm"
+    },
+    {
+        "Id": 8,
+        "ProductTypeAttributeId": 8,
+        "Value": "150"
+    },
+    {
+        "Id": 9,
+        "ProductTypeAttributeId": 9,
+        "Value": "Bìa Mềm"
+    },
+    {
+        "Id": 10,
+        "ProductTypeAttributeId": 1,
+        "Value": "8935251419030"
+    },
+    {
+        "Id": 11,
+        "ProductTypeAttributeId": 2,
+        "Value": "Alpha Books"
+    },
+    {
+        "Id": 12,
+        "ProductTypeAttributeId": 3,
+        "Value": "Harvard Business Review"
+    },
+    {
+        "Id": 13,
+        "ProductTypeAttributeId": 10,
+        "Value": "Alphabooks"
+    },
+    {
+        "Id": 14,
+        "ProductTypeAttributeId": 4,
+        "Value": "Đại Học Kinh Tế Quốc Dân"
+    },
+    {
+        "Id": 15,
+        "ProductTypeAttributeId": 5,
+        "Value": "2022"
+    },
+    {
+        "Id": 16,
+        "ProductTypeAttributeId": 6,
+        "Value": "415"
+    },
+    {
+        "Id": 17,
+        "ProductTypeAttributeId": 7,
+        "Value": "26.5 x 20.5 x 0.8 cm"
+    },
+    {
+        "Id": 18,
+        "ProductTypeAttributeId": 8,
+        "Value": "168"
+    },
+    {
+        "Id": 19,
+        "ProductTypeAttributeId": 1,
+        "Value": "8935246925645"
+    },
+    {
+        "Id": 20,
+        "ProductTypeAttributeId": 2,
+        "Value": "MCBooks"
+    },
+    {
+        "Id": 21,
+        "ProductTypeAttributeId": 3,
+        "Value": "Susan Gunelius"
+    },
+    {
+        "Id": 22,
+        "ProductTypeAttributeId": 4,
+        "Value": "NXB Hồng Đức"
+    },
+    {
+        "Id": 23,
+        "ProductTypeAttributeId": 5,
+        "Value": "2020"
+    },
+    {
+        "Id": 24,
+        "ProductTypeAttributeId": 6,
+        "Value": "320"
+    },
+    {
+        "Id": 25,
+        "ProductTypeAttributeId": 7,
+        "Value": "24 x 16 cm x 1.5"
+    },
+    {
+        "Id": 26,
+        "ProductTypeAttributeId": 8,
+        "Value": "312"
+    },
+    {
+        "Id": 27,
+        "ProductTypeAttributeId": 1,
+        "Value": "8851552512037"
+    },
+    {
+        "Id": 28,
+        "ProductTypeAttributeId": 2,
+        "Value": "Bình Tây"
+    },
+    {
+        "Id": 29,
+        "ProductTypeAttributeId": 11,
+        "Value": "Horse"
+    },
+    {
+        "Id": 30,
+        "ProductTypeAttributeId": 12,
+        "Value": "Thái Lan"
+    },
+    {
+        "Id": 31,
+        "ProductTypeAttributeId": 13,
+        "Value": "Đỏ - Đen"
+    },
+    {
+        "Id": 32,
+        "ProductTypeAttributeId": 14,
+        "Value": "Đỏ"
+    },
+    {
+        "Id": 33,
+        "ProductTypeAttributeId": 15,
+        "Value": "Nhựa"
+    },
+    {
+        "Id": 34,
+        "ProductTypeAttributeId": 6,
+        "Value": "39"
+    },
+    {
+        "Id": 35,
+        "ProductTypeAttributeId": 7,
+        "Value": "10 x 3.5 x 3.5 cm"
+    },
+    {
+        "Id": 36,
+        "ProductTypeAttributeId": 1,
+        "Value": "8935044534681"
+    },
+    {
+        "Id": 37,
+        "ProductTypeAttributeId": 16,
+        "Value": "Cty VPP Hồng Hà"
+    },
+    {
+        "Id": 38,
+        "ProductTypeAttributeId": 11,
+        "Value": "Hồng Hà"
+    },
+    {
+        "Id": 39,
+        "ProductTypeAttributeId": 17,
+        "Value": "Việt Nam"
+    },
+    {
+        "Id": 40,
+        "ProductTypeAttributeId": 12,
+        "Value": "Việt Nam"
+    },
+    {
+        "Id": 41,
+        "ProductTypeAttributeId": 13,
+        "Value": "Tím"
+    },
+    {
+        "Id": 42,
+        "ProductTypeAttributeId": 14,
+        "Value": "Tím Hồng"
+    },
+    {
+        "Id": 43,
+        "ProductTypeAttributeId": 15,
+        "Value": "Màu, Nước"
+    },
+    {
+        "Id": 44,
+        "ProductTypeAttributeId": 6,
+        "Value": "75"
+    },
+    {
+        "Id": 45,
+        "ProductTypeAttributeId": 7,
+        "Value": "5.5 x 4.5 x 4.5 cm"
+    },
+    {
+        "Id": 46,
+        "ProductTypeAttributeId": 1,
+        "Value": "1507020060490"
+    },
+    {
+        "Id": 47,
+        "ProductTypeAttributeId": 16,
+        "Value": "Cty TM Hạnh Thuận"
+    },
+    {
+        "Id": 48,
+        "ProductTypeAttributeId": 11,
+        "Value": "OEM"
+    },
+    {
+        "Id": 49,
+        "ProductTypeAttributeId": 17,
+        "Value": "Thương Hiệu Hàn Quốc"
+    },
+    {
+        "Id": 50,
+        "ProductTypeAttributeId": 12,
+        "Value": "Hàn Quốc"
+    },
+    {
+        "Id": 51,
+        "ProductTypeAttributeId": 13,
+        "Value": "Đen"
+    },
+    {
+        "Id": 52,
+        "ProductTypeAttributeId": 14,
+        "Value": "Đen"
+    },
+    {
+        "Id": 53,
+        "ProductTypeAttributeId": 6,
+        "Value": "10"
+    },
+    {
+        "Id": 54,
+        "ProductTypeAttributeId": 7,
+        "Value": "3 x 1 x 1 cm"
+    },
+    {
+        "Id": 55,
+        "ProductTypeAttributeId": 1,
+        "Value": "4974052811425"
+    },
+    {
+        "Id": 56,
+        "ProductTypeAttributeId": 2,
+        "Value": "Văn Phòng Phẩm Artline"
+    },
+    {
+        "Id": 57,
+        "ProductTypeAttributeId": 11,
+        "Value": "Artline"
+    },
+    {
+        "Id": 58,
+        "ProductTypeAttributeId": 17,
+        "Value": "Thương Hiệu Nhật"
+    },
+    {
+        "Id": 59,
+        "ProductTypeAttributeId": 12,
+        "Value": "Malaysia"
+    },
+    {
+        "Id": 60,
+        "ProductTypeAttributeId": 6,
+        "Value": "67"
+    },
+    {
+        "Id": 61,
+        "ProductTypeAttributeId": 7,
+        "Value": "6.5 x 3.9 x 3.9 cm"
+    },
+    {
+        "Id": 62,
+        "ProductTypeAttributeId": 1,
+        "Value": "4711577000107"
+    },
+    {
+        "Id": 63,
+        "ProductTypeAttributeId": 16,
+        "Value": "Cty Văn Phòng Sáng Tạo (Stacom)"
+    },
+    {
+        "Id": 64,
+        "ProductTypeAttributeId": 6,
+        "Value": "350"
+    },
+    {
+        "Id": 65,
+        "ProductTypeAttributeId": 1,
+        "Value": "8804819096283"
+    },
+    {
+        "Id": 66,
+        "ProductTypeAttributeId": 16,
+        "Value": "Cty Đỉnh Điểm"
+    },
+    {
+        "Id": 67,
+        "ProductTypeAttributeId": 11,
+        "Value": "Mungyo"
+    },
+    {
+        "Id": 68,
+        "ProductTypeAttributeId": 13,
+        "Value": "Hồng"
+    },
+    {
+        "Id": 69,
+        "ProductTypeAttributeId": 6,
+        "Value": "20"
+    },
+    {
+        "Id": 70,
+        "ProductTypeAttributeId": 7,
+        "Value": "14 x 1 x 1 cm"
+    },
+    {
+        "Id": 71,
+        "ProductTypeAttributeId": 1,
+        "Value": "1901011650361"
+    },
+    {
+        "Id": 72,
+        "ProductTypeAttributeId": 2,
+        "Value": "Công Ty TNHH Sakura Color Products Việt Nam"
+    },
+    {
+        "Id": 73,
+        "ProductTypeAttributeId": 11,
+        "Value": "Sakura"
+    },
+    {
+        "Id": 74,
+        "ProductTypeAttributeId": 13,
+        "Value": "Trắng"
+    },
+    {
+        "Id": 75,
+        "ProductTypeAttributeId": 6,
+        "Value": "5"
+    },
+    {
+        "Id": 76,
+        "ProductTypeAttributeId": 7,
+        "Value": "12 x 0.5 x 0.5 cm"
+    },
+    {
+        "Id": 77,
+        "ProductTypeAttributeId": 1,
+        "Value": "3154142456014-mau1"
+    },
+    {
+        "Id": 78,
+        "ProductTypeAttributeId": 2,
+        "Value": "Cty Mai Son"
+    },
+    {
+        "Id": 79,
+        "ProductTypeAttributeId": 11,
+        "Value": "Maped"
+    },
+    {
+        "Id": 80,
+        "ProductTypeAttributeId": 17,
+        "Value": "Thương Hiệu Pháp"
+    },
+    {
+        "Id": 81,
+        "ProductTypeAttributeId": 12,
+        "Value": "Trung Quốc"
+    },
+    {
+        "Id": 82,
+        "ProductTypeAttributeId": 6,
+        "Value": "15"
+    },
+    {
+        "Id": 83,
+        "ProductTypeAttributeId": 7,
+        "Value": "37 x 4.5 x 0.3 cm"
+    },
+    {
+        "Id": 84,
+        "ProductTypeAttributeId": 1,
+        "Value": "8908000034082"
+    },
+    {
+        "Id": 85,
+        "ProductTypeAttributeId": 16,
+        "Value": "DOMS INDUSTRIES Pvt. Ltd."
+    },
+    {
+        "Id": 86,
+        "ProductTypeAttributeId": 11,
+        "Value": "DOMS"
+    },
+    {
+        "Id": 87,
+        "ProductTypeAttributeId": 17,
+        "Value": "Thương Hiệu Ấn Độ"
+    },
+    {
+        "Id": 88,
+        "ProductTypeAttributeId": 12,
+        "Value": "Ấn Độ"
+    },
+    {
+        "Id": 89,
+        "ProductTypeAttributeId": 13,
+        "Value": "Trong Suốt"
+    },
+    {
+        "Id": 90,
+        "ProductTypeAttributeId": 6,
+        "Value": "30"
+    },
+    {
+        "Id": 91,
+        "ProductTypeAttributeId": 7,
+        "Value": "31 x 3 x 0.3 cm"
+    },
+    {
+        "Id": 92,
+        "ProductTypeAttributeId": 1,
+        "Value": "3154142790101-mau1"
+    },
+    {
+        "Id": 93,
+        "ProductTypeAttributeId": 6,
+        "Value": "40"
+    },
+    {
+        "Id": 94,
+        "ProductTypeAttributeId": 7,
+        "Value": "30 x 3.5 x 0.1 cm"
+    },
+    {
+        "Id": 95,
+        "ProductTypeAttributeId": 1,
+        "Value": "3154142792105-mau3"
+    },
+    {
+        "Id": 96,
+        "ProductTypeAttributeId": 6,
+        "Value": "22"
+    },
+    {
+        "Id": 97,
+        "ProductTypeAttributeId": 7,
+        "Value": "30 x 5.3 x 0.3 cm"
+    },
+    {
+        "Id": 98,
+        "ProductTypeAttributeId": 1,
+        "Value": "8938540746688"
+    },
+    {
+        "Id": 99,
+        "ProductTypeAttributeId": 11,
+        "Value": "HYLEX"
+    },
+    {
+        "Id": 100,
+        "ProductTypeAttributeId": 7,
+        "Value": "17 x 14 x 6 cm"
+    },
+    {
+        "Id": 101,
+        "ProductTypeAttributeId": 1,
+        "Value": "6942233661136"
+    },
+    {
+        "Id": 102,
+        "ProductTypeAttributeId": 11,
+        "Value": "Deli"
+    },
+    {
+        "Id": 103,
+        "ProductTypeAttributeId": 17,
+        "Value": "Trung Quốc"
+    },
+    {
+        "Id": 104,
+        "ProductTypeAttributeId": 6,
+        "Value": "60"
+    },
+    {
+        "Id": 105,
+        "ProductTypeAttributeId": 7,
+        "Value": "11.5 x 6.5 x 2 cm"
+    },
+    {
+        "Id": 106,
+        "ProductTypeAttributeId": 1,
+        "Value": "8935324023294"
+    },
+    {
+        "Id": 107,
+        "ProductTypeAttributeId": 2,
+        "Value": "Thiên Long Hoàn Cầu"
+    },
+    {
+        "Id": 108,
+        "ProductTypeAttributeId": 11,
+        "Value": "Thiên Long"
+    },
+    {
+        "Id": 109,
+        "ProductTypeAttributeId": 18,
+        "Value": "7 năm"
+    },
+    {
+        "Id": 110,
+        "ProductTypeAttributeId": 19,
+        "Value": "Có dùng pin, pin có kèm trong sản phẩm"
+    },
+    {
+        "Id": 111,
+        "ProductTypeAttributeId": 7,
+        "Value": "17 x 9 x 3 cm"
+    },
+    {
+        "Id": 112,
+        "ProductTypeAttributeId": 1,
+        "Value": "8935324005788"
+    },
+    {
+        "Id": 113,
+        "ProductTypeAttributeId": 11,
+        "Value": "Flexio"
+    },
+    {
+        "Id": 114,
+        "ProductTypeAttributeId": 6,
+        "Value": "190"
+    },
+    {
+        "Id": 115,
+        "ProductTypeAttributeId": 1,
+        "Value": "8938558077033"
+    },
+    {
+        "Id": 116,
+        "ProductTypeAttributeId": 2,
+        "Value": "Cty Huy Tín"
+    },
+    {
+        "Id": 117,
+        "ProductTypeAttributeId": 11,
+        "Value": "Vinacal"
+    },
+    {
+        "Id": 118,
+        "ProductTypeAttributeId": 18,
+        "Value": "2 năm"
+    },
+    {
+        "Id": 119,
+        "ProductTypeAttributeId": 15,
+        "Value": "Nhựa, Kim Loại"
+    },
+    {
+        "Id": 120,
+        "ProductTypeAttributeId": 6,
+        "Value": "180"
+    },
+    {
+        "Id": 121,
+        "ProductTypeAttributeId": 7,
+        "Value": "18 x 9 x 3 cm"
+    },
+    {
+        "Id": 122,
+        "ProductTypeAttributeId": 1,
+        "Value": "8938558077095"
+    },
+    {
+        "Id": 123,
+        "ProductTypeAttributeId": 7,
+        "Value": "20.5 x 9 x 3 cm"
+    },
+    {
+        "Id": 124,
+        "ProductTypeAttributeId": 1,
+        "Value": "8938558077118"
+    },
+    {
+        "Id": 125,
+        "ProductTypeAttributeId": 1,
+        "Value": "6975165338937"
+    },
+    {
+        "Id": 126,
+        "ProductTypeAttributeId": 18,
+        "Value": "5 năm"
+    },
+    {
+        "Id": 127,
+        "ProductTypeAttributeId": 13,
+        "Value": "Xanh Nhạt"
+    },
+    {
+        "Id": 128,
+        "ProductTypeAttributeId": 6,
+        "Value": "181"
+    },
+    {
+        "Id": 129,
+        "ProductTypeAttributeId": 7,
+        "Value": "16 x 10.8 x 2.8 cm"
+    },
+    {
+        "Id": 130,
+        "ProductTypeAttributeId": 1,
+        "Value": "8801237201411"
+    },
+    {
+        "Id": 131,
+        "ProductTypeAttributeId": 2,
+        "Value": "Morning Glory Corp"
+    },
+    {
+        "Id": 132,
+        "ProductTypeAttributeId": 11,
+        "Value": "Morning Glory"
+    },
+    {
+        "Id": 133,
+        "ProductTypeAttributeId": 6,
+        "Value": "165"
+    },
+    {
+        "Id": 134,
+        "ProductTypeAttributeId": 7,
+        "Value": "20 x 10.5 x 3 cm"
+    },
+    {
+        "Id": 135,
+        "ProductTypeAttributeId": 1,
+        "Value": "8935219410406"
+    },
+    {
+        "Id": 136,
+        "ProductTypeAttributeId": 13,
+        "Value": "Hồng - Đen"
+    },
+    {
+        "Id": 137,
+        "ProductTypeAttributeId": 6,
+        "Value": "228"
+    },
+    {
+        "Id": 138,
+        "ProductTypeAttributeId": 7,
+        "Value": "19.5 x 9 x 3.3 cm"
+    },
+    {
+        "Id": 139,
+        "ProductTypeAttributeId": 1,
+        "Value": "8888572769172"
+    },
+    {
+        "Id": 140,
+        "ProductTypeAttributeId": 2,
+        "Value": "ESPP"
+    },
+    {
+        "Id": 141,
+        "ProductTypeAttributeId": 11,
+        "Value": "Helix"
+    },
+    {
+        "Id": 142,
+        "ProductTypeAttributeId": 17,
+        "Value": "Thương Hiệu Singapore"
+    },
+    {
+        "Id": 143,
+        "ProductTypeAttributeId": 13,
+        "Value": "Xanh Dương"
+    },
+    {
+        "Id": 144,
+        "ProductTypeAttributeId": 6,
+        "Value": "100"
+    },
+    {
+        "Id": 145,
+        "ProductTypeAttributeId": 7,
+        "Value": "15 x 21.5"
+    },
+    {
+        "Id": 146,
+        "ProductTypeAttributeId": 1,
+        "Value": "8936007454633"
+    },
+    {
+        "Id": 147,
+        "ProductTypeAttributeId": 2,
+        "Value": "Công ty TNHH Công Nghiệp PLUS Việt Nam"
+    },
+    {
+        "Id": 148,
+        "ProductTypeAttributeId": 11,
+        "Value": "Plus"
+    },
+    {
+        "Id": 149,
+        "ProductTypeAttributeId": 7,
+        "Value": "30 x 21.5 x 0.2 cm"
+    },
+    {
+        "Id": 150,
+        "ProductTypeAttributeId": 1,
+        "Value": "8936007454640"
+    },
+    {
+        "Id": 151,
+        "ProductTypeAttributeId": 7,
+        "Value": "21.5 x 15 x 1 cm"
+    },
+    {
+        "Id": 152,
+        "ProductTypeAttributeId": 1,
+        "Value": "8936007457634"
+    },
+    {
+        "Id": 153,
+        "ProductTypeAttributeId": 6,
+        "Value": "130"
+    },
+    {
+        "Id": 154,
+        "ProductTypeAttributeId": 7,
+        "Value": "31 x 24 x 2 cm"
+    },
+    {
+        "Id": 155,
+        "ProductTypeAttributeId": 1,
+        "Value": "8936008696704-mau3"
+    },
+    {
+        "Id": 156,
+        "ProductTypeAttributeId": 16,
+        "Value": "Cty Giai Phát"
+    },
+    {
+        "Id": 157,
+        "ProductTypeAttributeId": 11,
+        "Value": "King Star"
+    },
+    {
+        "Id": 158,
+        "ProductTypeAttributeId": 13,
+        "Value": "Vàng"
+    },
+    {
+        "Id": 159,
+        "ProductTypeAttributeId": 7,
+        "Value": "30 x 21 x 1 cm"
+    }
 ]

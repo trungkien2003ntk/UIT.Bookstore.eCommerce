@@ -213,32 +213,32 @@ internal class DataSeeder
         Log.Information($"\t\t2.6. Seeding product type attribute values");
         await SeedProductTypeAttributeValues();
 
-        //Log.Information($"\t\t2.7. Seeding products");
-        //await SeedProducts();
+        Log.Information($"\t\t2.7. Seeding products");
+        await SeedProducts();
 
-        //Log.Information($"\t\t2.8. Seeding product type attribute product values");
-        //await SeedProductTypeAttributeProductValues();
+        Log.Information($"\t\t2.8. Seeding product type attribute product values");
+        await SeedProductTypeAttributeProductValues();
 
-        //Log.Information($"\t\t2.9. Seeding product images");
-        //await SeedProductImages();
+        Log.Information($"\t\t2.9. Seeding product images");
+        await SeedProductImages();
 
-        //Log.Information($"\t\t2.10. Seeding product variants");
-        //await SeedProductVariants(); 
+        Log.Information($"\t\t2.10. Seeding product variants");
+        await SeedProductVariants();
 
-        //Log.Information($"\t\t2.11. Seeding book authors");
-        //await SeedBookAuthors();
+        Log.Information($"\t\t2.11. Seeding book authors");
+        await SeedBookAuthors();
 
-        //Log.Information($"\t\t2.12. Seeding options");
-        //await SeedOptions();
+        Log.Information($"\t\t2.12. Seeding options");
+        await SeedOptions();
 
-        //Log.Information($"\t\t2.13. Seeding option values");
-        //await SeedOptionValues();
+        Log.Information($"\t\t2.13. Seeding option values");
+        await SeedOptionValues();
 
-        //Log.Information($"\t\t2.14. Seeding product variant option values");
-        //await SeedProductVariantOptionValues();
+        Log.Information($"\t\t2.14. Seeding product variant option values");
+        await SeedProductVariantOptionValues();
 
-        //Log.Information($"\t\t2.15. Seeding ratings");
-        //await SeedRatings();
+        Log.Information($"\t\t2.15. Seeding ratings");
+        await SeedRatings();
     }
 
     private async Task SeedBranches()

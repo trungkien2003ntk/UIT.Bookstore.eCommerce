@@ -1,46 +1,78 @@
 [
-	{
-		"Id": 2,
-		"Name": "NXB"
-	},
-	{
-		"Id": 3,
-		"Name": "Năm xuất bản"
-	},
-	{
-		"Id": 4,
-		"Name": "Ngôn ngữ"
-	},
-	{
-		"Id": 5,
-		"Name": "Số trang"
-	},
-	{
-		"Id": 6,
-		"Name": "Hình thức"
-	},
-	{
-		"Id": 7,
-		"Name": "Thương hiệu"
-	},
-	{
-		"Id": 8,
-		"Name": "Xuất xứ thương hiệu"
-	},
-	{
-		"Id": 9,
-		"Name": "Nơi gia công & sản xuất"
-	},
-	{
-		"Id": 10,
-		"Name": "Màu sắc"
-	},
-	{
-		"Id": 11,
-		"Name": "Chất liệu"
-	},
-	{
-		"Id": 12,
-		"Name": "Độ tuổi"
-	}
+    {
+        "Id": 1,
+        "Name": "Mã hàng"
+    },
+    {
+        "Id": 2,
+        "Name": "Tên Nhà Cung Cấp"
+    },
+    {
+        "Id": 3,
+        "Name": "Tác giả"
+    },
+    {
+        "Id": 4,
+        "Name": "NXB"
+    },
+    {
+        "Id": 5,
+        "Name": "Năm XB"
+    },
+    {
+        "Id": 6,
+        "Name": "Trọng lượng (gr)"
+    },
+    {
+        "Id": 7,
+        "Name": "Kích Thước Bao Bì"
+    },
+    {
+        "Id": 8,
+        "Name": "Số trang"
+    },
+    {
+        "Id": 9,
+        "Name": "Hình thức"
+    },
+    {
+        "Id": 10,
+        "Name": "Người Dịch"
+    },
+    {
+        "Id": 11,
+        "Name": "Thương Hiệu"
+    },
+    {
+        "Id": 12,
+        "Name": "Nơi Gia Công & Sản Xuất"
+    },
+    {
+        "Id": 13,
+        "Name": "Màu sắc"
+    },
+    {
+        "Id": 14,
+        "Name": "Màu Mực"
+    },
+    {
+        "Id": 15,
+        "Name": "Chất liệu"
+    },
+    {
+        "Id": 16,
+        "Name": "Nhà Cung Cấp"
+    },
+    {
+        "Id": 17,
+        "Name": "Xuất Xứ Thương Hiệu"
+    },
+    {
+        "Id": 18,
+        "Name": "Bảo hành"
+    },
+    {
+        "Id": 19,
+        "Name": "Thông Số Kỹ Thuật"
+    }
 ]

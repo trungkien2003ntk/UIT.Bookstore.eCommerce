@@ -14,6 +14,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.ConfigureAuditing();
 
         builder.Property(t => t.ProductVariantId).HasColumnName(nameof(Rating.ProductVariantId)).IsRequired();
+        builder.Property(t => t.ProductId).HasColumnName(nameof(Rating.ProductId)).IsRequired();
         builder.Property(t => t.RatingValue).HasColumnName(nameof(Rating.RatingValue)).IsRequired();
         builder.Property(t => t.Comment).HasColumnName(nameof(Rating.Comment)).HasMaxLength(RatingConsts.CommentMaxLength);
         builder.Property(t => t.Response).HasColumnName(nameof(Rating.Response)).HasMaxLength(RatingConsts.ResponseMaxLength);

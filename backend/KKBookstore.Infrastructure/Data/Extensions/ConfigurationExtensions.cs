@@ -39,6 +39,8 @@ internal static class ConfigurationExtensions
             b.Property<DateTimeOffset?>(nameof(IFullAuditedObject.DeletionTime)).HasColumnName(nameof(IFullAuditedObject.DeletionTime));
             b.Property<bool>(nameof(IFullAuditedObject.IsDeleted)).HasColumnName(nameof(IFullAuditedObject.IsDeleted)).IsRequired();
             b.HasOne(nameof(IFullAuditedObject.Deleter)).WithMany().HasForeignKey(nameof(IFullAuditedObject.DeleterId)).OnDelete(DeleteBehavior.NoAction);
+
+            b.HasIndex(nameof(IFullAuditedObject.IsDeleted)).HasDatabaseName("IX_IsDeleted");
         }
     }
 

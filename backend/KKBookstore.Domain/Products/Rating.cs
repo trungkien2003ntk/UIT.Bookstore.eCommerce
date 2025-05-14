@@ -26,6 +26,7 @@ public class Rating : BaseAuditedEntity
     public int RatingValue { get; set; }
     public int CustomerId { get; set; }
     public int ProductVariantId { get; set; }
+    public int ProductId { get; set; }
     public int ReportedCount { get; set; }
     public string? Response { get; set; }
     public RatingStatus Status { get; set; }

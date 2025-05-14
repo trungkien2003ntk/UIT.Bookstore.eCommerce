@@ -27,5 +27,6 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasOne(t => t.ProductType).WithMany().HasForeignKey(t => t.ProductTypeId);
         builder.HasOne(t => t.UnitMeasure).WithMany().HasForeignKey(t => t.UnitMeasureId);
+        builder.HasMany(t => t.Ratings).WithOne().HasForeignKey(t => t.ProductId);
     }
 }

@@ -8,6 +8,7 @@ using KKBookstore.Products;
 using KKBookstore.ProductTypes;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
+using KKBookstore.StockTransactions;
 using KKBookstore.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -54,6 +55,7 @@ public class KKBookstoreDbContext(
     public DbSet<ProductVariantOptionValue> ProductVariantOptionValues { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<UnitMeasure> UnitMeasures { get; set; }
+    public DbSet<Inventory> Inventories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

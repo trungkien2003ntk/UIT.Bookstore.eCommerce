@@ -57,5 +57,6 @@ internal class DbMigrator(IServiceProvider serviceProvider, IHostEnvironment web
     {
         // Seed production data here
         // Leave this empty for now
+        await _seeder!.SeedAsync();
     }
 }

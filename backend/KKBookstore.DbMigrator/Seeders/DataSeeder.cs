@@ -225,8 +225,8 @@ internal class DataSeeder
         Log.Information($"\t\t2.10. Seeding product variants");
         await SeedProductVariants();
 
-        Log.Information($"\t\t2.11. Seeding book authors");
-        await SeedBookAuthors();
+        //Log.Information($"\t\t2.11. Seeding book authors");
+        //await SeedBookAuthors();
 
         Log.Information($"\t\t2.12. Seeding options");
         await SeedOptions();
@@ -634,97 +634,97 @@ internal class DataSeeder
                 Value = $"SKU{variant.Id:D5}"
             };
 
-            switch (variant.Id)
-            {
-                case 1:
-                    variant.Dimension = new Dimension { Height = 14m, Width = 20.5m, Length = 0.3m };
-                    break;
-                case 2:
-                    variant.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 0.5m };
-                    break;
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    variant.Dimension = new Dimension { Height = 22.0m, Width = 12.0m, Length = 0.5m };
-                    break;
-                case 9:
-                    variant.Dimension = new Dimension { Height = 17.0m, Width = 9.0m, Length = 8m };
-                    break;
-                case 10:
-                    variant.Dimension = new Dimension { Height = 16.0m, Width = 8.0m, Length = 7m };
-                    break;
-                case 11:
-                    variant.Dimension = new Dimension { Height = 12.0m, Width = 8.0m, Length = 8m };
-                    break;
-                case 12:
-                    variant.Dimension = new Dimension { Height = 9.0m, Width = 9.0m, Length = 8m };
-                    break;
-                case 13:
-                    variant.Dimension = new Dimension { Height = 1.0m, Width = 9.0m, Length = 3.5m };
-                    break;
-                case 14:
-                    variant.Dimension = new Dimension { Height = 7.0m, Width = 7.0m, Length = 1m };
-                    break;
-                case 15:
-                case 16:
-                case 17:
-                case 18:
-                case 19:
-                    variant.Dimension = new Dimension { Height = 20.5m, Width = 18.5m, Length = 0.4m };
-                    break;
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                    variant.Dimension = new Dimension { Height = 17.6m, Width = 11.3m, Length = 1m };
-                    break;
-                case 26:
-                    variant.Dimension = new Dimension { Height = 24.0m, Width = 17.0m, Length = 6.0m };
-                    break;
-                case 27:
-                    variant.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 2.1m };
-                    break;
-                case 28:
-                    variant.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 0.5m };
-                    break;
-                case 29:
-                    variant.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 1.4m };
-                    break;
-                case 30:
-                    variant.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 1.4m };
-                    break;
-                case 31:
-                    variant.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 1.6m };
-                    break;
-                case 32:
-                    variant.Dimension = new Dimension { Height = 20.5m, Width = 14m, Length = 1m };
-                    break;
-                case 33:
-                    variant.Dimension = new Dimension { Height = 20.5m, Width = 13.0m, Length = 2.5m };
-                    break;
-                case 34:
-                case 35:
-                case 36:
-                    variant.Dimension = new Dimension { Height = 10.5m, Width = 5m, Length = 1.5m };
-                    break;
-                case 37:
-                    variant.Dimension = new Dimension { Height = 5m, Width = 5m, Length = 2m };
-                    break;
-                case 38:
-                    variant.Dimension = new Dimension { Height = 15m, Width = 2m, Length = 2m };
-                    break;
-                case 39:
-                    variant.Dimension = new Dimension { Height = 6.5m, Width = 6.5m, Length = 2m };
-                    break;
-                case 40:
-                    variant.Dimension = new Dimension { Height = 8m, Width = 8m, Length = 8m };
-                    break;
-            }
+            variant.Dimension = new Dimension { Height = 14m, Width = 20.5m, Length = 0.3m };
+            //switch (variant.Id)
+            //{
+            //    case 1:
+            //        break;
+            //    case 2:
+            //        variant.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 0.5m };
+            //        break;
+            //    case 3:
+            //    case 4:
+            //    case 5:
+            //    case 6:
+            //    case 7:
+            //    case 8:
+            //        variant.Dimension = new Dimension { Height = 22.0m, Width = 12.0m, Length = 0.5m };
+            //        break;
+            //    case 9:
+            //        variant.Dimension = new Dimension { Height = 17.0m, Width = 9.0m, Length = 8m };
+            //        break;
+            //    case 10:
+            //        variant.Dimension = new Dimension { Height = 16.0m, Width = 8.0m, Length = 7m };
+            //        break;
+            //    case 11:
+            //        variant.Dimension = new Dimension { Height = 12.0m, Width = 8.0m, Length = 8m };
+            //        break;
+            //    case 12:
+            //        variant.Dimension = new Dimension { Height = 9.0m, Width = 9.0m, Length = 8m };
+            //        break;
+            //    case 13:
+            //        variant.Dimension = new Dimension { Height = 1.0m, Width = 9.0m, Length = 3.5m };
+            //        break;
+            //    case 14:
+            //        variant.Dimension = new Dimension { Height = 7.0m, Width = 7.0m, Length = 1m };
+            //        break;
+            //    case 15:
+            //    case 16:
+            //    case 17:
+            //    case 18:
+            //    case 19:
+            //        variant.Dimension = new Dimension { Height = 20.5m, Width = 18.5m, Length = 0.4m };
+            //        break;
+            //    case 20:
+            //    case 21:
+            //    case 22:
+            //    case 23:
+            //    case 24:
+            //    case 25:
+            //        variant.Dimension = new Dimension { Height = 17.6m, Width = 11.3m, Length = 1m };
+            //        break;
+            //    case 26:
+            //        variant.Dimension = new Dimension { Height = 24.0m, Width = 17.0m, Length = 6.0m };
+            //        break;
+            //    case 27:
+            //        variant.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 2.1m };
+            //        break;
+            //    case 28:
+            //        variant.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 0.5m };
+            //        break;
+            //    case 29:
+            //        variant.Dimension = new Dimension { Height = 24.0m, Width = 16.0m, Length = 1.4m };
+            //        break;
+            //    case 30:
+            //        variant.Dimension = new Dimension { Height = 20.5m, Width = 14.5m, Length = 1.4m };
+            //        break;
+            //    case 31:
+            //        variant.Dimension = new Dimension { Height = 20.0m, Width = 14.5m, Length = 1.6m };
+            //        break;
+            //    case 32:
+            //        variant.Dimension = new Dimension { Height = 20.5m, Width = 14m, Length = 1m };
+            //        break;
+            //    case 33:
+            //        variant.Dimension = new Dimension { Height = 20.5m, Width = 13.0m, Length = 2.5m };
+            //        break;
+            //    case 34:
+            //    case 35:
+            //    case 36:
+            //        variant.Dimension = new Dimension { Height = 10.5m, Width = 5m, Length = 1.5m };
+            //        break;
+            //    case 37:
+            //        variant.Dimension = new Dimension { Height = 5m, Width = 5m, Length = 2m };
+            //        break;
+            //    case 38:
+            //        variant.Dimension = new Dimension { Height = 15m, Width = 2m, Length = 2m };
+            //        break;
+            //    case 39:
+            //        variant.Dimension = new Dimension { Height = 6.5m, Width = 6.5m, Length = 2m };
+            //        break;
+            //    case 40:
+            //        variant.Dimension = new Dimension { Height = 8m, Width = 8m, Length = 8m };
+            //        break;
+            //}
         }
 
         await _dbContext.SaveChangesWithIdentityInsertAsync<ProductVariant>();

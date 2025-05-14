@@ -7,7 +7,6 @@ using KKBookstore.Features.Products.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using KKBookstore.Products;
-using KKBookstore.ProductTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,35 +31,114 @@ public class GetProductListQueryHandler(
 {
     public async Task<Result<PagedResult<ProductSummary>>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
     {
-        // Note: This query is not optimized, just need the first image in the sku images
-        IQueryable<Product> query = dbContext.Products.AsNoTracking();
-
-        query = ApplyProductIdsFilter(query, request.ProductTypeIds);
-        query = ApplyPriceRangeFilter(query, request.PriceRange);
-        query = ApplyExcludeProducts(query, request.ExcludeProductIds);
-        query = query.Where(p => p.IsActive == request.IsActive);
-        var result = await ApplyCustomFiltersAsync(query, request.CustomFilters, cancellationToken);
-
-        if (result.IsFailure)
+        try
         {
-            return Result.Failure<PagedResult<ProductSummary>>(result.Error);
+            // Phase 1: Apply all filters but minimize includes for the filtering phase
+            IQueryable<Product> baseQuery = dbContext.Products.AsNoTracking();
+
+            baseQuery = ApplyProductIdsFilter(baseQuery, request.ProductTypeIds);
+            baseQuery = ApplyPriceRangeFilter(baseQuery, request.PriceRange);
+            baseQuery = ApplyExcludeProducts(baseQuery, request.ExcludeProductIds);
+            baseQuery = baseQuery
+                // We'll later implement full-text search, and AI search by Azure
+                //.Where(p => !string.IsNullOrWhiteSpace(request.SearchQuery) && p.Name.Contains(request.SearchQuery))
+                .Where(p => p.IsActive == request.IsActive);
+
+            var customFilterResult = await ApplyCustomFiltersAsync(baseQuery, request.CustomFilters, cancellationToken);
+            if (customFilterResult.IsFailure)
+            {
+                return Result.Failure<PagedResult<ProductSummary>>(customFilterResult.Error);
+            }
+
+            baseQuery = customFilterResult.Value;
+
+            // Get total count before pagination for accurate paging
+            var totalCount = await baseQuery.CountAsync(cancellationToken);
+            if (totalCount == 0)
+            {
+                return Result.Failure<PagedResult<ProductSummary>>(ProductErrors.NotFound);
+            }
+
+            // Apply sorting
+            IQueryable<Product> sortedQuery = ApplySorting(baseQuery, request.SortBy, request.SortDirection);
+
+            // Phase 2: Get just the IDs for the current page
+            var pagedProductIds = await sortedQuery
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(p => p.Id)
+                .ToListAsync(cancellationToken);
+
+            // Phase 3: Load only the detailed data needed for the current page
+            // with optimized includes
+            var pagedProductsWithDetails = await dbContext.Products
+                .AsNoTracking()
+                .Where(p => pagedProductIds.Contains(p.Id))
+                .Include(p => p.ProductType)
+                .Include(p => p.ProductImages.Take(1)) // Only first image
+                .Include(p => p.Ratings)
+                .Include(p => p.ProductVariants.OrderBy(pv => pv.UnitPrice)) // Limit variants
+                    .ThenInclude(pv => pv.ProductVariantOptionValues!) // Limit option values
+                        .ThenInclude(pov => pov.Option)
+                .Include(p => p.ProductVariants)
+                    .ThenInclude(pv => pv.ProductVariantOptionValues!)
+                        .ThenInclude(pov => pov.OptionValue)
+                .ToListAsync(cancellationToken);
+
+            // Load inventory data separately to reduce join complexity
+            var productIds = pagedProductsWithDetails.Select(p => p.Id).ToList();
+            var variantIds = pagedProductsWithDetails
+                .SelectMany(p => p.ProductVariants.Select(v => v.Id))
+                .ToList();
+
+            var inventories = await dbContext.Inventories
+                .AsNoTracking()
+                .Where(i => i.IsActive && variantIds.Contains(i.ProductVariantId))
+                .Include(i => i.Warehouse)
+                .ToListAsync(cancellationToken);
+
+            // Create lookup for efficient assignment
+            var inventoryByVariantId = inventories
+                .GroupBy(i => i.ProductVariantId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Assign inventories to variants
+            foreach (var product in pagedProductsWithDetails)
+            {
+                foreach (var variant in product.ProductVariants)
+                {
+                    if (inventoryByVariantId.TryGetValue(variant.Id, out var variantInventories))
+                    {
+                        variant.Inventories = variantInventories;
+                    }
+                }
+            }
+
+            // Load sold counts in a single efficient query
+            var soldCounts = await GetSoldCountsAsync(productIds, cancellationToken);
+
+            // Create page result
+            var products = new PagedResult<Product>(
+                pagedProductsWithDetails,
+                totalCount,
+                request.PageSize,
+                request.PageNumber
+            );
+
+            // Map to DTOs
+            var result = MapToProductSummaryResult(products, soldCounts);
+
+            return Result.Success(result);
         }
+        catch (Exception ex)
+        {
+            // Log exception here
+            return Result.Failure<PagedResult<ProductSummary>>(Error.Failure("Error.Internal", ex.Message));
+        }
+    }
 
-        query = result.Value
-            .Include(p => p.ProductImages)
-            .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.ProductVariantOptionValues)!
-                    .ThenInclude(pov => pov.Option)
-            .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.ProductVariantOptionValues)!
-                    .ThenInclude(pov => pov.OptionValue)
-            .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.Inventories)!
-                    .ThenInclude(i => i.Warehouse)
-            .Include(p => p.ProductType)
-            .Include(p => p.Ratings);
-
-        // Apply sorting
+    private IQueryable<Product> ApplySorting(IQueryable<Product> query, string sortBy, string sortDirection)
+    {
         var dtoValidSortProperties = new List<string>
         {
             nameof(ProductSummary.MinUnitPrice),
@@ -74,77 +152,42 @@ public class GetProductListQueryHandler(
             nameof(Product.Id)
         };
 
-        string sortProperty = request.SortBy;
         List<string> sortValidProperties = [.. internalValidSortProperties, .. dtoValidSortProperties];
-        var sortValidateResult = ValidateSortProperty(sortProperty, sortValidProperties);
+        var sortValidateResult = ValidateSortProperty(sortBy, sortValidProperties);
+
         if (sortValidateResult.IsFailure)
         {
-            return Result.Failure<PagedResult<ProductSummary>>(sortValidateResult.Error);
+            // Default to sorting by ID if invalid
+            sortBy = nameof(Product.Id);
+            sortDirection = "asc";
         }
 
+        bool isAscending = sortDirection.ToLower() == "asc";
 
-        PagedResult<Product> paginatedProducts;
-
-        // Handle special DTO properties that need custom sorting logic
-        if (sortProperty == nameof(ProductSummary.MinUnitPrice))
+        // Apply appropriate sorting based on property
+        return sortBy switch
         {
-            // Apply custom sorting for MinUnitPrice directly on the query
-            query = request.SortDirection.ToLower() == "asc"
+            nameof(ProductSummary.MinUnitPrice) => isAscending
                 ? query.OrderBy(p => p.ProductVariants.Min(pv => pv.UnitPrice))
-                : query.OrderByDescending(p => p.ProductVariants.Min(pv => pv.UnitPrice));
+                : query.OrderByDescending(p => p.ProductVariants.Min(pv => pv.UnitPrice)),
 
-            // Paginate the sorted query
-            var totalItemsCount = await query.CountAsync(cancellationToken);
-            var paginatedItems = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
-            paginatedProducts = new PagedResult<Product>(paginatedItems, totalItemsCount, request.PageSize, request.PageNumber);
-
-            if (paginatedProducts.Items.Count == 0)
-            {
-                return Result.Failure<PagedResult<ProductSummary>>(ProductErrors.NotFound);
-            }
-        }
-        else if (sortProperty == nameof(ProductSummary.MinRecommendedRetailPrice))
-        {
-            // Apply custom sorting for MinRecommendedRetailPrice directly on the query
-            query = request.SortDirection.ToLower() == "asc"
+            nameof(ProductSummary.MinRecommendedRetailPrice) => isAscending
                 ? query.OrderBy(p => p.ProductVariants.Min(pv => pv.RecommendedRetailPrice))
-                : query.OrderByDescending(p => p.ProductVariants.Min(pv => pv.RecommendedRetailPrice));
+                : query.OrderByDescending(p => p.ProductVariants.Min(pv => pv.RecommendedRetailPrice)),
 
-            // Paginate the sorted query
-            var totalItemsCount = await query.CountAsync(cancellationToken);
-            var paginatedItems = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
-            paginatedProducts = new PagedResult<Product>(paginatedItems, totalItemsCount, request.PageSize, request.PageNumber);
-        }
-        else
-        {
-            // For standard properties, use the existing method
+            nameof(Product.CreationTime) => isAscending
+                ? query.OrderBy(p => p.CreationTime)
+                : query.OrderByDescending(p => p.CreationTime),
 
-            var sortAndPagingResult = await query.SortAndPaginateWithResultAsync(
-                sortProperty,
-                request.SortDirection,
-                sortValidProperties,
-                request.PageNumber,
-                request.PageSize,
-                cancellationToken);
+            nameof(Product.Name) => isAscending
+                ? query.OrderBy(p => p.Name)
+                : query.OrderByDescending(p => p.Name),
 
-            if (sortAndPagingResult.IsFailure)
-            {
-                return Result.Failure<PagedResult<ProductSummary>>(sortAndPagingResult.Error);
-            }
-
-            paginatedProducts = sortAndPagingResult.Value;
-        }
-
-
-        if (paginatedProducts.Items.Count == 0)
-        {
-            return Result.Failure<PagedResult<ProductSummary>>(ProductErrors.NotFound);
-        }
-        var soldCounts = await GetSoldCountsAsync(cancellationToken);
-
-        var mappedPaginatedProducts = MapToProductSummaryResult(paginatedProducts, soldCounts);
-
-        return Result.Success(mappedPaginatedProducts);
+            // Default to ID
+            _ => isAscending
+                ? query.OrderBy(p => p.Id)
+                : query.OrderByDescending(p => p.Id)
+        };
     }
 
     private Result ValidateSortProperty(string sortProperty, List<string> validSortProperties)
@@ -158,10 +201,8 @@ public class GetProductListQueryHandler(
         {
             return Result.Failure<ProductSummary>(ProductErrors.InvalidAttributeValue(nameof(GetProductListQuery.SortBy), validSortProperties));
         }
-        else
-        {
-            return Result.Success();
-        }
+
+        return Result.Success();
     }
 
     private PagedResult<ProductSummary> MapToProductSummaryResult(PagedResult<Product> paginatedProducts, Dictionary<int, int> soldCounts)
@@ -228,7 +269,8 @@ public class GetProductListQueryHandler(
     {
         if (productTypeIds?.Count > 0)
         {
-            var productTypeIdsWithChilds = GetChildProductTypeIds(productTypeIds);
+            var productTypeIdsTask = GetAllChildProductTypeIdsAsync(productTypeIds);
+            var productTypeIdsWithChilds = productTypeIdsTask.GetAwaiter().GetResult();
 
             query = query.Where(p => productTypeIdsWithChilds.Contains(p.ProductTypeId));
         }
@@ -247,9 +289,9 @@ public class GetProductListQueryHandler(
     }
 
     public async Task<Result<IQueryable<Product>>> ApplyCustomFiltersAsync(
-    IQueryable<Product> query,
-    Dictionary<string, List<string>> customFilters,
-    CancellationToken cancellationToken = default)
+        IQueryable<Product> query,
+        Dictionary<string, List<string>> customFilters,
+        CancellationToken cancellationToken = default)
     {
         if (customFilters == null || customFilters.Count == 0)
         {
@@ -258,16 +300,37 @@ public class GetProductListQueryHandler(
 
         try
         {
-            var filterContext = await PrepareFilterContextAsync(customFilters, cancellationToken);
-
-            var validProductIds = FilterProductIds(filterContext);
-
-            if (validProductIds.Count == 0)
+            // Apply each filter directly through SQL expressions instead of loading into memory
+            foreach (var filter in customFilters)
             {
-                return Result.Failure<IQueryable<Product>>(ProductErrors.NotFound);
+                string attributeName = filter.Key;
+                List<string> attributeValues = filter.Value;
+
+                // Skip empty filters
+                if (attributeValues.Count == 0)
+                {
+                    continue;
+                }
+
+                // Apply filter using SQL subquery instead of in-memory filtering
+                query = query.Where(p =>
+                    dbContext.ProductTypeAttributeProductValues
+                        .Any(pav =>
+                            pav.ProductId == p.Id &&
+                            dbContext.ProductTypeAttributeValues
+                                .Any(av =>
+                                    av.Id == pav.AttributeValueId &&
+                                    attributeValues.Contains(av.Value) &&
+                                    dbContext.ProductTypeAttributes
+                                        .Any(pa =>
+                                            pa.Id == av.ProductTypeAttributeId &&
+                                            pa.Name == attributeName)
+                                )
+                        )
+                );
             }
 
-            return Result.Success(query.Where(p => validProductIds.Contains(p.Id)));
+            return Result.Success(query);
         }
         catch (InvalidOperationException ex)
         {
@@ -275,102 +338,42 @@ public class GetProductListQueryHandler(
         }
     }
 
-    private async Task<Dictionary<int, int>> GetSoldCountsAsync(CancellationToken cancellationToken)
+    private async Task<Dictionary<int, int>> GetSoldCountsAsync(List<int> productIds, CancellationToken cancellationToken)
     {
         return await dbContext.OrderLines
-            .Where(ol => ol.Order.Status == OrderStatus.Received || ol.Order.Status == OrderStatus.Delivered)
+            .Where(ol =>
+                productIds.Contains(ol.ProductVariant.ProductId) &&
+                (ol.Order.Status == OrderStatus.Received || ol.Order.Status == OrderStatus.Delivered))
             .GroupBy(ol => ol.ProductVariant.ProductId)
             .Select(g => new { ProductId = g.Key, SoldCount = g.Count() })
             .ToDictionaryAsync(x => x.ProductId, x => x.SoldCount, cancellationToken);
     }
 
-    private async Task<FilterContext> PrepareFilterContextAsync(
-        Dictionary<string, List<string>> customFilters,
-        CancellationToken cancellationToken)
+    // Optimized to use a single database query with a recursive CTE
+    private async Task<HashSet<int>> GetAllChildProductTypeIdsAsync(List<int> parentProductTypeIds)
     {
-        var attributeNames = customFilters.Keys.ToList();
+        // This assumes SQL Server or another DBMS that supports recursive CTEs
+        var sql = @"
+            WITH ProductTypeHierarchy AS (
+                -- Base case: start with parent IDs
+                SELECT Id, ParentProductTypeId
+                FROM ProductTypes
+                WHERE Id IN {0}
+                
+                UNION ALL
+                
+                -- Recursive case: join with children
+                SELECT pt.Id, pt.ParentProductTypeId
+                FROM ProductTypes pt
+                INNER JOIN ProductTypeHierarchy pth ON pt.ParentProductTypeId = pth.Id
+            )
+            SELECT DISTINCT Id FROM ProductTypeHierarchy;";
 
-        var allAttributes = await dbContext.ProductTypeAttributes
-            .Include(pa => pa.Values)
-            .Where(pa => attributeNames.Contains(pa.Name))
-            .ToListAsync(cancellationToken);
-
-        var allValues = allAttributes.SelectMany(pa => pa.Values).ToList();
-
-        var allRelevantProductAttributeValues = await dbContext.ProductTypeAttributeProductValues
-            .Where(apv => allValues.Select(v => v.Id).Contains(apv.AttributeValueId))
-            .ToListAsync(cancellationToken);
-
-        return new FilterContext
-        {
-            CustomFilters = customFilters,
-            AllAttributes = allAttributes,
-            AllProductAttributeValues = allRelevantProductAttributeValues
-        };
-    }
-
-    private HashSet<int> FilterProductIds(FilterContext context)
-    {
-        var validProductIds = new HashSet<int>(dbContext.Products.Select(p => p.Id));
-
-        foreach (var filter in context.CustomFilters)
-        {
-            var currentAttribute = context.AllAttributes
-                .FirstOrDefault(a => string.Equals(a.Name, filter.Key, StringComparison.OrdinalIgnoreCase))
-                ?? throw new InvalidOperationException(filter.Key);
-
-            var matchingValueIds = currentAttribute.Values
-                .Where(av => filter.Value.Contains(av.Value))
-                .Select(av => av.Id)
-                .ToList();
-
-            var matchingProductIds = context.AllProductAttributeValues
-                .Where(pv => matchingValueIds.Contains(pv.AttributeValueId))
-                .Select(pv => pv.ProductId)
-                .ToList();
-
-            validProductIds.IntersectWith(matchingProductIds);
-
-            if (validProductIds.Count == 0)
-            {
-                break;
-            }
-        }
-
-        return validProductIds;
-    }
-
-    private HashSet<int> GetChildProductTypeIds(List<int> parentProductTypeIds)
-    {
-        var result = new HashSet<int>(parentProductTypeIds);
-        foreach (var parentProductTypeId in parentProductTypeIds)
-        {
-            result.UnionWith(GetChildProductTypeIds(parentProductTypeId));
-        }
-
-        return result;
-    }
-
-    private HashSet<int> GetChildProductTypeIds(int parentProductTypeId)
-    {
-        var childProductTypeIds = dbContext.ProductTypes
-            .Where(pt => pt.ParentProductTypeId == parentProductTypeId)
+        var result = await dbContext.ProductTypes
+            .FromSqlRaw(sql, parentProductTypeIds)
             .Select(pt => pt.Id)
-            .ToHashSet();
+            .ToListAsync();
 
-        foreach (var childProductTypeId in new HashSet<int>(childProductTypeIds))
-        {
-            childProductTypeIds.UnionWith(GetChildProductTypeIds(childProductTypeId));
-        }
-
-        return childProductTypeIds;
-    }
-
-    private class FilterContext
-    {
-        public Dictionary<string, List<string>> CustomFilters { get; set; } = null!;
-        public List<ProductTypeAttribute> AllAttributes { get; set; } = null!;
-        public List<ProductTypeAttributeProductValue> AllProductAttributeValues { get; set; } = null!;
+        return new HashSet<int>(result);
     }
 }
-

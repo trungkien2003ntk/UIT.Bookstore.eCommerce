@@ -9,8 +9,6 @@ public abstract class StockTransaction : BaseFullAuditedEntity
     public int WarehouseId { get; set; }
     public string? Remarks { get; set; }
     public StockTransactionStatus TransactionStatus { get; set; }
-    //public
 
-    public virtual ICollection<StockTransactionDetail>? Items
-    { get; set; }
+    public virtual ICollection<StockTransactionDetail>? Items { get; set; }
 }

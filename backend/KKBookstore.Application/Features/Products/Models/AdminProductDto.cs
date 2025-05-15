@@ -11,6 +11,8 @@ public record AdminProductDto : BaseDto
     public bool IsBook { get; set; }
     public bool IsActive { get; set; }
     public int UnitMeasureId { get; set; } = 1;
+    public decimal? AverageRating { get; set; }
+    public int RatingsCount { get; set; }
 
     // navigation properties
     public ProductTypeDto? ProductType { get; set; }

@@ -18,27 +18,36 @@ public class GetCustomerProductDetailQueryHandler(
     private readonly IApplicationDbContext _dbContext = dbContext;
 
     public async Task<Result<GetCustomerProductDetailResponse>> Handle(GetCustomerProductDetailQuery request, CancellationToken cancellationToken)
-    {
-        // Query to fetch the product and related data
+    {        // Query to fetch the product and related data        
         var product = await _dbContext.Products
             .AsNoTracking()
-            .AsSplitQuery()
-            .Where(p => p.IsActive && !p.IsDeleted && p.Id == request.ProductId)
-            .Include(p => p.ProductType)
-            .Include(p => p.UnitMeasure)
-            .Include(p => p.ProductImages)
-            .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.ProductVariantOptionValues)
-                    .ThenInclude(pov => pov.Option)
-            .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.ProductVariantOptionValues)
-                    .ThenInclude(pov => pov.OptionValue)
-            .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.Inventories)
-                    .ThenInclude(i => i.Warehouse)
-                        .ThenInclude(w => w.Address)
-            .Include(p => p.BookAuthors)
-                .ThenInclude(ba => ba.Author)
+            //.AsSplitQuery()
+            //.Where(p => p.IsActive && !p.IsDeleted && p.Id == request.ProductId)
+            //.Include(p => p.ProductType)
+            //.Include(p => p.UnitMeasure)
+            //.Include(p => p.ProductImages)
+            //.Include(p => p.ProductVariants)
+            //    .ThenInclude(pv => pv.ProductVariantOptionValues)!
+            //        .ThenInclude(pov => pov.Option)
+            //.Include(p => p.ProductVariants)
+            //    .ThenInclude(pv => pv.ProductVariantOptionValues)!
+            //        .ThenInclude(pov => pov.OptionValue)
+            //.Include(p => p.ProductVariants)
+            //    .ThenInclude(pv => pv.Inventories)!
+            //        .ThenInclude(i => i.Warehouse)
+            //            .ThenInclude(w => w!.Address)
+            //.Include(p => p.ProductVariants)
+            //    .ThenInclude(pv => pv.Ratings)!
+            //        .ThenInclude(r => r.Customer)
+            //.Include(p => p.ProductVariants)
+            //    .ThenInclude(pv => pv.Ratings)!
+            //        .ThenInclude(r => r.Likes)
+            .Include(p => p.Ratings)
+                .ThenInclude(r => r.Customer)
+            .Include(p => p.Ratings)
+                .ThenInclude(r => r.Likes)
+            //.Include(p => p.BookAuthors)
+            //    .ThenInclude(ba => ba.Author)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (product is null)
@@ -77,59 +86,108 @@ public class GetCustomerProductDetailQueryHandler(
             })
             .ToListAsync(cancellationToken);
 
+        // Calculate overall product rating directly from Product.Ratings
+        decimal? overallRating = null;
+        int totalRatingsCount = 0;
+
+        if (product.Ratings != null && product.Ratings.Any())
+        {
+            overallRating = Convert.ToDecimal(product.Ratings.Average(r => r.RatingValue));
+            totalRatingsCount = product.Ratings.Count;
+        }
+
         var productResponse = new GetCustomerProductDetailResponse
         {
             Id = product.Id,
             Name = product.Name,
             Sku = product.Sku?.Value,
-            UnitMeasureName = product.UnitMeasure.Name,
+            UnitMeasureName = product.UnitMeasure?.Name,
             Description = product.Description,
             ProductTypeId = product.ProductTypeId,
-            ProductTypeName = product.ProductType.DisplayName,
+            ProductTypeName = product.ProductType?.DisplayName ?? string.Empty,
             IsBook = product.IsBook,
-            ThumbnailImageUrls = product.ProductImages.Select(pi => pi.ThumbnailImageUrl),
-            LargeImageUrls = product.ProductImages.Select(pi => pi.LargeImageUrl),
-            Authors = product.IsBook ? product.BookAuthors.Select(ba => new AuthorDto()
+            AverageRating = overallRating,
+            RatingsCount = totalRatingsCount,
+            ThumbnailImageUrls = product.ProductImages?.Select(pi => pi.ThumbnailImageUrl ?? string.Empty) ?? Array.Empty<string>(),
+            LargeImageUrls = product.ProductImages?.Select(pi => pi.LargeImageUrl ?? string.Empty) ?? Array.Empty<string>(),
+            Authors = product.IsBook && product.BookAuthors != null ? product.BookAuthors.Select(ba => new AuthorDto()
             {
                 Id = ba.Author.Id,
                 Name = ba.Author.Name
             }) : null,
-            ProductVariants = product.ProductVariants.Select(pv => new CustomerProductVariantDto()
+
+            ProductVariants = product.ProductVariants.Select(pv =>
             {
-                Id = pv.Id,
-                Sku = pv.SkuValue.Value,
-                UnitPrice = pv.UnitPrice,
-                RecommendedRetailPrice = pv.RecommendedRetailPrice,
-                Height = pv.Dimension.Height,
-                Width = pv.Dimension.Width,
-                Length = pv.Dimension.Length,
-                StockQuantity = pv.StockQuantity,
-                OptionValues = pv.ProductVariantOptionValues.Select(pov => new OptionValueDto()
+                // Calculate average rating for this variant
+                decimal? avgRating = null;
+                int ratingsCount = 0;
+
+                if (pv.Ratings != null && pv.Ratings.Any())
                 {
-                    Name = pov.Option.Name,
-                    Value = pov.OptionValue.Value
-                }),
-                StockBreakdowns = pv.Inventories.Select(inv => new StockBreakdownDto
+                    avgRating = Convert.ToDecimal(pv.Ratings.Average(r => r.RatingValue));
+                    ratingsCount = pv.Ratings.Count;
+                }
+
+                return new CustomerProductVariantDto()
                 {
-                    Id = inv.Id,
-                    BranchId = inv.WarehouseId ?? 0,
-                    BranchName = inv.Warehouse?.Name ?? "Unknown",
-                    Description = inv.Warehouse?.Description ?? string.Empty,
-                    StockQuantity = inv.StockQuantity,
-                    IsActive = inv.IsActive,
-                    Address = inv.Warehouse?.Address != null ? new BranchAddressDto
+                    Id = pv.Id,
+                    Sku = pv.SkuValue?.Value,
+                    UnitPrice = pv.UnitPrice,
+                    RecommendedRetailPrice = pv.RecommendedRetailPrice,
+                    Height = pv.Dimension?.Height ?? 0,
+                    Width = pv.Dimension?.Width ?? 0,
+                    Length = pv.Dimension?.Length ?? 0,
+                    Weight = pv.Weight,
+                    StockQuantity = pv.StockQuantity,
+                    AverageRating = avgRating,
+                    RatingsCount = ratingsCount,
+                    OptionValues = pv.ProductVariantOptionValues?.Select(pov => new OptionValueDto()
                     {
-                        PhoneNumber = inv.Warehouse.Address.PhoneNumber,
-                        ProvinceId = inv.Warehouse.Address.ProvinceId,
-                        ProvinceName = inv.Warehouse.Address.ProvinceName,
-                        DistrictId = inv.Warehouse.Address.DistrictId,
-                        DistrictName = inv.Warehouse.Address.DistrictName,
-                        CommuneCode = inv.Warehouse.Address.CommuneCode,
-                        CommuneName = inv.Warehouse.Address.CommuneName,
-                        DetailAddress = inv.Warehouse.Address.DetailAddress,
-                        Type = inv.Warehouse.Address.Type
-                    } : null
-                })
+                        Name = pov.Option?.Name ?? string.Empty,
+                        Value = pov.OptionValue?.Value ?? string.Empty
+                    }) ?? Array.Empty<OptionValueDto>(),
+                    Ratings = pv.Ratings?.Select(r => new RatingDto
+                    {
+                        Id = r.Id,
+                        Comment = r.Comment,
+                        RatingValue = r.RatingValue,
+                        CustomerId = r.CustomerId,
+                        CustomerName = r.Customer?.UserName ?? "Anonymous",
+                        CreationTime = r.CreationTime!.Value,
+                        ProductVariantId = r.ProductVariantId,
+                        LikesCount = r.Likes?.Count ?? 0,
+                        Response = r.Response,
+                        IsReported = r.ReportedCount > 0,
+                        VariantOptions = pv.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
+                        {
+                            ProductOptionId = pov.OptionId,
+                            ProductOptionValueId = pov.OptionValueId,
+                            Name = pov.Option?.Name ?? string.Empty,
+                            Value = pov.OptionValue?.Value ?? string.Empty
+                        }).ToList() ?? new List<ProductVariantOptionDto>()
+                    }).ToList() ?? new List<RatingDto>(),
+                    StockBreakdowns = pv.Inventories.Select(inv => new StockBreakdownDto
+                    {
+                        Id = inv.Id,
+                        BranchId = inv.WarehouseId ?? 0,
+                        BranchName = inv.Warehouse?.Name ?? "Unknown",
+                        Description = inv.Warehouse?.Description ?? string.Empty,
+                        StockQuantity = inv.StockQuantity,
+                        IsActive = inv.IsActive,
+                        Address = inv.Warehouse?.Address != null ? new BranchAddressDto
+                        {
+                            PhoneNumber = inv.Warehouse.Address.PhoneNumber,
+                            ProvinceId = inv.Warehouse.Address.ProvinceId,
+                            ProvinceName = inv.Warehouse.Address.ProvinceName,
+                            DistrictId = inv.Warehouse.Address.DistrictId,
+                            DistrictName = inv.Warehouse.Address.DistrictName,
+                            CommuneCode = inv.Warehouse.Address.CommuneCode,
+                            CommuneName = inv.Warehouse.Address.CommuneName,
+                            DetailAddress = inv.Warehouse.Address.DetailAddress,
+                            Type = inv.Warehouse.Address.Type
+                        } : null
+                    }).ToList()
+                };
             }),
             ProductVariantOptions = product.ProductVariants.SelectMany(pv => pv.ProductVariantOptionValues)
                 .GroupBy(pov => pov.OptionId)

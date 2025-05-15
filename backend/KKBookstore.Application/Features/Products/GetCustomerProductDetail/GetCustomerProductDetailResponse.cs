@@ -16,6 +16,8 @@ public record GetCustomerProductDetailResponse : BaseDto
     public int ProductTypeId { get; set; }
     public string ProductTypeName { get; set; } = null!;
     public bool IsBook { get; set; }
+    public decimal? AverageRating { get; set; }
+    public int RatingsCount { get; set; }
     public IEnumerable<string> ThumbnailImageUrls { get; set; } = [];
     public IEnumerable<string> LargeImageUrls { get; set; } = [];
     public IEnumerable<ProductTypeAttribute>? ProductTypeAttributes { get; set; }

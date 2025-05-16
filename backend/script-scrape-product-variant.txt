@@ -1,0 +1,76 @@
+I want you to add another cell to scrape the data for ProductVariants (PV). Knowing that:
+
+The input to scrape PV is from INPUT_FILE (cleaned_grouped_products.json). It is an array of products, with one single product look like this:
+
+1 {
+2     "base_product_name": "Hiệu Ứng Chim Mồi",
+3     "variants": [
+4       {
+5         "variant_attributes": {
+6           "Tập": "2",
+7           "Bản": "Tái Bản 2023"
+8         },
+9         "product_url": "https://www.fahasa.com/hieu-ung-chim-moi-2-tai-ban-2023.html"
+10      },
+11      ...
+18    ]
+19  }
+
+
+
+Let's talk about how each component is related to those files (all ran and exists inside the output folder):
+1. PRODUCTS_FILE = OUTPUT_FOLDER + "products.json"
+2. VARIANTS_FILE = OUTPUT_FOLDER + "product_variants.json"
+3. IMAGES_FILE = OUTPUT_FOLDER + "product_images.json"
+4. PRODUCT_OPTIONS_FILE = OUTPUT_FOLDER + "product_options.json"
+5. PRODUCT_OPTION_VALUES_FILE = OUTPUT_FOLDER + "product_option_values.json"
+
+Line 2: base_product_name: We use this value to find the name of product the file 1 => we can get the product id here. Each product inside file 1 looks like:
+{
+  "Id": 1, // get this id by using the name below to find
+  "Name": "Hiệu Ứng Chim Mồi", // we find this
+  "Description": "Người ...",
+  "IsBook": false,
+  "ProductTypeId": 9,
+  "UnitMeasureId": 1
+}
+Line 9: product_url: We use this to scrape additional information for the product variant, I'll note the html tags later:
+The product variant id is the incremental id of the current processing product variant, we can get this by using a counter, starting from 1 and incrementing it for each product variant.
+Okay now for the product variant, we need to scrape the data from the product_url. The data we need to scrape is:
+{
+  "Id": 1, // incremental id
+  "ProductId": 1, // product id found using line 2, find in file 1
+  "UnitPrice": 39200, // We'll use //div[@id="catalog-product-details-price"]//p[@class="special-price"]//span[contains(@class, "price") and not(contains(@class, "label"))] and take the text, but we'll get somethign like '56.000 đ', we need to convert this to 56000
+  "RecommendedRetailPrice": 49000, // We'll use //div[@id="catalog-product-details-price"]//p[@class="old-price"]//span[contains(@class, "price") and not(contains(@class, "label"))] and take the text, but we'll get somethign like '80.000 đ', we need to convert this to 80000
+  "ValidFrom": "2024-05-18T16:00:46.140177+00:00", // today
+  "Quantity": 20, // we randomize this value
+  "Barcode": "", // we randomize this value, generate a random string of 13 characters
+  "Weight": 150, // we get this from the tag: //tr[th[contains(text(), 'Trọng lượng')]]/td/div and take the text
+  "Comment": "Good",
+  "Tags": " "
+}
+
+Line 6: "Tập": "2", We use the "Tập" to find relevant id inside the file 4. PRODUCT_OPTIONS_FILE, We'll use the product id found with line 2, combined with the "Tập" and we'll find the id of the product option. Each product option in file 4 is like this:
+{
+  "Id": 1,
+  "ProductId": 1,
+  "Name": "Tập",
+  "IsOptionWithImage": true
+}
+After get the option id, we'll use that, combine with the value "2" after the "Tập" to find the option value inside file 5. PRODUCT_OPTION_VALUES_FILE. Each object in this file is like this:
+{
+  "Id": 1,
+  "OptionId": 1, // option id found using "Tập"
+  "Value": "2", // the value after "Tập"
+  "ThumbnailImageUrl": "",
+  "LargeImageUrl": ""
+}
+
+After we got the option value id, we'll build the object ProductVariantOptionValue, this is that object:
+{
+  "Id": 1, // incremental id
+  "ProductVariantId": 3, // current processing product variant id
+  "OptionId": 1, // option id found using "Tập"
+  "OptionValueId": 1 // option value id found using "2"
+}
+

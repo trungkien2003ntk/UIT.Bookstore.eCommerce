@@ -1,4 +1,4 @@
-﻿namespace KKBookstore.StockTransactions;
+﻿namespace KKBookstore.StockTransactions.StockAdjustments;
 
 public enum AdjustmentType
 {

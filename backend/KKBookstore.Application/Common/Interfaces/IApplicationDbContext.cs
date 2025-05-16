@@ -6,6 +6,7 @@ using KKBookstore.ProductTypes;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
 using KKBookstore.StockTransactions;
+using KKBookstore.StockTransactions.StockAdjustments;
 using KKBookstore.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -48,9 +49,10 @@ public interface IApplicationDbContext
     public DbSet<Staff> Staffs { get; set; }
     public DbSet<ProductVariant> ProductVariants { get; set; }
     public DbSet<ProductVariantOptionValue> ProductVariantOptionValues { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }
-    public DbSet<UnitMeasure> UnitMeasures { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }    public DbSet<UnitMeasure> UnitMeasures { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
+    public DbSet<StockAdjustment> StockAdjustments { get; set; }
+    public DbSet<StockAdjustmentItem> StockAdjustmentItems { get; set; }
 
     EntityEntry Entry(object entity);
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity)

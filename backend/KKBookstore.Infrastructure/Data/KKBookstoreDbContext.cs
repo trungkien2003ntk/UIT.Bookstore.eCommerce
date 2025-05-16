@@ -9,13 +9,12 @@ using KKBookstore.ProductTypes;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
 using KKBookstore.StockTransactions;
+using KKBookstore.StockTransactions.StockAdjustments;
 using KKBookstore.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Linq.Expressions;
 
 namespace KKBookstore.Data;
 
@@ -56,7 +55,8 @@ public class KKBookstoreDbContext(
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<UnitMeasure> UnitMeasures { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
-
+    public DbSet<StockAdjustment> StockAdjustments { get; set; }
+    public DbSet<StockAdjustmentItem> StockAdjustmentItems { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -67,25 +67,6 @@ public class KKBookstoreDbContext(
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
-
-        //builder.Model.GetEntityTypes()
-        //    .Where(entityType => typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
-        //    .ToList()
-        //    .ForEach(et =>
-        //        builder.Entity(et.ClrType)
-        //            .HasQueryFilter(ConvertFilterExpression<ISoftDelete>(e => !e.IsDeleted, et.ClrType))
-        //    );
-
-        //DataSeeder.Seed(builder);
-    }
-    private static LambdaExpression ConvertFilterExpression<TInterface>(
-        Expression<Func<TInterface, bool>> filterExpression,
-        Type entityType)
-    {
-        var newParam = Expression.Parameter(entityType);
-        var newBody = ReplacingExpressionVisitor.Replace(filterExpression.Parameters.Single(), newParam, filterExpression.Body);
-
-        return Expression.Lambda(newBody, newParam);
     }
 
     public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

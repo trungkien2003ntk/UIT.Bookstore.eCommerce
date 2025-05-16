@@ -3,6 +3,7 @@ using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.Branches.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
+using KKBookstore.StockTransactions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,56 +35,84 @@ public class CreateBranchCommandHandler(
 {
     public async Task<Result<BranchDetail>> Handle(CreateBranchCommand request, CancellationToken cancellationToken)
     {
-        // Check for duplicate branch name
-        if (await dbContext.Branches.AnyAsync(b => b.Name == request.Name, cancellationToken))
+        await using var transaction = await dbContext.BeginTransactionAsync(cancellationToken);
+
+        try
         {
-            return Result.Failure<BranchDetail>(BranchErrors.DuplicateBranchName(request.Name));
+            // Check for duplicate branch name
+            if (await dbContext.Branches.AnyAsync(b => b.Name == request.Name, cancellationToken))
+            {
+                return Result.Failure<BranchDetail>(BranchErrors.DuplicateBranchName(request.Name));
+            }
+
+            // If this branch is set as default, ensure no other branch is already default
+            if (request.IsDefault && await dbContext.Branches.AnyAsync(b => b.IsDefault, cancellationToken))
+            {
+                return Result.Failure<BranchDetail>(BranchErrors.DefaultBranchExists);
+            }
+
+            // Create the branch
+            var address = new BranchAddress(
+                request.PhoneNumber,
+                request.ProvinceId,
+                request.ProvinceName,
+                request.DistrictId,
+                request.DistrictName,
+                request.CommuneCode,
+                request.CommuneName,
+                request.DetailAddress,
+                isDefault: false,
+                request.AddressType,
+                0
+            );
+
+            var branch = new Branch(
+                request.Name,
+                request.Description,
+                request.Email,
+                request.IsDefault,
+                address
+            );
+
+            dbContext.Branches.Add(branch);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            // Add default inventory for all variants for this branch
+            var variantIds = await dbContext.ProductVariants
+                .Select(v => v.Id)
+                .ToListAsync(cancellationToken);
+
+            var inventoriesToAdd = variantIds.Select(variantId => new Inventory(
+                variantId,
+                0,
+                0,
+                true,
+                branch.Id,
+                DateTimeOffset.Now
+            )).ToList();
+
+            dbContext.Inventories.AddRange(inventoriesToAdd);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            // Commit transaction
+            await transaction.CommitAsync(cancellationToken);
+
+            BranchDetail branchDetail = MapToReponse(address, branch);
+            return Result.Success(branchDetail);
         }
-
-        // If this branch is set as default, ensure no other branch is already default
-        if (request.IsDefault && await dbContext.Branches.AnyAsync(b => b.IsDefault, cancellationToken))
+        catch (Exception ex)
         {
-            return Result.Failure<BranchDetail>(BranchErrors.DefaultBranchExists);
+            await transaction.RollbackAsync(cancellationToken);
+            // Log or handle the exception as needed
+            return Result.Failure<BranchDetail>(Error.Failure("Error.Branch", ex.Message));
         }
+    }
 
-        // Create the branch
-        var branch = new Branch
-        {
-            Name = request.Name,
-            Description = request.Description,
-            Email = request.Email,
-            IsDefault = request.IsDefault,
-            IsDeleted = true
-        };
-
-        // Add the branch first to get its ID
-        dbContext.Branches.Add(branch);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        // Create address
-        var address = new BranchAddress(
-            request.PhoneNumber,
-            request.ProvinceId,
-            request.ProvinceName,
-            request.DistrictId,
-            request.DistrictName,
-            request.CommuneCode,
-            request.CommuneName,
-            request.DetailAddress,
-            true, // isDefault
-            request.AddressType,
-            branch.Id
-        );
-
-        // Set the address ID on the branch
-        dbContext.BranchAddresses.Add(address);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        branch.AddressId = address.Id;
-        await dbContext.SaveChangesAsync(cancellationToken);
+    private static BranchDetail MapToReponse(BranchAddress address, Branch branch)
+    {
 
         // Return the branch details
-        var branchDetail = new BranchDetail
+        return new BranchDetail
         {
             Id = branch.Id,
             Name = branch.Name,
@@ -110,7 +139,5 @@ public class CreateBranchCommandHandler(
             LastModificationTime = branch.LastModificationTime,
             LastModifierId = branch.LastModifierId
         };
-
-        return Result.Success(branchDetail);
     }
 }

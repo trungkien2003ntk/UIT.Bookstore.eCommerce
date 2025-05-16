@@ -34,6 +34,13 @@ public class DeleteBranchCommandHandler(
             dbContext.BranchAddresses.Remove(branch.Address);
         }
 
+        // delete all related related inventories
+        var inventories = await dbContext.Inventories
+            .Where(i => i.WarehouseId == branch.Id)
+            .ToListAsync(cancellationToken);
+
+        dbContext.Inventories.RemoveRange(inventories);
+
         // Delete the branch
         dbContext.Branches.Remove(branch);
 

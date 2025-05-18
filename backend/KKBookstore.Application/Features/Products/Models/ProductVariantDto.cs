@@ -7,7 +7,8 @@ public sealed record ProductVariantDto : BaseDto
 {
     public decimal RecommendedRetailPrice { get; set; }
     public decimal UnitPrice { get; set; }
-    public int Weight { get; set; }    public Dimension? Dimension { get; set; }
+    public int Weight { get; set; }
+    public Dimension? Dimension { get; set; }
     public decimal TaxRate { get; set; }
     public string? Comment { get; set; }
     public int StockQuantity { get; set; }
@@ -16,7 +17,7 @@ public sealed record ProductVariantDto : BaseDto
 
     public ICollection<VariantOptionDto> VariantOptions { get; set; } = [];
     public ICollection<StockBreakdownDto> StockBreakdowns { get; set; } = [];
-    public ICollection<RatingDto> Ratings { get; set; } = [];    public sealed record VariantOptionDto
+    public ICollection<RatingDto> Ratings { get; set; } = []; public sealed record VariantOptionDto
     {
         public int ProductOptionId { get; set; }
         public int ProductOptionValueId { get; set; }
@@ -24,4 +25,3 @@ public sealed record ProductVariantDto : BaseDto
         public string? Value { get; set; }
     }
 }
-

@@ -26,12 +26,14 @@ public class GetProductRatingListQueryHandler(
     {
         var query = dbContext.Ratings
             .Include(r => r.ProductVariant)
-                .ThenInclude(s => s.ProductVariantOptionValues)
+                .ThenInclude(s => s.ProductVariantOptionValues)!
                     .ThenInclude(sov => sov.OptionValue)
             .Include(r => r.Customer)
             .Include(r => r.Likes)
-            .Where(x => x.ProductVariant.ProductId == request.ProductId)
-            .AsQueryable();
+            .Where(x =>
+                x.ProductVariant.ProductId == request.ProductId
+                && (x.Status == RatingStatus.Approved || x.Status == RatingStatus.PendingReview)
+            ).AsQueryable();
 
         var queryResult = ApplyStatusFilter(query, request);
 

@@ -4,6 +4,7 @@ using KKBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250518125036_Added_RatingImages_20250518_194600")]
+    partial class Added_RatingImages_20250518_194600
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1172,54 +1175,6 @@ namespace KKBookstore.Data.Migrations
                     b.ToTable("BookAuthors", (string)null);
                 });
 
-            modelBuilder.Entity("KKBookstore.Products.Events.RatingReport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTimeOffset?>("CreationTime")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<int?>("CreatorId")
-                        .HasColumnType("int")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("CustomerId");
-
-                    b.Property<DateTimeOffset?>("LastModificationTime")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<int?>("LastModifierId")
-                        .HasColumnType("int")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<int>("RatingId")
-                        .HasColumnType("int")
-                        .HasColumnName("RatingId");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Reason");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("LastModifierId");
-
-                    b.HasIndex("RatingId");
-
-                    b.ToTable("RatingReports", (string)null);
-                });
-
             modelBuilder.Entity("KKBookstore.Products.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -1774,7 +1729,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("RatingValue");
 
-                    b.Property<int>("ReportsCount")
+                    b.Property<int>("ReportedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Response")
@@ -3255,31 +3210,6 @@ namespace KKBookstore.Data.Migrations
                     b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("KKBookstore.Products.Events.RatingReport", b =>
-                {
-                    b.HasOne("KKBookstore.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("KKBookstore.Users.User", "LastModifier")
-                        .WithMany()
-                        .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("KKBookstore.Products.Rating", "Rating")
-                        .WithMany("Reports")
-                        .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("LastModifier");
-
-                    b.Navigation("Rating");
-                });
-
             modelBuilder.Entity("KKBookstore.Products.Product", b =>
                 {
                     b.HasOne("KKBookstore.Users.User", "Creator")
@@ -4001,8 +3931,6 @@ namespace KKBookstore.Data.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Reports");
                 });
 
             modelBuilder.Entity("KKBookstore.StockTransactions.StockTransaction", b =>

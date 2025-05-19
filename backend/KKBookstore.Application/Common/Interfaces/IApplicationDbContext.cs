@@ -2,6 +2,7 @@
 using KKBookstore.Customers;
 using KKBookstore.Orders;
 using KKBookstore.Products;
+using KKBookstore.Products.Events;
 using KKBookstore.ProductTypes;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
@@ -45,17 +46,20 @@ public interface IApplicationDbContext
     public DbSet<ProductPriceHistory> ProductPriceHistories { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<RatingLike> RatingLikes { get; set; }
+    public DbSet<RatingImage> RatingImages { get; set; }
     public DbSet<ShippingAddress> ShippingAddresses { get; set; }
     public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
     public DbSet<Staff> Staffs { get; set; }
     public DbSet<ProductVariant> ProductVariants { get; set; }
     public DbSet<ProductVariantOptionValue> ProductVariantOptionValues { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }    public DbSet<UnitMeasure> UnitMeasures { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<UnitMeasure> UnitMeasures { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<StockAdjustment> StockAdjustments { get; set; }
     public DbSet<StockAdjustmentItem> StockAdjustmentItems { get; set; }
     public DbSet<StockTransfer> StockTransfers { get; set; }
     public DbSet<StockTransferItem> StockTransferItems { get; set; }
+    public DbSet<RatingReport> RatingReports { get; set; }
 
     EntityEntry Entry(object entity);
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity)

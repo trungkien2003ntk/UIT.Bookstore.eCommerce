@@ -5,6 +5,7 @@ using KKBookstore.Data.Configurations.Products;
 using KKBookstore.Identity;
 using KKBookstore.Orders;
 using KKBookstore.Products;
+using KKBookstore.Products.Events;
 using KKBookstore.ProductTypes;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
@@ -48,6 +49,7 @@ public class KKBookstoreDbContext(
     public DbSet<ProductPriceHistory> ProductPriceHistories { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<RatingLike> RatingLikes { get; set; }
+    public DbSet<RatingImage> RatingImages { get; set; }
     public DbSet<ShippingAddress> ShippingAddresses { get; set; }
     public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
     public DbSet<Staff> Staffs { get; set; }
@@ -60,6 +62,7 @@ public class KKBookstoreDbContext(
     public DbSet<StockAdjustmentItem> StockAdjustmentItems { get; set; }
     public DbSet<StockTransfer> StockTransfers { get; set; }
     public DbSet<StockTransferItem> StockTransferItems { get; set; }
+    public DbSet<RatingReport> RatingReports { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

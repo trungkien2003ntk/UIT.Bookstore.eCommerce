@@ -157,7 +157,7 @@ public class GetCustomerProductDetailQueryHandler(
                         ProductVariantId = r.ProductVariantId,
                         LikesCount = r.Likes?.Count ?? 0,
                         Response = r.Response,
-                        IsReported = r.ReportedCount > 0,
+                        IsReported = r.ReportsCount > 0,
                         VariantOptions = pv.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
                         {
                             ProductOptionId = pov.OptionId,

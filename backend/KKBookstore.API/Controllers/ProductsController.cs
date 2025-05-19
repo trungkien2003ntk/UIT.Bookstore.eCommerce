@@ -3,6 +3,7 @@ using KKBookstore.Abstractions;
 using KKBookstore.Constants;
 using KKBookstore.Contracts.Requests;
 using KKBookstore.Features.Products.CreateProduct;
+using KKBookstore.Features.Products.CreateProductRating;
 using KKBookstore.Features.Products.GetAdminProductDetail;
 using KKBookstore.Features.Products.GetCustomerProductDetail;
 using KKBookstore.Features.Products.GetMonthlyTopSellingProductList;
@@ -12,6 +13,8 @@ using KKBookstore.Features.Products.GetProductRatingList;
 using KKBookstore.Features.Products.GetTrendyProductList;
 using KKBookstore.Features.Products.GetUnitMeasures;
 using KKBookstore.Features.Products.GetWeeklyTopSellingProductList;
+using KKBookstore.Features.Products.LikeProductRating;
+using KKBookstore.Features.Products.ReportProductRating;
 using KKBookstore.Features.Products.SearchProducts;
 using KKBookstore.Features.Products.UpdateProduct;
 using KKBookstore.Models;
@@ -88,28 +91,6 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [HttpGet("{id}/ratings")]
-    public async Task<IActionResult> GetProductRatings(
-        [FromRoute] int id,
-        [FromQuery] GetProductRatingListRequest request,
-        CancellationToken cancellationToken = default
-    )
-    {
-        request.ProductId ??= id;
-
-        if (request.ProductId.Value != id)
-        {
-            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
-            return ToActionResult(resultTemp);
-        }
-
-        var query = mapper.Map<GetProductRatingListQuery>(request);
-
-        var result = await Sender.Send(query, cancellationToken);
-
-        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    }
-
     [HttpGet("search")]
     public async Task<IActionResult> SearchProducts(
         [FromQuery] SearchProductsQuery query,
@@ -171,4 +152,76 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
+
+    [HttpGet("{id}/ratings")]
+    public async Task<IActionResult> GetProductRatings(
+        [FromRoute] int id,
+        [FromQuery] GetProductRatingListRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        request.ProductId ??= id;
+
+        if (request.ProductId.Value != id)
+        {
+            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
+            return ToActionResult(resultTemp);
+        }
+
+        var query = mapper.Map<GetProductRatingListQuery>(request);
+
+        var result = await Sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpPost("{id}/ratings")]
+    public async Task<IActionResult> CreateProductRating(
+        [FromRoute] int id,
+        [FromBody] CreateProductRatingCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (id != command.ProductVariantId)
+        {
+            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
+            return ToActionResult(resultTemp);
+        }
+        var result = await Sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpPost("{id}/ratings/{ratingId}/like")]
+    public async Task<IActionResult> LikeProductRating(
+        [FromRoute] int id,
+        [FromRoute] int ratingId,
+        [FromBody] LikeProductRatingCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (ratingId != command.RatingId)
+        {
+            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Rating id in request doesn't match with the id in the route"));
+            return ToActionResult(resultTemp);
+        }
+        var result = await Sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpPost("{id}/ratings/{ratingId}/report")]
+    public async Task<IActionResult> ReportProductRating(
+        [FromRoute] int id,
+        [FromRoute] int ratingId,
+        [FromBody] ReportProductRatingCommand command,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (ratingId != command.RatingId)
+        {
+            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Rating id in request doesn't match with the id in the route"));
+            return ToActionResult(resultTemp);
+        }
+        var result = await Sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
 }

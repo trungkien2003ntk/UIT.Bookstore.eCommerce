@@ -19,7 +19,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
     }
 
     public async Task<Result<AdminProductDto>> Handle(GetAdminProductDetailQuery request, CancellationToken cancellationToken)
-    {        
+    {
         var product = await _dbContext.Products
             .AsNoTracking()
             .Where(x => x.Id == request.ProductId)
@@ -55,17 +55,17 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
         {
             return Result.Failure<AdminProductDto>(ProductErrors.NotFound);
         }
-        
+
         // Calculate overall product rating directly from Product.Ratings
         decimal? overallRating = null;
         int totalRatingsCount = 0;
-        
+
         if (product.Ratings != null && product.Ratings.Any())
         {
             overallRating = Convert.ToDecimal(product.Ratings.Average(r => r.RatingValue));
             totalRatingsCount = product.Ratings.Count;
         }
-        
+
         var productDto = new AdminProductDto
         {
             Id = product.Id,
@@ -134,7 +134,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                         ProductVariantId = r.ProductVariantId,
                         LikesCount = r.Likes?.Count ?? 0,
                         Response = r.Response ?? string.Empty,
-                        IsReported = r.ReportedCount > 0,
+                        IsReported = r.ReportsCount > 0,
                         VariantOptions = pv.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
                         {
                             ProductOptionId = pov.OptionId,

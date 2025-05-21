@@ -57,6 +57,12 @@ public class ProductVariant : BaseFullAuditedEntity
     [NotMapped]
     public int AvailableQuantity => Inventories?.Sum(i => i.IsActive ? i.StockQuantity : 0) ?? 0;
 
+    [NotMapped]
+    public decimal LastestUnitCost => Inventories?
+        .Where(i => i.IsActive)
+        .OrderByDescending(i => i.CreationTime)
+        .FirstOrDefault()?
+        .UnitCost ?? 0;
     // navigation properties
     public Product Product { get; set; }
     public ICollection<ProductVariantOptionValue>? ProductVariantOptionValues { get; set; } = [];

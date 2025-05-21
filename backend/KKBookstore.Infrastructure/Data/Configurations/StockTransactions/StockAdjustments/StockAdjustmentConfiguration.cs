@@ -10,5 +10,9 @@ public class StockAdjustmentConfiguration : IEntityTypeConfiguration<StockAdjust
     public void Configure(EntityTypeBuilder<StockAdjustment> builder)
     {
         builder.HasBaseType<StockTransaction>();
+
+        builder.HasOne(x => x.Warehouse)
+            .WithMany()
+            .HasForeignKey(x => x.WarehouseId);
     }
 }

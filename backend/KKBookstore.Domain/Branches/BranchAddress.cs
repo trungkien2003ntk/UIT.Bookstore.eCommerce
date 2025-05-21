@@ -27,4 +27,9 @@ public class BranchAddress : Address
     public BranchAddress() : base()
     {
     }
+
+    public override string ToString()
+    {
+        return $"{CommuneName}, {DistrictName}, {ProvinceName}, {DetailAddress}";
+    }
 }

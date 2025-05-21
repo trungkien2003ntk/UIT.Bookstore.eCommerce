@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Models;
+using KKBookstore.Products;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KKBookstore.StockTransactions;
@@ -14,5 +15,7 @@ public abstract class StockTransactionDetail : BaseFullAuditedEntity
 
     [NotMapped]
     public decimal TotalCost => UnitCost * Quantity;
+
+    public ProductVariant? Variant { get; set; }
 }
 

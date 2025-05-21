@@ -1,12 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.StockAdjustments.GetStockAdjustmentDetail;
+using KKBookstore.Mappings.Helpers;
 using KKBookstore.Models;
-using KKBookstore.Products;
 using KKBookstore.StockTransactions;
 using KKBookstore.StockTransactions.StockAdjustments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace KKBookstore.Features.StockAdjustments.CreateStockAdjustment;
 
@@ -14,19 +14,19 @@ public record CreateStockAdjustmentCommand : IRequest<Result<StockAdjustmentDeta
 {
     [Required]
     public string Code { get; init; } = string.Empty;
-    
+
     public DateTimeOffset TransactionDate { get; init; } = DateTimeOffset.UtcNow;
-    
+
     public string? Remarks { get; init; }
-    
+
     public string? Reason { get; init; }
-    
+
     [Required]
     public StockTransactionStatus TransactionStatus { get; init; } = StockTransactionStatus.Pending;
-    
+
     [Required]
     public int WarehouseId { get; init; }
-    
+
     [Required]
     [MinLength(1, ErrorMessage = "At least one item is required")]
     public List<CreateStockAdjustmentItemCommand> Items { get; init; } = [];
@@ -36,19 +36,19 @@ public record CreateStockAdjustmentItemCommand
 {
     [Required]
     public int VariantId { get; init; }
-    
+
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
     public int Quantity { get; init; }
-    
+
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Unit cost must be greater than 0")]
     public decimal UnitCost { get; init; }
-    
+
     public string? Reason { get; init; }
-    
+
     public string? Remarks { get; init; }
-    
+
     [Required]
     public AdjustmentType AdjustmentType { get; init; }
 }
@@ -67,13 +67,13 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
     }
 
     public async Task<Result<StockAdjustmentDetail>> Handle(
-        CreateStockAdjustmentCommand request, 
+        CreateStockAdjustmentCommand request,
         CancellationToken cancellationToken)
     {
         // Check for duplicate code
         var existingAdjustment = await _dbContext.StockAdjustments
             .AnyAsync(sa => sa.Code == request.Code, cancellationToken);
-        
+
         if (existingAdjustment)
         {
             return Result.Failure<StockAdjustmentDetail>(
@@ -113,7 +113,10 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
             TransactionStatus = request.TransactionStatus,
             TransactionType = StockTransactionType.StockAdjustment,
             WarehouseId = request.WarehouseId
-        };        // Create stock adjustment items
+        };
+        _dbContext.StockAdjustments.Add(stockAdjustment);
+        await _dbContext.SaveChangesAsync();
+
         foreach (var item in request.Items)
         {
             var stockAdjustmentItem = new StockAdjustmentItem
@@ -126,11 +129,9 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                 AdjustmentType = item.AdjustmentType,
                 StockTransactionId = stockAdjustment.Id
             };
-            
+
             _dbContext.StockAdjustmentItems.Add(stockAdjustmentItem);
         }
-        
-        _dbContext.StockAdjustments.Add(stockAdjustment);
 
         // If the status is Completed, update inventory levels based on adjustment items
         if (request.TransactionStatus == StockTransactionStatus.Completed)
@@ -139,7 +140,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
             {
                 // Process each item based on AdjustmentType
                 var productVariant = existingVariants[item.VariantId];
-                
+
                 if (item.AdjustmentType == AdjustmentType.Increase)
                 {
                     // For increases, create a new inventory record
@@ -150,7 +151,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                         isActive: true,
                         warehouseId: request.WarehouseId
                     );
-                    
+
                     _dbContext.Inventories.Add(inventory);
                 }
                 else if (item.AdjustmentType == AdjustmentType.Decrease)
@@ -187,7 +188,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                     if (remainingToDecrease > 0)
                     {
                         return Result.Failure<StockAdjustmentDetail>(
-                            Error.Validation("StockAdjustment.InsufficientStock", 
+                            Error.Validation("StockAdjustment.InsufficientStock",
                                 $"Insufficient stock for product variant ID {item.VariantId} at warehouse ID {request.WarehouseId}"));
                     }
                 }
@@ -201,12 +202,23 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
     }
 
     private async Task<Result<StockAdjustmentDetail>> GetStockAdjustmentDetail(
-        int stockAdjustmentId, 
+        int stockAdjustmentId,
         CancellationToken cancellationToken)
     {
         var stockAdjustment = await _dbContext.StockAdjustments
             .AsNoTracking()
-            .Include(sa => sa.Items)
+            .Include(sa => sa.Items)!
+                .ThenInclude(i => i.Variant!)
+                    .ThenInclude(v => v.Product)
+            .Include(sa => sa.Items)!
+                .ThenInclude(i => i.Variant!)
+                    .ThenInclude(v => v.ProductVariantOptionValues)!
+                        .ThenInclude(vov => vov.OptionValue)
+            .Include(sa => sa.Items)!
+                .ThenInclude(i => i.Variant!)
+                    .ThenInclude(v => v.Inventories)
+            .Include(sa => sa.Warehouse!)
+                .ThenInclude(w => w.Address)
             .FirstOrDefaultAsync(sa => sa.Id == stockAdjustmentId, cancellationToken);
 
         if (stockAdjustment is null)
@@ -230,10 +242,23 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                 VariantId = item.VariantId,
                 Quantity = item.Quantity,
                 UnitCost = item.UnitCost,
-                AdjustmentType = ((StockAdjustmentItem)item).AdjustmentType,
+                AdjustmentType = item.AdjustmentType,
                 Remarks = item.Remarks,
-                Reason = item.Reason
+                Reason = item.Reason,
+                ThumbnailImageUrl = item.Variant!.Product.GetFirstThumbnailImageUrl() ?? string.Empty,
+                VariantName = MappingHelpers.GetProductVariantOptionValuesString(item.Variant),
+                LastestUnitCost = item.Variant.LastestUnitCost,
+                ProductName = item.Variant.Product.Name
             }).ToList() ?? new List<StockAdjustmentItemDetail>(),
+            Warehouse = new WarehouseDetail
+            {
+                Id = stockAdjustment.Warehouse!.Id,
+                Name = stockAdjustment.Warehouse.Name,
+                Address = stockAdjustment.Warehouse.Address.ToString(),
+                PhoneNumber = stockAdjustment.Warehouse.Address.PhoneNumber,
+                Email = stockAdjustment.Warehouse.Email,
+                IsDefault = stockAdjustment.Warehouse.IsDefault
+            },
             CreationTime = stockAdjustment.CreationTime ?? DateTimeOffset.UtcNow,
             CreatorId = stockAdjustment.CreatorId,
             LastModificationTime = stockAdjustment.LastModificationTime,

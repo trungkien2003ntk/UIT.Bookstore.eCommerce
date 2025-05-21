@@ -231,6 +231,7 @@ public class GetProductListQueryHandler(
                     Sku = pv.SkuValue.Value,
                     UnitPrice = pv.UnitPrice,
                     RecommendedRetailPrice = pv.RecommendedRetailPrice,
+                    LastestUnitCost = pv.LastestUnitCost,
                     StockQuantity = pv.StockQuantity,
                     ThumbnailImageUrl = pv.GetThumbnailImageUrl() ?? string.Empty,
                     OptionValues = pv.ProductVariantOptionValues?.Select(pov => new OptionValueDto

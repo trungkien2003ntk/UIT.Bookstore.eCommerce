@@ -7,6 +7,7 @@ public record ProductVariantSummaryDto : BaseDto
     public string Sku { get; set; } = string.Empty;
     public decimal UnitPrice { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
+    public decimal LastestUnitCost { get; set; }
     public decimal DiscountRate => RecommendedRetailPrice == 0 ? 0 : (RecommendedRetailPrice - UnitPrice) / RecommendedRetailPrice * 100;
     public int StockQuantity { get; set; }
     public string ThumbnailImageUrl { get; set; } = string.Empty;

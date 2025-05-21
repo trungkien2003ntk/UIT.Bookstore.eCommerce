@@ -10,12 +10,16 @@ public class StockTransactionDetailConfiguration : IEntityTypeConfiguration<Stoc
     public void Configure(EntityTypeBuilder<StockTransactionDetail> builder)
     {
         builder.ToTable("StockTransactionDetails");
+        builder.ConfigureAuditing();
 
         builder.HasKey(d => d.Id);
         builder.Property(d => d.VariantId).IsRequired();
         builder.Property(d => d.Quantity).IsRequired();
         builder.Property(d => d.UnitCost).IsRequired().HasPrecision(18, 2);
 
-        builder.ConfigureAuditing();
+
+        builder.HasOne(d => d.Variant)
+            .WithMany()
+            .HasForeignKey(d => d.VariantId);
     }
 }

@@ -8,6 +8,40 @@ namespace KKBookstore.Extensions;
 
 public static class QueryableExtensions
 {
+    /// <summary>
+    /// Conditionally applies a Where clause to an IQueryable if the specified condition is true.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the query</typeparam>
+    /// <param name="source">The source queryable object</param>
+    /// <param name="condition">The condition that determines whether to apply the predicate</param>
+    /// <param name="predicate">The predicate to apply when the condition is true</param>
+    /// <returns>The filtered queryable if condition is true; otherwise the original queryable</returns>
+    public static IQueryable<T> WhereIf<T>(
+        this IQueryable<T> source,
+        bool condition,
+        Expression<Func<T, bool>> predicate)
+    {
+        return condition ? source.Where(predicate) : source;
+    }
+    
+    /// <summary>
+    /// Conditionally applies a Where clause to an IQueryable if the specified condition is not null.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the query</typeparam>
+    /// <typeparam name="TValue">The type of the condition value</typeparam>
+    /// <param name="source">The source queryable object</param>
+    /// <param name="conditionValue">The value to check for null</param>
+    /// <param name="predicateBuilder">A function that builds a predicate using the non-null condition value</param>
+    /// <returns>The filtered queryable if conditionValue is not null; otherwise the original queryable</returns>
+    public static IQueryable<T> WhereIf<T, TValue>(
+        this IQueryable<T> source,
+        TValue? conditionValue,
+        Func<TValue, Expression<Func<T, bool>>> predicateBuilder) 
+        where TValue : struct
+    {
+        return conditionValue.HasValue ? source.Where(predicateBuilder(conditionValue.Value)) : source;
+    }
+    
     public static async Task<Result<PagedResult<T>>> SortAndPaginateWithResultAsync<T>(
         this IQueryable<T> query,
         string sortBy,

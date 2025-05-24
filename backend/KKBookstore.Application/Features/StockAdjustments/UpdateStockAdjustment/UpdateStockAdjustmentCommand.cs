@@ -241,6 +241,21 @@ public class UpdateStockAdjustmentCommandHandler : IRequestHandler<UpdateStockAd
                 }
             }
         }
+        else if (previousStatus == StockTransactionStatus.Pending &&
+                 request.TransactionStatus == StockTransactionStatus.Cancelled)
+        {
+            // If cancelling a pending adjustment, changing the status is enough
+        }
+        else if (previousStatus == StockTransactionStatus.Completed &&
+                 request.TransactionStatus == StockTransactionStatus.Pending)
+        {
+            // If reverting a completed adjustment to pending, we need to reverse the inventory changes
+            // This would be a more complex operation requiring tracking of inventory changes
+            // For now, return an error indicating this is not supported
+            return Result.Failure<StockAdjustmentDetail>(
+                Error.Validation("StockAdjustment.CannotRevert",
+                    "Cannot revert a completed stock adjustment to pending. Create a new adjustment with opposite types."));
+        }
         else if (previousStatus == StockTransactionStatus.Completed &&
                  request.TransactionStatus == StockTransactionStatus.Cancelled)
         {
@@ -251,6 +266,7 @@ public class UpdateStockAdjustmentCommandHandler : IRequestHandler<UpdateStockAd
                 Error.Validation("StockAdjustment.CannotCancel",
                     "Cannot cancel a completed stock adjustment. Create a new adjustment with opposite types."));
         }
+
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

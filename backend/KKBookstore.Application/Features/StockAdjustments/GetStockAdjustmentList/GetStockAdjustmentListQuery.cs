@@ -94,27 +94,13 @@ public class GetStockAdjustmentListQueryHandler(
                 CreationTime = sa.CreationTime ?? DateTimeOffset.UtcNow,
                 CreatorId = sa.CreatorId,
                 LastModificationTime = sa.LastModificationTime,
-                LastModifierId = sa.LastModifierId
+                LastModifierId = sa.LastModifierId,
+                Status = sa.TransactionStatus,
+                TotalCost = sa.Items?.Sum(item => item.Quantity * item.UnitCost) ?? 0
             }).ToList(),
             paginatedAdjustments.TotalCount,
             paginatedAdjustments.PageSize,
             paginatedAdjustments.PageNumber
         );
     }
-}
-
-public class StockAdjustmentSummary
-{
-    public int Id { get; set; }
-    public string Code { get; set; } = string.Empty;
-    public string? Remarks { get; set; }
-    public string? Reason { get; set; }
-    public DateTimeOffset TransactionDate { get; set; }
-    public int WarehouseId { get; set; }
-    public int TotalItems { get; set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? CreationTime { get; set; }
-    public int? CreatorId { get; set; }
-    public DateTimeOffset? LastModificationTime { get; set; }
-    public int? LastModifierId { get; set; }
 }

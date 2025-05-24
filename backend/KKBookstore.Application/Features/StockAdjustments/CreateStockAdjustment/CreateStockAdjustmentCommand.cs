@@ -201,6 +201,32 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                 }
             }
         }
+        else if (request.TransactionStatus == StockTransactionStatus.Pending)
+        {
+            // If pending, just create the adjustment items without affecting inventory
+            foreach (var item in request.Items)
+            {
+                var stockAdjustmentItem = new StockAdjustmentItem
+                {
+                    TotalQuantityBefore = existingVariants[item.VariantId].Inventories!
+                        .Where(i => i.IsActive && i.WarehouseId == request.WarehouseId)
+                        .Sum(i => i.StockQuantity),
+                    VariantId = item.VariantId,
+                    Quantity = item.Quantity,
+                    UnitCost = item.UnitCost,
+                    Reason = item.Reason,
+                    Remarks = item.Remarks,
+                    AdjustmentType = item.AdjustmentType,
+                    StockTransactionId = stockAdjustment.Id
+                };
+                _dbContext.StockAdjustmentItems.Add(stockAdjustmentItem);
+            }
+        }
+        else
+        {
+            return Result.Failure<StockAdjustmentDetail>(
+                Error.Validation("StockAdjustment.InvalidStatus", "Only Pending or Completed status is allowed for stock adjustments."));
+        }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

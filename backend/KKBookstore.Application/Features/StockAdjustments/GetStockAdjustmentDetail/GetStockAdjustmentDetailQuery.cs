@@ -1,6 +1,8 @@
 using KKBookstore.Common.Interfaces;
+using KKBookstore.Features.Branches.Models;
 using KKBookstore.Mappings.Helpers;
 using KKBookstore.Models;
+using KKBookstore.StockTransactions;
 using KKBookstore.StockTransactions.StockAdjustments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +22,15 @@ public class GetStockAdjustmentDetailQueryHandler(
             .Include(sa => sa.Items)!
                 .ThenInclude(i => i.Variant!)
                     .ThenInclude(v => v.Product)
+                        .ThenInclude(p => p.ProductImages)
             .Include(sa => sa.Items)!
                 .ThenInclude(i => i.Variant!)
                     .ThenInclude(v => v.ProductVariantOptionValues)!
                         .ThenInclude(vov => vov.OptionValue)
+            .Include(sa => sa.Items)!
+                .ThenInclude(i => i.Variant!)
+                    .ThenInclude(v => v.ProductVariantOptionValues)!
+                        .ThenInclude(vov => vov.Option)
             .Include(sa => sa.Items)!
                 .ThenInclude(i => i.Variant!)
                     .ThenInclude(v => v.Inventories)
@@ -43,6 +50,7 @@ public class GetStockAdjustmentDetailQueryHandler(
             Code = stockAdjustment.Code,
             Remarks = stockAdjustment.Remarks,
             Reason = stockAdjustment.Reason,
+            TransactionStatus = stockAdjustment.TransactionStatus,
             TransactionDate = stockAdjustment.TransactionDate,
             WarehouseId = stockAdjustment.WarehouseId,
             IsDeleted = stockAdjustment.IsDeleted,
@@ -50,6 +58,7 @@ public class GetStockAdjustmentDetailQueryHandler(
             {
                 Id = item.Id,
                 VariantId = item.VariantId,
+                TotalQuantityBefore = item.TotalQuantityBefore,
                 Quantity = item.Quantity,
                 UnitCost = item.UnitCost,
                 AdjustmentType = item.AdjustmentType,
@@ -57,22 +66,43 @@ public class GetStockAdjustmentDetailQueryHandler(
                 Reason = item.Reason,
                 ThumbnailImageUrl = item.Variant!.Product.GetFirstThumbnailImageUrl() ?? string.Empty,
                 VariantName = MappingHelpers.GetProductVariantOptionValuesString(item.Variant),
+                OptionValues = item.Variant.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
+                {
+                    ProductOptionId = pov.OptionId,
+                    ProductOptionValueId = pov.OptionValueId,
+                    Name = pov.Option?.Name ?? string.Empty,
+                    Value = pov.OptionValue?.Value ?? string.Empty
+                }).ToList() ?? [],
                 LastestUnitCost = item.Variant.LastestUnitCost,
                 ProductName = item.Variant.Product.Name
-            }).ToList() ?? new List<StockAdjustmentItemDetail>(),
-            Warehouse = new WarehouseDetail
+            }).ToList() ?? [],
+            Warehouse = new BranchDetail
             {
                 Id = stockAdjustment.Warehouse!.Id,
                 Name = stockAdjustment.Warehouse.Name,
-                Address = stockAdjustment.Warehouse.Address.ToString(),
-                PhoneNumber = stockAdjustment.Warehouse.Address.PhoneNumber,
+                Description = stockAdjustment.Warehouse.Description,
                 Email = stockAdjustment.Warehouse.Email,
-                IsDefault = stockAdjustment.Warehouse.IsDefault
-            },
-            CreationTime = stockAdjustment.CreationTime ?? DateTimeOffset.UtcNow,
-            CreatorId = stockAdjustment.CreatorId,
-            LastModificationTime = stockAdjustment.LastModificationTime,
-            LastModifierId = stockAdjustment.LastModifierId
+                IsDefault = stockAdjustment.Warehouse.IsDefault,
+                IsDeleted = stockAdjustment.Warehouse.IsDeleted,
+                Address = new AddressDetail
+                {
+                    Id = stockAdjustment.Warehouse.Address.Id,
+                    PhoneNumber = stockAdjustment.Warehouse.Address.PhoneNumber,
+                    ProvinceId = stockAdjustment.Warehouse.Address.ProvinceId,
+                    ProvinceName = stockAdjustment.Warehouse.Address.ProvinceName,
+                    DistrictId = stockAdjustment.Warehouse.Address.DistrictId,
+                    DistrictName = stockAdjustment.Warehouse.Address.DistrictName,
+                    CommuneCode = stockAdjustment.Warehouse.Address.CommuneCode,
+                    CommuneName = stockAdjustment.Warehouse.Address.CommuneName,
+                    DetailAddress = stockAdjustment.Warehouse.Address.DetailAddress,
+                    AddressType = stockAdjustment.Warehouse.Address.Type,
+                    FormattedAddress = $"{stockAdjustment.Warehouse.Address.DetailAddress}, {stockAdjustment.Warehouse.Address.CommuneName},  {stockAdjustment.Warehouse.Address.DistrictName}, {stockAdjustment.Warehouse.Address.ProvinceName}"
+                },
+                CreationTime = stockAdjustment.Warehouse.CreationTime,
+                CreatorId = stockAdjustment.Warehouse.CreatorId,
+                LastModificationTime = stockAdjustment.Warehouse.LastModificationTime,
+                LastModifierId = stockAdjustment.Warehouse.LastModifierId
+            }
         };
 
         return Result.Success(stockAdjustmentDetail);
@@ -85,6 +115,7 @@ public class StockAdjustmentDetail
     public string Code { get; set; } = string.Empty;
     public string? Remarks { get; set; }
     public string? Reason { get; set; }
+    public StockTransactionStatus? TransactionStatus { get; set; }
     public DateTimeOffset TransactionDate { get; set; }
     public int WarehouseId { get; set; }
     public bool IsDeleted { get; set; }
@@ -94,13 +125,14 @@ public class StockAdjustmentDetail
     public DateTimeOffset? LastModificationTime { get; set; }
     public int? LastModifierId { get; set; }
 
-    public WarehouseDetail? Warehouse { get; set; }
+    public BranchDetail? Warehouse { get; set; }
 }
 
 public class StockAdjustmentItemDetail
 {
     public int Id { get; set; }
     public int VariantId { get; set; }
+    public int? TotalQuantityBefore { get; set; }
     public int Quantity { get; set; }
     public decimal UnitCost { get; set; }
     public string? Reason { get; set; }
@@ -110,16 +142,15 @@ public class StockAdjustmentItemDetail
 
     public string ThumbnailImageUrl { get; set; } = string.Empty;
     public string VariantName { get; set; } = string.Empty;
+    public List<ProductVariantOptionDto> OptionValues { get; set; } = [];
     public string ProductName { get; set; } = string.Empty;
     public decimal LastestUnitCost { get; set; } = 0;
 }
 
-public class WarehouseDetail
+public class ProductVariantOptionDto
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Address { get; set; }
-    public string? PhoneNumber { get; set; }
-    public string? Email { get; set; }
-    public bool IsDefault { get; set; }
+    public int ProductOptionId { get; set; }
+    public int ProductOptionValueId { get; set; }
+    public string Name { get; set; }
+    public string Value { get; set; }
 }

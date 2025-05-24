@@ -8,6 +8,7 @@ public abstract class StockTransactionDetail : BaseFullAuditedEntity
 {
     public int VariantId { get; set; }
     public int StockTransactionId { get; set; }
+    public int? TotalQuantityBefore { get; set; }
     public int Quantity { get; set; }
     public decimal UnitCost { get; set; }
     public string? Reason { get; set; }

@@ -1,4 +1,5 @@
 using KKBookstore.Common.Interfaces;
+using KKBookstore.Features.Branches.Models;
 using KKBookstore.Features.StockAdjustments.GetStockAdjustmentDetail;
 using KKBookstore.Mappings.Helpers;
 using KKBookstore.Models;
@@ -83,6 +84,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
         // Validate product variants exist
         var variantIds = request.Items.Select(i => i.VariantId).Distinct().ToList();
         var existingVariants = await _dbContext.ProductVariants
+            .Include(pv => pv.Inventories)
             .Where(pv => variantIds.Contains(pv.Id))
             .ToDictionaryAsync(pv => pv.Id, pv => pv, cancellationToken);
 
@@ -119,18 +121,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
 
         foreach (var item in request.Items)
         {
-            var stockAdjustmentItem = new StockAdjustmentItem
-            {
-                VariantId = item.VariantId,
-                Quantity = item.Quantity,
-                UnitCost = item.UnitCost,
-                Reason = item.Reason,
-                Remarks = item.Remarks,
-                AdjustmentType = item.AdjustmentType,
-                StockTransactionId = stockAdjustment.Id
-            };
 
-            _dbContext.StockAdjustmentItems.Add(stockAdjustmentItem);
         }
 
         // If the status is Completed, update inventory levels based on adjustment items
@@ -141,13 +132,29 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                 // Process each item based on AdjustmentType
                 var productVariant = existingVariants[item.VariantId];
 
+                var stockAdjustmentItem = new StockAdjustmentItem
+                {
+                    TotalQuantityBefore = productVariant.Inventories!
+                        .Where(i => i.IsActive && i.WarehouseId == request.WarehouseId)
+                        .Sum(i => i.StockQuantity),
+                    VariantId = item.VariantId,
+                    Quantity = item.Quantity,
+                    UnitCost = item.UnitCost,
+                    Reason = item.Reason,
+                    Remarks = item.Remarks,
+                    AdjustmentType = item.AdjustmentType,
+                    StockTransactionId = stockAdjustment.Id
+                };
+
+                _dbContext.StockAdjustmentItems.Add(stockAdjustmentItem);
+
                 if (item.AdjustmentType == AdjustmentType.Increase)
                 {
                     // For increases, create a new inventory record
                     var inventory = new Inventory(
                         productVariantId: item.VariantId,
                         initialQuantity: item.Quantity,
-                        unitCost: (int)item.UnitCost,
+                        unitCost: item.UnitCost,
                         isActive: true,
                         warehouseId: request.WarehouseId
                     );
@@ -210,10 +217,15 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
             .Include(sa => sa.Items)!
                 .ThenInclude(i => i.Variant!)
                     .ThenInclude(v => v.Product)
+                        .ThenInclude(p => p.ProductImages)
             .Include(sa => sa.Items)!
                 .ThenInclude(i => i.Variant!)
                     .ThenInclude(v => v.ProductVariantOptionValues)!
                         .ThenInclude(vov => vov.OptionValue)
+            .Include(sa => sa.Items)!
+                .ThenInclude(i => i.Variant!)
+                    .ThenInclude(v => v.ProductVariantOptionValues)!
+                        .ThenInclude(vov => vov.Option)
             .Include(sa => sa.Items)!
                 .ThenInclude(i => i.Variant!)
                     .ThenInclude(v => v.Inventories)
@@ -233,6 +245,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
             Code = stockAdjustment.Code,
             Remarks = stockAdjustment.Remarks,
             Reason = stockAdjustment.Reason,
+            TransactionStatus = stockAdjustment.TransactionStatus,
             TransactionDate = stockAdjustment.TransactionDate,
             WarehouseId = stockAdjustment.WarehouseId,
             IsDeleted = stockAdjustment.IsDeleted,
@@ -240,6 +253,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
             {
                 Id = item.Id,
                 VariantId = item.VariantId,
+                TotalQuantityBefore = item.TotalQuantityBefore,
                 Quantity = item.Quantity,
                 UnitCost = item.UnitCost,
                 AdjustmentType = item.AdjustmentType,
@@ -247,22 +261,43 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
                 Reason = item.Reason,
                 ThumbnailImageUrl = item.Variant!.Product.GetFirstThumbnailImageUrl() ?? string.Empty,
                 VariantName = MappingHelpers.GetProductVariantOptionValuesString(item.Variant),
+                OptionValues = item.Variant.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
+                {
+                    ProductOptionId = pov.OptionId,
+                    ProductOptionValueId = pov.OptionValueId,
+                    Name = pov.Option?.Name ?? string.Empty,
+                    Value = pov.OptionValue?.Value ?? string.Empty
+                }).ToList() ?? [],
                 LastestUnitCost = item.Variant.LastestUnitCost,
                 ProductName = item.Variant.Product.Name
-            }).ToList() ?? new List<StockAdjustmentItemDetail>(),
-            Warehouse = new WarehouseDetail
+            }).ToList() ?? [],
+            Warehouse = new BranchDetail
             {
                 Id = stockAdjustment.Warehouse!.Id,
                 Name = stockAdjustment.Warehouse.Name,
-                Address = stockAdjustment.Warehouse.Address.ToString(),
-                PhoneNumber = stockAdjustment.Warehouse.Address.PhoneNumber,
+                Description = stockAdjustment.Warehouse.Description,
                 Email = stockAdjustment.Warehouse.Email,
-                IsDefault = stockAdjustment.Warehouse.IsDefault
-            },
-            CreationTime = stockAdjustment.CreationTime ?? DateTimeOffset.UtcNow,
-            CreatorId = stockAdjustment.CreatorId,
-            LastModificationTime = stockAdjustment.LastModificationTime,
-            LastModifierId = stockAdjustment.LastModifierId
+                IsDefault = stockAdjustment.Warehouse.IsDefault,
+                IsDeleted = stockAdjustment.Warehouse.IsDeleted,
+                Address = new AddressDetail
+                {
+                    Id = stockAdjustment.Warehouse.Address.Id,
+                    PhoneNumber = stockAdjustment.Warehouse.Address.PhoneNumber,
+                    ProvinceId = stockAdjustment.Warehouse.Address.ProvinceId,
+                    ProvinceName = stockAdjustment.Warehouse.Address.ProvinceName,
+                    DistrictId = stockAdjustment.Warehouse.Address.DistrictId,
+                    DistrictName = stockAdjustment.Warehouse.Address.DistrictName,
+                    CommuneCode = stockAdjustment.Warehouse.Address.CommuneCode,
+                    CommuneName = stockAdjustment.Warehouse.Address.CommuneName,
+                    DetailAddress = stockAdjustment.Warehouse.Address.DetailAddress,
+                    AddressType = stockAdjustment.Warehouse.Address.Type,
+                    FormattedAddress = $"{stockAdjustment.Warehouse.Address.DetailAddress}, {stockAdjustment.Warehouse.Address.CommuneName},  {stockAdjustment.Warehouse.Address.DistrictName}, {stockAdjustment.Warehouse.Address.ProvinceName}"
+                },
+                CreationTime = stockAdjustment.Warehouse.CreationTime,
+                CreatorId = stockAdjustment.Warehouse.CreatorId,
+                LastModificationTime = stockAdjustment.Warehouse.LastModificationTime,
+                LastModifierId = stockAdjustment.Warehouse.LastModifierId
+            }
         };
 
         return Result.Success(stockAdjustmentDetail);

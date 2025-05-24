@@ -14,6 +14,7 @@ public class StockTransactionDetailConfiguration : IEntityTypeConfiguration<Stoc
 
         builder.HasKey(d => d.Id);
         builder.Property(d => d.VariantId).IsRequired();
+        builder.Property(x => x.TotalQuantityBefore).HasColumnName(nameof(StockTransactionDetail.TotalQuantityBefore));
         builder.Property(d => d.Quantity).IsRequired();
         builder.Property(d => d.UnitCost).IsRequired().HasPrecision(18, 2);
 

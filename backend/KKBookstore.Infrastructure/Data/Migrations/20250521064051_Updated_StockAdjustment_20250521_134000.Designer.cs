@@ -4,6 +4,7 @@ using KKBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250521064051_Updated_StockAdjustment_20250521_134000")]
+    partial class Updated_StockAdjustment_20250521_134000
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2046,7 +2049,6 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("UnitCost")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("WarehouseId")
@@ -2196,10 +2198,6 @@ namespace KKBookstore.Data.Migrations
 
                     b.Property<int>("StockTransactionId")
                         .HasColumnType("int");
-
-                    b.Property<int?>("TotalQuantityBefore")
-                        .HasColumnType("int")
-                        .HasColumnName("TotalQuantityBefore");
 
                     b.Property<decimal>("UnitCost")
                         .HasPrecision(18, 2)

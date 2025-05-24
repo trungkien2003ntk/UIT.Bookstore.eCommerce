@@ -150,27 +150,34 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                         Value = pov.OptionValue?.Value ?? string.Empty,
                         Name = pov.Option?.Name ?? string.Empty,
                     }).ToList() ?? new List<ProductVariantDto.VariantOptionDto>(),
-                    StockBreakdowns = pv.Inventories?.Select(inv => new StockBreakdownDto
-                    {
-                        Id = inv.Id,
-                        BranchId = inv.WarehouseId ?? 0,
-                        BranchName = inv.Warehouse?.Name ?? "Unknown",
-                        Description = inv.Warehouse?.Description ?? string.Empty,
-                        StockQuantity = inv.StockQuantity,
-                        IsActive = inv.IsActive,
-                        Address = inv.Warehouse?.Address != null ? new BranchAddressDto
+                    StockBreakdowns = pv.Inventories?
+                        .Where(inv => inv.WarehouseId != null && inv.IsActive)
+                        .GroupBy(inv => inv.WarehouseId)
+                        .Select(g =>
                         {
-                            PhoneNumber = inv.Warehouse.Address.PhoneNumber,
-                            ProvinceId = inv.Warehouse.Address.ProvinceId,
-                            ProvinceName = inv.Warehouse.Address.ProvinceName,
-                            DistrictId = inv.Warehouse.Address.DistrictId,
-                            DistrictName = inv.Warehouse.Address.DistrictName,
-                            CommuneCode = inv.Warehouse.Address.CommuneCode,
-                            CommuneName = inv.Warehouse.Address.CommuneName,
-                            DetailAddress = inv.Warehouse.Address.DetailAddress,
-                            Type = inv.Warehouse.Address.Type
-                        } : null
-                    }).ToList() ?? new List<StockBreakdownDto>()
+                            var firstInv = g.First();
+                            return new StockBreakdownDto
+                            {
+                                BranchId = g.Key ?? 0,
+                                BranchName = firstInv.Warehouse?.Name ?? "Unknown",
+                                Description = firstInv.Warehouse?.Description ?? string.Empty,
+                                IsActive = true,
+                                Address = firstInv.Warehouse?.Address != null ? new BranchAddressDto
+                                {
+                                    PhoneNumber = firstInv.Warehouse.Address.PhoneNumber,
+                                    ProvinceId = firstInv.Warehouse.Address.ProvinceId,
+                                    ProvinceName = firstInv.Warehouse.Address.ProvinceName,
+                                    DistrictId = firstInv.Warehouse.Address.DistrictId,
+                                    DistrictName = firstInv.Warehouse.Address.DistrictName,
+                                    CommuneCode = firstInv.Warehouse.Address.CommuneCode,
+                                    CommuneName = firstInv.Warehouse.Address.CommuneName,
+                                    DetailAddress = firstInv.Warehouse.Address.DetailAddress,
+                                    Type = firstInv.Warehouse.Address.Type
+                                } : null,
+                                StockQuantity = g.Sum(x => x.StockQuantity)
+                            };
+                        })
+                        .ToList() ?? []
                 };
             }).ToList(),
             ProductImages = product.ProductImages.Select(pi => new ProductImageDto

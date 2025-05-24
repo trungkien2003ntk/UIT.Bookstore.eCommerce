@@ -45,7 +45,7 @@ public class GetBranchDetailQueryHandler(
                 CommuneName = branch.Address.CommuneName,
                 DetailAddress = branch.Address.DetailAddress,
                 AddressType = branch.Address.Type,
-                FormattedAddress = $"{branch.Address.DetailAddress}, {branch.Address.CommuneName} ,  {branch.Address.DistrictName}, {branch.Address.ProvinceName}"
+                FormattedAddress = $"{branch.Address.DetailAddress}, {branch.Address.CommuneName},  {branch.Address.DistrictName}, {branch.Address.ProvinceName}"
             },
             CreationTime = branch.CreationTime,
             CreatorId = branch.CreatorId,

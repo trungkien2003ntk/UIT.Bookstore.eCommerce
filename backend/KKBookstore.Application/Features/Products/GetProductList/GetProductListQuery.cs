@@ -241,12 +241,13 @@ public class GetProductListQueryHandler(
                     }),
                     StockBreakdowns = pv.Inventories is null ? [] : pv.Inventories
                         .Where(i => i.IsActive)
-                        .Select(inv => new StockSummaryDto
+                        .GroupBy(i => new { i.WarehouseId, i.Warehouse!.Name })
+                        .Select(g => new StockSummaryDto()
                         {
-                            BranchId = inv.WarehouseId ?? 0,
-                            BranchName = inv.Warehouse?.Name ?? "Unknown",
-                            StockQuantity = inv.StockQuantity,
-                            IsActive = inv.IsActive
+                            BranchId = g.Key.WarehouseId!.Value,
+                            BranchName = g.Key.Name,
+                            StockQuantity = g.Sum(x => x.StockQuantity),
+                            IsActive = true
                         })
                 }).ToList()
             }).ToList(),

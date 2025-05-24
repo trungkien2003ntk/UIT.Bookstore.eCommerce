@@ -16,7 +16,7 @@ public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
         builder.Property(e => e.PurchaseOrderLineId).IsRequired(false);
         builder.Property(e => e.WarehouseId).IsRequired(false);
         builder.Property(e => e.StockQuantity).IsRequired();
-        builder.Property(e => e.UnitCost).IsRequired();
+        builder.Property(e => e.UnitCost).IsRequired().HasPrecision(18, 2);
         builder.Property(e => e.IsActive).IsRequired();
         builder.Property(e => e.SourceType).IsRequired().HasConversion<EnumToStringConverter<InventorySource>>().HasDefaultValue(InventorySource.None);
         builder.HasOne(e => e.ProductVariant).WithMany(pv => pv.Inventories).HasForeignKey(e => e.ProductVariantId);

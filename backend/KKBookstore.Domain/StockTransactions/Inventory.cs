@@ -19,7 +19,7 @@ public class Inventory : BaseFullAuditedEntity
 
     // not updatable
     public DateTimeOffset OriginalCreatedDate { get; set; }
-    public int UnitCost { get; set; }
+    public decimal UnitCost { get; set; }
 
     public ProductVariant? ProductVariant { get; set; } = null!;
     public Branch? Warehouse { get; set; } = null!;
@@ -34,7 +34,7 @@ public class Inventory : BaseFullAuditedEntity
     public Inventory(
         int productVariantId,
         int initialQuantity,
-        int unitCost,
+        decimal unitCost,
         bool isActive,
         int? warehouseId = null,
         DateTimeOffset? originalCreatedDate = null,

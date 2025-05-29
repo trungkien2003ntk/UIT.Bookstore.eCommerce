@@ -20,6 +20,8 @@ public record UpdateStockAdjustmentCommand : IRequest<Result<StockAdjustmentDeta
 
     public string? Reason { get; init; }
 
+    public DateTimeOffset TransactionDate { get; init; }
+
     [Required]
     public StockTransactionStatus TransactionStatus { get; init; }
 
@@ -101,6 +103,7 @@ public class UpdateStockAdjustmentCommandHandler : IRequestHandler<UpdateStockAd
         // Validate product variants exist
         var variantIds = request.Items.Select(i => i.VariantId).Distinct().ToList();
         var existingVariants = await _dbContext.ProductVariants
+            .Include(pv => pv.Inventories)
             .Where(pv => variantIds.Contains(pv.Id))
             .ToDictionaryAsync(pv => pv.Id, pv => pv, cancellationToken);
 
@@ -113,13 +116,14 @@ public class UpdateStockAdjustmentCommandHandler : IRequestHandler<UpdateStockAd
         // Update basic properties
         stockAdjustment.Remarks = request.Remarks;
         stockAdjustment.Reason = request.Reason;
+        stockAdjustment.TransactionDate = request.TransactionDate;
         var previousStatus = stockAdjustment.TransactionStatus;
         stockAdjustment.TransactionStatus = request.TransactionStatus;
 
         // Track existing item IDs
         var existingItemIds = stockAdjustment.Items?
             .Select(i => i.Id)
-            .ToHashSet() ?? new HashSet<int>();
+            .ToHashSet() ?? [];
 
         var requestItemIds = request.Items
             .Where(i => i.Id.HasValue)
@@ -149,6 +153,7 @@ public class UpdateStockAdjustmentCommandHandler : IRequestHandler<UpdateStockAd
                     .First(i => i.Id == requestItem.Id.Value) as StockAdjustmentItem;
 
                 existingItem!.VariantId = requestItem.VariantId;
+                existingItem.TotalQuantityBefore = existingItem.TotalQuantityBefore;
                 existingItem.Quantity = requestItem.Quantity;
                 existingItem.UnitCost = requestItem.UnitCost;
                 existingItem.Reason = requestItem.Reason;
@@ -162,6 +167,9 @@ public class UpdateStockAdjustmentCommandHandler : IRequestHandler<UpdateStockAd
                 {
                     VariantId = requestItem.VariantId,
                     StockTransactionId = stockAdjustment.Id,
+                    TotalQuantityBefore = existingVariants[requestItem.VariantId].Inventories!
+                        .Where(i => i.IsActive && i.WarehouseId == stockAdjustment.WarehouseId)
+                        .Sum(i => i.StockQuantity),
                     Quantity = requestItem.Quantity,
                     UnitCost = requestItem.UnitCost,
                     Reason = requestItem.Reason,

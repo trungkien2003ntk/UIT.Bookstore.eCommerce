@@ -4,6 +4,7 @@ using KKBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250529172553_Updated_User_20250530_002500")]
+    partial class Updated_User_20250530_002500
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2387,9 +2390,8 @@ namespace KKBookstore.Data.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("nvarchar(450)")
-                        .HasComputedColumnSql("[FirstName] + ' ' + [LastName]", true)
-                        .UseCollation("SQL_Latin1_General_CP1_CI_AI");
+                        .HasColumnType("nvarchar(max)")
+                        .HasComputedColumnSql("[FirstName] + ' ' + [LastName]", true);
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -2472,9 +2474,6 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FullName")
-                        .HasDatabaseName("IX_AspNetUsers_FullName_FullText");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");

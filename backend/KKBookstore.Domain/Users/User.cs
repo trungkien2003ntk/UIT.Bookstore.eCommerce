@@ -15,8 +15,8 @@ public class User : IdentityUser<int>, IFullAuditedObject
 
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    [NotMapped]
-    public string FullName => $"{LastName} {FirstName}";
+
+    public string FullName { get; private set; }
 
     public DateTimeOffset DateOfBirth { get; set; }
 

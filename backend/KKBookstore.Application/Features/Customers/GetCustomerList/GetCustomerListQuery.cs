@@ -5,6 +5,7 @@ using KKBookstore.Customers;
 using KKBookstore.Extensions;
 using KKBookstore.Features.Customers.Models;
 using KKBookstore.Models;
+using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ public record GetCustomerListQuery()
     public bool? IsActive { get; set; }
     public string? SearchQuery { get; set; }
     public int? CustomerTypeId { get; set; }
+    public UserStatus? Status { get; set; }
 }
 
 public class GetCustomerListQueryHandler(
@@ -31,30 +33,17 @@ public class GetCustomerListQueryHandler(
             .Include(c => c.CustomerType);
 
         // Apply filters
-        if (request.IsDeleted.HasValue)
-        {
-            query = query.Where(c => c.IsDeleted == request.IsDeleted.Value);
-        }
-
-        if (request.IsActive.HasValue)
-        {
-            query = query.Where(c => c.IsActive == request.IsActive.Value);
-        }
-
-        if (request.CustomerTypeId.HasValue)
-        {
-            query = query.Where(c => c.CustomerTypeId == request.CustomerTypeId.Value);
-        }
-
-        if (!string.IsNullOrWhiteSpace(request.SearchQuery))
-        {
-            var searchQuery = request.SearchQuery.ToLower().Trim();
-            query = query.Where(c =>
-                c.FirstName.ToLower().Contains(searchQuery) ||
-                c.LastName.ToLower().Contains(searchQuery) ||
-                c.Email.ToLower().Contains(searchQuery) ||
-                c.PhoneNumber.Contains(searchQuery));
-        }
+        var searchQuery = request.SearchQuery?.ToLower().Trim();
+        query = query
+            .WhereIf(request.IsDeleted.HasValue, c => c.IsDeleted == request.IsDeleted!.Value)
+            .WhereIf(request.IsActive.HasValue, c => c.IsActive == request.IsActive!.Value)
+            .WhereIf(request.CustomerTypeId.HasValue, c => c.CustomerTypeId == request.CustomerTypeId!.Value)
+            .WhereIf(request.Status.HasValue, c => c.Status == request.Status!.Value)
+            .ApplyFullTextSearch(
+                request.SearchQuery,
+                FullTextSearchMode.All,
+                fullTextFields: [c => c.FullName],
+                likeFields: [c => c.Email, c => c.PhoneNumber]);
 
         // Apply sorting
         var validSortProperties = new List<string>
@@ -62,6 +51,7 @@ public class GetCustomerListQueryHandler(
             nameof(Customer.Id),
             nameof(Customer.FirstName),
             nameof(Customer.LastName),
+            nameof(Customer.FullName),
             nameof(Customer.Email),
             nameof(Customer.PhoneNumber),
             nameof(Customer.IsActive),

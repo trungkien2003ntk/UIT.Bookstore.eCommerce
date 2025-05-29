@@ -16,6 +16,6 @@ public class StockAdjustmentSummary
     public int? CreatorId { get; set; }
     public DateTimeOffset? LastModificationTime { get; set; }
     public int? LastModifierId { get; set; }
-    public StockTransactionStatus Status { get; set; }
+    public StockTransactionStatus TransactionStatus { get; set; }
     public decimal TotalCost { get; set; }
 }

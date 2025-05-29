@@ -15,6 +15,8 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.FirstName).HasColumnName(nameof(User.FirstName)).HasMaxLength(UserConsts.FirstNameMaxLength).IsRequired();
         builder.Property(u => u.LastName).HasColumnName(nameof(User.LastName)).HasMaxLength(UserConsts.LastNameMaxLength).IsRequired();
+        builder.Property(u => u.FullName)
+            .HasComputedColumnSql("[FirstName] + ' ' + [LastName]", stored: true);
         builder.Property(u => u.ImageUrl).HasColumnName(nameof(User.ImageUrl));
         builder.Property(u => u.LoginType).HasColumnName(nameof(User.LoginType));
         builder.Property(u => u.Status).HasColumnName(nameof(User.Status));

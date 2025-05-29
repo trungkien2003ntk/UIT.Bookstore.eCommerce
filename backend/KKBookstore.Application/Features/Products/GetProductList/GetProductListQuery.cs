@@ -34,14 +34,17 @@ public class GetProductListQueryHandler(
         try
         {
             // Phase 1: Apply all filters but minimize includes for the filtering phase
-            IQueryable<Product> baseQuery = dbContext.Products.AsNoTracking();
+            IQueryable<Product> baseQuery = dbContext.Products
+                .ApplyFullTextSearch(
+                    request.SearchQuery,
+                    FullTextSearchMode.All,
+                    fullTextFields: [p => p.Name/*, p => p.Description*/])
+                .AsNoTracking();
 
             baseQuery = ApplyProductIdsFilter(baseQuery, request.ProductTypeIds);
             baseQuery = ApplyPriceRangeFilter(baseQuery, request.PriceRange);
             baseQuery = ApplyExcludeProducts(baseQuery, request.ExcludeProductIds);
             baseQuery = baseQuery
-                // We'll later implement full-text search, and AI search by Azure
-                //.Where(p => !string.IsNullOrWhiteSpace(request.SearchQuery) && p.Name.Contains(request.SearchQuery))
                 .Where(p => p.IsActive == request.IsActive);
 
             var customFilterResult = await ApplyCustomFiltersAsync(baseQuery, request.CustomFilters, cancellationToken);

@@ -117,12 +117,7 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
             WarehouseId = request.WarehouseId
         };
         _dbContext.StockAdjustments.Add(stockAdjustment);
-        await _dbContext.SaveChangesAsync();
-
-        foreach (var item in request.Items)
-        {
-
-        }
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         // If the status is Completed, update inventory levels based on adjustment items
         if (request.TransactionStatus == StockTransactionStatus.Completed)

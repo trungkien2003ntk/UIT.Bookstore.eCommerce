@@ -3,6 +3,7 @@ using KKBookstore.Common.Models.RequestDtos;
 using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Extensions;
 using KKBookstore.Models;
+using KKBookstore.StockTransactions;
 using KKBookstore.StockTransactions.StockAdjustments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,9 @@ public record GetStockAdjustmentListQuery()
     public bool? IsDeleted { get; set; }
     public int? WarehouseId { get; set; }
     public string? SearchQuery { get; set; }
+    public StockTransactionStatus? TransactionStatus { get; set; }
+    public DateTimeOffset? TransactionDateFrom { get; set; }
+    public DateTimeOffset? TransactionDateTo { get; set; }
 }
 
 public class GetStockAdjustmentListQueryHandler(
@@ -28,15 +32,14 @@ public class GetStockAdjustmentListQueryHandler(
             .Include(sa => sa.Items);
 
         // Apply filters
-        if (request.IsDeleted.HasValue)
-        {
-            query = query.Where(sa => sa.IsDeleted == request.IsDeleted.Value);
-        }
+        query = query
+            .WhereIf(request.IsDeleted.HasValue, sa => sa.IsDeleted == request.IsDeleted!.Value)
+            .WhereIf(request.WarehouseId.HasValue, sa => sa.WarehouseId == request.WarehouseId!.Value)
+            .WhereIf(request.TransactionStatus.HasValue, sa => sa.TransactionStatus == request.TransactionStatus!.Value)
+            .WhereIf(request.TransactionDateFrom.HasValue, sa => sa.TransactionDate.Date >= request.TransactionDateFrom!.Value.Date)
+            .WhereIf(request.TransactionDateTo.HasValue, sa => sa.TransactionDate.Date <= request.TransactionDateTo!.Value.Date);
 
-        if (request.WarehouseId.HasValue)
-        {
-            query = query.Where(sa => sa.WarehouseId == request.WarehouseId.Value);
-        }        if (!string.IsNullOrWhiteSpace(request.SearchQuery))
+        if (!string.IsNullOrWhiteSpace(request.SearchQuery))
         {
             var searchQuery = request.SearchQuery.ToLower().Trim();
             query = query.Where(sa =>
@@ -78,7 +81,8 @@ public class GetStockAdjustmentListQueryHandler(
         var mappedPaginatedAdjustments = MapToStockAdjustmentSummaryResult(paginatedAdjustments);
 
         return Result.Success(mappedPaginatedAdjustments);
-    }    private PagedResult<StockAdjustmentSummary> MapToStockAdjustmentSummaryResult(PagedResult<StockAdjustment> paginatedAdjustments)
+    }
+    private PagedResult<StockAdjustmentSummary> MapToStockAdjustmentSummaryResult(PagedResult<StockAdjustment> paginatedAdjustments)
     {
         return new PagedResult<StockAdjustmentSummary>(
             paginatedAdjustments.Items.Select(sa => new StockAdjustmentSummary
@@ -95,7 +99,7 @@ public class GetStockAdjustmentListQueryHandler(
                 CreatorId = sa.CreatorId,
                 LastModificationTime = sa.LastModificationTime,
                 LastModifierId = sa.LastModifierId,
-                Status = sa.TransactionStatus,
+                TransactionStatus = sa.TransactionStatus,
                 TotalCost = sa.Items?.Sum(item => item.Quantity * item.UnitCost) ?? 0
             }).ToList(),
             paginatedAdjustments.TotalCount,

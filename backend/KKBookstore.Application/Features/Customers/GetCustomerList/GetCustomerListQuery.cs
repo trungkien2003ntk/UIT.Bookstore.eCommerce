@@ -93,6 +93,7 @@ public class GetCustomerListQueryHandler(
                 LastName = c.LastName,
                 FullName = c.FullName,
                 Email = c.Email,
+                ImageUrl = c.ImageUrl ?? string.Empty,
                 PhoneNumber = c.PhoneNumber ?? string.Empty,
                 IsActive = c.IsActive,
                 IsDeleted = c.IsDeleted,

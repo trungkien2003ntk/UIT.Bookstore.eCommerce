@@ -92,12 +92,11 @@ public static class QueryableExtensions
         {
             throw new ArgumentException($"Invalid sort property '{sortBy}'. Valid properties are: {string.Join(',', validSortProperties)}");
         }
+        // Get total count before pagination
+        var totalItemsCount = await query.CountAsync(cancellationToken);
 
         // Apply pagination
         var paginatedItems = await query.PaginateAsync(pageNumber, pageSize, cancellationToken);
-
-        // Create paginated result
-        var totalItemsCount = await query.CountAsync(cancellationToken);
         var result = new PagedResult<T>(paginatedItems, totalItemsCount, pageSize, pageNumber);
 
         return result;

@@ -3,6 +3,8 @@ using KKBookstore.Abstractions;
 using KKBookstore.Features.Customers.BlockCustomer;
 using KKBookstore.Features.Customers.GetCustomerDetail;
 using KKBookstore.Features.Customers.GetCustomerList;
+using KKBookstore.Features.Customers.GetCustomerStatusSummary;
+using KKBookstore.Features.Customers.UnblockCustomer;
 using KKBookstore.Features.Customers.UpdateCustomer;
 using KKBookstore.Models;
 using MediatR;
@@ -65,5 +67,26 @@ public class CustomersController(
         var result = await Sender.Send(new BlockCustomerCommand(id), cancellationToken);
 
         return result.IsSuccess ? Ok() : ToActionResult(result);
+    }
+
+    [HttpPost("{id}/unblock")]
+    public async Task<IActionResult> UnblockCustomer(
+        [FromRoute] int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(new UnblockCustomerCommand(id), cancellationToken);
+
+        return result.IsSuccess ? Ok() : ToActionResult(result);
+    }
+
+    [HttpGet("status-summary")]
+    public async Task<IActionResult> GetCustomerStatusSummary(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(new GetCustomerStatusSummaryQuery(), cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 }

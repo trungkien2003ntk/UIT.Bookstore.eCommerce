@@ -4,6 +4,7 @@ using KKBookstore.Constants;
 using KKBookstore.Contracts.Requests;
 using KKBookstore.Features.Products.CreateProduct;
 using KKBookstore.Features.Products.CreateProductRating;
+using KKBookstore.Features.Products.DeleteProduct;
 using KKBookstore.Features.Products.GetAdminProductDetail;
 using KKBookstore.Features.Products.GetCustomerProductDetail;
 using KKBookstore.Features.Products.GetMonthlyTopSellingProductList;
@@ -133,9 +134,7 @@ public class ProductsController(
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    }
-
-    [HttpPut("{id}")]
+    }    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProductAsync(
         [FromRoute] int id,
         [FromBody] UpdateProductCommand command,
@@ -150,6 +149,18 @@ public class ProductsController(
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProductAsync(
+        [FromRoute] int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var command = new DeleteProductCommand(id);
+        var result = await Sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
 

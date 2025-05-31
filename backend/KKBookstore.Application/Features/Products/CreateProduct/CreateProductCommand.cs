@@ -72,11 +72,10 @@ public record CreateProductCommand : IRequest<Result<AdminProductDto>>
         [Required]
         public string LargeImageUrl { get; set; } = null!;
     }
-
     public class VariantOptionCreateDto
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public required string Name { get; set; }
+        public required string Value { get; set; }
     }
 }
 
@@ -158,27 +157,30 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             var variants = variantsResult.Value;
             _dbContext.ProductVariants.AddRange(variants);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            _logger.LogInformation("Product variants created for product {ProductId}", product.Id);
-
-            // 7. Create and save product images if any
+            _logger.LogInformation("Product variants created for product {ProductId}", product.Id);            // 7. Create and save product images if any
+            List<ProductImage> savedProductImages = [];
             if (request.ProductImages != null)
             {
                 var productImages = CreateProductImages(request, product);
                 _dbContext.ProductImages.AddRange(productImages);
                 await _dbContext.SaveChangesAsync(cancellationToken);
+                savedProductImages = productImages;
                 _logger.LogInformation("Product images created for product {ProductId}", product.Id);
             }
 
-            _logger.LogInformation("Sending product created event for product {ProductId}", product.Id);
-            var productCreatedEvent = new ProductCreatedEvent(
-                product.Id,
-                product.ProductImages.Select(i => new ImageDto(i.Id, i.ThumbnailImageUrl)));
-            await _serviceBus.SendMessageAsync(productCreatedEvent, ServiceBusConsts.ProductCreatedQueueName);
-
-
-
+            // Commit transaction first to ensure all data is persisted
             await transaction.CommitAsync(cancellationToken);
-            return CreateResponse(product, productType, unitMeasure);
+
+            // Send event after successful transaction commit with the saved images
+            if (savedProductImages.Any())
+            {
+                _logger.LogInformation("Sending product created event for product {ProductId}", product.Id);
+                var productCreatedEvent = new ProductCreatedEvent(
+                    product.Id,
+                    savedProductImages.Select(i => new ImageDto(i.Id, i.ThumbnailImageUrl)));
+                await _serviceBus.SendMessageAsync(productCreatedEvent, ServiceBusConsts.ProductCreatedQueueName);
+            }
+            return CreateResponse(product, productType, unitMeasure, variants, savedProductImages, attributeValues);
         }
         catch (Exception ex)
         {
@@ -260,9 +262,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             {
                 return Result.Failure<List<ProductVariant>>(skuValue.Error);
             }
-            var sku = skuValue.Value;
-
-            variants.Add(new ProductVariant(
+            var sku = skuValue.Value; var variant = new ProductVariant(
                 sku,
                 variantRequest.RecommendedRetailPrice,
                 variantRequest.UnitPrice,
@@ -272,7 +272,23 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 variantRequest.Comment ?? "")
             {
                 ProductId = product.Id
-            });
+            };
+
+            // Add inventory for the variant
+            foreach (var branch in branches ?? [])
+            {
+                variant.Inventories?.Add(new Inventory(
+                    productVariantId: 0,
+                    initialQuantity: 0,
+                    unitCost: 0,
+                    isActive: true,
+                    warehouseId: branch.Id,
+                    originalCreatedDate: DateTimeOffset.Now,
+                    purchaseOrderLineId: null
+                ));
+            }
+
+            variants.Add(variant);
         }
         else
         {
@@ -324,19 +340,17 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                             ProductVariant = variant
                         };
 
-                        variant.ProductVariantOptionValues.Add(valueToAdd);
+                        variant.ProductVariantOptionValues?.Add(valueToAdd);
 
                         if (existingOptionValue == null)
                         {
                             cachedOptionValues.Add(valueToAdd);
                         }
                     }
-                }
-
-                // Add inventory for the variant
-                foreach (var branch in branches)
+                }                // Add inventory for the variant
+                foreach (var branch in branches ?? [])
                 {
-                    variant.Inventories.Add(new Inventory(
+                    variant.Inventories?.Add(new Inventory(
                         productVariantId: 0,
                         initialQuantity: 0,
                         unitCost: 0,
@@ -363,8 +377,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             LargeImageUrl = image.LargeImageUrl
         }).ToList();
     }
-
-    private AdminProductDto CreateResponse(Product product, ProductType productType, UnitMeasure unitMeasure)
+    private AdminProductDto CreateResponse(
+        Product product,
+        ProductType productType,
+        UnitMeasure unitMeasure,
+        List<ProductVariant> variants,
+        List<ProductImage> productImages,
+        List<ProductTypeAttributeProductValue> attributeValues)
     {
         return new AdminProductDto
         {
@@ -391,7 +410,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 Name = unitMeasure.Name,
                 Description = unitMeasure.Description
             },
-            ProductVariants = product.ProductVariants.Select(v => new ProductVariantDto
+            ProductVariants = variants.Select(v => new ProductVariantDto
             {
                 Id = v.Id,
                 RecommendedRetailPrice = v.RecommendedRetailPrice,
@@ -400,26 +419,26 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 Dimension = v.Dimension,
                 TaxRate = v.TaxRate,
                 Comment = v.Comment,
-                VariantOptions = v.ProductVariantOptionValues.Select(vo => new ProductVariantDto.VariantOptionDto
+                VariantOptions = v.ProductVariantOptionValues?.Select(vo => new ProductVariantDto.VariantOptionDto
                 {
                     ProductOptionId = vo.OptionId,
                     ProductOptionValueId = vo.OptionValueId,
-                    Name = vo.Option.Name,
-                    Value = vo.OptionValue.Value
-                }).ToList()
+                    Name = vo.Option?.Name ?? "",
+                    Value = vo.OptionValue?.Value ?? ""
+                }).ToList() ?? new List<ProductVariantDto.VariantOptionDto>()
             }).ToList(),
-            ProductImages = product.ProductImages.Select(pi => new ProductImageDto
+            ProductImages = productImages.Select(pi => new ProductImageDto
             {
                 Id = pi.Id,
                 ThumbnailImageUrl = pi.ThumbnailImageUrl,
                 LargeImageUrl = pi.LargeImageUrl
             }).ToList(),
-            AttributeProductValues = product.AttributeProductValues.Select(pav => new ProductTypeAttributeProductValueDto
+            AttributeProductValues = attributeValues.Select(pav => new ProductTypeAttributeProductValueDto
             {
-                AttributeId = pav.AttributeValue.ProductTypeAttribute.Id,
+                AttributeId = pav.AttributeValue?.ProductTypeAttribute?.Id ?? 0,
                 AttributeValueId = pav.AttributeValueId,
-                Name = pav.AttributeValue.ProductTypeAttribute.Name,
-                Value = pav.AttributeValue.Value
+                Name = pav.AttributeValue?.ProductTypeAttribute?.Name ?? "",
+                Value = pav.AttributeValue?.Value ?? ""
             }).ToList()
         };
     }

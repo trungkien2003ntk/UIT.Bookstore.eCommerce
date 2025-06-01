@@ -88,7 +88,9 @@ public class GetProductListQueryHandler(
                     .ThenInclude(pv => pv.ProductVariantOptionValues!)
                         .ThenInclude(pov => pov.OptionValue)
                 .ToListAsync(cancellationToken);
-
+            pagedProductsWithDetails = pagedProductsWithDetails
+                .OrderBy(p => pagedProductIds.IndexOf(p.Id))
+                .ToList();
             // Load inventory data separately to reduce join complexity
             var productIds = pagedProductsWithDetails.Select(p => p.Id).ToList();
             var variantIds = pagedProductsWithDetails

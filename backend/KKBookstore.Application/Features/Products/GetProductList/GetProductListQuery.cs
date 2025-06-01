@@ -42,7 +42,7 @@ public class GetProductListQueryHandler(
                     likeFields: [p => p.Id.ToString()])
                 .AsNoTracking();
 
-            baseQuery = ApplyProductIdsFilter(baseQuery, request.ProductTypeIds);
+            baseQuery = await ApplyProductIdsFilter(baseQuery, request.ProductTypeIds);
             baseQuery = ApplyPriceRangeFilter(baseQuery, request.PriceRange);
             baseQuery = ApplyExcludeProducts(baseQuery, request.ExcludeProductIds);
             baseQuery = baseQuery
@@ -273,12 +273,11 @@ public class GetProductListQueryHandler(
         return query;
     }
 
-    private IQueryable<Product> ApplyProductIdsFilter(IQueryable<Product> query, List<int>? productTypeIds)
+    private async Task<IQueryable<Product>> ApplyProductIdsFilter(IQueryable<Product> query, List<int>? productTypeIds)
     {
         if (productTypeIds?.Count > 0)
         {
-            var productTypeIdsTask = GetAllChildProductTypeIdsAsync(productTypeIds);
-            var productTypeIdsWithChilds = productTypeIdsTask.GetAwaiter().GetResult();
+            var productTypeIdsWithChilds = await GetAllChildProductTypeIdsAsync(productTypeIds);
 
             query = query.Where(p => productTypeIdsWithChilds.Contains(p.ProductTypeId));
         }
@@ -357,31 +356,46 @@ public class GetProductListQueryHandler(
             .ToDictionaryAsync(x => x.ProductId, x => x.SoldCount, cancellationToken);
     }
 
-    // Optimized to use a single database query with a recursive CTE
+    // Get all product type IDs including children, similar to GetProductTypeListQuery approach
     private async Task<HashSet<int>> GetAllChildProductTypeIdsAsync(List<int> parentProductTypeIds)
     {
-        // This assumes SQL Server or another DBMS that supports recursive CTEs
-        var sql = @"
-            WITH ProductTypeHierarchy AS (
-                -- Base case: start with parent IDs
-                SELECT Id, ParentProductTypeId
-                FROM ProductTypes
-                WHERE Id IN {0}
-                
-                UNION ALL
-                
-                -- Recursive case: join with children
-                SELECT pt.Id, pt.ParentProductTypeId
-                FROM ProductTypes pt
-                INNER JOIN ProductTypeHierarchy pth ON pt.ParentProductTypeId = pth.Id
-            )
-            SELECT DISTINCT Id FROM ProductTypeHierarchy;";
-
-        var result = await dbContext.ProductTypes
-            .FromSqlRaw(sql, parentProductTypeIds)
-            .Select(pt => pt.Id)
+        // Get all product types to build hierarchy in memory (similar to GetProductTypeListQuery)
+        var allProductTypes = await dbContext.ProductTypes
+            .Select(pt => new ProductTypeDto { Id = pt.Id, ParentProductTypeId = pt.ParentProductTypeId })
             .ToListAsync();
 
-        return new HashSet<int>(result);
+        // Build a lookup table to find children for each product type
+        var lookup = allProductTypes.ToLookup(p => p.ParentProductTypeId);
+
+        var allIds = new HashSet<int>(parentProductTypeIds);
+
+        // For each parent ID, recursively get all child IDs
+        foreach (var parentId in parentProductTypeIds)
+        {
+            GetAllChildIds(parentId, lookup, allIds);
+        }
+
+        return allIds;
+    }
+
+    private void GetAllChildIds(int parentId, ILookup<int?, ProductTypeDto> lookup, HashSet<int> allIds)
+    {
+        // Get direct children of the current parent
+        var children = lookup[parentId];
+
+        foreach (var child in children)
+        {
+            if (allIds.Add(child.Id)) // Add returns true if it was actually added (not already present)
+            {
+                // Recursively get children of this child
+                GetAllChildIds(child.Id, lookup, allIds);
+            }
+        }
+    }
+
+    private class ProductTypeDto
+    {
+        public int Id { get; set; }
+        public int? ParentProductTypeId { get; set; }
     }
 }

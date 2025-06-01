@@ -1,3 +1,5 @@
+using KKBookstore.Users;
+
 namespace KKBookstore.Features.Customers.Models;
 
 public class CustomerSummary
@@ -11,6 +13,7 @@ public class CustomerSummary
     public string ImageUrl { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public bool IsDeleted { get; set; }
+    public UserStatus Status { get; set; }
     public string? CustomerTypeName { get; set; }
     public int? CustomerTypeId { get; set; }
     public DateTimeOffset? CreationTime { get; set; }

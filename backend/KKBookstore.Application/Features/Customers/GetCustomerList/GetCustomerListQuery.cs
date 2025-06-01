@@ -97,6 +97,7 @@ public class GetCustomerListQueryHandler(
                 PhoneNumber = c.PhoneNumber ?? string.Empty,
                 IsActive = c.IsActive,
                 IsDeleted = c.IsDeleted,
+                Status = c.Status,
                 CustomerTypeId = c.CustomerTypeId,
                 CustomerTypeName = c.CustomerType?.Name,
                 CreationTime = c.CreationTime

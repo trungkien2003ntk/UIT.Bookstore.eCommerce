@@ -38,7 +38,8 @@ public class GetProductListQueryHandler(
                 .ApplyFullTextSearch(
                     request.SearchQuery,
                     FullTextSearchMode.All,
-                    fullTextFields: [p => p.Name/*, p => p.Description*/])
+                    fullTextFields: [p => p.Name/*, p => p.Description*/],
+                    likeFields: [p => p.Id.ToString()])
                 .AsNoTracking();
 
             baseQuery = ApplyProductIdsFilter(baseQuery, request.ProductTypeIds);

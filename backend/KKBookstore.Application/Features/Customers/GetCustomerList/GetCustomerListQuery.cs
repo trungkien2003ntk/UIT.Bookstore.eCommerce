@@ -27,8 +27,7 @@ public class GetCustomerListQueryHandler(
 {
     public async Task<Result<PagedResult<CustomerSummary>>> Handle(GetCustomerListQuery request, CancellationToken cancellationToken)
     {
-        IQueryable<Customer> query = dbContext.Users
-            .OfType<Customer>()
+        IQueryable<Customer> query = dbContext.Customers
             .AsNoTracking()
             .Include(c => c.CustomerType);
 
@@ -39,6 +38,7 @@ public class GetCustomerListQueryHandler(
             .WhereIf(request.IsActive.HasValue, c => c.IsActive == request.IsActive!.Value)
             .WhereIf(request.CustomerTypeId.HasValue, c => c.CustomerTypeId == request.CustomerTypeId!.Value)
             .WhereIf(request.Status.HasValue, c => c.Status == request.Status!.Value)
+            .Where(u => u.CustomerType != null && !u.CustomerType.IsDeleted)
             .ApplyFullTextSearch(
                 request.SearchQuery,
                 FullTextSearchMode.All,

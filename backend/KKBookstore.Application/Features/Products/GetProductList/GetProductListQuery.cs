@@ -230,6 +230,7 @@ public class GetProductListQueryHandler(
                 MinUnitPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.UnitPrice) : 0,
                 MinRecommendedRetailPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.RecommendedRetailPrice) : 0,
                 AverageRating = (decimal)(p.Ratings.Count > 0 ? p.Ratings.Average(r => r.RatingValue) : 0),
+                RatingsCount = p.Ratings.Count(r => r.Status == RatingStatus.Posted || r.Status == RatingStatus.PendingReview),
                 CreationTime = p.CreationTime,
                 IsActive = p.IsActive,
                 TotalStockQuantity = p.ProductVariants.Sum(pv => pv.StockQuantity),

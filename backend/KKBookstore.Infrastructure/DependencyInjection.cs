@@ -32,6 +32,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        /// Config Memory Cache
+        services.AddMemoryCache();
+
         /// Config DbContext
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
@@ -139,10 +142,19 @@ public static class DependencyInjection
         services.AddScoped<IGeminiService, GeminiService>();        /// Config AI Moderation
         services.Configure<ModerationConfiguration>(configuration.GetSection(ModerationConfiguration.SectionName));
         services.AddScoped<ICommentModerationService, CommentModerationService>();
-        services.AddScoped<IModerationNotificationService, ModerationNotificationService>();
+        services.AddScoped<IModerationNotificationService, ModerationNotificationService>();        /// Config Related Products AI Service
+        /// old way
+        //services.AddScoped<IRelatedProductsService, RelatedProductsService>();
 
-        /// Config Related Products AI Service
-        services.AddScoped<IRelatedProductsService, RelatedProductsService>();
+        /// new way: added decorator for caching
+        services.AddScoped<RelatedProductsService>();
+        services.AddScoped<IRelatedProductsService>(provider =>
+        {
+            return new CachedRelatedProductsService(
+                provider.GetRequiredService<IMemoryCache>(),
+                provider.GetRequiredService<RelatedProductsService>()
+            );
+        });
 
 
         var storageConnectionString = configuration.GetConnectionString("AzureStorage");

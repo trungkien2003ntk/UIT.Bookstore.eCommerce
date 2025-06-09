@@ -18,6 +18,7 @@ public record ProductSummary : BaseDto
     public decimal MinDiscountRate => MinRecommendedRetailPrice == 0 ? 0 : (MinRecommendedRetailPrice - MinUnitPrice) / MinRecommendedRetailPrice * 100;
     public DateTimeOffset? CreationTime { get; set; }
     public decimal AverageRating { get; set; }
+    public decimal RatingsCount { get; set; }
     public bool IsActive { get; set; }
     public int TotalStockQuantity { get; set; }
     public string StockStatus => TotalStockQuantity > 0 ? "In Stock" : "Out of Stock";

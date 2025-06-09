@@ -10,6 +10,8 @@ using KKBookstore.Shipping;
 using KKBookstore.Storage;
 using KKBookstore.Users;
 using KKBookstore.Web;
+using KKBookstore.Infrastructure.AI;
+using DotnetGeminiSDK;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -116,12 +118,22 @@ public static class DependencyInjection
 
         /// Config VnPay Payment
         services.Configure<VnPayConfiguration>(configuration.GetSection(nameof(VnPayConfiguration)));
-        services.AddScoped<IPaymentService, VnPayPaymentService>();
-
-
-        /// Config Azure Search
+        services.AddScoped<IPaymentService, VnPayPaymentService>();        /// Config Azure Search
         services.Configure<SearchConfiguration>(configuration.GetSection(nameof(SearchConfiguration)));
         services.AddScoped<ISearchService, SearchService>();
+
+        /// Config Gemini AI
+        services.Configure<GeminiConfiguration>(configuration.GetSection(nameof(GeminiConfiguration)));
+        services.AddGeminiClient(config =>
+        {
+            var geminiConfig = configuration.GetSection(nameof(GeminiConfiguration)).Get<GeminiConfiguration>();
+            config.ApiKey = geminiConfig?.ApiKey ?? throw new InvalidOperationException("Gemini API Key is required");
+            config.TextBaseUrl = geminiConfig?.TextBaseUrl ?? "https://generativelanguage.googleapis.com/v1/models/gemini-pro";
+            config.ImageBaseUrl = geminiConfig?.ImageBaseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision";
+            config.ModelBaseUrl = geminiConfig?.ModelBaseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models";
+            config.EmbeddingBaseUrl = geminiConfig?.EmbeddingBaseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models";
+        });
+        services.AddScoped<IGeminiService, GeminiService>();
 
 
         var storageConnectionString = configuration.GetConnectionString("AzureStorage");

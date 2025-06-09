@@ -1,0 +1,7 @@
+{
+  "prompt": "Write a short product description for a science fiction book",
+  "maxOutputTokens": 50,
+  "temperature": 0.7,
+  "safetyCategory": "HARM_CATEGORY_HARASSMENT",
+  "safetyThreshold": "BLOCK_MEDIUM_AND_ABOVE"
+}

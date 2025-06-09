@@ -18,7 +18,6 @@ public static class DependencyInjection
         // Manual Mapping Services
         services.AddScoped<IUpdateShoppingCartMappingService, UpdateShoppingCartMappingService>();
         services.AddScoped<IGetShoppingCartMappingService, GetShoppingCartMappingService>();
-
         services.AddScoped<DefaultOrderProcessor>();
 
         // Services

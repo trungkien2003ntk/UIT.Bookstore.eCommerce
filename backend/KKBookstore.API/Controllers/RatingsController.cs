@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KKBookstore.Controllers;
 
+[Route("api/ratings")]
 public class RatingsController(
     ISender sender
 ) : ApiController(sender)
@@ -16,7 +17,7 @@ public class RatingsController(
     )
     {
         var result = await Sender.Send(query, cancellationToken);
-        
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 

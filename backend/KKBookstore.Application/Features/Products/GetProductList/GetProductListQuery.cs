@@ -17,6 +17,7 @@ public record GetProductListQuery()
 {
     // other properties for filtering 
     public List<int>? ProductTypeIds { get; set; }
+    public List<int>? ProductIds { get; set; }
     public List<int>? ExcludeProductIds { get; set; }
     public PriceRange? PriceRange { get; set; }
     public Dictionary<string, List<string>> CustomFilters { get; set; } = [];
@@ -43,6 +44,7 @@ public class GetProductListQueryHandler(
                 .AsNoTracking();
 
             baseQuery = await ApplyProductIdsFilter(baseQuery, request.ProductTypeIds);
+            baseQuery = ApplyIncludeProductIdsFilter(baseQuery, request.ProductIds);
             baseQuery = ApplyPriceRangeFilter(baseQuery, request.PriceRange);
             baseQuery = ApplyExcludeProducts(baseQuery, request.ExcludeProductIds);
             baseQuery = baseQuery
@@ -268,6 +270,16 @@ public class GetProductListQueryHandler(
         if (excludeProductIds is not null && excludeProductIds.Count > 0)
         {
             query = query.Where(p => !excludeProductIds.Contains(p.Id));
+        }
+
+        return query;
+    }
+
+    private IQueryable<Product> ApplyIncludeProductIdsFilter(IQueryable<Product> query, List<int>? productIds)
+    {
+        if (productIds is not null && productIds.Count > 0)
+        {
+            query = query.Where(p => productIds.Contains(p.Id));
         }
 
         return query;

@@ -136,11 +136,13 @@ public static class DependencyInjection
             config.ModelBaseUrl = geminiConfig?.ModelBaseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models";
             config.EmbeddingBaseUrl = geminiConfig?.EmbeddingBaseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models";
         });
-        services.AddScoped<IGeminiService, GeminiService>();
-          /// Config AI Moderation
+        services.AddScoped<IGeminiService, GeminiService>();        /// Config AI Moderation
         services.Configure<ModerationConfiguration>(configuration.GetSection(ModerationConfiguration.SectionName));
         services.AddScoped<ICommentModerationService, CommentModerationService>();
         services.AddScoped<IModerationNotificationService, ModerationNotificationService>();
+
+        /// Config Related Products AI Service
+        services.AddScoped<IRelatedProductsService, RelatedProductsService>();
 
 
         var storageConnectionString = configuration.GetConnectionString("AzureStorage");

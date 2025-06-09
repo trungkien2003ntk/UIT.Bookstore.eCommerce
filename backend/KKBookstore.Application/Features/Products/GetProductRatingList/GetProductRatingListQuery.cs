@@ -12,8 +12,8 @@ namespace KKBookstore.Features.Products.GetProductRatingList;
 public record GetProductRatingListQuery : IRequest<Result<ProductRatingSummary>>, IPaginatedQuery
 {
     public int ProductId { get; init; }
-    public int PageNumber { get; init; }
-    public int PageSize { get; init; }
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 10;
     public List<string> Statuses { get; init; } = [];
 }
 
@@ -70,6 +70,11 @@ public class GetProductRatingListQueryHandler(
     private Result<IQueryable<Rating>> ApplyStatusFilter(IQueryable<Rating> query, GetProductRatingListQuery request)
     {
         // check if the statuses in the request are valid
+        if (request.Statuses.Count == 0)
+        {
+            return Result.Success(query);
+        }
+
         if (request.Statuses.Exists(x => !Enum.TryParse<RatingStatus>(x, out _)))
         {
             return Result.Failure<IQueryable<Rating>>(

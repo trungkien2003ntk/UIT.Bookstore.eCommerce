@@ -16,11 +16,11 @@ public record GetRatingListQuery()
     public int PageSize { get; init; } = 10;
     public string SortBy { get; init; } = "CreationTime";
     public string SortDirection { get; init; } = "desc";
-    
+
     // Filters
     public int? ProductId { get; init; }
     public int? CustomerId { get; init; }
-    public List<string> Statuses { get; init; } = [];
+    public RatingStatus? Status { get; init; }
     public int? RatingValue { get; init; }
     public string? SearchQuery { get; init; }
 }
@@ -38,7 +38,14 @@ public class GetRatingListQueryHandler(
             .Include(r => r.Customer)
             .Include(r => r.Likes)
             .Include(r => r.Images)
-            .AsQueryable();
+            .Include(r => r.ProductVariant!)
+                .ThenInclude(v => v.Product)
+                    .ThenInclude(p => p.Ratings)
+            .Include(r => r.ProductVariant!)
+                .ThenInclude(v => v.Product)
+                    .ThenInclude(p => p.ProductImages)
+            .AsQueryable()
+            .AsSplitQuery();
 
         // Apply filters
         query = ApplyFilters(query, request);
@@ -55,15 +62,16 @@ public class GetRatingListQueryHandler(
         if (!string.IsNullOrWhiteSpace(request.SearchQuery))
         {
             var searchTerm = request.SearchQuery.ToLower();
-            query = query.Where(r => 
-                r.Comment!.ToLower().Contains(searchTerm) ||
-                r.Customer.UserName!.ToLower().Contains(searchTerm) ||
-                r.Customer.FullName!.ToLower().Contains(searchTerm));
+            query = query.Where(r =>
+                EF.Functions.Like(r.ProductVariant.Product.Name, $"%{request.SearchQuery}%") ||
+                r.ProductVariant.Product.Id.ToString().Contains(searchTerm));
         }
 
         var allowedSortFields = new[] { "CreationTime", "RatingValue", "LikesCount" };
-        
-        var paginatedRatings = await query.SortAndPaginateAsync(
+        PagedResult<Rating>? paginatedRatings = null;
+        try
+        {
+            paginatedRatings = await query.SortAndPaginateAsync(
             request.SortBy,
             request.SortDirection,
             allowedSortFields.ToList(),
@@ -71,7 +79,14 @@ public class GetRatingListQueryHandler(
             request.PageSize,
             cancellationToken);
 
-        if (paginatedRatings.Items.Count == 0)
+        }
+        catch (ArgumentException ex)
+        {
+            return Result.Failure<PagedResult<RatingDto>>(Error.InvalidSortProperty(request.SortBy, string.Join(",", allowedSortFields)));
+        }
+        ;
+
+        if (paginatedRatings!.Items.Count == 0)
         {
             return Result.Success(new PagedResult<RatingDto>(
                 [],
@@ -81,50 +96,23 @@ public class GetRatingListQueryHandler(
             ));
         }
 
-        var result = MapToRatingDtoResult(paginatedRatings);
+        var result = MapToRatingDtoResult(paginatedRatings!);
         return Result.Success(result);
     }
 
     private static IQueryable<Rating> ApplyFilters(IQueryable<Rating> query, GetRatingListQuery request)
     {
-        if (request.ProductId.HasValue)
-        {
-            query = query.Where(r => r.ProductId == request.ProductId.Value);
-        }
-
-        if (request.CustomerId.HasValue)
-        {
-            query = query.Where(r => r.CustomerId == request.CustomerId.Value);
-        }
-
-        if (request.RatingValue.HasValue)
-        {
-            query = query.Where(r => r.RatingValue == request.RatingValue.Value);
-        }
+        query = query
+            .WhereIf(request.ProductId.HasValue, r => r.ProductId == request.ProductId!.Value)
+            .WhereIf(request.CustomerId.HasValue, r => r.CustomerId == request.CustomerId!.Value)
+            .WhereIf(request.RatingValue.HasValue, r => r.RatingValue == request.RatingValue!.Value);
 
         return query;
     }
 
     private static Result<IQueryable<Rating>> ApplyStatusFilter(IQueryable<Rating> query, GetRatingListQuery request)
     {
-        if (request.Statuses.Count == 0)
-        {
-            // Default to show only Posted and PendingReview ratings
-            return Result.Success(query.Where(x => x.Status == RatingStatus.Posted || x.Status == RatingStatus.PendingReview));
-        }
-
-        // Check if the statuses in the request are valid
-        if (request.Statuses.Exists(x => !Enum.TryParse<RatingStatus>(x, out _)))
-        {
-            return Result.Failure<IQueryable<Rating>>(
-                ProductErrors.InvalidAttributeValue(
-                    nameof(Rating.Status),
-                    Enum.GetNames(typeof(RatingStatus))
-                ));
-        }
-
-        var statuses = request.Statuses.Select(x => Enum.Parse<RatingStatus>(x)).ToList();
-        return Result.Success(query.Where(x => statuses.Contains(x.Status)));
+        return Result.Success(query.WhereIf(request.Status.HasValue, x => x.Status == request.Status!.Value));
     }
 
     private static PagedResult<RatingDto> MapToRatingDtoResult(PagedResult<Rating> paginatedRatings)
@@ -149,7 +137,18 @@ public class GetRatingListQueryHandler(
             CreationTime = r.CreationTime,
             CreatorId = r.CreatorId,
             LastModificationTime = r.LastModificationTime,
-            LastModifierId = r.LastModifierId
+            LastModifierId = r.LastModifierId,
+            Product = r.ProductVariant?.Product != null
+                ? new ProductBasicInfoDto
+                {
+                    Id = r.ProductVariant.Product.Id,
+                    Name = r.ProductVariant.Product.Name,
+                    ThumbnailImageUrl = r.ProductVariant.Product.GetFirstThumbnailImageUrl(),
+                    AverageRating = r.ProductVariant.Product.Ratings
+                        .Where(x => x.Status == RatingStatus.Posted)
+                        .Average(x => (decimal)x.RatingValue)
+                }
+                : null
         }).ToList();
 
         return new PagedResult<RatingDto>(

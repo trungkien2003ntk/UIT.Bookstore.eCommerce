@@ -11,6 +11,8 @@ using KKBookstore.Features.Products.GetMonthlyTopSellingProductList;
 using KKBookstore.Features.Products.GetProductList;
 using KKBookstore.Features.Products.GetProductOptions;
 using KKBookstore.Features.Products.GetProductRatingList;
+using KKBookstore.Features.Products.GetRelatedProductsById;
+using KKBookstore.Features.Products.GetRelatedProductsByImage;
 using KKBookstore.Features.Products.GetTrendyProductList;
 using KKBookstore.Features.Products.GetUnitMeasures;
 using KKBookstore.Features.Products.GetWeeklyTopSellingProductList;
@@ -172,9 +174,7 @@ public class ProductsController(
         CancellationToken cancellationToken = default
     )
     {
-        request.ProductId ??= id;
-
-        if (request.ProductId.Value != id)
+        if (request.ProductId != id)
         {
             var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
             return ToActionResult(resultTemp);
@@ -234,6 +234,28 @@ public class ProductsController(
             return ToActionResult(resultTemp);
         }
         var result = await Sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }    [HttpGet("{id}/related")]
+    public async Task<IActionResult> GetRelatedProductsById(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = new GetRelatedProductsByIdQuery(id);
+        var result = await Sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [HttpPost("related/by-image")]
+    public async Task<IActionResult> GetRelatedProductsByImage(
+        [FromBody] GetRelatedProductsByImageRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = mapper.Map<GetRelatedProductsByImageQuery>(request);
+        var result = await Sender.Send(query, cancellationToken);
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 }

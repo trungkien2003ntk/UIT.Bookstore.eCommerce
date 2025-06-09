@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Abstractions;
+using KKBookstore.Features.Ratings.GetRatingDetail;
 using KKBookstore.Features.Ratings.GetRatingList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,4 +22,15 @@ public class RatingsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetRatingDetail(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = new GetRatingDetailQuery(id);
+        var result = await Sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
 }

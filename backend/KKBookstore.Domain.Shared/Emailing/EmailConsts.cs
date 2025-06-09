@@ -2,10 +2,8 @@
 
 public static class EmailConsts
 {
-    public const string BaseNamespace = "KKBookstore.Domain.Emailing.Templates.";
-    public const string SubjectPrefix = "[KKBooks] ";
-
-    public const string LayoutTemplateName = "Layout";
+    public const string BaseNamespace = "KKBookstore.Emailing.Templates.";
+    public const string SubjectPrefix = "[KKBooks] "; public const string LayoutTemplateName = "Layout";
     public const string LayoutTemplateAsmNamespace = BaseNamespace + "EmailLayout.sbn";
 
     #region Authentication
@@ -18,6 +16,19 @@ public static class EmailConsts
     public const string ForgotPasswordEmailAsmNamespace = BaseNamespace + "ForgotPassword.sbn";
     #endregion
 
+    #region Moderation
+    public const string AdminAutoHiddenRatingEmailSubject = SubjectPrefix + "Thông báo ẩn đánh giá tự động - Đánh giá #";
+    public const string AdminAutoHiddenRatingEmailTemplateName = "AdminAutoHiddenRating";
+    public const string AdminAutoHiddenRatingEmailAsmNamespace = BaseNamespace + "AdminAutoHiddenRating.sbn";
+
+    public const string UserHiddenRatingEmailSubject = SubjectPrefix + "Đánh giá của bạn đã bị ẩn";
+    public const string UserHiddenRatingEmailTemplateName = "UserHiddenRating";
+    public const string UserHiddenRatingEmailAsmNamespace = BaseNamespace + "UserHiddenRating.sbn";
+
+    public const string UserRestoredRatingEmailSubject = SubjectPrefix + "Đánh giá của bạn đã được khôi phục";
+    public const string UserRestoredRatingEmailTemplateName = "UserRestoredRating";
+    public const string UserRestoredRatingEmailAsmNamespace = BaseNamespace + "UserRestoredRating.sbn";
+    #endregion
 
     #region Orders
 

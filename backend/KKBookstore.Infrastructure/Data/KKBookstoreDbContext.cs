@@ -63,6 +63,7 @@ public class KKBookstoreDbContext(
     public DbSet<StockTransfer> StockTransfers { get; set; }
     public DbSet<StockTransferItem> StockTransferItems { get; set; }
     public DbSet<RatingReport> RatingReports { get; set; }
+    public DbSet<ModerationAuditLog> ModerationAuditLogs { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

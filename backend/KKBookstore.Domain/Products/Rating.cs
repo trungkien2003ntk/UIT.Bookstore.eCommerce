@@ -36,11 +36,16 @@ public class Rating : BaseAuditedEntity
     public RatingStatus Status { get; set; }
 
     public int ReportsCount { get; set; }
-
-    // navigation property
-    public Customer Customer { get; set; }
-    public ProductVariant ProductVariant { get; set; }
-    public ICollection<RatingLike> Likes { get; set; }
+    
+    // AI Moderation properties
+    public int? AiModerationScore { get; set; } // Badness score from AI (1-100)
+    public string? AiModerationCategory { get; set; } // Category of violation
+    public string? AiModerationExplanation { get; set; } // AI explanation
+    public DateTimeOffset? AiModerationDate { get; set; } // When AI evaluation occurred
+    public bool IsAiModerated { get; set; } // Whether this rating has been AI moderated    // navigation property
+    public Customer Customer { get; set; } = null!;
+    public ProductVariant ProductVariant { get; set; } = null!;
+    public ICollection<RatingLike> Likes { get; set; } = new List<RatingLike>();
     public ICollection<RatingImage>? Images { get; set; }
     public ICollection<RatingReport>? Reports { get; set; }
 
@@ -84,5 +89,19 @@ public class Rating : BaseAuditedEntity
         }
 
         return Result.Success();
+    }
+
+    public void SetAiModerationResult(int score, string category, string explanation)
+    {
+        AiModerationScore = score;
+        AiModerationCategory = category;
+        AiModerationExplanation = explanation;
+        AiModerationDate = DateTimeOffset.UtcNow;
+        IsAiModerated = true;
+    }
+
+    public bool ShouldBeAutoHidden(int autoHideThreshold)
+    {
+        return IsAiModerated && AiModerationScore.HasValue && AiModerationScore.Value >= autoHideThreshold;
     }
 }

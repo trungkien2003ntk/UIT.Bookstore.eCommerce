@@ -25,12 +25,31 @@ public class EmailTemplateDefinitionProvider
             EmailConsts.AccountRegistrationEmailTemplateName,
             EmailConsts.AccountRegistrationEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
-        ));
-
-        // Forgot password email template
+        ));        // Forgot password email template
         AddTemplate(new TemplateDefinition(
             EmailConsts.ForgotPasswordEmailTemplateName,
             EmailConsts.ForgotPasswordEmailAsmNamespace,
+            layout: EmailConsts.LayoutTemplateName
+        ));
+
+        // Admin auto-hidden rating email template
+        AddTemplate(new TemplateDefinition(
+            EmailConsts.AdminAutoHiddenRatingEmailTemplateName,
+            EmailConsts.AdminAutoHiddenRatingEmailAsmNamespace,
+            layout: EmailConsts.LayoutTemplateName
+        ));
+
+        // User hidden rating email template
+        AddTemplate(new TemplateDefinition(
+            EmailConsts.UserHiddenRatingEmailTemplateName,
+            EmailConsts.UserHiddenRatingEmailAsmNamespace,
+            layout: EmailConsts.LayoutTemplateName
+        ));
+
+        // User restored rating email template
+        AddTemplate(new TemplateDefinition(
+            EmailConsts.UserRestoredRatingEmailTemplateName,
+            EmailConsts.UserRestoredRatingEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
         ));
 

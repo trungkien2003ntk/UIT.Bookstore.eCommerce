@@ -12,7 +12,7 @@ using static KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem.UpdateSho
 
 namespace KKBookstore.Controllers;
 
-[Authorize(Roles = $"{Role.Customer}")]
+[Authorize(Roles = $"{AppRoles.Customer}")]
 [Route("api/shopping-cart/items")]
 public class ShoppingCartController(
     ISender sender

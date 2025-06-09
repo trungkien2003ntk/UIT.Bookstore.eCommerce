@@ -54,7 +54,7 @@ public class SignUpCommandHandler(
             Password: request.Password,
             DateOfBirth: DateTimeOffset.UtcNow, // Default value, can be updated later
             Gender: request.Gender,
-            Role: Role.Customer
+            Role: AppRoles.Customer
         );
 
         using (var transaction = await dbContext.BeginTransactionAsync(cancellationToken))

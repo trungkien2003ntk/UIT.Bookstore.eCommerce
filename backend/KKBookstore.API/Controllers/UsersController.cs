@@ -56,7 +56,7 @@ public class UsersController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [Authorize(Roles = $"{Role.Admin},{Role.Customer}")]
+    [Authorize(Roles = $"{AppRoles.Admin},{AppRoles.Customer}")]
     [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUserAsync(CancellationToken cancellationToken = default)
     {
@@ -113,7 +113,7 @@ public class UsersController(
         return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
-    [Authorize(Roles = Role.Customer)]
+    [Authorize(Roles = AppRoles.Customer)]
     [HttpGet("{userId}/addresses")]
     public async Task<IActionResult> GetUserShippingAddressesAsync(
         int userId,
@@ -131,7 +131,7 @@ public class UsersController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [Authorize(Roles = Role.Customer)]
+    [Authorize(Roles = AppRoles.Customer)]
     [HttpPost("{userId}/addresses")]
     public async Task<IActionResult> AddUserShippingAddressAsync(
         int userId,
@@ -167,7 +167,7 @@ public class UsersController(
         return result.IsSuccess ? Created() : ToActionResult(result);
     }
 
-    [Authorize(Roles = Role.Customer)]
+    [Authorize(Roles = AppRoles.Customer)]
     [HttpPut]
     [Route("{userId}/addresses/{id}")]
     public async Task<IActionResult> UpdateUserShippingAddressAsync(
@@ -189,7 +189,7 @@ public class UsersController(
         return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 
-    [Authorize(Roles = Role.Customer)]
+    [Authorize(Roles = AppRoles.Customer)]
     [HttpDelete]
     [Route("{userId}/addresses/{addressId}")]
     public async Task<IActionResult> DeleteUserShippingAddressAsync(

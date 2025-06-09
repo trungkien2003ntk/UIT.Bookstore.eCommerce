@@ -1,0 +1,27 @@
+<div style="background-color: #ffa500; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h2 style="margin: 0; color: white;">📝 Cập nhật trạng thái đánh giá</h2>
+</div>
+
+<p style="color: #333;">Xin chào <strong>{{ model.recipient_name }}</strong>,</p>
+
+<p style="color: #333;">
+    Chúng tôi gửi email để thông báo rằng một trong những đánh giá sản phẩm của bạn (Đánh giá #{{ model.rating_id }}) đã bị ẩn khỏi chế độ hiển thị công khai.
+</p>
+
+<div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #ffa500; margin: 20px 0;">
+    <h3 style="color: #333; margin-top: 0;">Lý do thực hiện hành động:</h3>
+    <p style="color: #333;">{{ model.reason }}</p>
+</div>
+
+<p style="color: #333;">
+    Nếu bạn tin rằng hành động này được thực hiện nhầm, vui lòng liên hệ với đội ngũ hỗ trợ khách hàng để được xem xét lại.
+</p>
+
+<p style="color: #333;">
+    Cảm ơn bạn đã thông cảm.
+</p>
+
+<p style="color: #333;">
+    Trân trọng,<br>
+    <strong>Đội ngũ KKBooks</strong>
+</p>

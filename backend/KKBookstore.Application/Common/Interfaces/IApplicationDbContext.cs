@@ -60,6 +60,7 @@ public interface IApplicationDbContext
     public DbSet<StockTransfer> StockTransfers { get; set; }
     public DbSet<StockTransferItem> StockTransferItems { get; set; }
     public DbSet<RatingReport> RatingReports { get; set; }
+    public DbSet<ModerationAuditLog> ModerationAuditLogs { get; set; }
 
     EntityEntry Entry(object entity);
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity)

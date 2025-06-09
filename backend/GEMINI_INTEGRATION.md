@@ -5,11 +5,13 @@ This document describes the integration of Google's Gemini AI SDK into the KKBoo
 ## Recent Fixes
 
 ### Safety Settings API Issue (June 2025)
+
 **Issue**: Google Gemini API was rejecting requests with error: `"Invalid JSON payload received. Unknown name 'safetySetting': Cannot find field."`
 
 **Root Cause**: The DotnetGeminiSDK was sending individual `SafetySetting` objects, but Google's API expects `safetySettings` (plural) as an array.
 
-**Solution**: 
+**Solution**:
+
 1. Removed the problematic safety setting parameter from the `TextPrompt` method call
 2. Updated model names from deprecated `gemini-pro` to current `gemini-1.5-flash`
 3. Updated API endpoints from `v1beta` to `v1` where appropriate
@@ -19,10 +21,11 @@ This document describes the integration of Google's Gemini AI SDK into the KKBoo
 ## Overview
 
 The Gemini SDK has been integrated to provide AI-powered features for the bookstore, including:
-- Text generation (book descriptions, recommendations)
-- Content embeddings (for semantic search)
-- Image processing capabilities
-- Token counting for cost estimation
+
+-   Text generation (book descriptions, recommendations)
+-   Content embeddings (for semantic search)
+-   Image processing capabilities
+-   Token counting for cost estimation
 
 ## Architecture
 
@@ -59,12 +62,12 @@ Replace the placeholder in `appsettings.json`:
 
 ```json
 {
-  "Gemini": {
-    "ApiKey": "YOUR_ACTUAL_GOOGLE_GEMINI_API_KEY",
-    "Model": "gemini-1.5-flash",
-    "MaxTokens": 1000,
-    "Temperature": 0.7
-  }
+	"Gemini": {
+		"ApiKey": "YOUR_ACTUAL_GOOGLE_GEMINI_API_KEY",
+		"Model": "gemini-1.5-flash",
+		"MaxTokens": 1000,
+		"Temperature": 0.7
+	}
 }
 ```
 
@@ -80,9 +83,9 @@ Or in `appsettings.Production.json`:
 
 ```json
 {
-  "Gemini": {
-    "ApiKey": "${GEMINI_API_KEY}"
-  }
+	"Gemini": {
+		"ApiKey": "${GEMINI_API_KEY}"
+	}
 }
 ```
 
@@ -175,37 +178,42 @@ public async Task<int> EstimateCost(string content)
 
 The `TestGeminiController` provides endpoints for testing:
 
-- `POST /api/testgemini/generate-text` - Generate text from request
-- `POST /api/testgemini/test-basic` - Basic functionality test
-- `GET /api/testgemini/count-tokens/{text}` - Count tokens in text
-- `POST /api/testgemini/embeddings` - Get text embeddings
+-   `POST /api/testgemini/generate-text` - Generate text from request
+-   `POST /api/testgemini/test-basic` - Basic functionality test
+-   `GET /api/testgemini/count-tokens/{text}` - Count tokens in text
+-   `POST /api/testgemini/embeddings` - Get text embeddings
 
 ## Use Cases for Bookstore
 
 ### 1. Product Descriptions
-- Generate compelling book descriptions from basic metadata
-- Create category-specific marketing copy
-- Localize descriptions for different markets
+
+-   Generate compelling book descriptions from basic metadata
+-   Create category-specific marketing copy
+-   Localize descriptions for different markets
 
 ### 2. Recommendation Engine
-- Generate personalized book recommendations
-- Create themed book lists (e.g., "Books like Harry Potter")
-- Explain why a book is recommended
+
+-   Generate personalized book recommendations
+-   Create themed book lists (e.g., "Books like Harry Potter")
+-   Explain why a book is recommended
 
 ### 3. Search Enhancement
-- Use embeddings for semantic book search
-- Find books by description rather than exact keywords
-- Improve search relevance
+
+-   Use embeddings for semantic book search
+-   Find books by description rather than exact keywords
+-   Improve search relevance
 
 ### 4. Content Moderation
-- Analyze user reviews for inappropriate content
-- Categorize feedback sentiment
-- Generate response templates for customer service
+
+-   Analyze user reviews for inappropriate content
+-   Categorize feedback sentiment
+-   Generate response templates for customer service
 
 ### 5. Inventory Management
-- Generate product tags from book covers
-- Categorize books automatically
-- Create SEO-friendly content
+
+-   Generate product tags from book covers
+-   Categorize books automatically
+-   Create SEO-friendly content
 
 ## Error Handling
 
@@ -259,7 +267,7 @@ public async Task GenerateTextAsync_ValidRequest_ReturnsResult()
     // Arrange
     var mockClient = new Mock<IGeminiClient>();
     var service = new GeminiService(mockClient.Object, /* other dependencies */);
-    
+
     // Act & Assert
     var result = await service.GenerateTextAsync(validRequest);
     Assert.IsNotNull(result);
@@ -299,6 +307,7 @@ curl -X POST "https://localhost:7001/api/testgemini/test-basic" \
 ## Support
 
 For issues with the integration:
+
 1. Check logs for detailed error messages
 2. Verify API key configuration
 3. Ensure network connectivity to Google's APIs

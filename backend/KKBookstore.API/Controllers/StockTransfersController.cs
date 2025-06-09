@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KKBookstore.Controllers;
 
 [Route("api/stock-transfers")]
-[Authorize(Roles = $"{Role.Admin},{Role.SalesStaff}")]
+[Authorize(Roles = $"{AppRoles.Admin},{AppRoles.SalesStaff}")]
 public class StockTransfersController(
     ISender sender
 ) : ApiController(sender)

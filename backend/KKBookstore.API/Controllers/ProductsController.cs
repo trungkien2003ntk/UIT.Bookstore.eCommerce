@@ -67,7 +67,7 @@ public class ProductsController(
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductDetail(int id)
     {
-        var isAdmin = User.IsInRole(Role.Admin) || User.IsInRole(Role.SalesStaff) || User.IsInRole(Role.CustomerCareStaff);
+        var isAdmin = User.IsInRole(AppRoles.Admin) || User.IsInRole(AppRoles.SalesStaff) || User.IsInRole(AppRoles.CustomerCareStaff);
 
         if (isAdmin)
         {

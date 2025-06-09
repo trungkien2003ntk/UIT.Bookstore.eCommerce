@@ -1,0 +1,26 @@
+<div style="background-color: #ff6b6b; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h2 style="margin: 0; color: white;">⚠️ Thông báo ẩn đánh giá tự động</h2>
+</div>
+
+<p style="color: #333;">Xin chào <strong>{{ model.recipient_name }}</strong>,</p>
+
+<p style="color: #333;">
+    Một đánh giá sản phẩm đã được hệ thống AI kiểm duyệt tự động ẩn do vi phạm chính sách.
+</p>
+
+<div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #ff6b6b; margin: 20px 0;">
+    <h3 style="color: #333; margin-top: 0;">Chi tiết đánh giá:</h3>
+    <p style="color: #333;"><strong>ID Đánh giá:</strong> #{{ model.rating_id }}</p>
+    <p style="color: #333;"><strong>Điểm AI kiểm duyệt:</strong> <span style="font-weight: bold; color: #ff6b6b;">{{ model.ai_score }}/100</span></p>
+    <p style="color: #333;"><strong>Nội dung bình luận:</strong></p>
+    <blockquote style="margin: 10px 0; padding: 10px; background-color: #f5f5f5; border-left: 3px solid #ddd; font-style: italic;">{{ model.comment }}</blockquote>
+</div>
+
+<p style="color: #333;">
+    Vui lòng xem xét đánh giá này trong bảng điều khiển kiểm duyệt admin để xác định có cần thêm hành động nào không.
+</p>
+
+<p style="color: #333;">
+    Trân trọng,<br>
+    <strong>Hệ thống AI Kiểm duyệt KKBooks</strong>
+</p>

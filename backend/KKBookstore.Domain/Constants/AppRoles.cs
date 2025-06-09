@@ -1,5 +1,5 @@
 ﻿namespace KKBookstore.Constants;
-public static class Role
+public static class AppRoles
 {
     public const string Admin = nameof(Admin);
     public const string SalesStaff = nameof(SalesStaff);

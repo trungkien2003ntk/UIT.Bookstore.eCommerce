@@ -35,7 +35,7 @@ public class DiscountController(ISender sender) : ApiController(sender)
     }
 
 
-    [Authorize(Roles = $"{Role.Customer}, {Role.Admin}")]
+    [Authorize(Roles = $"{AppRoles.Customer}, {AppRoles.Admin}")]
     [HttpPost("get-vouchers-cart")]
     public async Task<IActionResult> GetAllDiscountVouchersForCartAsync(
         [FromBody] GetAllDiscountVouchersForCartRequest request,

@@ -15,6 +15,7 @@ public interface IIdentityService
 {
     Task<Result<string>> GenerateResetPasswordTokenAsync(string email);
     Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
+    Task<Result<List<User>>> GetUsersInRoleAsync(string role);
     Task<Result<User>> FindUserAsync(FindUserRequest findUserDto);
     Task<Result<User>> FindUserByPhoneNumberAsync(string phoneNumber);
     Task<Result<User>> CreateTemporaryCustomerAsync(string email);

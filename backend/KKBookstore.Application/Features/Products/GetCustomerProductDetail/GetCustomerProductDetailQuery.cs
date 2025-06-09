@@ -37,14 +37,14 @@ public class GetCustomerProductDetailQueryHandler(
                     .ThenInclude(i => i.Warehouse)
                         .ThenInclude(w => w!.Address)
             .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.Ratings)!
+                .ThenInclude(pv => pv.Ratings.Where(r => r.Status != RatingStatus.Hidden))!
                     .ThenInclude(r => r.Customer)
             .Include(p => p.ProductVariants)
-                .ThenInclude(pv => pv.Ratings)!
+                .ThenInclude(pv => pv.Ratings.Where(r => r.Status != RatingStatus.Hidden))!
                     .ThenInclude(r => r.Likes)
-            .Include(p => p.Ratings)
+            .Include(p => p.Ratings.Where(r => r.Status != RatingStatus.Hidden))
                 .ThenInclude(r => r.Customer)
-            .Include(p => p.Ratings)
+            .Include(p => p.Ratings.Where(r => r.Status != RatingStatus.Hidden))
                 .ThenInclude(r => r.Likes)
             .Include(p => p.BookAuthors)
                 .ThenInclude(ba => ba.Author)
@@ -146,26 +146,27 @@ public class GetCustomerProductDetailQueryHandler(
                         Name = pov.Option?.Name ?? string.Empty,
                         Value = pov.OptionValue?.Value ?? string.Empty
                     }) ?? Array.Empty<OptionValueDto>(),
-                    Ratings = pv.Ratings?.Select(r => new RatingDto
-                    {
-                        Id = r.Id,
-                        Comment = r.Comment,
-                        RatingValue = r.RatingValue,
-                        CustomerId = r.CustomerId,
-                        CustomerName = r.Customer?.UserName ?? "Anonymous",
-                        CreationTime = r.CreationTime!.Value,
-                        ProductVariantId = r.ProductVariantId,
-                        LikesCount = r.Likes?.Count ?? 0,
-                        Response = r.Response,
-                        IsReported = r.ReportsCount > 0,
-                        VariantOptions = pv.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
+                    Ratings = pv.Ratings?
+                        .Select(r => new RatingDto
                         {
-                            ProductOptionId = pov.OptionId,
-                            ProductOptionValueId = pov.OptionValueId,
-                            Name = pov.Option?.Name ?? string.Empty,
-                            Value = pov.OptionValue?.Value ?? string.Empty
-                        }).ToList() ?? new List<ProductVariantOptionDto>()
-                    }).ToList() ?? new List<RatingDto>(),
+                            Id = r.Id,
+                            Comment = r.Comment,
+                            RatingValue = r.RatingValue,
+                            CustomerId = r.CustomerId,
+                            CustomerName = r.Customer?.UserName ?? "Anonymous",
+                            CreationTime = r.CreationTime!.Value,
+                            ProductVariantId = r.ProductVariantId,
+                            LikesCount = r.Likes?.Count ?? 0,
+                            Response = r.Response,
+                            IsReported = r.ReportsCount > 0,
+                            VariantOptions = pv.ProductVariantOptionValues?.Select(pov => new ProductVariantOptionDto
+                            {
+                                ProductOptionId = pov.OptionId,
+                                ProductOptionValueId = pov.OptionValueId,
+                                Name = pov.Option?.Name ?? string.Empty,
+                                Value = pov.OptionValue?.Value ?? string.Empty
+                            }).ToList() ?? new List<ProductVariantOptionDto>()
+                        }).ToList() ?? new List<RatingDto>(),
                     StockBreakdowns = pv.Inventories.Select(inv => new StockBreakdownDto
                     {
                         Id = inv.Id,

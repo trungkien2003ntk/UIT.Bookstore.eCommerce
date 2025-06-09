@@ -1,0 +1,24 @@
+<div style="background-color: #28a745; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h2 style="margin: 0; color: white;">✅ Đánh giá đã được khôi phục</h2>
+</div>
+
+<p style="color: #333;">Xin chào <strong>{{ model.recipient_name }}</strong>,</p>
+
+<p style="color: #333;">
+    Xin chúc mừng! Đánh giá sản phẩm của bạn (Đánh giá #{{ model.rating_id }}) đã được xem xét và khôi phục để hiển thị công khai.
+</p>
+
+<div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745; margin: 20px 0;">
+    <p style="color: #333; margin: 0;">
+        Đánh giá của bạn hiện đã có thể nhìn thấy với các khách hàng khác và góp phần vào đánh giá sản phẩm.
+    </p>
+</div>
+
+<p style="color: #333;">
+    Cảm ơn bạn đã kiên nhẫn trong quá trình xem xét.
+</p>
+
+<p style="color: #333;">
+    Trân trọng,<br>
+    <strong>Đội ngũ KKBooks</strong>
+</p>

@@ -40,6 +40,17 @@ public class IdentityService(
     private readonly IOptions<JwtSettings> _jwtSettings = jwtSettings;
     private readonly KKBookstoreDbContext _dbContext = dbContext;
 
+    public async Task<Result<List<User>>> GetUsersInRoleAsync(string role)
+    {
+        if (string.IsNullOrWhiteSpace(role))
+        {
+            return Result.Failure<List<User>>(Error.Validation("Users.RoleCannotNull", "Role cannot be null or empty."));
+        }
+
+        var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+        return Result.Success(usersInRole.ToList());
+    }
+
     public async Task<Result<User>> FindUserAsync(FindUserRequest findUserDto)
     {
         var user = await _userManager.FindByEmailAsync(findUserDto.Email);
@@ -136,7 +147,7 @@ public class IdentityService(
             return Result.Failure<User>(errors.FirstOrDefault() ?? UserErrors.CreateFailed);
         }
 
-        var customerRole = await _roleManager.FindByNameAsync(Role.Customer);
+        var customerRole = await _roleManager.FindByNameAsync(AppRoles.Customer);
 
         var assignRoleResult = await _userManager.AddToRoleAsync(user, customerRole!.Name!);
         if (!assignRoleResult.Succeeded)
@@ -171,7 +182,7 @@ public class IdentityService(
 
         var user = request.ToEntity();
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
-        user.SignInSource = request.Role == Role.Customer ? SignInSource.CustomerPortal : SignInSource.AdminPortal;
+        user.SignInSource = request.Role == AppRoles.Customer ? SignInSource.CustomerPortal : SignInSource.AdminPortal;
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)

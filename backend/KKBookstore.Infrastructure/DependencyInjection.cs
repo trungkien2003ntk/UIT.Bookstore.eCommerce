@@ -1,4 +1,5 @@
 ﻿using KKBookstore;
+using KKBookstore.Common.Configuration;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Data;
 using KKBookstore.Data.Interceptors;
@@ -11,6 +12,7 @@ using KKBookstore.Storage;
 using KKBookstore.Users;
 using KKBookstore.Web;
 using KKBookstore.Infrastructure.AI;
+using KKBookstore.Features.Admin.Services;
 using DotnetGeminiSDK;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using KKBookstore.AI;
 
 namespace KKBookstore;
 
@@ -134,6 +137,10 @@ public static class DependencyInjection
             config.EmbeddingBaseUrl = geminiConfig?.EmbeddingBaseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models";
         });
         services.AddScoped<IGeminiService, GeminiService>();
+          /// Config AI Moderation
+        services.Configure<ModerationConfiguration>(configuration.GetSection(ModerationConfiguration.SectionName));
+        services.AddScoped<ICommentModerationService, CommentModerationService>();
+        services.AddScoped<IModerationNotificationService, ModerationNotificationService>();
 
 
         var storageConnectionString = configuration.GetConnectionString("AzureStorage");

@@ -26,6 +26,8 @@ public class GetCustomerStatusSummaryQueryHandler : IRequestHandler<GetCustomerS
         var customers = await _dbContext.Users
             .OfType<Customer>()
             .AsNoTracking()
+            .Include(c => c.CustomerType)
+            .Where(c => c.CustomerType != null && c.CustomerType.IsDeleted == false) // Ensure customer type is not null
             .ToListAsync(cancellationToken);
 
         // Group by status and count

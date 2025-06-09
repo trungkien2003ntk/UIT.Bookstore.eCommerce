@@ -73,19 +73,19 @@ public class CheckoutController(ISender sender) : ApiController(sender)
     {
         var command = new HandleIPNCommand
         {
-            TmnCode = request.TmnCode,
-            Amount = request.Amount.Value,
-            BankCode = request.BankCode,
-            BankTranNo = request.BankTranNo,
-            CardType = request.CardType,
-            PayDate = request.PayDate,
-            OrderInfo = request.OrderInfo,
-            TransactionNo = request.TransactionNo.Value,
-            ResponseCode = request.ResponseCode,
-            TransactionStatus = request.TransactionStatus,
-            TxnRef = request.TxnRef,
-            SecureHashType = request.SecureHashType,
-            SecureHash = request.SecureHash
+            TmnCode = request.TmnCode!,
+            Amount = request.Amount!.Value,
+            BankCode = request.BankCode!,
+            BankTranNo = request.BankTranNo!,
+            CardType = request.CardType!,
+            PayDate = request.PayDate!,
+            OrderInfo = request.OrderInfo!,
+            TransactionNo = request.TransactionNo!.Value,
+            ResponseCode = request.ResponseCode!,
+            TransactionStatus = request.TransactionStatus!,
+            TxnRef = request.TxnRef!,
+            SecureHashType = request.SecureHashType!,
+            SecureHash = request.SecureHash!
         };
 
         var result = await Sender.Send(command, cancellationToken);

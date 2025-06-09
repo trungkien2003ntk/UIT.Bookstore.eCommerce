@@ -21,33 +21,33 @@ public class GetCustomerProductDetailQueryHandler(
     {        // Query to fetch the product and related data        
         var product = await _dbContext.Products
             .AsNoTracking()
-            //.AsSplitQuery()
-            //.Where(p => p.IsActive && !p.IsDeleted && p.Id == request.ProductId)
-            //.Include(p => p.ProductType)
-            //.Include(p => p.UnitMeasure)
-            //.Include(p => p.ProductImages)
-            //.Include(p => p.ProductVariants)
-            //    .ThenInclude(pv => pv.ProductVariantOptionValues)!
-            //        .ThenInclude(pov => pov.Option)
-            //.Include(p => p.ProductVariants)
-            //    .ThenInclude(pv => pv.ProductVariantOptionValues)!
-            //        .ThenInclude(pov => pov.OptionValue)
-            //.Include(p => p.ProductVariants)
-            //    .ThenInclude(pv => pv.Inventories)!
-            //        .ThenInclude(i => i.Warehouse)
-            //            .ThenInclude(w => w!.Address)
-            //.Include(p => p.ProductVariants)
-            //    .ThenInclude(pv => pv.Ratings)!
-            //        .ThenInclude(r => r.Customer)
-            //.Include(p => p.ProductVariants)
-            //    .ThenInclude(pv => pv.Ratings)!
-            //        .ThenInclude(r => r.Likes)
+            .AsSplitQuery()
+            .Where(p => p.IsActive && !p.IsDeleted && p.Id == request.ProductId)
+            .Include(p => p.ProductType)
+            .Include(p => p.UnitMeasure)
+            .Include(p => p.ProductImages)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)!
+                    .ThenInclude(pov => pov.Option)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)!
+                    .ThenInclude(pov => pov.OptionValue)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Inventories)!
+                    .ThenInclude(i => i.Warehouse)
+                        .ThenInclude(w => w!.Address)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Ratings)!
+                    .ThenInclude(r => r.Customer)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Ratings)!
+                    .ThenInclude(r => r.Likes)
             .Include(p => p.Ratings)
                 .ThenInclude(r => r.Customer)
             .Include(p => p.Ratings)
                 .ThenInclude(r => r.Likes)
-            //.Include(p => p.BookAuthors)
-            //    .ThenInclude(ba => ba.Author)
+            .Include(p => p.BookAuthors)
+                .ThenInclude(ba => ba.Author)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (product is null)

@@ -31,9 +31,9 @@ public class ProductsController(
     IMapper mapper
 ) : ApiController(sender)
 {
-    [HttpGet]
+    [HttpPost("list")]
     public async Task<IActionResult> GetProducts(
-        [FromQuery] GetProductListRequest filter,
+        [FromBody] GetProductListRequest filter,
         CancellationToken cancellationToken = default
     )
     {
@@ -134,7 +134,8 @@ public class ProductsController(
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    }    [HttpPut("{id}")]
+    }
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProductAsync(
         [FromRoute] int id,
         [FromBody] UpdateProductCommand command,

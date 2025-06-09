@@ -23,7 +23,7 @@ public class Rating : BaseAuditedEntity
         CustomerId = customerId;
         ProductVariantId = variant.Id;
         ProductId = variant.ProductId;
-        Status = RatingStatus.Approved;
+        Status = RatingStatus.Posted;
         Images = [.. imageUrls.Select(imageUrls => new RatingImage(imageUrls, 0))];
     }
 
@@ -78,7 +78,7 @@ public class Rating : BaseAuditedEntity
         Reports.Add(report);
         ReportsCount++;
 
-        if (ReportsCount >= RatingConsts.ReportThreshold && Status == RatingStatus.Approved)
+        if (ReportsCount >= RatingConsts.ReportThreshold && Status == RatingStatus.Posted)
         {
             Status = RatingStatus.PendingReview;
         }

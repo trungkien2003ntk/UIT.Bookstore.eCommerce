@@ -54,19 +54,16 @@ public class LikeProductRatingCommandHandler : IRequestHandler<LikeProductRating
             Id = rating.Id,
             Comment = rating.Comment!,
             RatingValue = rating.RatingValue,
-            UserName = rating.Customer!.UserName ?? "N/A",
+            UserName = rating.Customer!.UserName ?? "Anonymous User",
+            FullName = rating.Customer.FullName ?? "Anonymous User",
             UserAvatarUrl = rating.Customer.ImageUrl,
             ProductVariantName = MappingHelpers.GetProductVariantOptionValuesString(rating.ProductVariant),
             LikesCount = rating.Likes.Count,
             ReportsCount = rating.ReportsCount,
             Response = rating.Response,
-            Status = rating.Status.ToString(),
+            Status = rating.Status,
             CreationTime = rating.CreationTime,
-            Images = rating.Images?.Select(i => new RatingImageDto
-            {
-                Id = i.Id,
-                ImageUrl = i.ImageUrl,
-            }).OrderBy(i => i.Id).ToList() ?? [],
+            ImageUrls = rating.Images?.Select(i => i.ImageUrl).ToList() ?? [],
         };
 
         return Result.Success(ratingDto);

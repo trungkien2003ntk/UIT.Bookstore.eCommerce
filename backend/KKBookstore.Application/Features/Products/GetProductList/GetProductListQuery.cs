@@ -296,9 +296,9 @@ public class GetProductListQueryHandler(
     }
 
     public async Task<Result<IQueryable<Product>>> ApplyCustomFiltersAsync(
-        IQueryable<Product> query,
-        Dictionary<string, List<string>> customFilters,
-        CancellationToken cancellationToken = default)
+    IQueryable<Product> query,
+    Dictionary<string, List<string>> customFilters,
+    CancellationToken cancellationToken = default)
     {
         if (customFilters == null || customFilters.Count == 0)
         {
@@ -307,35 +307,60 @@ public class GetProductListQueryHandler(
 
         try
         {
-            // Apply each filter directly through SQL expressions instead of loading into memory
-            foreach (var filter in customFilters)
+            // Remove empty filters
+            var validFilters = customFilters
+                .Where(f => f.Value != null && f.Value.Count > 0)
+                .ToDictionary(f => f.Key, f => f.Value);
+
+            if (validFilters.Count == 0)
             {
-                string attributeName = filter.Key;
-                List<string> attributeValues = filter.Value;
-
-                // Skip empty filters
-                if (attributeValues.Count == 0)
-                {
-                    continue;
-                }
-
-                // Apply filter using SQL subquery instead of in-memory filtering
-                query = query.Where(p =>
-                    dbContext.ProductTypeAttributeProductValues
-                        .Any(pav =>
-                            pav.ProductId == p.Id &&
-                            dbContext.ProductTypeAttributeValues
-                                .Any(av =>
-                                    av.Id == pav.AttributeValueId &&
-                                    attributeValues.Contains(av.Value) &&
-                                    dbContext.ProductTypeAttributes
-                                        .Any(pa =>
-                                            pa.Id == av.ProductTypeAttributeId &&
-                                            pa.Name == attributeName)
-                                )
-                        )
-                );
+                return Result.Success(query);
             }
+
+            // Create a list of valid attribute-value pairs that can be translated to SQL
+            var validAttributeValuePairs = validFilters
+                .SelectMany(filter => filter.Value.Select(value => new
+                {
+                    AttributeName = filter.Key,
+                    AttributeValue = value
+                }))
+                .ToList();
+
+            // Get all attribute names we're filtering on
+            var attributeNames = validFilters.Keys.ToList();
+
+            // Find products that have matching attribute-value combinations
+            // Join all tables once and group by product
+            var validPairStrings = validFilters
+                .SelectMany(f => f.Value.Select(v => f.Key + "|||" + v))
+                .ToList();
+
+            var matchingProductIds = dbContext.Products
+                .Join(dbContext.ProductTypeAttributeProductValues,
+                    p => p.Id,
+                    pav => pav.ProductId,
+                    (p, pav) => new { p.Id, pav.AttributeValueId })
+                .Join(dbContext.ProductTypeAttributeValues,
+                    x => x.AttributeValueId,
+                    av => av.Id,
+                    (x, av) => new { x.Id, av.Value, av.ProductTypeAttributeId })
+                .Join(dbContext.ProductTypeAttributes,
+                    x => x.ProductTypeAttributeId,
+                    pa => pa.Id,
+                    (x, pa) => new
+                    {
+                        ProductId = x.Id,
+                        AttributeName = pa.Name,
+                        AttributeValue = x.Value,
+                        PairString = pa.Name + "|||" + x.Value
+                    })
+                .Where(x => validPairStrings.Contains(x.PairString))
+                .GroupBy(x => x.ProductId)
+                .Where(g => g.Select(x => x.AttributeName).Distinct().Count() == validFilters.Count)
+                .Select(g => g.Key);
+
+            // Apply the filter to the original query
+            query = query.Where(p => matchingProductIds.Contains(p.Id));
 
             return Result.Success(query);
         }

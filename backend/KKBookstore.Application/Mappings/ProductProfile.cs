@@ -55,7 +55,7 @@ public class ProductProfile : Profile
         CreateMap<(PagedResult<Rating>, List<Rating>), ProductRatingSummary>()
             .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Item1))
             .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.Item2.Average(r => new decimal(r.RatingValue))))
-            .ForMember(dest => dest.TotalApprovedRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.Status == RatingStatus.Approved)))
+            .ForMember(dest => dest.TotalApprovedRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.Status == RatingStatus.Posted)))
             .ForMember(dest => dest.TotalRatingWithComment, opt => opt.MapFrom(src => src.Item2.Count(r => !string.IsNullOrEmpty(r.Comment))))
             .ForMember(dest => dest.Total5StarRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.RatingValue == 5)))
             .ForMember(dest => dest.Total4StarRating, opt => opt.MapFrom(src => src.Item2.Count(r => r.RatingValue == 4)))

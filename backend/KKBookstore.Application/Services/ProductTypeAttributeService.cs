@@ -85,14 +85,12 @@ public class ProductTypeAttributeService
                 .ThenInclude(pt => pt.ParentProductType)
             .ToListAsync(cancellationToken);
 
-        return new HashSet<ProductTypeAttributeDto>(
-            productTypeAttributeMappings.Select(ptam => new ProductTypeAttributeDto()
+        return [.. productTypeAttributeMappings.Select(ptam => new ProductTypeAttributeDto()
             {
                 Id = ptam.ProductTypeAttribute.Id,
                 Name = ptam.ProductTypeAttribute.Name,
                 IsInherited = isParentAttribute,
                 Values = _mapper.Map<List<ProductTypeAttributeValueDto>>(ptam.ProductTypeAttribute.Values)
-            })
-        );
+            })];
     }
 }

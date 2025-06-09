@@ -12,8 +12,7 @@ public class RequestProfile : Profile
     public RequestProfile()
     {
         CreateMap<GetProductListRequest, GetProductListQuery>()
-            .ForMember(dest => dest.PriceRange, opt => opt.MapFrom(src => src.MinPrice.HasValue && src.MaxPrice.HasValue ? new PriceRange(src.MinPrice.Value, src.MaxPrice.Value) : null))
-            .ForMember(dest => dest.CustomFilters, opt => opt.MapFrom(src => src.CustomFilters != null ? src.CustomFilters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()) : new Dictionary<string, List<string>>()));
+            .ForMember(dest => dest.PriceRange, opt => opt.MapFrom(src => src.MinPrice.HasValue && src.MaxPrice.HasValue ? new PriceRange(src.MinPrice.Value, src.MaxPrice.Value) : null));
 
         // OrderStatuses is a list of integers in string, so we need to check if it's null before mapping it
         CreateMap<GetOrderListRequest, GetOrderListQuery>()

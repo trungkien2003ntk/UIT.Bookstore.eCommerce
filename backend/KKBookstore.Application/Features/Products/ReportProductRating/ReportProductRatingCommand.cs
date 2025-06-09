@@ -47,17 +47,14 @@ public class ReportProductRatingCommandHandler : IRequestHandler<ReportProductRa
             Id = rating.Id,
             Comment = rating.Comment!,
             RatingValue = rating.RatingValue,
-            UserName = rating.Customer!.UserName ?? "N/A",
+            UserName = rating.Customer!.UserName ?? "Anonymous User",
+            FullName = rating.Customer.FullName ?? "Anonymous User",
             UserAvatarUrl = rating.Customer.ImageUrl,
             ProductVariantName = MappingHelpers.GetProductVariantOptionValuesString(rating.ProductVariant),
             ReportsCount = rating.ReportsCount,
             LikesCount = rating.Likes.Count,
-            Images = rating.Images?.Select(i => new RatingImageDto
-            {
-                Id = i.Id,
-                ImageUrl = i.ImageUrl,
-            }).OrderBy(i => i.Id).ToList(),
-            Status = rating.Status.ToString(),
+            ImageUrls = rating.Images?.Select(i => i.ImageUrl).ToList(),
+            Status = rating.Status,
             Response = rating.Response,
             CreationTime = rating.CreationTime
         };

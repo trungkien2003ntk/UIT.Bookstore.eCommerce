@@ -74,5 +74,49 @@
     {
         "Id": 19,
         "Name": "Thông Số Kỹ Thuật"
+    },
+    {
+        "Id": 20,
+        "Name": "Độ Tuổi"
+    },
+    {
+        "Id": 21,
+        "Name": "Ngôn Ngữ"
+    },
+    {
+        "Id": 22,
+        "Name": "T√°c gi·∫£"
+    },
+    {
+        "Id": 23,
+        "Name": "Đếm ngược thời gian"
+    },
+    {
+        "Id": 24,
+        "Name": "Genres"
+    },
+    {
+        "Id": 25,
+        "Name": "Thông Tin Cảnh Báo"
+    },
+    {
+        "Id": 26,
+        "Name": "Hướng Dẫn Sử Dụng"
+    },
+    {
+        "Id": 27,
+        "Name": "Số Lượng/ Bộ"
+    },
+    {
+        "Id": 28,
+        "Name": "Cấp Độ/ Lớp"
+    },
+    {
+        "Id": 29,
+        "Name": "Cấp Học"
+    },
+    {
+        "Id": 30,
+        "Name": "Dự Kiến Có Hàng"
     }
 ]

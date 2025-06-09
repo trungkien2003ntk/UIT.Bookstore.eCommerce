@@ -3,6 +3,7 @@ using KKBookstore.Features.Products.Models;
 using KKBookstore.Mappings.Helpers;
 using KKBookstore.Models;
 using KKBookstore.Products;
+using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,9 +22,11 @@ public record CreateProductRatingCommand(
 public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRatingCommand, Result<ProductRatingDto>>
 {
     private readonly IApplicationDbContext _dbContext;
-    public CreateProductRatingCommandHandler(IApplicationDbContext dbContext)
+    private readonly ICurrentUser _currentUser;
+    public CreateProductRatingCommandHandler(IApplicationDbContext dbContext, ICurrentUser currentUser)
     {
         _dbContext = dbContext;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<ProductRatingDto>> Handle(CreateProductRatingCommand request, CancellationToken cancellationToken)
@@ -32,6 +35,15 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
             .Include(v => v.ProductVariantOptionValues)!
                 .ThenInclude(x => x.OptionValue)
             .FirstOrDefaultAsync(v => v.Id == request.ProductVariantId, cancellationToken);
+
+        var currentUser = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == _currentUser.Id, cancellationToken);
+
+        if (currentUser == null)
+        {
+            return Result.Failure<ProductRatingDto>(UserErrors.NotFound);
+        }
+
         if (productVariant == null)
         {
             return Result.Failure<ProductRatingDto>(ProductErrors.NotFound);
@@ -59,13 +71,14 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
             Id = rating.Id,
             Comment = rating.Comment!,
             RatingValue = rating.RatingValue,
-            UserName = "N/A",
+            UserName = currentUser.UserName ?? "Anonymous User",
+            FullName = currentUser.FullName ?? "Anonymous User",
             UserAvatarUrl = null,
             ProductVariantName = MappingHelpers.GetProductVariantOptionValuesString(productVariant),
             LikesCount = 0,
             ReportsCount = 0,
             Response = null,
-            Status = rating.Status.ToString()
+            Status = rating.Status
         };
         return Result.Success(ratingDto);
     }

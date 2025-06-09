@@ -2,7 +2,7 @@
 
 public enum RatingStatus
 {
-    Approved = 1,
+    Posted = 1,
     PendingReview = 2,
-    Rejected = 3
+    Hidden = 3
 }

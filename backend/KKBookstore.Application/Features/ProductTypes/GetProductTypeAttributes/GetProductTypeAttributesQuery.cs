@@ -15,23 +15,37 @@ public class GetProductTypeAttributesQueryHandler(
         var attributesResult = await productTypeAttributeService
             .GetProductTypeAttributesIncludingParents(request.ProductTypeId, cancellationToken);
 
-        return attributesResult.IsSuccess
-            ? new GetProductTypeAttributesResponse
-            {
-                ListAttributes = attributesResult.Value.Select(x => new GetProductTypeAttributesResponse.ProductTypeAttributeDto
+        if (!attributesResult.IsSuccess)
+            return Result.Failure<GetProductTypeAttributesResponse>(attributesResult.Error);
+
+        // Group by Name and take the first attribute for each Name
+        var uniqueAttributes = attributesResult.Value
+                .GroupBy(x => x.Name)
+                .Select(g =>
                 {
-                    Id = x.Id,
+                    var first = g.First();
+                    // Merge values from all duplicates
+                    first.Values = g.SelectMany(x => x.Values).Distinct().ToList();
+                    return first;
+                });
+
+        var response = new GetProductTypeAttributesResponse
+        {
+            ListAttributes = uniqueAttributes.Select(x => new GetProductTypeAttributesResponse.ProductTypeAttributeDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                IsInherited = x.IsInherited,
+                Values = x.Values.Select(v => new GetProductTypeAttributesResponse.ProductTypeAttributeDto.ProductTypeAttributeValueDto
+                {
+                    AttributeId = v.ProductTypeAttributeId,
+                    AttributeValueId = v.Id,
                     Name = x.Name,
-                    IsInherited = x.IsInherited,
-                    Values = x.Values.Select(v => new GetProductTypeAttributesResponse.ProductTypeAttributeDto.ProductTypeAttributeValueDto
-                    {
-                        AttributeId = v.ProductTypeAttributeId,
-                        AttributeValueId = v.Id,
-                        Name = x.Name,
-                        Value = v.Value
-                    }).ToList()
+                    Value = v.Value
                 }).ToList()
-            }
-            : Result.Failure<GetProductTypeAttributesResponse>(attributesResult.Error);
+            }).ToList()
+        };
+
+        return response;
     }
 }

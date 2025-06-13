@@ -54,6 +54,7 @@ public class LikeProductRatingCommandHandler : IRequestHandler<LikeProductRating
             Id = rating.Id,
             Comment = rating.Comment!,
             RatingValue = rating.RatingValue,
+            CustomerId = rating.CustomerId,
             UserName = rating.Customer!.UserName ?? "Anonymous User",
             FullName = rating.Customer.FullName ?? "Anonymous User",
             UserAvatarUrl = rating.Customer.ImageUrl,

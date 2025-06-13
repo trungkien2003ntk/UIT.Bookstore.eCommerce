@@ -96,6 +96,7 @@ public class GetProductRatingListQueryHandler(
             Id = r.Id,
             Comment = r.Comment ?? "",
             RatingValue = r.RatingValue,
+            CustomerId = r.CustomerId,
             UserName = r.Customer.UserName ?? "Anonymous User",
             FullName = r.Customer.FullName ?? "Anonymous User",
             UserAvatarUrl = r.Customer.ImageUrl,

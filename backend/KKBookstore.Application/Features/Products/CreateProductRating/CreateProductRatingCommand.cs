@@ -71,6 +71,7 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
             Id = rating.Id,
             Comment = rating.Comment!,
             RatingValue = rating.RatingValue,
+            CustomerId = rating.CustomerId,
             UserName = currentUser.UserName ?? "Anonymous User",
             FullName = currentUser.FullName ?? "Anonymous User",
             UserAvatarUrl = null,

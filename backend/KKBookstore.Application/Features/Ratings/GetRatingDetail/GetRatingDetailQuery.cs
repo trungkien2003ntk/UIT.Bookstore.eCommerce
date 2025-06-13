@@ -33,7 +33,9 @@ public class GetRatingDetailQueryHandler : IRequestHandler<GetRatingDetailQuery,
                     .ThenInclude(p => p.ProductImages)
             .Include(r => r.Images)
             .Include(r => r.Likes)
-                .ThenInclude(l => l.Customer)            .Include(r => r.Reports)
+                .ThenInclude(l => l.Customer)
+            .Include(r => r.Reports)
+                .ThenInclude(r => r.Customer)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (rating is null)
@@ -62,21 +64,22 @@ public class GetRatingDetailQueryHandler : IRequestHandler<GetRatingDetailQuery,
             CreatorId = rating.CreatorId,
             LastModificationTime = rating.LastModificationTime,
             LastModifierId = rating.LastModifierId,
-            
+
             // AI Moderation properties
             AiModerationScore = rating.AiModerationScore,
             AiModerationCategory = rating.AiModerationCategory,
             AiModerationExplanation = rating.AiModerationExplanation,
             AiModerationDate = rating.AiModerationDate,
             IsAiModerated = rating.IsAiModerated,
-            
+
             // Product information
             Product = rating.ProductVariant?.Product != null
                 ? new ProductDetailInfoDto
                 {
                     Id = rating.ProductVariant.Product.Id,
                     Name = rating.ProductVariant.Product.Name,
-                    ThumbnailImageUrl = MappingHelpers.GetProductThumbnailImageUrl(rating.ProductVariant.Product),                    AverageRating = rating.ProductVariant.Product.Ratings
+                    ThumbnailImageUrl = MappingHelpers.GetProductThumbnailImageUrl(rating.ProductVariant.Product),
+                    AverageRating = rating.ProductVariant.Product.Ratings
                         .Where(x => x.Status == RatingStatus.Posted)
                         .Any() ? rating.ProductVariant.Product.Ratings
                             .Where(x => x.Status == RatingStatus.Posted)
@@ -85,25 +88,33 @@ public class GetRatingDetailQueryHandler : IRequestHandler<GetRatingDetailQuery,
                         .Count(x => x.Status == RatingStatus.Posted)
                 }
                 : null,
-                
+
             // Likes details
             Likes = rating.Likes?.Select(l => new RatingLikeDto
             {
                 Id = l.Id,
                 CustomerId = l.CustomerId,
-                CustomerName = l.Customer?.FullName ?? "Anonymous User",
+                CustomerUserName = l.Customer?.UserName ?? "Anonymous User",
+                CustomerFullName = l.Customer?.FullName ?? "Anonymous User",
                 Liked = l.Liked,
-                CreationTime = l.CreationTime
+                CreationTime = l.CreationTime,
+                CreatorId = l.CreatorId,
+                LastModificationTime = l.LastModificationTime,
+                LastModifierId = l.LastModifierId
             }).ToList(),
-              // Reports details  
+            // Reports details  
             Reports = rating.Reports?.Select(r => new RatingReportDto
             {
                 Id = r.Id,
                 CustomerId = r.CustomerId,
-                CustomerName = "Anonymous User", // Customer navigation not available in RatingReport
+                CustomerUserName = r.Customer.UserName ?? "Anonymous User",
+                CustomerFullName = r.Customer.FullName ?? "Anonymous User",
                 Reason = r.Reason,
                 DetailedReason = r.DetailedReason,
-                CreationTime = r.CreationTime
+                CreationTime = r.CreationTime,
+                CreatorId = r.CreatorId,
+                LastModificationTime = r.LastModificationTime,
+                LastModifierId = r.LastModifierId
             }).ToList()
         };
 

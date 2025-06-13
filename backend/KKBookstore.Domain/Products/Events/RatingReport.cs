@@ -1,4 +1,5 @@
-﻿using KKBookstore.Models;
+﻿using KKBookstore.Customers;
+using KKBookstore.Models;
 
 namespace KKBookstore.Products.Events;
 
@@ -15,7 +16,8 @@ public class RatingReport : BaseAuditedEntity
         CustomerId = customerId;
         Reason = reason;
         DetailedReason = detailedReason;
-    }    protected RatingReport() : base()
+    }
+    protected RatingReport() : base()
     {
     }
 
@@ -23,7 +25,8 @@ public class RatingReport : BaseAuditedEntity
     public int CustomerId { get; set; }
     public string Reason { get; set; } = null!;
     public string? DetailedReason { get; set; }
-    
+
     // navigation property
     public Rating Rating { get; set; } = null!;
+    public Customer Customer { get; set; } = null!;
 }

@@ -50,7 +50,8 @@ public class ReportProductRatingCommandHandler : IRequestHandler<ReportProductRa
         if (rating == null)
         {
             return Result.Failure<ProductRatingDto>(ProductErrors.RatingNotFound);
-        }        var reportResult = rating.ReportedBy(request.CustomerId, request.Reason, request.DetailedReason);
+        }
+        var reportResult = rating.ReportedBy(request.CustomerId, request.Reason, request.DetailedReason);
         if (reportResult.IsFailure)
         {
             return Result.Failure<ProductRatingDto>(reportResult.Error);
@@ -130,6 +131,7 @@ public class ReportProductRatingCommandHandler : IRequestHandler<ReportProductRa
             Id = rating.Id,
             Comment = rating.Comment!,
             RatingValue = rating.RatingValue,
+            CustomerId = rating.CustomerId,
             UserName = rating.Customer!.UserName ?? "Anonymous User",
             FullName = rating.Customer.FullName ?? "Anonymous User",
             UserAvatarUrl = rating.Customer.ImageUrl,

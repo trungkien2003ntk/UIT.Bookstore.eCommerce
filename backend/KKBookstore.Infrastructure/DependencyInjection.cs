@@ -98,9 +98,7 @@ public static class DependencyInjection
 
         /// Config Email
         services.Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)));
-        services.AddSingleton<IEmailSender, DefaultEmailSender>();
-
-        /// Config Shipping
+        services.AddSingleton<IEmailSender, DefaultEmailSender>();        /// Config Shipping
         services.Configure<ShippingConfiguration>(configuration.GetSection(nameof(ShippingConfiguration)));
         /// old way
         //services.AddScoped<IShippingService, ShippingService>();
@@ -113,7 +111,8 @@ public static class DependencyInjection
                 provider.GetRequiredService<IMemoryCache>(),
                 provider.GetRequiredService<ShippingService>()
             );
-        });
+        });        /// Config GHN Shipping
+        services.AddScoped<IGhnShippingService, Infrastructure.Shipping.GhnShippingService>();
 
 
         /// Additional Config

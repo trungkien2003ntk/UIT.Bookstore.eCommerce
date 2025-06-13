@@ -15,18 +15,14 @@ public record GetDiscountVoucherListQuery()
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
     public string SortBy { get; init; } = "CreationTime";
-    public string SortDirection { get; init; } = "desc";
-
-    // Filters
+    public string SortDirection { get; init; } = "desc";    // Filters
     public string? SearchQuery { get; init; }
     public DiscountStatus? Status { get; init; }
     public DiscountVoucherType? VoucherType { get; init; }
     public DiscountValueType? ValueType { get; init; }
     public int? ApplyToProductTypeId { get; init; }
-    public DateTimeOffset? StartTimeFrom { get; init; }
-    public DateTimeOffset? StartTimeTo { get; init; }
-    public DateTimeOffset? EndTimeFrom { get; init; }
-    public DateTimeOffset? EndTimeTo { get; init; }
+    public DateTimeOffset? StartDate { get; init; }
+    public DateTimeOffset? EndDate { get; init; }
     public decimal? MinValue { get; init; }
     public decimal? MaxValue { get; init; }
 }
@@ -89,21 +85,31 @@ public class GetDiscountVoucherListQueryHandler(
 
         var result = MapToDiscountVoucherDtoResult(paginatedVouchers!);
         return Result.Success(result);
-    }
-
-    private static IQueryable<DiscountVoucher> ApplyFilters(IQueryable<DiscountVoucher> query, GetDiscountVoucherListQuery request)
+    }    private static IQueryable<DiscountVoucher> ApplyFilters(IQueryable<DiscountVoucher> query, GetDiscountVoucherListQuery request)
     {
         query = query
             .WhereIf(request.Status.HasValue, dv => dv.Status == request.Status!.Value)
             .WhereIf(request.VoucherType.HasValue, dv => dv.VoucherType == request.VoucherType!.Value)
             .WhereIf(request.ValueType.HasValue, dv => dv.ValueType == request.ValueType!.Value)
             .WhereIf(request.ApplyToProductTypeId.HasValue, dv => dv.ApplyToProductTypeId == request.ApplyToProductTypeId!.Value)
-            .WhereIf(request.StartTimeFrom.HasValue, dv => dv.StartTime >= request.StartTimeFrom!.Value)
-            .WhereIf(request.StartTimeTo.HasValue, dv => dv.StartTime <= request.StartTimeTo!.Value)
-            .WhereIf(request.EndTimeFrom.HasValue, dv => dv.EndTime >= request.EndTimeFrom!.Value)
-            .WhereIf(request.EndTimeTo.HasValue, dv => dv.EndTime <= request.EndTimeTo!.Value)
             .WhereIf(request.MinValue.HasValue, dv => dv.Value >= request.MinValue!.Value)
             .WhereIf(request.MaxValue.HasValue, dv => dv.Value <= request.MaxValue!.Value);
+
+        // Apply duration overlap filter: voucher overlaps with the specified date range
+        if (request.StartDate.HasValue && request.EndDate.HasValue)
+        {
+            query = query.Where(dv => 
+                dv.StartTime <= request.EndDate!.Value && 
+                dv.EndTime >= request.StartDate!.Value);
+        }
+        else if (request.StartDate.HasValue)
+        {
+            query = query.Where(dv => dv.EndTime >= request.StartDate!.Value);
+        }
+        else if (request.EndDate.HasValue)
+        {
+            query = query.Where(dv => dv.StartTime <= request.EndDate!.Value);
+        }
 
         return query;
     }

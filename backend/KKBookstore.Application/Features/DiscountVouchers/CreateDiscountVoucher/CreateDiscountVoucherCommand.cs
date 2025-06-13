@@ -151,6 +151,16 @@ public class CreateDiscountVoucherCommandHandler(
             CustomerTypeNames = createdVoucher.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
             UsageCount = createdVoucher.VoucherUsages.Count,
             UsedPercentage = 0,
+            CustomerTypes = createdVoucher.CustomerTypes.Select(vct => new CustomerTypeDto
+            {
+                Id = vct.CustomerType.Id,
+                Name = vct.CustomerType.Name
+            }).ToList(),
+            ApplyToProductType = createdVoucher.ApplyToProductType != null ? new ApplyToProductTypeDto
+            {
+                Id = createdVoucher.ApplyToProductType.Id,
+                DisplayName = createdVoucher.ApplyToProductType.DisplayName
+            } : null,
             CreationTime = createdVoucher.CreationTime,
             CreatorId = createdVoucher.CreatorId,
             LastModificationTime = createdVoucher.LastModificationTime,

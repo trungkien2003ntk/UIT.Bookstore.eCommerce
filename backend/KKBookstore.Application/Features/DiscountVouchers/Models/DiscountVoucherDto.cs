@@ -24,4 +24,19 @@ public record DiscountVoucherDto : BaseFullAuditedDto
     public List<string> CustomerTypeNames { get; init; } = [];
     public int UsageCount { get; init; }
     public decimal UsedPercentage { get; init; }
+
+    public List<CustomerTypeDto> CustomerTypes { get; init; } = [];
+    public ApplyToProductTypeDto? ApplyToProductType { get; init; }
+}
+
+public class CustomerTypeDto
+{
+    public int Id { get; init; }
+    public string Name { get; init; } = string.Empty;
+}
+
+public class ApplyToProductTypeDto
+{
+    public int Id { get; init; }
+    public string DisplayName { get; init; } = string.Empty;
 }

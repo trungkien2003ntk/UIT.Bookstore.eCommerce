@@ -47,6 +47,16 @@ public class GetDiscountVoucherDetailQueryHandler(
             CustomerTypeNames = discountVoucher.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
             UsageCount = discountVoucher.VoucherUsages.Count,
             UsedPercentage = discountVoucher.UsageLimitOverall == 0 ? 0 : (decimal)discountVoucher.VoucherUsages.Count / discountVoucher.UsageLimitOverall,
+            CustomerTypes = discountVoucher.CustomerTypes.Select(vct => new CustomerTypeDto
+            {
+                Id = vct.CustomerType.Id,
+                Name = vct.CustomerType.Name
+            }).ToList(),
+            ApplyToProductType = discountVoucher.ApplyToProductType != null ? new ApplyToProductTypeDto
+            {
+                Id = discountVoucher.ApplyToProductType.Id,
+                DisplayName = discountVoucher.ApplyToProductType.DisplayName
+            } : null,
             CreationTime = discountVoucher.CreationTime,
             CreatorId = discountVoucher.CreatorId,
             LastModificationTime = discountVoucher.LastModificationTime,

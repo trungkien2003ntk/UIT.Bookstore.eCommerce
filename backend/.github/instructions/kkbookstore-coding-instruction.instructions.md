@@ -58,6 +58,8 @@ public class DiscountVoucher : BaseFullAuditedEntity
 -   `Data/Configurations/Orders/[EntityName]Configuration.cs` - EF Core configuration
 -   `Data/KKBookstoreDbContext.cs` - Add DbSet properties
 -   `Common/Interfaces/IApplicationDbContext.cs` - Add DbSet to interface
+-   `[ServiceCategory]/[ServiceName]Service.cs` - External service implementations
+-   `DependencyInjection.cs` - Service registration
 
 **Configuration Implementation Checklist:**
 
@@ -80,6 +82,88 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         // Properties, relationships, indexes...
     }
 }
+```
+
+### **External Service Implementation Pattern**
+
+#### **File Structure:**
+
+-   **Interface**: `Application/Common/Interfaces/I[ServiceName]Service.cs`
+-   **Implementation**: `Infrastructure/[Category]/[ServiceName]Service.cs`
+-   **Configuration**: `Infrastructure/[Category]/[ServiceName]Configuration.cs`
+-   **Models**: `Application/Common/Models/RequestDtos|ResultDtos/`
+-   **Registration**: `Infrastructure/DependencyInjection.cs`
+
+#### **Naming Conventions:**
+
+-   Interface: `I[ServiceName]Service` (e.g., `IGeminiService`)
+-   Implementation: `[ServiceName]Service` (e.g., `GeminiService`, `VnPayPaymentService`)
+-   Configuration: `[ServiceName]Configuration` (e.g., `GeminiConfiguration`)
+-   Models: `[ServiceName][Purpose]Result/Request` (e.g., `GeminiTextResult`)
+
+#### **Folder Categories:**
+
+```
+Infrastructure/
+  AI/        // Gemini, OpenAI
+  Payment/   // VnPay, Stripe
+  Shipping/  // Delivery services
+  Search/    // Azure Search, Elasticsearch
+  Storage/   // Blob, File storage
+  Emailing/  // SMTP, SendGrid
+```
+
+#### **Service Implementation Pattern:**
+
+```csharp
+public class GeminiService : IGeminiService
+{
+    private readonly IGeminiClient _client;
+    private readonly ILogger<GeminiService> _logger;
+
+    public GeminiService(IGeminiClient client, ILogger<GeminiService> logger)
+    {
+        _client = client;
+        _logger = logger;
+    }
+
+    public async Task<GeminiTextResult> GenerateTextAsync(string prompt)
+    {
+        try
+        {
+            _logger.LogInformation("Generating text with Gemini AI");
+            var response = await _client.TextPrompt(prompt);
+
+            return new GeminiTextResult
+            {
+                Success = true,
+                Text = response?.Candidates?.First()?.Content?.Parts?.FirstOrDefault()?.Text ?? string.Empty
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating text with Gemini AI");
+            return new GeminiTextResult { Success = false, ErrorMessage = ex.Message };
+        }
+    }
+}
+```
+
+#### **DI Registration Pattern:**
+
+```csharp
+// In DependencyInjection.cs
+/// Config [ServiceName]
+services.Configure<ServiceConfiguration>(configuration.GetSection(nameof(ServiceConfiguration)));
+services.AddScoped<IServiceInterface, ServiceImplementation>();
+
+// With decorator for caching
+services.AddScoped<BaseService>();
+services.AddScoped<IServiceInterface>(provider =>
+    new CachedServiceDecorator(
+        provider.GetRequiredService<IMemoryCache>(),
+        provider.GetRequiredService<BaseService>()
+    ));
 ```
 
 ### 4. **Application Layer** (`KKBookstore.Application`)
@@ -171,9 +255,13 @@ Features/
 ### Phase 2: Infrastructure
 
 1. **EF Configurations** - Database mapping
-2. **DbContext Updates** - Register new entities
-3. **Generate Migration** - Database schema changes
-4. **Apply Migration** - Update database
+2. **External Service Interfaces** - Application layer service contracts
+3. **External Service Implementations** - Infrastructure layer implementations
+4. **Service Configurations** - Settings and options classes
+5. **Service Registration** - Dependency injection setup
+6. **DbContext Updates** - Register new entities
+7. **Generate Migration** - Database schema changes
+8. **Apply Migration** - Update database
 
 ### Phase 3: Application Layer
 
@@ -214,6 +302,15 @@ Features/
 -   Always configure auditing for tracked entities
 -   Use `Include()` for loading related data
 -   Batch related changes in single SaveChanges()
+
+### **External Service Integration:**
+
+-   Define interfaces in Application layer for clean architecture
+-   Implement services in Infrastructure layer with proper error handling
+-   Use configuration pattern for external service settings
+-   Register services with dependency injection container
+-   Consider decorator pattern for cross-cutting concerns (caching, logging)
+-   Follow consistent naming conventions across service categories
 
 ### **Error Handling:**
 
@@ -267,6 +364,33 @@ foreach (var id in request.RelatedIds)
     };
     dbContext.JunctionTable.Add(junction);
 }
+```
+
+### **External Service Configuration:**
+
+```json
+{
+	"ServiceConfiguration": {
+		"ApiKey": "your-api-key",
+		"BaseUrl": "https://api.service.com"
+	}
+}
+```
+
+### **External Service Registration Pattern:**
+
+```csharp
+// Basic registration
+services.Configure<ServiceConfiguration>(configuration.GetSection(nameof(ServiceConfiguration)));
+services.AddScoped<IServiceInterface, ServiceImplementation>();
+
+// With decorator pattern
+services.AddScoped<BaseService>();
+services.AddScoped<IServiceInterface>(provider =>
+    new CachedServiceDecorator(
+        provider.GetRequiredService<IMemoryCache>(),
+        provider.GetRequiredService<BaseService>()
+    ));
 ```
 
 This workflow ensures consistent, maintainable, and properly architected implementations across the entire application stack.

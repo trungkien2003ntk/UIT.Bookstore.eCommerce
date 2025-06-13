@@ -26,12 +26,14 @@ public static class EmailConsts
     public const string UserHiddenRatingEmailAsmNamespace = BaseNamespace + "UserHiddenRating.sbn";
 
     public const string UserRestoredRatingEmailSubject = SubjectPrefix + "Đánh giá của bạn đã được khôi phục";
-    public const string UserRestoredRatingEmailTemplateName = "UserRestoredRating";
+        public const string UserRestoredRatingEmailTemplateName = "UserRestoredRating";
     public const string UserRestoredRatingEmailAsmNamespace = BaseNamespace + "UserRestoredRating.sbn";
     #endregion
 
     #region Orders
-
+    public const string OrderConfirmationEmailSubject = SubjectPrefix + "Xác nhận đơn hàng";
+    public const string OrderConfirmationEmailTemplateName = "OrderConfirmation";
+    public const string OrderConfirmationEmailAsmNamespace = BaseNamespace + "OrderConfirmation.sbn";
     #endregion
 
 

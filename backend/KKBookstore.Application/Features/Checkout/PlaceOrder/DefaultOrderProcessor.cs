@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Common.Interfaces;
 using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Emailing;
+using KKBookstore.Emailing.TemplateModels;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using KKBookstore.ShoppingCarts;
@@ -11,9 +12,11 @@ namespace KKBookstore.Features.Checkout.PlaceOrder;
 public class DefaultOrderProcessor(
     IApplicationDbContext dbContext,
     IPaymentService paymentService,
-    IEmailSender emailService
-) : OrderProcessor(dbContext, paymentService, emailService)
+    IEmailSender emailSender,
+    IEmailService emailService
+) : OrderProcessor(dbContext, paymentService, emailSender)
 {
+    private readonly IEmailService _emailTemplateService = emailService;
     protected override async Task<List<ShoppingCartItem>> GetCheckoutItems(PlaceOrderCommand request, CancellationToken cancellationToken)
     {
         return await _dbContext.ShoppingCartItems
@@ -155,11 +158,78 @@ public class DefaultOrderProcessor(
             paymentUrl = _paymentService.CreatePaymentUrl(createPaymentRequest, request.IpAddress);
         }
         return paymentUrl;
-    }
-
-    protected override async Task SendOrderConfirmation(int userId, Order order, CancellationToken cancellationToken)
+    }    protected override async Task SendOrderConfirmation(int userId, Order order, CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users.FindAsync([userId], cancellationToken);
-        await _emailService.SendOrderConfirmation(user!.Email ?? "trungkien2003ntk@gmail.com", user!.FullName, order);
+        if (user?.Email == null) return;        // Get order details with related data
+        var orderWithDetails = await _dbContext.Orders
+            .Where(o => o.Id == order.Id)
+            .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.ProductVariant)
+                    .ThenInclude(pv => pv.Product)
+            .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.ProductVariant)
+                    .ThenInclude(pv => pv.ProductVariantOptionValues!)
+                        .ThenInclude(pvov => pvov.OptionValue)
+            .Include(o => o.ShippingAddress)
+            .Include(o => o.PaymentMethod)
+            .Include(o => o.DeliveryMethod)
+            .Include(o => o.PriceDiscountVoucher)
+            .Include(o => o.ShippingDiscountVoucher)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (orderWithDetails == null) return;
+
+        // Create order line items for email
+        var orderItems = orderWithDetails.OrderLines.Select(ol => new OrderLineItem
+        {
+            ProductName = ol.ProductVariant.Product.Name,
+            VariantName = ol.ProductVariant.VariantName,
+            Quantity = ol.Quantity,
+            UnitPrice = ol.UnitPrice,
+            ThumbnailUrl = ol.ProductVariant.GetThumbnailImageUrl()
+        }).ToList();
+
+        // Calculate discount amount
+        decimal? discountAmount = null;
+        if (orderWithDetails.PriceDiscountVoucher != null)
+        {
+            discountAmount = orderWithDetails.PriceDiscountVoucher.GetDiscountValue(orderWithDetails.Subtotal);
+        }
+        if (orderWithDetails.ShippingDiscountVoucher != null)
+        {
+            var shippingDiscount = orderWithDetails.ShippingDiscountVoucher.GetDiscountValue(orderWithDetails.ShippingFee);
+            discountAmount = (discountAmount ?? 0) + shippingDiscount;
+        }
+
+        // Build shipping address string
+        var shippingAddress = $"{orderWithDetails.ShippingAddress?.DetailAddress}, " +
+                             $"{orderWithDetails.ShippingAddress?.CommuneName}, " +
+                             $"{orderWithDetails.ShippingAddress?.DistrictName}, " +
+                             $"{orderWithDetails.ShippingAddress?.ProvinceName}";
+
+        // Create email model
+        var emailModel = new OrderConfirmationEmailModel(
+            orderId: orderWithDetails.Id,
+            orderNumber: orderWithDetails.OrderNumber,
+            totalAmount: orderWithDetails.CalculateTotal(),
+            orderDate: orderWithDetails.OrderWhen,
+            expectedDeliveryDate: orderWithDetails.ExpectedDeliveryWhen,
+            orderItems: orderItems,
+            shippingFee: orderWithDetails.ShippingFee,
+            shippingAddress: shippingAddress,
+            paymentMethod: orderWithDetails.PaymentMethod?.Name ?? "N/A",
+            deliveryMethod: orderWithDetails.DeliveryMethod?.Name ?? "N/A",
+            receiverFullName: user.FullName,
+            note: orderWithDetails.Comment,
+            discountAmount: discountAmount
+        );
+
+        // Send email using template service
+        await _emailTemplateService.SendAsync(
+            user.Email,
+            emailModel.Subject,
+            emailModel
+        );
     }
 }

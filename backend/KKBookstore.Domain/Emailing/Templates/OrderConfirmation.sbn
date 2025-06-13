@@ -1,0 +1,106 @@
+<p style="color: #333;">Xin chào <strong>{{ model.recipient_name }}</strong>,</p>
+<p style="color: #333;">
+    Cảm ơn bạn đã đặt hàng tại <strong>KKBooks</strong>! Đơn hàng #{{ model.order_number }} của bạn đã được xác nhận và chúng tôi đang chuẩn bị hàng.
+</p>
+
+<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h3 style="color: #01bf65; margin-top: 0;">Chi tiết đơn hàng</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td style="padding: 5px 0; color: #666;"><strong>Mã đơn hàng:</strong></td>
+            <td style="padding: 5px 0; color: #333;">{{ model.order_number }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 5px 0; color: #666;"><strong>Ngày đặt hàng:</strong></td>
+            <td style="padding: 5px 0; color: #333;">{{ model.order_date }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 5px 0; color: #666;"><strong>Ngày giao hàng dự kiến:</strong></td>
+            <td style="padding: 5px 0; color: #333;">{{ model.expected_delivery_date }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 5px 0; color: #666;"><strong>Phương thức thanh toán:</strong></td>
+            <td style="padding: 5px 0; color: #333;">{{ model.payment_method }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 5px 0; color: #666;"><strong>Phương thức giao hàng:</strong></td>
+            <td style="padding: 5px 0; color: #333;">{{ model.delivery_method }}</td>
+        </tr>
+    </table>
+</div>
+
+<div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; margin: 20px 0;">
+    <h3 style="color: #01bf65; margin: 0; padding: 15px 20px; border-bottom: 1px solid #e0e0e0;">Sản phẩm đã đặt</h3>
+    {{ for item in model.order_items }}
+    <div style="padding: 15px 20px; border-bottom: 1px solid #f0f0f0;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 80px; vertical-align: top;">
+                    {{ if item.thumbnail_url }}
+                    <img src="{{ item.thumbnail_url }}" alt="{{ item.product_name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                    {{ else }}
+                    <div style="width: 60px; height: 60px; background-color: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999;">No image</div>
+                    {{ end }}
+                </td>
+                <td style="vertical-align: top; padding-left: 15px;">
+                    <div style="font-weight: bold; color: #333; margin-bottom: 5px;">{{ item.product_name }}</div>
+                    {{ if item.variant_name }}
+                    <div style="color: #666; font-size: 13px; margin-bottom: 5px;">{{ item.variant_name }}</div>
+                    {{ end }}
+                    <div style="color: #666; font-size: 13px;">
+                        Số lượng: {{ item.quantity }} × {{ item.unit_price | number_format }} ₫
+                    </div>
+                </td>
+                <td style="text-align: right; vertical-align: top; font-weight: bold; color: #01bf65;">
+                    {{ item.total_price | number_format }} ₫
+                </td>
+            </tr>
+        </table>
+    </div>
+    {{ end }}
+</div>
+
+<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h3 style="color: #01bf65; margin-top: 0;">Tổng kết đơn hàng</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td style="padding: 8px 0; color: #666;">Tạm tính:</td>
+            <td style="text-align: right; padding: 8px 0; color: #333;">{{ model.subtotal | number_format }} ₫</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px 0; color: #666;">Phí vận chuyển:</td>
+            <td style="text-align: right; padding: 8px 0; color: #333;">{{ model.shipping_fee | number_format }} ₫</td>
+        </tr>
+        {{ if model.discount_amount > 0 }}
+        <tr>
+            <td style="padding: 8px 0; color: #e74c3c;">Giảm giá:</td>
+            <td style="text-align: right; padding: 8px 0; color: #e74c3c;">-{{ model.discount_amount | number_format }} ₫</td>
+        </tr>
+        {{ end }}
+        <tr style="border-top: 2px solid #01bf65;">
+            <td style="padding: 12px 0; font-weight: bold; font-size: 16px; color: #333;">Tổng cộng:</td>
+            <td style="text-align: right; padding: 12px 0; font-weight: bold; font-size: 16px; color: #01bf65;">{{ model.total_amount | number_format }} ₫</td>
+        </tr>
+    </table>
+</div>
+
+<div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; margin: 20px 0; padding: 20px;">
+    <h3 style="color: #01bf65; margin-top: 0;">Địa chỉ giao hàng</h3>
+    <p style="color: #333; margin: 0; line-height: 1.5;">{{ model.shipping_address }}</p>
+</div>
+
+{{ if model.note }}
+<div style="background-color: #fff8e1; border: 1px solid #ffc107; border-radius: 8px; margin: 20px 0; padding: 20px;">
+    <h3 style="color: #e65100; margin-top: 0;">Ghi chú đơn hàng</h3>
+    <p style="color: #333; margin: 0; line-height: 1.5;">{{ model.note }}</p>
+</div>
+{{ end }}
+
+<p style="color: #333;">
+    Chúng tôi sẽ gửi thông báo cập nhật trạng thái đơn hàng qua email này. Nếu bạn có bất kỳ câu hỏi nào, 
+    đừng ngần ngại liên hệ với chúng tôi.
+</p>
+
+<p style="color: #333;">
+    Cảm ơn bạn đã tin tưởng và lựa chọn <strong>KKBooks</strong>!
+</p>

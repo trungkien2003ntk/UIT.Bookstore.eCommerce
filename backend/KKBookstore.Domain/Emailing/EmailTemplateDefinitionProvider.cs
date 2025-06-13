@@ -44,12 +44,17 @@ public class EmailTemplateDefinitionProvider
             EmailConsts.UserHiddenRatingEmailTemplateName,
             EmailConsts.UserHiddenRatingEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
-        ));
-
-        // User restored rating email template
+        ));        // User restored rating email template
         AddTemplate(new TemplateDefinition(
             EmailConsts.UserRestoredRatingEmailTemplateName,
             EmailConsts.UserRestoredRatingEmailAsmNamespace,
+            layout: EmailConsts.LayoutTemplateName
+        ));
+
+        // Order confirmation email template
+        AddTemplate(new TemplateDefinition(
+            EmailConsts.OrderConfirmationEmailTemplateName,
+            EmailConsts.OrderConfirmationEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
         ));
 

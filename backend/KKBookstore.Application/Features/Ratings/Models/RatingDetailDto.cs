@@ -53,4 +53,5 @@ public record RatingReportDto : BaseAuditedDto
     public int CustomerId { get; init; }
     public string CustomerName { get; init; } = string.Empty;
     public string Reason { get; init; } = string.Empty;
+    public string? DetailedReason { get; init; }
 }

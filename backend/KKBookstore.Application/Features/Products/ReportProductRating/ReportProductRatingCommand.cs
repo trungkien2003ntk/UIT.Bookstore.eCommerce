@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace KKBookstore.Features.Products.ReportProductRating;
 
-public record ReportProductRatingCommand(int RatingId, int CustomerId, string Reason) : IRequest<Result<ProductRatingDto>>
+public record ReportProductRatingCommand(int RatingId, int CustomerId, string Reason, string? DetailedReason = null) : IRequest<Result<ProductRatingDto>>
 {
 }
 
@@ -50,9 +50,7 @@ public class ReportProductRatingCommandHandler : IRequestHandler<ReportProductRa
         if (rating == null)
         {
             return Result.Failure<ProductRatingDto>(ProductErrors.RatingNotFound);
-        }
-
-        var reportResult = rating.ReportedBy(request.CustomerId, request.Reason);
+        }        var reportResult = rating.ReportedBy(request.CustomerId, request.Reason, request.DetailedReason);
         if (reportResult.IsFailure)
         {
             return Result.Failure<ProductRatingDto>(reportResult.Error);

@@ -102,6 +102,7 @@ public class GetRatingDetailQueryHandler : IRequestHandler<GetRatingDetailQuery,
                 CustomerId = r.CustomerId,
                 CustomerName = "Anonymous User", // Customer navigation not available in RatingReport
                 Reason = r.Reason,
+                DetailedReason = r.DetailedReason,
                 CreationTime = r.CreationTime
             }).ToList()
         };

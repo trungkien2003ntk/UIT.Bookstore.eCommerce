@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Models;
+using KKBookstore.ProductTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -11,21 +12,21 @@ public class DiscountVoucher : BaseFullAuditedEntity
     public DiscountVoucher()
     {
 
-    }
-
-    private DiscountVoucher(
+    }    private DiscountVoucher(
         string name,
         string code,
         string description,
         DiscountValueType valueType,
         DiscountVoucherType voucherType,
+        DiscountStatus status,
         decimal value,
         decimal? maximumDiscountValue,
         decimal minimumSpend,
         int? usageLimitPerUser,
         int usageLimitOverall,
         DateTimeOffset startTime,
-        DateTimeOffset endTime
+        DateTimeOffset endTime,
+        int? applyToProductTypeId = null
         ) : base()
     {
         Name = name;
@@ -33,6 +34,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         Description = description;
         ValueType = valueType;
         VoucherType = voucherType;
+        Status = status;
         Value = value;
         MaximumDiscountValue = maximumDiscountValue;
         MinimumSpend = minimumSpend;
@@ -40,15 +42,14 @@ public class DiscountVoucher : BaseFullAuditedEntity
         UsageLimitOverall = usageLimitOverall;
         StartTime = startTime;
         EndTime = endTime;
-
-    }
-
-    // Discount voucher basic properties
-    public string Name { get; set; }
-    public string Code { get; set; }
-    public string Description { get; set; }
+        ApplyToProductTypeId = applyToProductTypeId;
+    }    // Discount voucher basic properties
+    public string Name { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public DiscountValueType ValueType { get; set; }
     public DiscountVoucherType VoucherType { get; set; }
+    public DiscountStatus Status { get; set; }
     public decimal Value { get; set; } // percentage 0.15 or fixed amount
 
 
@@ -65,14 +66,15 @@ public class DiscountVoucher : BaseFullAuditedEntity
     // Time limit
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
-
-
     [NotMapped]
     public bool IsRedeemable { get; set; }
 
+    // Optional one-to-one relationship with ProductType
+    public int? ApplyToProductTypeId { get; set; }
+    public ProductType? ApplyToProductType { get; set; }
+
     // navigation property to Order and OrderLine
     public ICollection<VoucherUsage> VoucherUsages { get; set; } = [];
-    public ICollection<DiscountApplyToProductType> ProductTypesApplied { get; set; } = [];
 
 
 
@@ -121,20 +123,20 @@ public class DiscountVoucher : BaseFullAuditedEntity
         }
 
         return false;
-    }
-
-    public static Result<DiscountVoucher> Create(
+    }    public static Result<DiscountVoucher> Create(
         string code,
         string description,
         DiscountValueType valueType,
         DiscountVoucherType voucherType,
+        DiscountStatus status,
         decimal value,
         decimal? maximumDiscountValue,
         decimal minimumSpend,
         int? usageLimitPerUser,
         int usageLimitOverall,
         DateTimeOffset startWhen,
-        DateTimeOffset endWhen
+        DateTimeOffset endWhen,
+        int? applyToProductTypeId = null
         )
     {
         // validation logic
@@ -153,21 +155,21 @@ public class DiscountVoucher : BaseFullAuditedEntity
             maximumDiscountValue = null;
         }
 
-        var name = CreateDiscountName(value, maximumDiscountValue, valueType);
-
-        return Result.Success(new DiscountVoucher(
+        var name = CreateDiscountName(value, maximumDiscountValue, valueType);        return Result.Success(new DiscountVoucher(
             name,
             code,
             description,
             valueType,
             voucherType,
+            status,
             value,
             maximumDiscountValue,
             minimumSpend,
             usageLimitPerUser,
             usageLimitOverall,
             startWhen,
-            endWhen
+            endWhen,
+            applyToProductTypeId
         ));
     }
 

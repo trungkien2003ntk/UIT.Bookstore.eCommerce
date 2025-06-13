@@ -9,8 +9,7 @@ namespace KKBookstore.Data.Configurations.Orders;
 internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountVoucher>
 {
     public void Configure(EntityTypeBuilder<DiscountVoucher> builder)
-    {
-        builder.ToTable("DiscountVouchers");
+    {        builder.ToTable("DiscountVouchers");
         builder.ConfigureAuditing();
 
         builder.Property(dv => dv.Name).HasColumnName(nameof(DiscountVoucher.Name)).HasMaxLength(DiscountVoucherConsts.NameMaxLength).IsRequired();
@@ -23,5 +22,12 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         builder.Property(dv => dv.StartTime).IsRequired();
         builder.Property(dv => dv.EndTime).IsRequired();
         builder.Property(dv => dv.VoucherType).IsRequired().HasConversion<EnumToStringConverter<DiscountVoucherType>>();
+        builder.Property(dv => dv.Status).IsRequired().HasConversion<EnumToStringConverter<DiscountStatus>>();
+
+        // Optional one-to-one relationship with ProductType
+        builder.HasOne(dv => dv.ApplyToProductType)
+            .WithMany()
+            .HasForeignKey(dv => dv.ApplyToProductTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

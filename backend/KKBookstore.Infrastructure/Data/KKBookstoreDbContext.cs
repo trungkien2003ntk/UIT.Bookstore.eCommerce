@@ -1,4 +1,5 @@
-﻿using KKBookstore.Branches;
+﻿using KKBookstore.Banners;
+using KKBookstore.Branches;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Customers;
 using KKBookstore.Data.Configurations.Products;
@@ -26,6 +27,7 @@ public class KKBookstoreDbContext(
 {
     public DbSet<Author> Authors { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<Banner> Banners { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<Branch> Branches { get; set; }
     public DbSet<BranchAddress> BranchAddresses { get; set; }

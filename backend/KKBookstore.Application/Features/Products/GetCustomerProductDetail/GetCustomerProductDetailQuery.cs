@@ -110,6 +110,7 @@ public class GetCustomerProductDetailQueryHandler(
             RatingsCount = totalRatingsCount,
             ThumbnailImageUrls = product.ProductImages?.Select(pi => pi.ThumbnailImageUrl ?? string.Empty) ?? Array.Empty<string>(),
             LargeImageUrls = product.ProductImages?.Select(pi => pi.LargeImageUrl ?? string.Empty) ?? Array.Empty<string>(),
+            TotalStockQuantity = product.ProductVariants.Sum(pv => pv.StockQuantity),
             Authors = product.IsBook && product.BookAuthors != null ? product.BookAuthors.Select(ba => new AuthorDto()
             {
                 Id = ba.Author.Id,
@@ -138,6 +139,7 @@ public class GetCustomerProductDetailQueryHandler(
                     Width = pv.Dimension?.Width ?? 0,
                     Length = pv.Dimension?.Length ?? 0,
                     Weight = pv.Weight,
+                    Status = pv.StockQuantity > 0 ? "InStock" : "OutOfStock",
                     StockQuantity = pv.StockQuantity,
                     AverageRating = avgRating,
                     RatingsCount = ratingsCount,

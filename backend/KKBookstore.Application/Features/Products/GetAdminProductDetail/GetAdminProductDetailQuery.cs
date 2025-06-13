@@ -22,6 +22,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
     {
         var product = await _dbContext.Products
             .AsNoTracking()
+            .AsSplitQuery()
             .Where(x => x.Id == request.ProductId)
             .Include(x => x.ProductType)
             .Include(x => x.UnitMeasure)

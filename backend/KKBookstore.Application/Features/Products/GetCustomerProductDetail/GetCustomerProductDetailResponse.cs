@@ -18,6 +18,7 @@ public record GetCustomerProductDetailResponse : BaseDto
     public bool IsBook { get; set; }
     public decimal? AverageRating { get; set; }
     public int RatingsCount { get; set; }
+    public int TotalStockQuantity { get; set; }
     public IEnumerable<string> ThumbnailImageUrls { get; set; } = [];
     public IEnumerable<string> LargeImageUrls { get; set; } = [];
     public IEnumerable<ProductTypeAttribute>? ProductTypeAttributes { get; set; }

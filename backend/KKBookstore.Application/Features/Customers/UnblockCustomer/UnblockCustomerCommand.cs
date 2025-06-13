@@ -34,9 +34,9 @@ public class UnblockCustomerCommandHandler(
         {
             // Set customer status to Active (unblocked)
             customer.Status = UserStatus.Active;
-            
+
             await dbContext.SaveChangesAsync(cancellationToken);
-            
+
             return Result.Success();
         }
         catch

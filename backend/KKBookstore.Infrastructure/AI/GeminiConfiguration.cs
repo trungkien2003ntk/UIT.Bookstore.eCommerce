@@ -1,4 +1,4 @@
-namespace KKBookstore.Infrastructure.AI;
+namespace KKBookstore.AI;
 
 public class GeminiConfiguration
 {

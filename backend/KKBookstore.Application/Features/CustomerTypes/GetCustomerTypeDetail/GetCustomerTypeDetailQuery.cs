@@ -22,7 +22,8 @@ public class GetCustomerTypeDetailQueryHandler(
         if (customerType is null)
         {
             return Result.Failure<CustomerTypeDetail>(CustomerTypeErrors.NotFound);
-        }        var customerTypeDetail = new CustomerTypeDetail
+        }
+        var customerTypeDetail = new CustomerTypeDetail
         {
             Id = customerType.Id,
             Name = customerType.Name,

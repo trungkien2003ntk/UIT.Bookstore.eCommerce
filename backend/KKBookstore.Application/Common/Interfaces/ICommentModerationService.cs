@@ -1,5 +1,3 @@
-using KKBookstore.Common.Models.ResultDtos;
-
 namespace KKBookstore.Common.Interfaces;
 
 public interface ICommentModerationService

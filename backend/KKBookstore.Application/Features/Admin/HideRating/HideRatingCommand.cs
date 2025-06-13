@@ -34,9 +34,10 @@ public class HideRatingCommandHandler : IRequestHandler<HideRatingCommand, Resul
         if (string.IsNullOrWhiteSpace(request.Reason))
         {
             return Result.Failure(Error.Validation("HideRating.ReasonRequired", "Reason is required when hiding a rating"));
-        }        var rating = await _dbContext.Ratings
+        }
+        var rating = await _dbContext.Ratings
             .Include(r => r.Customer)
-            .FirstOrDefaultAsync(r => r.Id == request.RatingId, cancellationToken);if (rating == null)
+            .FirstOrDefaultAsync(r => r.Id == request.RatingId, cancellationToken); if (rating == null)
         {
             return Result.Failure(ProductErrors.RatingNotFound);
         }
@@ -57,18 +58,18 @@ public class HideRatingCommandHandler : IRequestHandler<HideRatingCommand, Resul
             _currentUser.Id,
             rating.AiModerationScore);
 
-        _dbContext.ModerationAuditLogs.Add(auditLog);        await _dbContext.SaveChangesAsync(cancellationToken);
+        _dbContext.ModerationAuditLogs.Add(auditLog); await _dbContext.SaveChangesAsync(cancellationToken);
 
         // Send notification to user
         if (!string.IsNullOrEmpty(rating.Customer?.Email))
         {
             await _notificationService.NotifyUserOfHiddenRatingAsync(
-                rating.Customer.Email, 
-                rating.Id, 
+                rating.Customer.Email,
+                rating.Id,
                 request.Reason);
         }
 
-        _logger.LogInformation("Rating {RatingId} manually hidden by admin {AdminId}. Reason: {Reason}", 
+        _logger.LogInformation("Rating {RatingId} manually hidden by admin {AdminId}. Reason: {Reason}",
             request.RatingId, _currentUser.Id, request.Reason);
 
         return Result.Success();

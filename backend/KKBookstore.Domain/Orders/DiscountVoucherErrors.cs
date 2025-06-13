@@ -5,6 +5,7 @@ namespace KKBookstore.Orders;
 public static class DiscountVoucherErrors
 {
     // list all error a discountvoucher can have using KKBookstore.Error record
+    public static readonly Error NotFound = Error.NotFound("DiscountVoucher.NotFound", "Discount voucher not found");
     public static readonly Error OrderVoucherNotFound = Error.NotFound("DiscountVoucher.OrderVoucherNotFound", "Order discount voucher not found");
     public static readonly Error ShippingVoucherNotFound = Error.NotFound("DiscountVoucher.ShippingVoucherNotFound", "Shipping discount voucher not found");
 

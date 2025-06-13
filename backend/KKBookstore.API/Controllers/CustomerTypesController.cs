@@ -1,4 +1,3 @@
-using AutoMapper;
 using KKBookstore.Abstractions;
 using KKBookstore.Features.CustomerTypes.CreateCustomerType;
 using KKBookstore.Features.CustomerTypes.DeleteCustomerType;
@@ -61,7 +60,7 @@ public class CustomerTypesController(
             var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "CustomerType id in request doesn't match with the id in the route"));
             return ToActionResult(resultTemp);
         }
-        
+
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);

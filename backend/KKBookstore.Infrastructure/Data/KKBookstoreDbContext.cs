@@ -34,6 +34,7 @@ public class KKBookstoreDbContext(
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
     public DbSet<DiscountVoucher> DiscountVouchers { get; set; }
     public DbSet<VoucherUsage> VoucherUsages { get; set; }
+    public DbSet<VoucherCustomerType> VoucherCustomerTypes { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderLine> OrderLines { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }

@@ -1,6 +1,5 @@
 using AutoMapper;
 using KKBookstore.Abstractions;
-using KKBookstore.Contracts.Requests;
 using KKBookstore.Features.Branches.CreateBranch;
 using KKBookstore.Features.Branches.DeleteBranch;
 using KKBookstore.Features.Branches.GetBranchDetail;
@@ -63,7 +62,7 @@ public class BranchesController(
             var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Branch id in request doesn't match with the id in the route"));
             return ToActionResult(resultTemp);
         }
-        
+
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);

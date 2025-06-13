@@ -36,7 +36,7 @@ public class Rating : BaseAuditedEntity
     public RatingStatus Status { get; set; }
 
     public int ReportsCount { get; set; }
-    
+
     // AI Moderation properties
     public int? AiModerationScore { get; set; } // Badness score from AI (1-100)
     public string? AiModerationCategory { get; set; } // Category of violation
@@ -65,7 +65,8 @@ public class Rating : BaseAuditedEntity
         }
 
         return new Rating(comment, ratingValue, customerId, variant, imageUrls);
-    }    public Result ReportedBy(int customerId, string reason, string? detailedReason = null)
+    }
+    public Result ReportedBy(int customerId, string reason, string? detailedReason = null)
     {
         if (string.IsNullOrWhiteSpace(reason))
             return Result.Failure(RatingErrors.ReportReasonRequired);

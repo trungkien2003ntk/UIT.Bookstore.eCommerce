@@ -30,7 +30,8 @@ public class RestoreRatingCommandHandler : IRequestHandler<RestoreRatingCommand,
     }
 
     public async Task<Result> Handle(RestoreRatingCommand request, CancellationToken cancellationToken)
-    {        var rating = await _dbContext.Ratings
+    {
+        var rating = await _dbContext.Ratings
             .Include(r => r.Customer)
             .FirstOrDefaultAsync(r => r.Id == request.RatingId, cancellationToken);
 
@@ -55,17 +56,17 @@ public class RestoreRatingCommandHandler : IRequestHandler<RestoreRatingCommand,
             _currentUser.Id,
             rating.AiModerationScore);
 
-        _dbContext.ModerationAuditLogs.Add(auditLog);        await _dbContext.SaveChangesAsync(cancellationToken);
+        _dbContext.ModerationAuditLogs.Add(auditLog); await _dbContext.SaveChangesAsync(cancellationToken);
 
         // Send notification to user
         if (!string.IsNullOrEmpty(rating.Customer?.Email))
         {
             await _notificationService.NotifyUserOfRestoredRatingAsync(
-                rating.Customer.Email, 
+                rating.Customer.Email,
                 rating.Id);
         }
 
-        _logger.LogInformation("Rating {RatingId} manually restored by admin {AdminId}", 
+        _logger.LogInformation("Rating {RatingId} manually restored by admin {AdminId}",
             request.RatingId, _currentUser.Id);
 
         return Result.Success();

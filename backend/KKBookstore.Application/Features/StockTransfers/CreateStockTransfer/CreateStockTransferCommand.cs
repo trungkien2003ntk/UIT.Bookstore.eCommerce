@@ -1,12 +1,11 @@
-using System.ComponentModel.DataAnnotations;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.StockTransfers.GetStockTransferDetail;
 using KKBookstore.Models;
-using KKBookstore.Products;
 using KKBookstore.StockTransactions;
 using KKBookstore.StockTransactions.StockTransfers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace KKBookstore.Features.StockTransfers.CreateStockTransfer;
 
@@ -14,30 +13,30 @@ public record CreateStockTransferCommand : IRequest<Result<StockTransferDetail>>
 {
     [Required]
     public string Code { get; init; } = null!;
-    
+
     public DateTimeOffset TransactionDate { get; init; } = DateTimeOffset.UtcNow;
-    
+
     public string? Remarks { get; init; }
-    
+
     public string? Reason { get; init; }
-    
+
     [Required]
     public StockTransactionStatus TransactionStatus { get; init; } = StockTransactionStatus.Pending;
-    
+
     [Required]
     public int SourceWarehouseId { get; init; }
-    
+
     [Required]
     public int DestinationWarehouseId { get; init; }
-    
+
     public StockTransferStatus TransferStatus { get; init; } = StockTransferStatus.None;
-    
+
     public DateTimeOffset? DeparturedDate { get; init; }
-    
+
     public DateTimeOffset? ArrivalDate { get; init; }
-    
+
     public DateTimeOffset? TransferDate { get; init; }
-    
+
     [Required]
     [MinLength(1, ErrorMessage = "At least one item is required")]
     public List<CreateStockTransferItemCommand> Items { get; init; } = [];
@@ -47,17 +46,17 @@ public record CreateStockTransferItemCommand
 {
     [Required]
     public int VariantId { get; init; }
-    
+
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
     public int Quantity { get; init; }
-    
+
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Unit cost must be greater than 0")]
     public decimal UnitCost { get; init; }
-    
+
     public string? Reason { get; init; }
-    
+
     public string? Remarks { get; init; }
 }
 
@@ -75,13 +74,13 @@ public class CreateStockTransferCommandHandler : IRequestHandler<CreateStockTran
     }
 
     public async Task<Result<StockTransferDetail>> Handle(
-        CreateStockTransferCommand request, 
+        CreateStockTransferCommand request,
         CancellationToken cancellationToken)
     {
         // Check for duplicate code
         var existingTransfer = await _dbContext.StockTransfers
             .AnyAsync(st => st.Code == request.Code, cancellationToken);
-        
+
         if (existingTransfer)
         {
             return Result.Failure<StockTransferDetail>(
@@ -151,26 +150,26 @@ public class CreateStockTransferCommandHandler : IRequestHandler<CreateStockTran
                 Remarks = item.Remarks,
                 StockTransactionId = stockTransfer.Id
             };
-            
+
             _dbContext.StockTransferItems.Add(stockTransferItem);
         }
-        
+
         _dbContext.StockTransfers.Add(stockTransfer);
 
         // If the status is Completed, update inventory levels
-        if (request.TransactionStatus == StockTransactionStatus.Completed && 
+        if (request.TransactionStatus == StockTransactionStatus.Completed &&
             request.TransferStatus == StockTransferStatus.Completed)
         {
             foreach (var item in request.Items)
             {
                 // Process each item by moving inventory from source to destination
                 var productVariant = existingVariants[item.VariantId];
-                
+
                 // 1. Decrease inventory at source warehouse (FIFO)
                 var sourceInventories = await _dbContext.Inventories
-                    .Where(i => i.ProductVariantId == item.VariantId && 
-                                i.WarehouseId == request.SourceWarehouseId && 
-                                i.IsActive && 
+                    .Where(i => i.ProductVariantId == item.VariantId &&
+                                i.WarehouseId == request.SourceWarehouseId &&
+                                i.IsActive &&
                                 i.StockQuantity > 0)
                     .OrderBy(i => i.OriginalCreatedDate) // FIFO - oldest first
                     .ToListAsync(cancellationToken);
@@ -178,7 +177,7 @@ public class CreateStockTransferCommandHandler : IRequestHandler<CreateStockTran
                 // Keep track of units to move and their original costs
                 var inventoryUnitsToTransfer = new List<(int quantity, decimal unitCost)>();
                 int remainingToDecrease = item.Quantity;
-                
+
                 // Decrease inventory at source warehouse
                 foreach (var inventory in sourceInventories)
                 {
@@ -205,7 +204,7 @@ public class CreateStockTransferCommandHandler : IRequestHandler<CreateStockTran
                 if (remainingToDecrease > 0)
                 {
                     return Result.Failure<StockTransferDetail>(
-                        Error.Validation("StockTransfer.InsufficientStock", 
+                        Error.Validation("StockTransfer.InsufficientStock",
                             $"Insufficient stock for product variant ID {item.VariantId} at source warehouse ID {request.SourceWarehouseId}"));
                 }
 
@@ -219,7 +218,7 @@ public class CreateStockTransferCommandHandler : IRequestHandler<CreateStockTran
                         isActive: true,
                         warehouseId: request.DestinationWarehouseId
                     );
-                    
+
                     _dbContext.Inventories.Add(inventory);
                 }
             }
@@ -232,7 +231,7 @@ public class CreateStockTransferCommandHandler : IRequestHandler<CreateStockTran
     }
 
     private async Task<Result<StockTransferDetail>> GetStockTransferDetail(
-        int stockTransferId, 
+        int stockTransferId,
         CancellationToken cancellationToken)
     {
         var stockTransfer = await _dbContext.StockTransfers

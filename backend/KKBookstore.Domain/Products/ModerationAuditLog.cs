@@ -7,7 +7,7 @@ public class ModerationAuditLog : BaseAuditedEntity
     public ModerationAuditLog()
     {
     }
-    
+
     public ModerationAuditLog(
         int ratingId,
         string action,
@@ -30,7 +30,7 @@ public class ModerationAuditLog : BaseAuditedEntity
     public int? ModeratorId { get; set; } // Admin who took manual action
     public int? AiScore { get; set; } // AI badness score (1-100)
     public DateTimeOffset Timestamp { get; set; }
-    
+
     // Navigation properties
     public Rating Rating { get; set; } = null!;
 }

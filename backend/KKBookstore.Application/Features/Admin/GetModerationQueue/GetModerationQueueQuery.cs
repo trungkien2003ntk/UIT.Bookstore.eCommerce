@@ -24,14 +24,14 @@ public class ModerationQueueItemDto
     public string ProductName { get; set; } = string.Empty;
     public int ReportsCount { get; set; }
     public RatingStatus Status { get; set; }
-    
+
     // AI Moderation Info
     public int? AiModerationScore { get; set; }
     public string? AiModerationCategory { get; set; }
     public string? AiModerationExplanation { get; set; }
     public DateTimeOffset? AiModerationDate { get; set; }
     public bool IsAiModerated { get; set; }
-    
+
     public DateTimeOffset CreationTime { get; set; }
 }
 

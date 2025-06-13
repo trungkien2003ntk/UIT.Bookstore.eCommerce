@@ -2,9 +2,9 @@ namespace KKBookstore.Orders;
 
 public enum DiscountStatus
 {
-    Draft,
-    Active,
-    Paused,
-    Expired,
-    Cancelled
+    Draft = 1,
+    Active = 2,
+    Paused = 3,
+    Expired = 4,
+    Cancelled = 5
 }

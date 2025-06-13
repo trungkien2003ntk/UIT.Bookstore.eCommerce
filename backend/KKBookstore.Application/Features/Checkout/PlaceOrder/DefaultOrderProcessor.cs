@@ -158,7 +158,8 @@ public class DefaultOrderProcessor(
             paymentUrl = _paymentService.CreatePaymentUrl(createPaymentRequest, request.IpAddress);
         }
         return paymentUrl;
-    }    protected override async Task SendOrderConfirmation(int userId, Order order, CancellationToken cancellationToken)
+    }
+    protected override async Task SendOrderConfirmation(int userId, Order order, CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users.FindAsync([userId], cancellationToken);
         if (user?.Email == null) return;        // Get order details with related data

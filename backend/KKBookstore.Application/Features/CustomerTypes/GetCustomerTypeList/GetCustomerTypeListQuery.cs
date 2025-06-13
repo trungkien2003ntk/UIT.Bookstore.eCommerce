@@ -32,7 +32,8 @@ public class GetCustomerTypeListQueryHandler(
         if (request.Tier.HasValue)
         {
             query = query.Where(ct => ct.Tier == request.Tier.Value);
-        }        if (request.MinSpendingFrom.HasValue)
+        }
+        if (request.MinSpendingFrom.HasValue)
         {
             query = query.Where(ct => ct.MinSpending >= (double)request.MinSpendingFrom.Value);
         }
@@ -85,7 +86,8 @@ public class GetCustomerTypeListQueryHandler(
     }
 
     private PagedResult<CustomerTypeSummary> MapToCustomerTypeSummaryResult(PagedResult<CustomerType> paginatedCustomerTypes)
-    {        return new PagedResult<CustomerTypeSummary>(
+    {
+        return new PagedResult<CustomerTypeSummary>(
             paginatedCustomerTypes.Items.Select(ct => new CustomerTypeSummary
             {
                 Id = ct.Id,

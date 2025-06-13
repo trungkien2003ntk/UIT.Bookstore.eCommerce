@@ -12,7 +12,8 @@ public class DiscountVoucher : BaseFullAuditedEntity
     public DiscountVoucher()
     {
 
-    }    private DiscountVoucher(
+    }
+    private DiscountVoucher(
         string name,
         string code,
         string description,
@@ -73,6 +74,9 @@ public class DiscountVoucher : BaseFullAuditedEntity
     public int? ApplyToProductTypeId { get; set; }
     public ProductType? ApplyToProductType { get; set; }
 
+    // Many-to-many relationship with CustomerType
+    public ICollection<VoucherCustomerType> CustomerTypes { get; set; } = [];
+
     // navigation property to Order and OrderLine
     public ICollection<VoucherUsage> VoucherUsages { get; set; } = [];
 
@@ -123,7 +127,73 @@ public class DiscountVoucher : BaseFullAuditedEntity
         }
 
         return false;
-    }    public static Result<DiscountVoucher> Create(
+    }
+
+    // Domain methods for status changes
+    public Result Start()
+    {
+        return Status switch
+        {
+            DiscountStatus.Draft or DiscountStatus.Paused => Result.Success(),
+            DiscountStatus.Active => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.AlreadyActive", "Voucher is already active")),
+            DiscountStatus.Expired => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.CannotStartExpired", "Cannot start an expired voucher")),
+            DiscountStatus.Cancelled => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.CannotStartCancelled", "Cannot start a cancelled voucher")),
+            _ => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.InvalidStatusTransition", "Invalid status transition"))
+        };
+    }
+
+    public Result Pause()
+    {
+        return Status switch
+        {
+            DiscountStatus.Active => Result.Success(),
+            DiscountStatus.Draft => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.CannotPauseDraft", "Cannot pause a draft voucher")),
+            DiscountStatus.Paused => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.AlreadyPaused", "Voucher is already paused")),
+            DiscountStatus.Expired => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.CannotPauseExpired", "Cannot pause an expired voucher")),
+            DiscountStatus.Cancelled => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.CannotPauseCancelled", "Cannot pause a cancelled voucher")),
+            _ => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.InvalidStatusTransition", "Invalid status transition"))
+        };
+    }
+
+    public Result Cancel()
+    {
+        return Status switch
+        {
+            DiscountStatus.Draft or DiscountStatus.Active or DiscountStatus.Paused => Result.Success(),
+            DiscountStatus.Expired => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.CannotCancelExpired", "Cannot cancel an expired voucher")),
+            DiscountStatus.Cancelled => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.AlreadyCancelled", "Voucher is already cancelled")),
+            _ => Result.Failure(Error.BusinessRuleViolation("DiscountVoucher.InvalidStatusTransition", "Invalid status transition"))
+        };
+    }
+
+    public Result UpdateStatus(DiscountVoucherActionType action)
+    {
+        var validationResult = action switch
+        {
+            DiscountVoucherActionType.Start => Start(),
+            DiscountVoucherActionType.Pause => Pause(),
+            DiscountVoucherActionType.Cancel => Cancel(),
+            _ => Result.Failure(Error.Validation("DiscountVoucher.InvalidAction", "Invalid action specified"))
+        };
+
+        if (validationResult.IsFailure)
+        {
+            return validationResult;
+        }
+
+        // Apply the status change
+        Status = action switch
+        {
+            DiscountVoucherActionType.Start => DiscountStatus.Active,
+            DiscountVoucherActionType.Pause => DiscountStatus.Paused,
+            DiscountVoucherActionType.Cancel => DiscountStatus.Cancelled,
+            _ => Status
+        };
+
+        return Result.Success();
+    }
+
+    public static Result<DiscountVoucher> Create(
         string code,
         string description,
         DiscountValueType valueType,
@@ -145,7 +215,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
             return Result.Failure<DiscountVoucher>(DiscountVoucherErrors.ValueMustBePositive);
         }
 
-        if (value > 1)
+        if (valueType == DiscountValueType.Percentage && value > 1)
         {
             return Result.Failure<DiscountVoucher>(DiscountVoucherErrors.InvalidValueRange);
         }
@@ -155,7 +225,9 @@ public class DiscountVoucher : BaseFullAuditedEntity
             maximumDiscountValue = null;
         }
 
-        var name = CreateDiscountName(value, maximumDiscountValue, valueType);        return Result.Success(new DiscountVoucher(
+        var name = CreateDiscountName(value, maximumDiscountValue, valueType);
+
+        return Result.Success(new DiscountVoucher(
             name,
             code,
             description,
@@ -188,7 +260,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
             nameBuilder.Append($"₫{fixedValue}k");
         }
 
-        if (maximumDiscountValue.HasValue)
+        if (maximumDiscountValue.HasValue && valueType == DiscountValueType.Percentage)
         {
             int maximumDiscountValueFixed = (int)(maximumDiscountValue.Value / 1000);
             nameBuilder.Append($", tối đa ₫{maximumDiscountValueFixed}k");

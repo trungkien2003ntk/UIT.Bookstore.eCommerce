@@ -2,6 +2,6 @@
 
 public enum DiscountVoucherType
 {
-    Order,
-    Shipping
+    Order = 1,
+    Shipping = 2
 }

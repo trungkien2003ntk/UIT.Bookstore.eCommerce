@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KKBookstore.API.Controllers;
+namespace KKBookstore.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -16,7 +16,9 @@ public class AdminController : ApiController
 {
     public AdminController(ISender sender) : base(sender)
     {
-    }    /// <summary>
+    }
+
+    /// <summary>
     /// Get the moderation queue for admin review
     /// </summary>
     /// <param name="query">Query parameters</param>
@@ -38,7 +40,7 @@ public class AdminController : ApiController
     {
         var command = new ApproveRatingCommand(ratingId, request.AdminNote);
         var result = await Sender.Send(command);
-        
+
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 
@@ -52,7 +54,7 @@ public class AdminController : ApiController
     {
         var command = new HideRatingCommand(ratingId, request.Reason);
         var result = await Sender.Send(command);
-        
+
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 
@@ -66,7 +68,7 @@ public class AdminController : ApiController
     {
         var command = new RestoreRatingCommand(ratingId, request.AdminNote);
         var result = await Sender.Send(command);
-        
+
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }
 }

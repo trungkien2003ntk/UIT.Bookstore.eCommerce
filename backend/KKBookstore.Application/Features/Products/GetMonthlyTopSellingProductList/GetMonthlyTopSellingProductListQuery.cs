@@ -3,11 +3,6 @@ using KKBookstore.Features.Products.GetWeeklyTopSellingProductList;
 using KKBookstore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using static KKBookstore.Features.Products.GetWeeklyTopSellingProductList.GetWeeklyTopSellingProductListResponse;
 
 namespace KKBookstore.Features.Products.GetMonthlyTopSellingProductList;
@@ -25,17 +20,17 @@ public class GetMonthlyTopSellingProductListQueryHandler(
     {
         // Default number of products to return if not specified
         var numberOfProducts = request.Limit ?? 12;
-        
+
         // Calculate the date one month ago
         var oneMonthAgo = DateTime.UtcNow.AddMonths(-1);
-        
+
         // Query to get order lines from the past month
         var recentOrderLines = dbContext.OrderLines
             .Include(ol => ol.ProductVariant)
             .Include(ol => ol.Order)
             .Where(ol => ol.Order.OrderWhen >= oneMonthAgo)
             .AsQueryable();
-            
+
         // If ProductTypeId is provided, filter by it
         if (request.ProductTypeId.HasValue)
         {
@@ -43,12 +38,12 @@ public class GetMonthlyTopSellingProductListQueryHandler(
                 .Include(ol => ol.ProductVariant.Product)
                 .Where(ol => ol.ProductVariant.Product.ProductTypeId == request.ProductTypeId.Value);
         }
-        
+
         // Get the IDs of products sold in the past month
         var recentlyBoughtProductIds = await recentOrderLines
             .Select(ol => ol.ProductVariant.ProductId)
             .ToListAsync(cancellationToken);
-            
+
         // Group by product ID and count occurrences to find the most purchased products
         var topSellingProductIds = recentlyBoughtProductIds
             .GroupBy(id => id)
@@ -56,7 +51,7 @@ public class GetMonthlyTopSellingProductListQueryHandler(
             .Select(g => g.Key)
             .Take(numberOfProducts)
             .ToList();
-            
+
         // If no products were sold in the past month, return an empty list
         if (!topSellingProductIds.Any())
         {
@@ -65,7 +60,7 @@ public class GetMonthlyTopSellingProductListQueryHandler(
                 Items = new List<ProductSummary>()
             };
         }
-        
+
         // Query to get detailed information about the top-selling products
         var productQueryable = dbContext.Products
             .Where(p => topSellingProductIds.Contains(p.Id))
@@ -91,18 +86,18 @@ public class GetMonthlyTopSellingProductListQueryHandler(
                     ThumbnailImageUrl = p.GetFirstThumbnailImageUrl()
                 })
             .AsQueryable();
-            
+
         var productDtos = await productQueryable.ToListAsync(cancellationToken);
-        
+
         // Sort products by monthly sold count in descending order
         static int comparison(ProductSummary y, ProductSummary x) => x.SoldCount.CompareTo(y.SoldCount);
         productDtos.Sort(comparison);
-        
+
         var response = new GetWeeklyTopSellingProductListResponse
         {
             Items = productDtos
         };
-        
+
         return response;
     }
 }

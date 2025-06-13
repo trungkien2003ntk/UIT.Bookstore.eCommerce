@@ -681,6 +681,46 @@ namespace KKBookstore.Data.Migrations
                     b.ToTable("Transactions", (string)null);
                 });
 
+            modelBuilder.Entity("KKBookstore.Orders.VoucherCustomerType", b =>
+                {
+                    b.Property<int>("VoucherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.HasKey("VoucherId", "CustomerTypeId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("CustomerTypeId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.HasIndex("VoucherId");
+
+                    b.ToTable("VoucherCustomerTypes", (string)null);
+                });
+
             modelBuilder.Entity("KKBookstore.Orders.VoucherUsage", b =>
                 {
                     b.Property<int>("Id")
@@ -3012,6 +3052,39 @@ namespace KKBookstore.Data.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("KKBookstore.Orders.VoucherCustomerType", b =>
+                {
+                    b.HasOne("KKBookstore.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Customers.CustomerType", "CustomerType")
+                        .WithMany()
+                        .HasForeignKey("CustomerTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("KKBookstore.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Orders.DiscountVoucher", "Voucher")
+                        .WithMany("CustomerTypes")
+                        .HasForeignKey("VoucherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("CustomerType");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("Voucher");
+                });
+
             modelBuilder.Entity("KKBookstore.Orders.VoucherUsage", b =>
                 {
                     b.HasOne("KKBookstore.Users.User", "Creator")
@@ -3986,6 +4059,8 @@ namespace KKBookstore.Data.Migrations
 
             modelBuilder.Entity("KKBookstore.Orders.DiscountVoucher", b =>
                 {
+                    b.Navigation("CustomerTypes");
+
                     b.Navigation("VoucherUsages");
                 });
 

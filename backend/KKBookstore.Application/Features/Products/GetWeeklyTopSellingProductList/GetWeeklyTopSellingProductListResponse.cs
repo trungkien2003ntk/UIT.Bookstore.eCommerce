@@ -1,6 +1,3 @@
-using KKBookstore.Models;
-using System.Collections.Generic;
-
 namespace KKBookstore.Features.Products.GetWeeklyTopSellingProductList;
 
 public class GetWeeklyTopSellingProductListResponse

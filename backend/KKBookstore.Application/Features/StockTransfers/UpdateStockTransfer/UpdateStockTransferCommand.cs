@@ -1,12 +1,11 @@
-using System.ComponentModel.DataAnnotations;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.StockTransfers.GetStockTransferDetail;
 using KKBookstore.Models;
-using KKBookstore.Products;
 using KKBookstore.StockTransactions;
 using KKBookstore.StockTransactions.StockTransfers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace KKBookstore.Features.StockTransfers.UpdateStockTransfer;
 
@@ -14,23 +13,23 @@ public record UpdateStockTransferCommand : IRequest<Result<StockTransferDetail>>
 {
     [Required]
     public int Id { get; init; }
-    
+
     public string? Remarks { get; init; }
-    
+
     public string? Reason { get; init; }
-    
+
     [Required]
     public StockTransactionStatus TransactionStatus { get; init; }
-    
+
     [Required]
     public StockTransferStatus TransferStatus { get; init; }
-    
+
     public DateTimeOffset? DeparturedDate { get; init; }
-    
+
     public DateTimeOffset? ArrivalDate { get; init; }
-    
+
     public DateTimeOffset? TransferDate { get; init; }
-    
+
     [Required]
     [MinLength(1, ErrorMessage = "At least one item is required")]
     public List<UpdateStockTransferItemCommand> Items { get; init; } = [];
@@ -39,20 +38,20 @@ public record UpdateStockTransferCommand : IRequest<Result<StockTransferDetail>>
 public record UpdateStockTransferItemCommand
 {
     public int? Id { get; init; }
-    
+
     [Required]
     public int VariantId { get; init; }
-    
+
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
     public int Quantity { get; init; }
-    
+
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Unit cost must be greater than 0")]
     public decimal UnitCost { get; init; }
-    
+
     public string? Reason { get; init; }
-    
+
     public string? Remarks { get; init; }
 }
 
@@ -70,7 +69,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
     }
 
     public async Task<Result<StockTransferDetail>> Handle(
-        UpdateStockTransferCommand request, 
+        UpdateStockTransferCommand request,
         CancellationToken cancellationToken)
     {
         var stockTransfer = await _dbContext.StockTransfers
@@ -84,7 +83,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
         }
 
         // Only allow updates if in pending status unless explicitly changing the status
-        if (stockTransfer.TransactionStatus != StockTransactionStatus.Pending && 
+        if (stockTransfer.TransactionStatus != StockTransactionStatus.Pending &&
             request.TransactionStatus == stockTransfer.TransactionStatus &&
             request.TransferStatus == stockTransfer.TransferStatus)
         {
@@ -141,7 +140,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
                 // Update existing item
                 var existingItem = stockTransfer.Items!
                     .First(i => i.Id == requestItem.Id.Value) as StockTransferItem;
-                
+
                 existingItem!.VariantId = requestItem.VariantId;
                 existingItem.Quantity = requestItem.Quantity;
                 existingItem.UnitCost = requestItem.UnitCost;
@@ -160,13 +159,13 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
                     Reason = requestItem.Reason,
                     Remarks = requestItem.Remarks,
                 };
-                
+
                 _dbContext.StockTransferItems.Add(newItem);
             }
         }
 
         // If the status is being changed to Completed, update inventory
-        bool isBeingCompleted = stockTransfer.TransactionStatus != StockTransactionStatus.Completed && 
+        bool isBeingCompleted = stockTransfer.TransactionStatus != StockTransactionStatus.Completed &&
                                request.TransactionStatus == StockTransactionStatus.Completed &&
                                request.TransferStatus == StockTransferStatus.Completed;
 
@@ -177,9 +176,9 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
             {
                 // 1. Decrease inventory at source warehouse (FIFO)
                 var sourceInventories = await _dbContext.Inventories
-                    .Where(i => i.ProductVariantId == item.VariantId && 
-                                i.WarehouseId == stockTransfer.SourceWarehouseId && 
-                                i.IsActive && 
+                    .Where(i => i.ProductVariantId == item.VariantId &&
+                                i.WarehouseId == stockTransfer.SourceWarehouseId &&
+                                i.IsActive &&
                                 i.StockQuantity > 0)
                     .OrderBy(i => i.OriginalCreatedDate) // FIFO - oldest first
                     .ToListAsync(cancellationToken);
@@ -187,7 +186,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
                 // Keep track of units to move and their original costs
                 var inventoryUnitsToTransfer = new List<(int quantity, decimal unitCost)>();
                 int remainingToDecrease = item.Quantity;
-                
+
                 // Decrease inventory at source warehouse
                 foreach (var inventory in sourceInventories)
                 {
@@ -214,7 +213,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
                 if (remainingToDecrease > 0)
                 {
                     return Result.Failure<StockTransferDetail>(
-                        Error.Validation("StockTransfer.InsufficientStock", 
+                        Error.Validation("StockTransfer.InsufficientStock",
                             $"Insufficient stock for product variant ID {item.VariantId} at source warehouse ID {stockTransfer.SourceWarehouseId}"));
                 }
 
@@ -228,7 +227,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
                         isActive: true,
                         warehouseId: stockTransfer.DestinationWarehouseId
                     );
-                    
+
                     _dbContext.Inventories.Add(inventory);
                 }
             }
@@ -241,7 +240,7 @@ public class UpdateStockTransferCommandHandler : IRequestHandler<UpdateStockTran
     }
 
     private async Task<Result<StockTransferDetail>> GetStockTransferDetail(
-        int stockTransferId, 
+        int stockTransferId,
         CancellationToken cancellationToken)
     {
         var stockTransfer = await _dbContext.StockTransfers

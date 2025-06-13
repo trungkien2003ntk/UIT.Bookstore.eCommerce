@@ -1,9 +1,12 @@
-﻿using KKBookstore;
+﻿using DotnetGeminiSDK;
+using KKBookstore;
+using KKBookstore.AI;
 using KKBookstore.Common.Configuration;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Data;
 using KKBookstore.Data.Interceptors;
 using KKBookstore.Emailing;
+using KKBookstore.Features.Admin.Services;
 using KKBookstore.Identity;
 using KKBookstore.Payment;
 using KKBookstore.Search;
@@ -11,9 +14,6 @@ using KKBookstore.Shipping;
 using KKBookstore.Storage;
 using KKBookstore.Users;
 using KKBookstore.Web;
-using KKBookstore.Infrastructure.AI;
-using KKBookstore.Features.Admin.Services;
-using DotnetGeminiSDK;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +24,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using KKBookstore.AI;
 
 namespace KKBookstore;
 
@@ -143,7 +142,7 @@ public static class DependencyInjection
         services.Configure<ModerationConfiguration>(configuration.GetSection(ModerationConfiguration.SectionName));
         services.AddScoped<ICommentModerationService, CommentModerationService>();
         services.AddScoped<IModerationNotificationService, ModerationNotificationService>();        /// Config Related Products AI Service
-        /// old way
+                                                                                                    /// old way
         //services.AddScoped<IRelatedProductsService, RelatedProductsService>();
 
         /// new way: added decorator for caching

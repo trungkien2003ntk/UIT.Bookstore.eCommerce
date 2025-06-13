@@ -2,29 +2,28 @@
 
 #nullable disable
 
-namespace KKBookstore.Data.Migrations
+namespace KKBookstore.Data.Migrations;
+
+/// <inheritdoc />
+public partial class Updated_User_20250530_002500 : Migration
 {
     /// <inheritdoc />
-    public partial class Updated_User_20250530_002500 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<string>(
-                name: "FullName",
-                table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: false,
-                computedColumnSql: "[FirstName] + ' ' + [LastName]",
-                stored: true);
-        }
+        migrationBuilder.AddColumn<string>(
+            name: "FullName",
+            table: "AspNetUsers",
+            type: "nvarchar(max)",
+            nullable: false,
+            computedColumnSql: "[FirstName] + ' ' + [LastName]",
+            stored: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "FullName",
-                table: "AspNetUsers");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "FullName",
+            table: "AspNetUsers");
     }
 }

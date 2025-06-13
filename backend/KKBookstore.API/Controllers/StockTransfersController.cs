@@ -47,11 +47,11 @@ public class StockTransfersController(
     {
         var result = await Sender.Send(command, cancellationToken);
 
-        return result.IsSuccess 
-            ? CreatedAtAction(nameof(GetStockTransferDetail), new { id = result.Value.Id }, result.Value) 
+        return result.IsSuccess
+            ? CreatedAtAction(nameof(GetStockTransferDetail), new { id = result.Value.Id }, result.Value)
             : ToActionResult(result);
     }
-    
+
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateStockTransfer(
         [FromRoute] int id,
@@ -63,12 +63,12 @@ public class StockTransfersController(
         {
             return BadRequest("Id in route must match Id in body");
         }
-        
+
         var result = await Sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
-    
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteStockTransfer(
         [FromRoute] int id,

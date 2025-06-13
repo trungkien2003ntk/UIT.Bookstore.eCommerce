@@ -28,7 +28,7 @@ public class ApproveRatingCommandHandler : IRequestHandler<ApproveRatingCommand,
     public async Task<Result> Handle(ApproveRatingCommand request, CancellationToken cancellationToken)
     {
         var rating = await _dbContext.Ratings
-            .FirstOrDefaultAsync(r => r.Id == request.RatingId, cancellationToken);        if (rating == null)
+            .FirstOrDefaultAsync(r => r.Id == request.RatingId, cancellationToken); if (rating == null)
         {
             return Result.Failure(ProductErrors.RatingNotFound);
         }
@@ -53,7 +53,7 @@ public class ApproveRatingCommandHandler : IRequestHandler<ApproveRatingCommand,
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("Rating {RatingId} manually approved by admin {AdminId}", 
+        _logger.LogInformation("Rating {RatingId} manually approved by admin {AdminId}",
             request.RatingId, _currentUser.Id);
 
         return Result.Success();

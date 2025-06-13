@@ -23,7 +23,7 @@ public static class QueryableExtensions
     {
         return condition ? source.Where(predicate) : source;
     }
-    
+
     /// <summary>
     /// Conditionally applies a Where clause to an IQueryable if the specified condition is not null.
     /// </summary>
@@ -36,12 +36,12 @@ public static class QueryableExtensions
     public static IQueryable<T> WhereIf<T, TValue>(
         this IQueryable<T> source,
         TValue? conditionValue,
-        Func<TValue, Expression<Func<T, bool>>> predicateBuilder) 
+        Func<TValue, Expression<Func<T, bool>>> predicateBuilder)
         where TValue : struct
     {
         return conditionValue.HasValue ? source.Where(predicateBuilder(conditionValue.Value)) : source;
     }
-    
+
     public static async Task<Result<PagedResult<T>>> SortAndPaginateWithResultAsync<T>(
         this IQueryable<T> query,
         string sortBy,

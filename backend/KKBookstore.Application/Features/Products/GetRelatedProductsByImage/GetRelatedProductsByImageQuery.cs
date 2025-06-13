@@ -1,5 +1,3 @@
-using KKBookstore.Common.Models;
-using KKBookstore.Features.Products.Models;
 using KKBookstore.Features.Products.GetProductList;
 using KKBookstore.Models;
 using MediatR;

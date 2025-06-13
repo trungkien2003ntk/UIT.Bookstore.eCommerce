@@ -30,9 +30,9 @@ public class DeleteStockTransferCommandHandler(
         }
 
         stockTransfer.IsDeleted = true;
-        
+
         await dbContext.SaveChangesAsync(cancellationToken);
-        
+
         return Result.Success(true);
     }
 }

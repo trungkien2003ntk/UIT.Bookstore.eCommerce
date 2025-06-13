@@ -35,7 +35,7 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
         // Since AuditingInterceptor handles soft delete, we just need to call Remove
         // which will trigger EntityState.Deleted and the interceptor will handle the soft delete
         _dbContext.Products.Remove(product);
-        
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Successfully deleted product with ID {ProductId}", request.Id);

@@ -235,7 +235,8 @@ public class ProductsController(
         }
         var result = await Sender.Send(command, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    }    [HttpGet("{id}/related")]
+    }
+    [HttpGet("{id}/related")]
     public async Task<IActionResult> GetRelatedProductsById(
         int id,
         CancellationToken cancellationToken = default

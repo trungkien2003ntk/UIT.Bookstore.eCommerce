@@ -22,7 +22,7 @@ public class DeleteStockAdjustmentCommandHandler : IRequestHandler<DeleteStockAd
     }
 
     public async Task<Result<bool>> Handle(
-        DeleteStockAdjustmentCommand request, 
+        DeleteStockAdjustmentCommand request,
         CancellationToken cancellationToken)
     {
         var stockAdjustment = await _dbContext.StockAdjustments
@@ -31,7 +31,7 @@ public class DeleteStockAdjustmentCommandHandler : IRequestHandler<DeleteStockAd
         if (stockAdjustment == null)
         {
             return Result.Failure<bool>(
-                Error.NotFound("StockAdjustment.NotFound", 
+                Error.NotFound("StockAdjustment.NotFound",
                     "Stock adjustment with specified ID was not found"));
         }
 
@@ -39,15 +39,15 @@ public class DeleteStockAdjustmentCommandHandler : IRequestHandler<DeleteStockAd
         if (stockAdjustment.TransactionStatus != StockTransactionStatus.Pending)
         {
             return Result.Failure<bool>(
-                Error.Validation("StockAdjustment.CannotDelete", 
+                Error.Validation("StockAdjustment.CannotDelete",
                     "Only pending stock adjustments can be deleted"));
         }
 
         // Perform soft delete instead of hard delete
         stockAdjustment.IsDeleted = true;
-        
+
         await _dbContext.SaveChangesAsync(cancellationToken);
-        
+
         return Result.Success(true);
     }
 }

@@ -6,7 +6,7 @@ using KKBookstore.Common.Models.RequestDtos;
 using KKBookstore.Common.Models.ResultDtos;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Infrastructure.AI;
+namespace KKBookstore.AI;
 
 public class GeminiService : IGeminiService
 {
@@ -23,12 +23,12 @@ public class GeminiService : IGeminiService
     {
         try
         {
-            _logger.LogInformation("Generating text with Gemini AI for prompt: {Prompt}", prompt.Substring(0, Math.Min(50, prompt.Length)));            var response = await _geminiClient.TextPrompt(prompt);
+            _logger.LogInformation("Generating text with Gemini AI for prompt: {Prompt}", prompt.Substring(0, Math.Min(50, prompt.Length))); var response = await _geminiClient.TextPrompt(prompt);
 
             if (response?.Candidates?.Any() == true)
             {
                 var generatedText = response.Candidates.First().Content?.Parts?.FirstOrDefault()?.Text ?? string.Empty;
-                
+
                 return new GeminiTextResult
                 {
                     Success = true,
@@ -79,7 +79,7 @@ public class GeminiService : IGeminiService
             if (response?.Candidates?.Any() == true)
             {
                 var generatedText = response.Candidates.First().Content?.Parts?.FirstOrDefault()?.Text ?? string.Empty;
-                
+
                 return new GeminiTextResult
                 {
                     Success = true,
@@ -107,7 +107,8 @@ public class GeminiService : IGeminiService
     }
 
     public async Task StreamTextAsync(string prompt, Action<string> callback)
-    {        try
+    {
+        try
         {
             _logger.LogInformation("Starting text streaming with Gemini AI");
             await _geminiClient.StreamTextPrompt(prompt, (chunk) => callback(chunk ?? string.Empty));
@@ -123,7 +124,7 @@ public class GeminiService : IGeminiService
     {
         try
         {
-            _logger.LogInformation("Generating content with image using Gemini AI");            ImageMimeType imageMimeType = mimeType.ToLower() switch
+            _logger.LogInformation("Generating content with image using Gemini AI"); ImageMimeType imageMimeType = mimeType.ToLower() switch
             {
                 "image/jpeg" or "image/jpg" => ImageMimeType.Jpeg,
                 "image/png" => ImageMimeType.Png,
@@ -133,10 +134,10 @@ public class GeminiService : IGeminiService
                 _ => ImageMimeType.Jpeg
             };
 
-            var response = await _geminiClient.ImagePrompt(prompt, imageBase64, imageMimeType);            if (response?.Candidates?.Any() == true)
+            var response = await _geminiClient.ImagePrompt(prompt, imageBase64, imageMimeType); if (response?.Candidates?.Any() == true)
             {
                 var generatedText = response.Candidates.First().Content?.Parts?.FirstOrDefault()?.Text ?? string.Empty;
-                
+
                 return new GeminiTextResult
                 {
                     Success = true,
@@ -174,7 +175,7 @@ public class GeminiService : IGeminiService
             if (response?.Embedding?.Values?.Any() == true)
             {
                 var values = response.Embedding.Values.Select(v => Convert.ToSingle(v)).ToList();
-                
+
                 return new GeminiEmbeddingResult
                 {
                     Success = true,
@@ -206,7 +207,7 @@ public class GeminiService : IGeminiService
         {
             _logger.LogInformation("Counting tokens with Gemini AI");
 
-            var response = await _geminiClient.CountTokens(text);            if (response != null)
+            var response = await _geminiClient.CountTokens(text); if (response != null)
             {
                 return new GeminiTokenCountResult
                 {

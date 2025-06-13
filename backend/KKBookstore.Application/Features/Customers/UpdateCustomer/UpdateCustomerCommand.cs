@@ -8,6 +8,6 @@ namespace KKBookstore.Features.Customers.UpdateCustomer;
 public record UpdateCustomerCommand : IRequest<Result<int>>
 {
     public int Id { get; init; }
-    
+
     // Properties will be added later
 }

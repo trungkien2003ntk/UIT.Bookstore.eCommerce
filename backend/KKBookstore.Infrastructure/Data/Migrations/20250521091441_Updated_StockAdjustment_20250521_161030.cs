@@ -2,27 +2,26 @@
 
 #nullable disable
 
-namespace KKBookstore.Data.Migrations
+namespace KKBookstore.Data.Migrations;
+
+/// <inheritdoc />
+public partial class Updated_StockAdjustment_20250521_161030 : Migration
 {
     /// <inheritdoc />
-    public partial class Updated_StockAdjustment_20250521_161030 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(
-                name: "TotalQuantityBefore",
-                table: "StockTransactionDetails",
-                type: "int",
-                nullable: true);
-        }
+        migrationBuilder.AddColumn<int>(
+            name: "TotalQuantityBefore",
+            table: "StockTransactionDetails",
+            type: "int",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "TotalQuantityBefore",
-                table: "StockTransactionDetails");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "TotalQuantityBefore",
+            table: "StockTransactionDetails");
     }
 }

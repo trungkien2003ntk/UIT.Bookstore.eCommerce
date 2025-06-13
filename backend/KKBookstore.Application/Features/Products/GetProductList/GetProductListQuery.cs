@@ -14,8 +14,7 @@ namespace KKBookstore.Features.Products.GetProductList;
 
 public record GetProductListQuery()
     : PagedAndSortedResultRequest, IRequest<Result<PagedResult<ProductSummary>>>
-{
-    // other properties for filtering 
+{    // other properties for filtering 
     public List<int>? ProductTypeIds { get; set; }
     public List<int>? ProductIds { get; set; }
     public List<int>? ExcludeProductIds { get; set; }
@@ -23,6 +22,7 @@ public record GetProductListQuery()
     public Dictionary<string, List<string>> CustomFilters { get; set; } = [];
     public bool IsActive { get; set; } = true;
     public string? SearchQuery { get; set; }
+    public int? WarehouseId { get; set; }
 }
 
 // todo: this class is doing too much, consider refactoring
@@ -47,10 +47,12 @@ public class GetProductListQueryHandler(
             baseQuery = ApplyIncludeProductIdsFilter(baseQuery, request.ProductIds);
             baseQuery = ApplyPriceRangeFilter(baseQuery, request.PriceRange);
             baseQuery = ApplyExcludeProducts(baseQuery, request.ExcludeProductIds);
+            baseQuery = ApplyWarehouseFilter(baseQuery, request.WarehouseId);
+
             baseQuery = baseQuery
                 .Where(p => p.IsActive == request.IsActive);
 
-            var customFilterResult = await ApplyCustomFiltersAsync(baseQuery, request.CustomFilters, cancellationToken);
+            var customFilterResult = ApplyCustomFilters(baseQuery, request.CustomFilters);
             if (customFilterResult.IsFailure)
             {
                 return Result.Failure<PagedResult<ProductSummary>>(customFilterResult.Error);
@@ -134,7 +136,7 @@ public class GetProductListQueryHandler(
             );
 
             // Map to DTOs
-            var result = MapToProductSummaryResult(products, soldCounts);
+            var result = MapToProductSummaryResult(products, soldCounts, request.WarehouseId);
 
             return Result.Success(result);
         }
@@ -213,7 +215,7 @@ public class GetProductListQueryHandler(
         return Result.Success();
     }
 
-    private PagedResult<ProductSummary> MapToProductSummaryResult(PagedResult<Product> paginatedProducts, Dictionary<int, int> soldCounts)
+    private PagedResult<ProductSummary> MapToProductSummaryResult(PagedResult<Product> paginatedProducts, Dictionary<int, int> soldCounts, int? warehouseId = null)
     {
         return new PagedResult<ProductSummary>(
             paginatedProducts.Items.Select(p => new ProductSummary()
@@ -233,7 +235,9 @@ public class GetProductListQueryHandler(
                 RatingsCount = p.Ratings.Count(r => r.Status == RatingStatus.Posted || r.Status == RatingStatus.PendingReview),
                 CreationTime = p.CreationTime,
                 IsActive = p.IsActive,
-                TotalStockQuantity = p.ProductVariants.Sum(pv => pv.StockQuantity),
+                TotalStockQuantity = warehouseId.HasValue
+                    ? p.ProductVariants.Sum(pv => pv.Inventories?.Where(i => i.IsActive && i.WarehouseId == warehouseId.Value).Sum(i => i.StockQuantity) ?? 0)
+                    : p.ProductVariants.Sum(pv => pv.StockQuantity),
                 Variants = p.ProductVariants.Select(pv => new ProductVariantSummaryDto
                 {
                     Id = pv.Id,
@@ -241,7 +245,9 @@ public class GetProductListQueryHandler(
                     UnitPrice = pv.UnitPrice,
                     RecommendedRetailPrice = pv.RecommendedRetailPrice,
                     LastestUnitCost = pv.LastestUnitCost,
-                    StockQuantity = pv.StockQuantity,
+                    StockQuantity = warehouseId.HasValue
+                        ? pv.Inventories?.Where(i => i.IsActive && i.WarehouseId == warehouseId.Value).Sum(i => i.StockQuantity) ?? 0
+                        : pv.StockQuantity,
                     ThumbnailImageUrl = pv.GetThumbnailImageUrl() ?? string.Empty,
                     OptionValues = pv.ProductVariantOptionValues?.Select(pov => new OptionValueDto
                     {
@@ -249,7 +255,7 @@ public class GetProductListQueryHandler(
                         Value = pov.OptionValue.Value
                     }),
                     StockBreakdowns = pv.Inventories is null ? [] : pv.Inventories
-                        .Where(i => i.IsActive)
+                        .Where(i => i.IsActive && (!warehouseId.HasValue || i.WarehouseId == warehouseId.Value))
                         .GroupBy(i => new { i.WarehouseId, i.Warehouse!.Name })
                         .Select(g => new StockSummaryDto()
                         {
@@ -297,7 +303,6 @@ public class GetProductListQueryHandler(
 
         return query;
     }
-
     private IQueryable<Product> ApplyPriceRangeFilter(IQueryable<Product> query, PriceRange? priceRange)
     {
         if (priceRange != null)
@@ -308,10 +313,20 @@ public class GetProductListQueryHandler(
         return query;
     }
 
-    public async Task<Result<IQueryable<Product>>> ApplyCustomFiltersAsync(
+    private IQueryable<Product> ApplyWarehouseFilter(IQueryable<Product> query, int? warehouseId)
+    {
+        if (warehouseId.HasValue)
+        {
+            query = query.Where(p => p.ProductVariants.Any(pv =>
+                pv.Inventories != null &&
+                pv.Inventories.Any(i => i.WarehouseId == warehouseId.Value && i.IsActive && i.StockQuantity > 0)));
+        }
+
+        return query;
+    }
+    public Result<IQueryable<Product>> ApplyCustomFilters(
     IQueryable<Product> query,
-    Dictionary<string, List<string>> customFilters,
-    CancellationToken cancellationToken = default)
+    Dictionary<string, List<string>> customFilters)
     {
         if (customFilters == null || customFilters.Count == 0)
         {
@@ -382,7 +397,6 @@ public class GetProductListQueryHandler(
             return Result.Failure<IQueryable<Product>>(ProductErrors.InvalidAttribute(ex.Message));
         }
     }
-
     private async Task<Dictionary<int, int>> GetSoldCountsAsync(List<int> productIds, CancellationToken cancellationToken)
     {
         return await dbContext.OrderLines

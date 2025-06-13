@@ -15,8 +15,8 @@ public class GetProductListRequest
     public List<int>? ExcludeProductIds { get; set; }
     public int? MinPrice { get; set; }
     public int? MaxPrice { get; set; }
-    // sending this in the url by using: ?CustomFilters[Key]=Value, if you pass key or value in utf8, before sending it, you should encode it to base64
     public Dictionary<string, List<string>> CustomFilters { get; set; } = [];
     public bool IsActive { get; set; } = true;
     public string? SearchQuery { get; set; }
+    public int? WarehouseId { get; set; }
 }

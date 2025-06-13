@@ -112,7 +112,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             var branches = await _dbContext.Branches.ToListAsync(cancellationToken);
 
 
-            var productExists = await _dbContext.Products.AnyAsync(p => p.Name == request.Name, cancellationToken);
+            var productExists = await _dbContext.Products
+                .IgnoreQueryFilters()
+                .AnyAsync(p => p.Name.ToLower() == request.Name.ToLower(), cancellationToken);
+
             if (productExists)
             {
                 return Result.Failure<AdminProductDto>(ProductErrors.ProductAlreadyExists(request.Name));

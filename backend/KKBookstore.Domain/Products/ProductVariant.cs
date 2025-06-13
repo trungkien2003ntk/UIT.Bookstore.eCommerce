@@ -37,7 +37,7 @@ public class ProductVariant : BaseFullAuditedEntity
     public decimal RecommendedRetailPrice { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal TaxRate { get; set; }
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
     public DateTimeOffset ValidFrom { get; set; }
     public DateTimeOffset? ValidTo { get; set; }
     public DateTimeOffset? DiscontinuedWhen { get; set; }
@@ -45,7 +45,7 @@ public class ProductVariant : BaseFullAuditedEntity
     public int Weight { get; set; }
     public Dimension Dimension { get; set; }
     public bool IsActive { get; set; }
-    public string Tags { get; set; }
+    public string? Tags { get; set; }
 
     // Calculated properties
     [NotMapped]

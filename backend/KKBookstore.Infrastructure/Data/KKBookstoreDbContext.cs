@@ -74,6 +74,11 @@ public class KKBookstoreDbContext(
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
+
+        foreach (var relationship in builder.Model.GetEntityTypes().Where(e => e.IsOwned()).SelectMany(e => e.GetForeignKeys()))
+        {
+            relationship.DeleteBehavior = DeleteBehavior.Cascade;
+        }
     }
 
     public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

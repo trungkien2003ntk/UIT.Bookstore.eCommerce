@@ -145,45 +145,81 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     }
 
 
-    private void UpdateAttributeProductValues(Product product, ICollection<ProductTypeAttributeProductValueDto> attributeProductValues)
+    private void UpdateAttributeProductValues(Product product, ICollection<ProductTypeAttributeProductValueDto> newValues)
     {
-        var existingAttributeProductValues = product.AttributeProductValues.ToList();
+        var attributeIds = newValues.Select(x => x.AttributeId).ToHashSet();
+        var attributes = _dbContext.ProductTypeAttributes
+            .Where(x => attributeIds.Contains(x.Id))
+            .Include(x => x.Values)
+            .ToDictionary(x => x.Id, x => x);
 
-        foreach (var attributeProductValue in attributeProductValues)
+        var existing = product.AttributeProductValues.ToList();
+
+        // Build sets using (AttributeId, Value) as identity
+        var existingPairs = existing
+            .Select(x => new AttributeValueKey(x.AttributeValue.ProductTypeAttributeId, x.AttributeValue.Value.Trim()))
+            .ToHashSet();
+
+        var newPairs = newValues
+            .Select(x => new AttributeValueKey(x.AttributeId, x.Value.Trim()))
+            .ToHashSet();
+
+        // Add new values not already in existing
+        var toAdd = newPairs.Except(existingPairs);
+        List<ProductTypeAttributeProductValue> newAttributeProductValues = [];
+        foreach (var pair in toAdd)
         {
-            var existingAttributeProductValue = existingAttributeProductValues.FirstOrDefault(x => x.AttributeValueId == attributeProductValue.AttributeValueId);
+            var attributeValue = attributes[pair.AttributeId].Values
+                .FirstOrDefault(x => x.Value.Trim().Equals(pair.Value, StringComparison.OrdinalIgnoreCase));
 
-            if (existingAttributeProductValue is null)
+            // it's already in the database
+            if (attributeValue is not null)
             {
                 product.AttributeProductValues.Add(new ProductTypeAttributeProductValue
                 {
-                    AttributeValueId = attributeProductValue.AttributeValueId
+                    ProductId = product.Id,
+                    AttributeValueId = attributeValue.Id
                 });
+            }
+            // it's a new value, create it
+            else
+            {
+                var newAttributeProductValue = new ProductTypeAttributeProductValue
+                {
+                    ProductId = product.Id,
+                    AttributeValue = new ProductTypeAttributeValue
+                    {
+                        Value = pair.Value,
+                        ProductTypeAttributeId = pair.AttributeId
+                    }
+                };
+                product.AttributeProductValues.Add(newAttributeProductValue);
             }
         }
 
-        foreach (var existingAttributeProductValue in existingAttributeProductValues)
-        {
-            var attributeProductValue = attributeProductValues.FirstOrDefault(x => x.AttributeValueId == existingAttributeProductValue.AttributeValueId);
+        // Remove values that are no longer present
+        var toRemove = existing
+            .Where(x => !newPairs.Contains(new AttributeValueKey(x.AttributeValue.ProductTypeAttributeId, x.AttributeValue.Value)))
+            .ToList();
 
-            if (attributeProductValue is null)
-            {
-                _dbContext.ProductTypeAttributeProductValues.Remove(existingAttributeProductValue);
-            }
+        foreach (var item in toRemove)
+        {
+            _dbContext.ProductTypeAttributeProductValues.Remove(item);
         }
     }
 
     private void UpdateProductVariants(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
     {
         var existingProductVariants = product.ProductVariants.ToList();
+
+        // 1. Handle Add & Update
         foreach (var productVariant in productVariants)
         {
-            var existingProductVariant = existingProductVariants.FirstOrDefault(x => x.Id == productVariant.Id);
-            if (existingProductVariant is null)
+            if (productVariant.Id == 0)
             {
+                // Add new
                 product.ProductVariants.Add(new ProductVariant
                 {
-                    Id = productVariant.Id,
                     ProductId = productDtoId,
                     RecommendedRetailPrice = productVariant.RecommendedRetailPrice,
                     UnitPrice = productVariant.UnitPrice,
@@ -198,20 +234,28 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             }
             else
             {
-                existingProductVariant.RecommendedRetailPrice = productVariant.RecommendedRetailPrice;
-                existingProductVariant.UnitPrice = productVariant.UnitPrice;
-                existingProductVariant.TaxRate = productVariant.TaxRate;
-                existingProductVariant.Comment = productVariant.Comment;
-                existingProductVariant.Weight = productVariant.Weight;
-                existingProductVariant.Dimension = productVariant.Dimension;
+                // Update existing
+                var existingProductVariant = existingProductVariants.FirstOrDefault(x => x.Id == productVariant.Id);
+                if (existingProductVariant != null)
+                {
+                    existingProductVariant.RecommendedRetailPrice = productVariant.RecommendedRetailPrice;
+                    existingProductVariant.UnitPrice = productVariant.UnitPrice;
+                    existingProductVariant.TaxRate = productVariant.TaxRate;
+                    existingProductVariant.Comment = productVariant.Comment;
+                    existingProductVariant.Weight = productVariant.Weight;
+                    existingProductVariant.Dimension = productVariant.Dimension;
+                }
             }
         }
 
+        // 2. Handle Remove
+        var incomingIds = productVariants.Where(x => x.Id != 0).Select(x => x.Id).ToHashSet();
+
         foreach (var existingProductVariant in existingProductVariants)
         {
-            var productVariant = productVariants.FirstOrDefault(x => x.Id == existingProductVariant.Id);
-            if (productVariant is null)
+            if (!incomingIds.Contains(existingProductVariant.Id))
             {
+                // Detach first to avoid owned entity issue
                 _dbContext.ProductVariants.Remove(existingProductVariant);
             }
         }
@@ -299,4 +343,5 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             }).ToList()
         };
     }
+
 }

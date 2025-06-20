@@ -127,6 +127,9 @@ public class UpdateShoppingCartItemCommandHandler(
             return Result.Failure<UpdateShoppingCartResponse>(ShoppingCartError.Unknown);
         }
 
+        // Re-select the items that were originally selected since IsSelected is not persisted
+        createCartResponseResult.Value.SelectItems(request.SelectedItemIds);
+
         var result = await mappingService.MapToResponse(createCartResponseResult.Value, discountFromVoucherAmount);
 
         return result;

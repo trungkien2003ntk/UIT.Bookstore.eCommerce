@@ -1,6 +1,5 @@
 ﻿using KKBookstore.Common.Interfaces;
 using KKBookstore.Models;
-using KKBookstore.Products;
 using KKBookstore.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -51,22 +50,30 @@ public class UpdateShoppingCartItemCommandHandler(
         var shoppingCart = createCartResult.Value;
         shoppingCart.SelectItems(request.SelectedItemIds);
 
+        Result<List<ShoppingCartItem>> updateResult;
         switch (updateActionType)
         {
-            case UpdateCartActionType.SelectForCheckout:
-                break;
-
             case UpdateCartActionType.UpdateQuantity:
-                UpdateItemQuantities(shoppingCart, request.UpdateItems);
+                updateResult = UpdateItemQuantities(shoppingCart, request.UpdateItems);
                 break;
 
             case UpdateCartActionType.UpdateProductVariant:
-                UpdateItemProductVariants(shoppingCart, request.UpdateItems);
+                updateResult = UpdateItemProductVariants(shoppingCart, request.UpdateItems);
                 break;
 
             case UpdateCartActionType.Remove:
-                DeleteItems(shoppingCart, request.UpdateItems);
+                updateResult = DeleteItems(shoppingCart, request.UpdateItems);
                 break;
+
+            case UpdateCartActionType.SelectForCheckout:
+            default:
+                updateResult = Result.Success<List<ShoppingCartItem>>([]);
+                break;
+        }
+
+        if (updateResult.IsFailure)
+        {
+            return Result.Failure<UpdateShoppingCartResponse>(updateResult.Error);
         }
 
         try
@@ -84,9 +91,12 @@ public class UpdateShoppingCartItemCommandHandler(
         var itemIdsToUpdate = request.UpdateItems.Select(x => x.Id).ToList();
         foreach (var item in shoppingCart.Items.Where(item => itemIdsToUpdate.Contains(item.Id)))
         {
-            await _dbContext.Entry(item).Reference(nameof(ProductVariant)).LoadAsync(cancellationToken);
+            await _dbContext.Entry(item)
+                .Reference(i => i.ProductVariant)
+                .Query()
+                .Include(pv => pv.Inventories)
+                .LoadAsync(cancellationToken);
         }
-
 
         // Calculate discount from voucher
         var orderDiscountVoucher = await _dbContext.DiscountVouchers
@@ -127,10 +137,11 @@ public class UpdateShoppingCartItemCommandHandler(
         return await _dbContext.ShoppingCartItems
             .Where(sci => sci.CustomerId == userId)
             .Include(sci => sci.ProductVariant)
+                .ThenInclude(pv => pv.Inventories)
             .ToListAsync(cancellationToken);
     }
 
-    private List<ShoppingCartItem> UpdateItemQuantities(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    private Result<List<ShoppingCartItem>> UpdateItemQuantities(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
     {
         var updatedItems = new List<ShoppingCartItem>();
 
@@ -140,6 +151,11 @@ public class UpdateShoppingCartItemCommandHandler(
         {
             var updateItem = listItems.First(ui => ui.Id == item.Id);
             // todo: add a check to old quantity
+            if (updateItem.Quantity > item.ProductVariant.AvailableQuantity)
+            {
+                return Result.Failure<List<ShoppingCartItem>>(ShoppingCartError.NotEnoughStock);
+            }
+
             item.Quantity = updateItem.Quantity;
 
             updatedItems.Add(item);
@@ -148,7 +164,7 @@ public class UpdateShoppingCartItemCommandHandler(
         return updatedItems;
     }
 
-    private List<ShoppingCartItem> UpdateItemProductVariants(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    private Result<List<ShoppingCartItem>> UpdateItemProductVariants(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
     {
         List<ShoppingCartItem> updatedItems = [];
         var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
@@ -165,8 +181,9 @@ public class UpdateShoppingCartItemCommandHandler(
         return updatedItems;
     }
 
-    private void DeleteItems(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
+    private Result<List<ShoppingCartItem>> DeleteItems(ShoppingCart shoppingCart, List<UpdateShoppingCartItemBriefDto> listItems)
     {
+        List<ShoppingCartItem> updatedItems = [];
         var itemIdsToUpdate = listItems.Select(x => x.Id).ToList();
 
         foreach (var itemId in itemIdsToUpdate)
@@ -175,7 +192,10 @@ public class UpdateShoppingCartItemCommandHandler(
             if (itemToRemove != null)
             {
                 _dbContext.ShoppingCartItems.Remove(itemToRemove);
+                updatedItems.Add(itemToRemove);
             }
         }
+
+        return updatedItems;
     }
 }

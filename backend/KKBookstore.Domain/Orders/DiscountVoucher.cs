@@ -86,7 +86,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
     {
         if (ValueType == DiscountValueType.Percentage)
         {
-            return MaximumDiscountValue.HasValue ? Math.Min(MaximumDiscountValue.Value, spentAmount * Value) : spentAmount * Value;
+            return MaximumDiscountValue.HasValue ? Math.Min(MaximumDiscountValue.Value, spentAmount * Value / 100) : spentAmount * Value / 100;
         }
 
         return spentAmount > Value ? Value : spentAmount;
@@ -215,7 +215,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
             return Result.Failure<DiscountVoucher>(DiscountVoucherErrors.ValueMustBePositive);
         }
 
-        if (valueType == DiscountValueType.Percentage && value > 1)
+        if (valueType == DiscountValueType.Percentage && value > 100)
         {
             return Result.Failure<DiscountVoucher>(DiscountVoucherErrors.InvalidValueRange);
         }

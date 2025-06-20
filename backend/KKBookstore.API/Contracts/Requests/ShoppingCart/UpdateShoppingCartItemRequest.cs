@@ -13,8 +13,8 @@ public class UpdateShoppingCartItemRequest
     public sealed record UpdateShoppingCartItemBriefDto
     {
         public int Id { get; init; }
-        public int SkuId { get; init; }
-        public int OldSkuId { get; init; }
+        public int ProductVariantId { get; init; }
+        public int OldProductVariantId { get; init; }
         public int Quantity { get; init; }
         public int OldQuantity { get; init; }
     }

@@ -60,8 +60,8 @@ public class ShoppingCartController(
             UpdateItems = request.UpdateItems.Select(i => new UpdateShoppingCartItemBriefDto
             {
                 Id = i.Id,
-                ProductVariantId = i.SkuId,
-                OldProductVariantId = i.OldSkuId,
+                ProductVariantId = i.ProductVariantId,
+                OldProductVariantId = i.OldProductVariantId,
                 Quantity = i.Quantity,
                 OldQuantity = i.OldQuantity
             }).ToList(),

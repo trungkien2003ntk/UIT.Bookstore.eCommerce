@@ -1,11 +1,13 @@
 ﻿using KKBookstore.Common.Interfaces;
 using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Constants;
 using KKBookstore.Emailing;
 using KKBookstore.Emailing.TemplateModels;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using KKBookstore.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace KKBookstore.Features.Checkout.PlaceOrder;
 
@@ -13,10 +15,16 @@ public class DefaultOrderProcessor(
     IApplicationDbContext dbContext,
     IPaymentService paymentService,
     IEmailSender emailSender,
-    IEmailService emailService
+    IEmailService emailService,
+    IBranchSelectionService branchSelectionService,
+    IIdentityService identityService,
+    ILogger<DefaultOrderProcessor> logger
 ) : OrderProcessor(dbContext, paymentService, emailSender)
 {
     private readonly IEmailService _emailTemplateService = emailService;
+    private readonly IBranchSelectionService _branchSelectionService = branchSelectionService;
+    private readonly IIdentityService identityService = identityService;
+    private readonly ILogger<DefaultOrderProcessor> logger = logger;
     protected override async Task<List<ShoppingCartItem>> GetCheckoutItems(PlaceOrderCommand request, CancellationToken cancellationToken)
     {
         return await _dbContext.ShoppingCartItems
@@ -41,22 +49,31 @@ public class DefaultOrderProcessor(
             }
         }
         return true;
-    }
-
-    protected override async Task ReduceStock(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
+    }    protected override async Task ReduceStock(List<ShoppingCartItem> checkoutItems, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
     {
-        foreach (var item in checkoutItems)
+        // Reduce stock based on allocated inventory from specific branches
+        foreach (var fulfillment in orderFulfillments)
         {
-            //item.ProductVariant.Quantity -= item.Quantity;
+            foreach (var allocation in fulfillment.OrderLineAllocations)
+            {
+                var inventory = await _dbContext.Inventories.FindAsync([allocation.InventoryId], cancellationToken);
+                if (inventory != null)
+                {
+                    inventory.StockQuantity -= allocation.Quantity;
+                    if (inventory.StockQuantity <= 0)
+                    {
+                        inventory.Deactivate();
+                    }
+                }
+            }
         }
-    }
-
-    protected override async Task RemoveFromCart(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
+    }    protected override Task RemoveFromCart(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
     {
         _dbContext.ShoppingCartItems.RemoveRange(checkoutItems);
+        return Task.CompletedTask;
     }
 
-    protected override async Task<Order> CreateOrder(PlaceOrderCommand request, List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
+    protected override Task<Order> CreateOrder(PlaceOrderCommand request, List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
     {
         var order = new Order()
         {
@@ -83,7 +100,7 @@ public class DefaultOrderProcessor(
             });
         }
 
-        return order;
+        return Task.FromResult(order);
     }
 
     protected override async Task<bool> ApplyDiscountVouchers(Order order, PlaceOrderCommand request, CancellationToken cancellationToken)
@@ -232,5 +249,100 @@ public class DefaultOrderProcessor(
             emailModel.Subject,
             emailModel
         );
+    }
+
+    // NEW: Intelligent branch selection methods implementation
+    protected override async Task<Result<List<OrderFulfillment>>> AllocateInventoryFromNearestBranches(Order order, PlaceOrderCommand request, CancellationToken cancellationToken)
+    {
+        // Get customer shipping address
+        var shippingAddress = await _dbContext.ShippingAddresses
+            .FirstOrDefaultAsync(sa => sa.Id == request.ShippingAddressId, cancellationToken);
+
+        if (shippingAddress == null)
+        {
+            return Result.Failure<List<OrderFulfillment>>(
+                Error.NotFound("ShippingAddress.NotFound", "Shipping address not found"));
+        }
+
+        // Use the branch selection service to allocate inventory
+        var allocationResult = await _branchSelectionService.AllocateInventoryFromNearestBranchesAsync(
+            order, shippingAddress, cancellationToken);
+
+        if (allocationResult.IsSuccess)
+        {
+            // Save the order fulfillments to database
+            foreach (var fulfillment in allocationResult.Value)
+            {
+                _dbContext.OrderFulfillments.Add(fulfillment);
+            }
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        return allocationResult;
+    }
+
+    protected override bool RequiresAdminConfirmation(List<OrderFulfillment> orderFulfillments)
+    {
+        return _branchSelectionService.RequiresAdminConfirmation(orderFulfillments);
+    }    protected override async Task NotifyAdminForBranchSelection(Order order, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
+    {
+        // Create email model for admin notification
+        var branchOptions = orderFulfillments.Select(of => new BranchSelectionOption
+        {
+            BranchId = of.BranchId,
+            BranchName = of.Branch?.Name ?? $"Branch {of.BranchId}",
+            DistanceKm = of.DistanceFromCustomer,
+            TotalItems = of.GetTotalAllocatedItems(),
+            TotalValue = of.GetTotalAllocatedValue()        }).ToList();
+
+        // Load customer information
+        var customer = await dbContext.Customers
+            .FirstOrDefaultAsync(c => c.Id == order.CustomerId, cancellationToken);
+
+        var customerName = customer?.FullName ?? customer?.UserName ?? "Unknown Customer";
+
+        var emailModel = new AdminBranchSelectionEmailModel(
+            orderId: order.Id,
+            orderNumber: order.OrderNumber,
+            customerName: customerName,
+            orderDate: order.OrderWhen.DateTime,
+            branchOptions: branchOptions,
+            totalOrderValue: order.CalculateTotal()
+        );
+
+        // Get admin users to notify
+        var adminUsers = await identityService.GetUsersInRoleAsync(AppRoles.Admin);
+        if (adminUsers.IsFailure || adminUsers.Value.Count == 0)
+        {
+            logger.LogWarning("No admin users found to notify for branch selection for order {OrderId}", order.Id);
+            return;
+        }
+
+        var adminEmails = adminUsers.Value
+            .Where(u => !string.IsNullOrEmpty(u.Email))
+            .Select(u => u.Email!)
+            .ToList();
+
+        if (adminEmails.Count == 0)
+        {
+            logger.LogWarning("No admin emails configured for branch selection notifications");
+            return;
+        }
+
+        // Send email to all admins
+        foreach (var adminEmail in adminEmails)
+        {
+            try
+            {
+                await _emailTemplateService.SendAsync(adminEmail, emailModel.Subject, emailModel);
+                logger.LogInformation("Branch selection notification sent to admin {AdminEmail} for order {OrderId}",
+                    adminEmail, order.Id);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to send branch selection notification to admin {AdminEmail} for order {OrderId}",
+                    adminEmail, order.Id);
+            }
+        }
     }
 }

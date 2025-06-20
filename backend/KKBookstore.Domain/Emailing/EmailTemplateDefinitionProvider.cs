@@ -49,12 +49,17 @@ public class EmailTemplateDefinitionProvider
             EmailConsts.UserRestoredRatingEmailTemplateName,
             EmailConsts.UserRestoredRatingEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
-        ));
-
-        // Order confirmation email template
+        ));        // Order confirmation email template
         AddTemplate(new TemplateDefinition(
             EmailConsts.OrderConfirmationEmailTemplateName,
             EmailConsts.OrderConfirmationEmailAsmNamespace,
+            layout: EmailConsts.LayoutTemplateName
+        ));
+
+        // Admin branch selection email template
+        AddTemplate(new TemplateDefinition(
+            EmailConsts.AdminBranchSelectionEmailTemplateName,
+            EmailConsts.AdminBranchSelectionEmailAsmNamespace,
             layout: EmailConsts.LayoutTemplateName
         ));
 

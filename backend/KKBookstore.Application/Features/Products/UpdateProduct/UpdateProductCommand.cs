@@ -256,6 +256,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             if (!incomingIds.Contains(existingProductVariant.Id))
             {
                 // Detach first to avoid owned entity issue
+
                 _dbContext.ProductVariants.Remove(existingProductVariant);
             }
         }

@@ -37,6 +37,7 @@ public class GetShoppingCartQueryHandler(
         return await _dbContext.ShoppingCartItems
             .Where(sci => sci.CustomerId == userId)
             .Include(sci => sci.ProductVariant)
+                .ThenInclude(pv => pv.Inventories)
             .ToListAsync(cancellationToken);
     }
 }

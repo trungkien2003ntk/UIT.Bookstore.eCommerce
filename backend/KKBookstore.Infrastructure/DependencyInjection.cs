@@ -14,6 +14,9 @@ using KKBookstore.Shipping;
 using KKBookstore.Storage;
 using KKBookstore.Users;
 using KKBookstore.Web;
+using KKBookstore.Infrastructure.Geolocation;
+using KKBookstore.Application.Common.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -152,8 +155,19 @@ public static class DependencyInjection
                 provider.GetRequiredService<IMemoryCache>(),
                 provider.GetRequiredService<RelatedProductsService>()
             );
-        });
+        });        /// Config OpenCage Geocoding Service
+        services.Configure<OpenCageConfiguration>(configuration.GetSection(nameof(OpenCageConfiguration)));
+        services.AddHttpClient<OpenCageGeocodingService>();
+        services.AddScoped<OpenCageGeocodingService>();
+        services.AddScoped<IGeoCoordService>(provider =>
+            new CachedGeoCoordService(
+                provider.GetRequiredService<IMemoryCache>(),
+                provider.GetRequiredService<OpenCageGeocodingService>(),
+                provider.GetRequiredService<ILogger<CachedGeoCoordService>>()
+            ));
 
+        /// Config Branch Selection Service
+        services.AddScoped<IBranchSelectionService, Infrastructure.Services.BranchSelectionService>();
 
         var storageConnectionString = configuration.GetConnectionString("AzureStorage");
         services.AddAzureClients(builder =>

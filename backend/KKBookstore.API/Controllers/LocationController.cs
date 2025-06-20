@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Abstractions;
+using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Features.Locations.GetCommuneList;
 using KKBookstore.Features.Locations.GetDistrictList;
 using KKBookstore.Features.Locations.GetProvinceList;
@@ -9,7 +10,8 @@ namespace KKBookstore.Controllers;
 
 [Route("api/locations")]
 public class LocationController(
-    ISender sender
+    ISender sender,
+    IGeoCoordService geoCoordService
 ) : ApiController(sender)
 {
     [HttpGet("province")]
@@ -32,9 +34,7 @@ public class LocationController(
         var result = await Sender.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    }
-
-    [HttpGet("commune")]
+    }    [HttpGet("commune")]
     public async Task<IActionResult> GetCommuneListAsync(
         [FromQuery] GetCommuneListQuery query,
         CancellationToken cancellationToken = default
@@ -44,4 +44,20 @@ public class LocationController(
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
+
+    [HttpPost("geocode")]
+    public async Task<IActionResult> GetCoordinatesAsync(
+        [FromBody] GeocodeRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await geoCoordService.GetCoordinatesAsync(request.Address, cancellationToken);
+        
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+}
+
+public class GeocodeRequest
+{
+    public string Address { get; set; } = string.Empty;
 }

@@ -17,8 +17,8 @@ internal class ProductVariantOptionValueConfiguration : IEntityTypeConfiguration
         builder.Property(t => t.OptionId).IsRequired();
         builder.Property(t => t.OptionValueId).IsRequired();
 
-        builder.HasOne(t => t.ProductVariant).WithMany(t => t.ProductVariantOptionValues).HasForeignKey(t => t.ProductVariantId);
-        builder.HasOne(t => t.Option).WithMany().HasForeignKey(t => t.OptionId);
-        builder.HasOne(t => t.OptionValue).WithMany().HasForeignKey(t => t.OptionValueId);
+        builder.HasOne(t => t.ProductVariant).WithMany(t => t.ProductVariantOptionValues).HasForeignKey(t => t.ProductVariantId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(t => t.Option).WithMany().HasForeignKey(t => t.OptionId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(t => t.OptionValue).WithMany().HasForeignKey(t => t.OptionValueId).OnDelete(DeleteBehavior.Cascade);
     }
 }

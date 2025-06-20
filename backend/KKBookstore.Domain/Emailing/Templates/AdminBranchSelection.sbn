@@ -1,0 +1,49 @@
+<div style="background-color: #ff9800; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h2 style="margin: 0; color: white;">📦 Cần chọn chi nhánh đóng gói</h2>
+</div>
+
+<p style="color: #333;">Xin chào <strong>{{ model.recipient_name }}</strong>,</p>
+
+<p style="color: #333;">
+    Một đơn hàng cần được phân bổ đóng gói từ nhiều chi nhánh. Vui lòng chọn chi nhánh chính để đóng gói cho đơn hàng này.
+</p>
+
+<div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #ff9800; margin: 20px 0;">
+    <h3 style="color: #333; margin-top: 0;">Thông tin đơn hàng:</h3>
+    <p style="color: #333;"><strong>Mã đơn hàng:</strong> {{ model.order_number }}</p>
+    <p style="color: #333;"><strong>Khách hàng:</strong> {{ model.customer_name }}</p>
+    <p style="color: #333;"><strong>Ngày đặt hàng:</strong> {{ model.order_date }}</p>
+    <p style="color: #333;"><strong>Tổng giá trị đơn hàng:</strong> {{ model.total_order_value }} VND</p>
+</div>
+
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+    <h3 style="color: #333; margin-top: 0;">🏢 Các chi nhánh có thể đóng gói:</h3>
+    
+    {{ for branch in model.branch_options }}
+    <div style="border: 1px solid #ddd; padding: 12px; margin: 10px 0; border-radius: 5px; background-color: white;">
+        <h4 style="margin: 0 0 8px 0; color: #007bff;">{{ branch.branch_name }}</h4>
+        <p style="margin: 4px 0; color: #666;"><strong>📍 Khoảng cách:</strong> {{ branch.distance_km }} km</p>
+        <p style="margin: 4px 0; color: #666;"><strong>📦 Số sản phẩm:</strong> {{ branch.total_items }} sản phẩm</p>
+        <p style="margin: 4px 0; color: #666;"><strong>💰 Tổng giá trị:</strong> {{ branch.total_value }} VND</p>
+    </div>
+    {{ end }}
+</div>
+
+<div style="background-color: #e3f2fd; padding: 15px; border-radius: 5px; border: 1px solid #2196f3; margin: 20px 0;">
+    <h4 style="color: #1976d2; margin-top: 0;">💡 Hướng dẫn:</h4>
+    <ul style="color: #333; margin: 0; padding-left: 20px;">
+        <li>Đăng nhập vào bảng điều khiển admin</li>
+        <li>Tìm đơn hàng <strong>{{ model.order_number }}</strong></li>
+        <li>Chọn chi nhánh chính để đóng gói</li>
+        <li>Xác nhận để tiếp tục xử lý đơn hàng</li>
+    </ul>
+</div>
+
+<p style="color: #333;">
+    Vui lòng xử lý trong thời gian sớm nhất để đảm bảo đơn hàng được giao đúng hạn.
+</p>
+
+<p style="color: #333;">
+    Trân trọng,<br>
+    <strong>Hệ thống quản lý đơn hàng KKBooks</strong>
+</p>

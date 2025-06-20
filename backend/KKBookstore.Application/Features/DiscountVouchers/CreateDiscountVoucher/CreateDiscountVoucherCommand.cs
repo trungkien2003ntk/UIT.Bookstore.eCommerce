@@ -32,12 +32,12 @@ public class CreateDiscountVoucherCommandHandler(
     public async Task<Result<DiscountVoucherDto>> Handle(CreateDiscountVoucherCommand request, CancellationToken cancellationToken)
     {
         // Validate start time is at least 15 minutes from now
-        var minimumStartTime = DateTimeOffset.Now.AddMinutes(15);
-        if (request.StartTime < minimumStartTime)
-        {
-            return Result.Failure<DiscountVoucherDto>(
-                Error.Validation("DiscountVoucher.StartTimeTooSoon", "Start time must be at least 15 minutes from now"));
-        }
+        //var minimumStartTime = DateTimeOffset.Now.AddMinutes(15);
+        //if (request.StartTime < minimumStartTime)
+        //{
+        //    return Result.Failure<DiscountVoucherDto>(
+        //        Error.Validation("DiscountVoucher.StartTimeTooSoon", "Start time must be at least 15 minutes from now"));
+        //}
 
         // Validate end time is after start time
         if (request.EndTime <= request.StartTime)
@@ -108,7 +108,9 @@ public class CreateDiscountVoucherCommandHandler(
         }
 
         var discountVoucher = createResult.Value; dbContext.DiscountVouchers.Add(discountVoucher);
-        await dbContext.SaveChangesAsync(cancellationToken);        // Add CustomerType relationships
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        // Add CustomerType relationships
         foreach (var customerTypeId in request.CustomerTypeIds)
         {
             var voucherCustomerType = new VoucherCustomerType

@@ -24,7 +24,7 @@ public class Transaction : BaseEntity
     public string ResponseCode { get; set; }
     public int TransactionNo { get; set; }
     public string TransactionStatus { get; set; }
-    public int OrderId { get; set; }
+    public int? OrderId { get; set; }
 
 
     // navigation properties

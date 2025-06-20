@@ -27,6 +27,6 @@ internal class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVar
         builder.OwnsOne(t => t.Dimension).Property(d => d.Height).HasPrecision(18, 2).IsRequired();
 
         // Foreign Key
-        builder.HasOne(t => t.Product).WithMany(t => t.ProductVariants).HasForeignKey(t => t.ProductId);
+        builder.HasOne(t => t.Product).WithMany(t => t.ProductVariants).HasForeignKey(t => t.ProductId).OnDelete(DeleteBehavior.Cascade);
     }
 }

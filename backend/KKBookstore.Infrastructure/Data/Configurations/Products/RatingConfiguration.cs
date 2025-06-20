@@ -20,7 +20,7 @@ internal class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.Property(t => t.Response).HasColumnName(nameof(Rating.Response)).HasMaxLength(RatingConsts.ResponseMaxLength);
         builder.Property(t => t.Status).HasColumnName(nameof(Rating.Status)).HasConversion<EnumToStringConverter<RatingStatus>>().IsRequired();
 
-        builder.HasOne(t => t.ProductVariant).WithMany(t => t.Ratings).HasForeignKey(t => t.ProductVariantId);
-        builder.HasOne(t => t.Customer).WithMany().HasForeignKey(t => t.CustomerId);
+        builder.HasOne(t => t.ProductVariant).WithMany(t => t.Ratings).HasForeignKey(t => t.ProductVariantId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(t => t.Customer).WithMany().HasForeignKey(t => t.CustomerId).OnDelete(DeleteBehavior.SetNull);
     }
 }

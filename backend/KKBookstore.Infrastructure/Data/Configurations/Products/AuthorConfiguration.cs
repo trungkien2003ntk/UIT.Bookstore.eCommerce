@@ -17,7 +17,5 @@ internal class AuthorConfiguration : IEntityTypeConfiguration<Author>
 
         b.Property<string>(nameof(Author.Name)).HasColumnName(nameof(Author.Name)).HasMaxLength(AuthorConsts.NameMaxLength).IsRequired();
         b.Property(t => t.Description).HasColumnName(nameof(Author.Description)).HasMaxLength(AuthorConsts.DescriptionMaxLength);
-
-        b.HasMany(t => t.AuthorBooks).WithOne(t => t.Author).HasForeignKey(t => t.AuthorId);
     }
 }

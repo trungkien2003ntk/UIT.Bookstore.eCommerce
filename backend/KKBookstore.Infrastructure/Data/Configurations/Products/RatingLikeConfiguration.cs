@@ -17,6 +17,6 @@ internal class RatingLikeConfiguration : IEntityTypeConfiguration<RatingLike>
         builder.Property(t => t.Liked).HasColumnName(nameof(RatingLike.Liked)).IsRequired();
 
         builder.HasOne(t => t.Customer).WithMany().HasForeignKey(t => t.CustomerId);
-        builder.HasOne(t => t.Rating).WithMany(r => r.Likes).HasForeignKey(t => t.RatingId);
+        builder.HasOne(t => t.Rating).WithMany(r => r.Likes).HasForeignKey(t => t.RatingId).OnDelete(DeleteBehavior.Cascade);
     }
 }

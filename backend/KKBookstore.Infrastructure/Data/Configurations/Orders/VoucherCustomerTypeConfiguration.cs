@@ -15,12 +15,6 @@ internal class VoucherCustomerTypeConfiguration : IEntityTypeConfiguration<Vouch
         // Composite primary key
         builder.HasKey(vct => new { vct.VoucherId, vct.CustomerTypeId });
 
-        // Foreign key relationships
-        builder.HasOne(vct => vct.Voucher)
-            .WithMany(v => v.CustomerTypes)
-            .HasForeignKey(vct => vct.VoucherId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.HasOne(vct => vct.CustomerType)
             .WithMany()
             .HasForeignKey(vct => vct.CustomerTypeId)

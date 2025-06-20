@@ -16,10 +16,5 @@ internal class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage
         builder.Property(e => e.LargeImageUrl).HasColumnName(nameof(ProductImage.LargeImageUrl)).IsRequired();
 
         builder.Property(e => e.ProductId).HasColumnName(nameof(ProductImage.ProductId)).IsRequired();
-
-        builder.HasOne(e => e.Product)
-            .WithMany(p => p.ProductImages)
-            .HasForeignKey(e => e.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

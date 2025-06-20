@@ -23,7 +23,7 @@ public class StockTransactionConfiguration : IEntityTypeConfiguration<StockTrans
         builder.ConfigureAuditing();
         builder.HasMany(x => x.Items)
             .WithOne()
-            .HasForeignKey(x => x.StockTransactionId);
+            .HasForeignKey(x => x.StockTransactionId).OnDelete(DeleteBehavior.Cascade);
 
         builder.HasDiscriminator(x => x.TransactionType)
             .HasValue<StockTransaction>(StockTransactionType.Default)

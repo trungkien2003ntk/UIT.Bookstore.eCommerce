@@ -16,6 +16,6 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasOne(x => x.CustomerType)
             .WithMany()
             .HasForeignKey(e => e.CustomerTypeId)
-            .IsRequired();
+            .IsRequired().OnDelete(DeleteBehavior.Restrict);
     }
 }

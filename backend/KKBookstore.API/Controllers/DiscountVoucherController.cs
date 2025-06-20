@@ -8,6 +8,7 @@ using KKBookstore.Features.DiscountVouchers.UpdateDiscountVoucher;
 using KKBookstore.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace KKBookstore.Controllers;
 
@@ -16,13 +17,15 @@ public class DiscountVoucherController(
     ISender sender
 ) : ApiController(sender)
 {
-    [HttpGet]
+    [HttpPost("list")]
     public async Task<IActionResult> GetDiscountVouchers(
-        [FromQuery] GetDiscountVoucherListQuery query,
+        [FromBody] GetDiscountVoucherListQuery query,
         CancellationToken cancellationToken = default
     )
     {
-        var result = await Sender.Send(query, cancellationToken);
+        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!);
+        var newQuery = query with { UserId = userId };
+        var result = await Sender.Send(newQuery, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }

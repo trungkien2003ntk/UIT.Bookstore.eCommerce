@@ -3,7 +3,7 @@ using KKBookstore.Models;
 
 namespace KKBookstore.Products;
 
-public class RatingLike : BaseAuditedEntity
+public class RatingLike : BaseFullAuditedEntity
 {
     public RatingLike(
         int ratingId,

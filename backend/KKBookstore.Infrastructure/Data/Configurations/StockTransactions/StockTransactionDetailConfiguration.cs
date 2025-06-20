@@ -21,6 +21,7 @@ public class StockTransactionDetailConfiguration : IEntityTypeConfiguration<Stoc
 
         builder.HasOne(d => d.Variant)
             .WithMany()
-            .HasForeignKey(d => d.VariantId);
+            .HasForeignKey(d => d.VariantId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

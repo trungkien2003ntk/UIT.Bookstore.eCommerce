@@ -16,6 +16,6 @@ internal class ProductTypeAttributeValueConfiguration : IEntityTypeConfiguration
 
         builder.HasIndex(x => new { x.ProductTypeAttributeId, x.Value }).IsUnique();
 
-        builder.HasOne(x => x.ProductTypeAttribute).WithMany(y => y.Values).HasForeignKey(x => x.ProductTypeAttributeId);
+        builder.HasOne(x => x.ProductTypeAttribute).WithMany(y => y.Values).HasForeignKey(x => x.ProductTypeAttributeId).OnDelete(DeleteBehavior.Cascade);
     }
 }

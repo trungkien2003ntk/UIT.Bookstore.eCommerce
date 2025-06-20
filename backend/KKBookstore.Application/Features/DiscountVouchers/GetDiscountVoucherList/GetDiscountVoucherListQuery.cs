@@ -4,6 +4,7 @@ using KKBookstore.Extensions;
 using KKBookstore.Features.DiscountVouchers.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
+using KKBookstore.ShoppingCarts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,9 @@ public record GetDiscountVoucherListQuery()
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
     public string SortBy { get; init; } = "CreationTime";
-    public string SortDirection { get; init; } = "desc";    // Filters
+    public string SortDirection { get; init; } = "desc";
+
+    // Filters
     public string? SearchQuery { get; init; }
     public DiscountStatus? Status { get; init; }
     public DiscountVoucherType? VoucherType { get; init; }
@@ -25,6 +28,10 @@ public record GetDiscountVoucherListQuery()
     public DateTimeOffset? EndDate { get; init; }
     public decimal? MinValue { get; init; }
     public decimal? MaxValue { get; init; }
+
+    // Cart integration - optional parameters for voucher applicability check
+    public int? UserId { get; init; }
+    public List<int> SelectedCartItemIds { get; init; } = [];
 }
 
 public class GetDiscountVoucherListQueryHandler(
@@ -83,9 +90,26 @@ public class GetDiscountVoucherListQueryHandler(
             ));
         }
 
-        var result = MapToDiscountVoucherDtoResult(paginatedVouchers!);
+        // Calculate cart total if cart integration parameters are provided
+        decimal? cartTotal = null;
+        if (request.UserId.HasValue && request.SelectedCartItemIds.Any())
+        {
+            cartTotal = await CalculateSelectedCartItemsTotal(request.UserId.Value, request.SelectedCartItemIds, cancellationToken);
+        }
+
+        var distinctProductTypeIds = request.SelectedCartItemIds.Any()
+            ? await dbContext.ShoppingCartItems
+                .Where(sci => sci.CustomerId == request.UserId && request.SelectedCartItemIds.Contains(sci.Id))
+                .Select(sci => sci.ProductVariant.Product.ProductTypeId)
+                .Distinct()
+                .ToListAsync(cancellationToken)
+            : [];
+
+        var result = MapToDiscountVoucherDtoResult(paginatedVouchers!, request.UserId, cartTotal, distinctProductTypeIds);
         return Result.Success(result);
-    }    private static IQueryable<DiscountVoucher> ApplyFilters(IQueryable<DiscountVoucher> query, GetDiscountVoucherListQuery request)
+    }
+
+    private static IQueryable<DiscountVoucher> ApplyFilters(IQueryable<DiscountVoucher> query, GetDiscountVoucherListQuery request)
     {
         query = query
             .WhereIf(request.Status.HasValue, dv => dv.Status == request.Status!.Value)
@@ -98,8 +122,8 @@ public class GetDiscountVoucherListQueryHandler(
         // Apply duration overlap filter: voucher overlaps with the specified date range
         if (request.StartDate.HasValue && request.EndDate.HasValue)
         {
-            query = query.Where(dv => 
-                dv.StartTime <= request.EndDate!.Value && 
+            query = query.Where(dv =>
+                dv.StartTime <= request.EndDate!.Value &&
                 dv.EndTime >= request.StartDate!.Value);
         }
         else if (request.StartDate.HasValue)
@@ -114,44 +138,81 @@ public class GetDiscountVoucherListQueryHandler(
         return query;
     }
 
-    private static PagedResult<DiscountVoucherDto> MapToDiscountVoucherDtoResult(PagedResult<DiscountVoucher> paginatedVouchers)
+    private async Task<decimal> CalculateSelectedCartItemsTotal(int userId, List<int> selectedItemIds, CancellationToken cancellationToken)
     {
-        var items = paginatedVouchers.Items.Select(dv => new DiscountVoucherDto
+        var selectedCartItems = await dbContext.ShoppingCartItems
+            .Where(sci => sci.CustomerId == userId && selectedItemIds.Contains(sci.Id))
+            .Include(sci => sci.ProductVariant)
+                .ThenInclude(pv => pv.Inventories)
+            .ToListAsync(cancellationToken);
+
+        var createShoppingCartResult = ShoppingCart.Create(userId, selectedCartItems);
+        if (createShoppingCartResult.IsFailure)
         {
-            Id = dv.Id,
-            Name = dv.Name,
-            Code = dv.Code,
-            Description = dv.Description,
-            ValueType = dv.ValueType,
-            VoucherType = dv.VoucherType,
-            Status = dv.Status,
-            Value = dv.Value,
-            MaximumDiscountValue = dv.MaximumDiscountValue,
-            MinimumSpend = dv.MinimumSpend,
-            UsageLimitPerUser = dv.UsageLimitPerUser,
-            UsageLimitOverall = dv.UsageLimitOverall,
-            StartTime = dv.StartTime,
-            EndTime = dv.EndTime,
-            ApplyToProductTypeId = dv.ApplyToProductTypeId,
-            ApplyToProductTypeName = dv.ApplyToProductType?.DisplayName,
-            CustomerTypeIds = dv.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
-            CustomerTypeNames = dv.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
-            UsageCount = dv.VoucherUsages.Count,
-            UsedPercentage = dv.UsageLimitOverall == 0 ? 0 : (decimal)dv.VoucherUsages.Count / dv.UsageLimitOverall,
-            CustomerTypes = dv.CustomerTypes.Select(vct => new CustomerTypeDto
+            return 0m;
+        }
+
+        var shoppingCart = createShoppingCartResult.Value;
+        shoppingCart.SelectItems(selectedItemIds);
+        return shoppingCart.TotalUnitPrice;
+    }
+
+    private static PagedResult<DiscountVoucherDto> MapToDiscountVoucherDtoResult(
+        PagedResult<DiscountVoucher> paginatedVouchers,
+        int? userId = null,
+        decimal? cartTotal = null,
+        List<int>? distinctProductTypeIds = null)
+    {
+        var items = paginatedVouchers.Items.Select(dv =>
+        {
+            // Determine if voucher can be applied to cart (if cart integration params provided)
+            bool canApply = false;
+            if (userId.HasValue && cartTotal.HasValue)
             {
-                Id = vct.CustomerType.Id,
-                Name = vct.CustomerType.Name
-            }).ToList(),
-            ApplyToProductType = dv.ApplyToProductType != null ? new ApplyToProductTypeDto
+                canApply = dv.Status == DiscountStatus.Active &&
+                          dv.StartTime <= DateTimeOffset.Now &&
+                          dv.EndTime >= DateTimeOffset.Now &&
+                          dv.IsApplicable(cartTotal.Value, userId.Value, distinctProductTypeIds!);
+            }
+
+            return new DiscountVoucherDto
             {
-                Id = dv.ApplyToProductType.Id,
-                DisplayName = dv.ApplyToProductType.DisplayName
-            } : null,
-            CreationTime = dv.CreationTime,
-            CreatorId = dv.CreatorId,
-            LastModificationTime = dv.LastModificationTime,
-            LastModifierId = dv.LastModifierId
+                Id = dv.Id,
+                Name = dv.Name,
+                Code = dv.Code,
+                Description = dv.Description,
+                ValueType = dv.ValueType,
+                VoucherType = dv.VoucherType,
+                Status = dv.Status,
+                Value = dv.Value,
+                MaximumDiscountValue = dv.MaximumDiscountValue,
+                MinimumSpend = dv.MinimumSpend,
+                UsageLimitPerUser = dv.UsageLimitPerUser,
+                UsageLimitOverall = dv.UsageLimitOverall,
+                StartTime = dv.StartTime,
+                EndTime = dv.EndTime,
+                ApplyToProductTypeId = dv.ApplyToProductTypeId,
+                ApplyToProductTypeName = dv.ApplyToProductType?.DisplayName,
+                CustomerTypeIds = dv.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
+                CustomerTypeNames = dv.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
+                UsageCount = dv.VoucherUsages.Count,
+                UsedPercentage = dv.UsageLimitOverall == 0 ? 0 : (decimal)dv.VoucherUsages.Count / dv.UsageLimitOverall,
+                CustomerTypes = dv.CustomerTypes.Select(vct => new CustomerTypeDto
+                {
+                    Id = vct.CustomerType.Id,
+                    Name = vct.CustomerType.Name
+                }).ToList(),
+                ApplyToProductType = dv.ApplyToProductType != null ? new ApplyToProductTypeDto
+                {
+                    Id = dv.ApplyToProductType.Id,
+                    DisplayName = dv.ApplyToProductType.DisplayName
+                } : null,
+                CreationTime = dv.CreationTime,
+                CreatorId = dv.CreatorId,
+                LastModificationTime = dv.LastModificationTime,
+                LastModifierId = dv.LastModifierId,
+                CanApply = canApply
+            };
         }).ToList();
 
         return new PagedResult<DiscountVoucherDto>(

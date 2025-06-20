@@ -13,6 +13,6 @@ public class RatingImageConfiguration : IEntityTypeConfiguration<RatingImage>
         builder.Property(t => t.ImageUrl).HasColumnName(nameof(RatingImage.ImageUrl)).HasMaxLength(RatingImageConsts.ImageUrlMaxLength).IsRequired();
         builder.Property(t => t.RatingId).HasColumnName(nameof(RatingImage.RatingId)).IsRequired();
 
-        builder.HasOne(t => t.Rating).WithMany(t => t.Images).HasForeignKey(t => t.RatingId);
+        builder.HasOne(t => t.Rating).WithMany(t => t.Images).HasForeignKey(t => t.RatingId).OnDelete(DeleteBehavior.Cascade);
     }
 }

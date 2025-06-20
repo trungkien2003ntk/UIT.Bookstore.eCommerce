@@ -4,6 +4,7 @@ using KKBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250620143421_Updated_Ratings_20250620_213300")]
+    partial class Updated_Ratings_20250620_213300
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -651,7 +654,7 @@ namespace KKBookstore.Data.Migrations
                     b.Property<DateTimeOffset?>("PickingCompletionTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("ProductVariantId")
+                    b.Property<int>("ProductVariantId")
                         .HasColumnType("int")
                         .HasColumnName("ProductVariantId");
 
@@ -815,8 +818,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("varchar(25)")
                         .HasColumnName("CardType");
 
-                    b.Property<int?>("OrderId")
-                        .IsRequired()
+                    b.Property<int>("OrderId")
                         .HasColumnType("int")
                         .HasColumnName("OrderId");
 
@@ -908,8 +910,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CreatorId");
 
-                    b.Property<int?>("CustomerId")
-                        .IsRequired()
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int")
                         .HasColumnName("CustomerId");
 
@@ -1349,7 +1350,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CreatorId");
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int")
                         .HasColumnName("CustomerId");
 
@@ -1498,8 +1499,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ProductTypeId");
 
-                    b.Property<int?>("UnitMeasureId")
-                        .IsRequired()
+                    b.Property<int>("UnitMeasureId")
                         .HasColumnType("int")
                         .HasColumnName("UnitMeasureId");
 
@@ -1540,6 +1540,18 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CreatorId");
 
+                    b.Property<int?>("DeleterId")
+                        .HasColumnType("int")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTimeOffset?>("DeletionTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
+
                     b.Property<string>("LargeImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1565,6 +1577,11 @@ namespace KKBookstore.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("DeleterId");
+
+                    b.HasIndex("IsDeleted")
+                        .HasDatabaseName("IX_IsDeleted");
 
                     b.HasIndex("LastModifierId");
 
@@ -1963,7 +1980,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CreatorId");
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<int?>("DeleterId")
@@ -2247,8 +2264,7 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<int?>("ProductVariantId")
-                        .IsRequired()
+                    b.Property<int>("ProductVariantId")
                         .HasColumnType("int")
                         .HasColumnName("ProductVariantId");
 
@@ -3018,12 +3034,12 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.ProductTypes.ProductType", "ProductType")
                         .WithMany()
@@ -3042,23 +3058,23 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Branches.BranchAddress", "Address")
                         .WithOne()
                         .HasForeignKey("KKBookstore.Branches.Branch", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Address");
 
@@ -3074,17 +3090,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3098,7 +3114,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -3109,17 +3125,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3133,22 +3149,22 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.ProductTypes.ProductType", "ApplyToProductType")
                         .WithMany()
                         .HasForeignKey("ApplyToProductTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ApplyToProductType");
 
@@ -3164,7 +3180,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany()
@@ -3175,32 +3191,32 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Orders.DeliveryMethod", "DeliveryMethod")
                         .WithMany()
                         .HasForeignKey("DeliveryMethodId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.DiscountVoucher", "PriceDiscountVoucher")
                         .WithMany()
                         .HasForeignKey("PriceDiscountVoucherId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.ShippingAddress", "ShippingAddress")
                         .WithMany()
                         .HasForeignKey("ShippingAddressId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.DiscountVoucher", "ShippingDiscountVoucher")
                         .WithMany()
                         .HasForeignKey("ShippingDiscountVoucherId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3230,17 +3246,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Branch");
@@ -3257,16 +3273,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.DiscountVoucher", "DiscountVoucher")
                         .WithMany()
-                        .HasForeignKey("DiscountVoucherId");
+                        .HasForeignKey("DiscountVoucherId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.Order", "Order")
                         .WithMany("OrderLines")
@@ -3277,7 +3294,8 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Products.ProductVariant", "ProductVariant")
                         .WithMany()
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Creator");
 
@@ -3301,13 +3319,13 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Orders.OrderFulfillment", "OrderFulfillment")
                         .WithMany("OrderLineAllocations")
                         .HasForeignKey("OrderFulfillmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Orders.OrderLine", "OrderLine")
                         .WithMany()
                         .HasForeignKey("OrderLineId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Products.ProductVariant", "ProductVariant")
@@ -3330,17 +3348,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3365,7 +3383,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.CustomerType", "CustomerType")
                         .WithMany()
@@ -3376,12 +3394,12 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.DiscountVoucher", "Voucher")
                         .WithMany("CustomerTypes")
                         .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3398,7 +3416,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany()
@@ -3409,7 +3427,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Orders.Order", "Order")
                         .WithMany()
@@ -3420,7 +3438,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Orders.DiscountVoucher", "Voucher")
                         .WithMany("VoucherUsages")
                         .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3439,17 +3457,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.ProductTypes.ProductType", "ParentProductType")
                         .WithMany()
@@ -3470,12 +3488,12 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3487,12 +3505,12 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.ProductTypes.ProductTypeAttribute", "ProductTypeAttribute")
                         .WithMany("ProductTypes")
@@ -3526,17 +3544,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Product", "Product")
                         .WithMany("AttributeProductValues")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AttributeValue");
@@ -3553,17 +3571,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.ProductTypes.ProductTypeAttribute", "ProductTypeAttribute")
                         .WithMany("Values")
                         .HasForeignKey("ProductTypeAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3578,17 +3596,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3614,17 +3632,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Author");
 
@@ -3642,22 +3660,23 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Rating", "Rating")
                         .WithMany("Reports")
                         .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3673,16 +3692,18 @@ namespace KKBookstore.Data.Migrations
                 {
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastModifierId");
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Rating", "Rating")
                         .WithMany()
                         .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3697,17 +3718,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.ProductTypes.ProductType", "ProductType")
                         .WithMany()
@@ -3757,20 +3778,27 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KKBookstore.Users.User", "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
+
+                    b.Navigation("Deleter");
 
                     b.Navigation("LastModifier");
 
@@ -3782,22 +3810,22 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Product", "Product")
                         .WithMany("Options")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3814,22 +3842,22 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.ProductOption", "Option")
                         .WithMany("OptionValues")
                         .HasForeignKey("OptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3846,12 +3874,12 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -3863,22 +3891,22 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Product", "Product")
                         .WithMany("ProductVariants")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.OwnsOne("KKBookstore.Products.Dimension", "Dimension", b1 =>
@@ -3944,17 +3972,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.ProductOption", "Option")
                         .WithMany()
@@ -3971,7 +3999,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Products.ProductVariant", "ProductVariant")
                         .WithMany("ProductVariantOptionValues")
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -3992,33 +4020,34 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Product", null)
                         .WithMany("Ratings")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Products.ProductVariant", "ProductVariant")
                         .WithMany("Ratings")
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -4036,20 +4065,23 @@ namespace KKBookstore.Data.Migrations
                 {
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("DeleterId");
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastModifierId");
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Rating", "Rating")
                         .WithMany("Images")
                         .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -4066,28 +4098,28 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.Rating", "Rating")
                         .WithMany("Likes")
                         .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -4106,17 +4138,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -4130,18 +4162,18 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.ProductVariant", "ProductVariant")
                         .WithMany()
@@ -4162,26 +4194,29 @@ namespace KKBookstore.Data.Migrations
                 {
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
-                        .HasForeignKey("DeleterId");
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastModifierId");
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Products.ProductVariant", "ProductVariant")
                         .WithMany("Inventories")
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Branches.Branch", "Warehouse")
                         .WithMany()
                         .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -4199,17 +4234,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -4223,28 +4258,28 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.StockTransactions.StockTransaction", null)
                         .WithMany("Items")
                         .HasForeignKey("StockTransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Products.ProductVariant", "Variant")
                         .WithMany()
                         .HasForeignKey("VariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -4261,17 +4296,17 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "Deleter")
                         .WithMany()
                         .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Creator");
 
@@ -4285,7 +4320,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -4294,7 +4329,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -4303,7 +4338,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -4312,13 +4347,13 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("KKBookstore.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -4327,7 +4362,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -4366,7 +4401,7 @@ namespace KKBookstore.Data.Migrations
                     b.HasOne("KKBookstore.Customers.Customer", "Customer")
                         .WithMany("ShippingAddresses")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");

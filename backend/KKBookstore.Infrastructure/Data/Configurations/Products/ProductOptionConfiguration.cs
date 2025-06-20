@@ -18,6 +18,7 @@ public class ProductOptionConfiguration : IEntityTypeConfiguration<ProductOption
 
         builder.HasOne(t => t.Product)
             .WithMany(t => t.Options)
-            .HasForeignKey(t => t.ProductId);
+            .HasForeignKey(t => t.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

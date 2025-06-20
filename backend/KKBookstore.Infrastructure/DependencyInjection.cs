@@ -27,6 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using KKBookstore.Services;
 
 namespace KKBookstore;
 
@@ -167,7 +168,7 @@ public static class DependencyInjection
             ));
 
         /// Config Branch Selection Service
-        services.AddScoped<IBranchSelectionService, Infrastructure.Services.BranchSelectionService>();
+        services.AddScoped<IBranchSelectionService, BranchSelectionService>();
 
         var storageConnectionString = configuration.GetConnectionString("AzureStorage");
         services.AddAzureClients(builder =>

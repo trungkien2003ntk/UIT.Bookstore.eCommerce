@@ -11,15 +11,15 @@ public record UpdateShoppingCartResponse
 
     public sealed record ShoppingCartItemDto : BaseFullAuditedDto
     {
-        public int ProductId { get; init; }
-        public int ProductVariantId { get; init; }
+        public int? ProductId { get; init; }
+        public int? ProductVariantId { get; init; }
         public bool IsSelected { get; init; }
-        public string ProductVariantName { get; init; } = null!;
-        public string ProductName { get; init; } = null!;
+        public string? ProductVariantName { get; init; }
+        public string? ProductName { get; init; }
         public int ProductTypeId { get; init; }
-        public decimal UnitPrice { get; init; }
-        public decimal RecommendedRetailPrice { get; init; }
-        public decimal TotalPrice => UnitPrice * Quantity;
+        public decimal? UnitPrice { get; init; }
+        public decimal? RecommendedRetailPrice { get; init; }
+        public decimal TotalPrice => (UnitPrice ?? 0) * Quantity;
         public decimal BasicDiscountRate { get; init; }
         public int Quantity { get; init; }
         // todo: Currently, the available quantity is the same as total quantity
@@ -30,7 +30,7 @@ public record UpdateShoppingCartResponse
         public string Description { get; init; } = null!;
         public List<ProductVariantForCartDto> ProductVariantVariations { get; init; } = [];
         public List<ProductOptionAttributeDto> ProductOptions { get; init; } = [];
-
+        public bool IsRemoved { get; init; }
         public sealed record ProductVariantForCartDto : BaseDto
         {
             public int ProductId { get; init; }

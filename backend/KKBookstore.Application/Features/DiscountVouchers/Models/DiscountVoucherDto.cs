@@ -27,6 +27,9 @@ public record DiscountVoucherDto : BaseFullAuditedDto
 
     public List<CustomerTypeDto> CustomerTypes { get; init; } = [];
     public ApplyToProductTypeDto? ApplyToProductType { get; init; }
+    
+    // Cart integration - indicates if voucher can be applied to selected cart items
+    public bool? CanApply { get; init; }
 }
 
 public class CustomerTypeDto

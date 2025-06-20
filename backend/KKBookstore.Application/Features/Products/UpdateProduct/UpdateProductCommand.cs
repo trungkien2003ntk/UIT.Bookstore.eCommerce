@@ -36,6 +36,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             .Include(x => x.ProductVariants)
                 .ThenInclude(x => x.ProductVariantOptionValues)
                     .ThenInclude(x => x.OptionValue)
+            .Include(x => x.ProductVariants)
+                .ThenInclude(x => x.Inventories)
             .Include(x => x.ProductImages)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -255,8 +257,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             if (!incomingIds.Contains(existingProductVariant.Id))
             {
-                // Detach first to avoid owned entity issue
-
+                _dbContext.ProductVariantOptionValues.RemoveRange(existingProductVariant.ProductVariantOptionValues);
                 _dbContext.ProductVariants.Remove(existingProductVariant);
             }
         }

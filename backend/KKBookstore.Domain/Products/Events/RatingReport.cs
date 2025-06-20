@@ -22,7 +22,7 @@ public class RatingReport : BaseAuditedEntity
     }
 
     public int RatingId { get; set; }
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public string Reason { get; set; } = null!;
     public string? DetailedReason { get; set; }
 

@@ -18,7 +18,7 @@ internal class BookAuthorConfiguration : IEntityTypeConfiguration<BookAuthor>
 
         builder.HasIndex(wb => new { wb.BookId, wb.AuthorId }).IsUnique();
 
-        builder.HasOne(wb => wb.Book).WithMany(p => p.BookAuthors).HasForeignKey(wb => wb.BookId);
-        builder.HasOne(wb => wb.Author).WithMany(a => a.AuthorBooks).HasForeignKey(wb => wb.AuthorId);
+        builder.HasOne(wb => wb.Book).WithMany(p => p.BookAuthors).HasForeignKey(wb => wb.BookId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(wb => wb.Author).WithMany(a => a.AuthorBooks).HasForeignKey(wb => wb.AuthorId).OnDelete(DeleteBehavior.Restrict);
     }
 }

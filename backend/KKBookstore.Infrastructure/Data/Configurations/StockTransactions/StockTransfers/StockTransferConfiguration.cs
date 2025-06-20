@@ -17,10 +17,10 @@ public class StockTransferConfiguration : IEntityTypeConfiguration<StockTransfer
 
         builder.HasOne(x => x.SourceWarehouse)
             .WithMany()
-            .HasForeignKey(x => x.SourceWarehouseId);
+            .HasForeignKey(x => x.SourceWarehouseId).OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.DestinationWarehouse)
             .WithMany()
-            .HasForeignKey(x => x.DestinationWarehouseId);
+            .HasForeignKey(x => x.DestinationWarehouseId).OnDelete(DeleteBehavior.Restrict);
     }
 }

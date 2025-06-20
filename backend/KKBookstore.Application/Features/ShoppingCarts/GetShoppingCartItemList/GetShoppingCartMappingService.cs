@@ -21,7 +21,25 @@ public class GetShoppingCartMappingService(
         {
             Items = shoppingCart.Items.Select(ci =>
             {
-                var product = neededProducts.First(p => p.Id == ci.ProductVariant.ProductId);
+                var product = neededProducts.FirstOrDefault(p => p.Id == ci.ProductVariant.ProductId);
+                if (product == null)
+                {
+                    // If product is not found, we can return a default ShoppingCartItemDto or handle it as needed
+                    return new ShoppingCartItemDto()
+                    {
+                        Id = ci.Id,
+                        ProductId = ci.ProductVariant?.ProductId,
+                        ProductVariantId = ci.ProductVariantId,
+                        ProductVariantName = ci.ProductVariant?.VariantName,
+                        ProductName = "Unknown Product",
+                        UnitPrice = ci.ProductVariant?.UnitPrice,
+                        Quantity = ci.Quantity,
+                        AvailableQuantity = 0,
+                        ImageUrl = string.Empty,
+                        Description = "Product not found",
+                        CreationTime = ci.CreationTime
+                    };
+                }
                 return MapToShoppingCartItemDto(ci, product);
             }).ToList()
         };
@@ -34,14 +52,17 @@ public class GetShoppingCartMappingService(
         // todo: use projection to reduce the amount of data fetched, increase performance
         var productIds = shoppingCart.Items.Select(ci => ci.ProductVariant.ProductId).Distinct().ToList();
         var neededProducts = await _dbContext.Products
+            .IgnoreQueryFilters()
             .Where(p => productIds.Contains(p.Id))
             .Include(p => p.Options)                        // these are for 
-                .ThenInclude(o => o.OptionValues)           // sku variations
+                .ThenInclude(o => o.OptionValues)        // sku variations
             .Include(p => p.ProductVariants)
-                .ThenInclude(s => s.ProductVariantOptionValues)        // these are for
+                .ThenInclude(s => s.ProductVariantOptionValues)!        // these are for
                     .ThenInclude(sov => sov.OptionValue)    // sku thumbnail image
                         .ThenInclude(ov => ov.Option)       // this is for SkuInCart option names
             .Include(p => p.ProductImages)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Inventories)
             .ToListAsync();
         return neededProducts;
     }
@@ -56,25 +77,27 @@ public class GetShoppingCartMappingService(
         return new ShoppingCartItemDto()
         {
             Id = ci.Id,
-            ProductId = ci.ProductVariant.ProductId,
+            ProductId = ci.ProductVariant?.ProductId,
             ProductVariantId = ci.ProductVariantId,
-            ProductVariantName = ci.ProductVariant.VariantName,
+            ProductVariantName = ci.ProductVariant?.VariantName,
             ProductName = product.Name,
             ProductTypeId = product.ProductTypeId,
-            UnitPrice = ci.ProductVariant.UnitPrice,
-            RecommendedRetailPrice = ci.ProductVariant.RecommendedRetailPrice,
-            BasicDiscountRate = ci.ProductVariant.BasicDiscountRate,
+            UnitPrice = ci.ProductVariant?.UnitPrice ?? 0,
+            RecommendedRetailPrice = ci.ProductVariant?.RecommendedRetailPrice ?? 0,
+            BasicDiscountRate = ci.ProductVariant?.BasicDiscountRate ?? 0,
             Quantity = ci.Quantity,
-            AvailableQuantity = ci.ProductVariant.StockQuantity,
-            TotalQuantity = ci.ProductVariant.StockQuantity,
-            ImageUrl = ci.ProductVariant.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
+            AvailableQuantity = ci.ProductVariant?.StockQuantity ?? 0,
+            TotalQuantity = ci.ProductVariant?.StockQuantity ?? 0,
+            ImageUrl = ci.ProductVariant?.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
             Description = product.Description,
             CreationTime = ci.CreationTime,
             ProductVariantVariations = product.ProductVariants
+                .Where(pv => !pv.IsDeleted && pv.IsActive)
                 .Select(MapToProductVariantForCartDto)
                 .Select(sv => sv.PopulateIndex(productOptionAttributeDtos))
                 .ToList(),
-            ProductOptions = productOptionAttributeDtos
+            ProductOptions = productOptionAttributeDtos,
+            IsRemoved = ci.ProductVariant?.IsDeleted ?? true
         };
     }
 

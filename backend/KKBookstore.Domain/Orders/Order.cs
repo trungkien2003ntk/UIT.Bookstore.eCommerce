@@ -65,7 +65,12 @@ public class Order : BaseAuditedEntity
 
     public Result ApplyVoucher(DiscountVoucher voucher)
     {
-        if (!voucher.IsApplicable(Subtotal, CustomerId))
+        var distinctProductTypeIds = OrderLines
+            .Select(ol => ol.ProductVariant?.Product?.ProductTypeId ?? 0)
+            .Distinct()
+            .ToList();
+
+        if (!voucher.IsApplicable(Subtotal, CustomerId, distinctProductTypeIds))
         {
             return Result.Failure(OrderErrors.DiscountVoucherNotAvailable);
         }

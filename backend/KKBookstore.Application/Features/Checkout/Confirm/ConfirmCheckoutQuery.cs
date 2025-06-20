@@ -27,211 +27,221 @@ public class ConfirmCheckoutHandler(
 
     public async Task<Result<ConfirmCheckoutResponse>> Handle(ConfirmCheckoutQuery request, CancellationToken cancellationToken)
     {
-        var userId = request.UserId;
-        var checkoutItems = await GetCartItems(userId, request.ItemIds, cancellationToken);
-
-        if (checkoutItems.Count == 0)
+        try
         {
-            return Result.Failure<ConfirmCheckoutResponse>(ShoppingCartError.ItemNotFound);
-        }
+            var userId = request.UserId;
+            var checkoutItems = await GetCartItems(userId, request.ItemIds, cancellationToken);
 
-        var productsInCart = await ExtractDistinctProductInCart(checkoutItems);
-
-        var shippingAddresses = await _dbContext.ShippingAddresses
-            .Where(ca => ca.CustomerId == userId)
-            .ToListAsync(cancellationToken);
-
-        var defaultAddress = shippingAddresses.Find(ca => ca.CustomerId == userId && ca.IsDefault);
-
-        int shippingFee;
-        DateTimeOffset expectedDeliveryTime;
-        if (defaultAddress == null)
-        {
-            shippingFee = 0;
-            expectedDeliveryTime = DateTimeOffset.Now.AddDays(7);
-        }
-        else
-        {
-            var getCustomerProvinceIdResult = await _shippingService.FindProvinceAsync(defaultAddress.ProvinceName, cancellationToken);
-            if (getCustomerProvinceIdResult.IsFailure)
+            if (checkoutItems.Count == 0)
             {
-                return Result.Failure<ConfirmCheckoutResponse>(getCustomerProvinceIdResult.Error);
+                return Result.Failure<ConfirmCheckoutResponse>(ShoppingCartError.ItemNotFound);
             }
 
-            var getCustomerDistrictIdResult = await _shippingService.FindDistrictIdAsync(getCustomerProvinceIdResult.Value, defaultAddress.DistrictName, cancellationToken);
-            if (getCustomerDistrictIdResult.IsFailure)
+            var productsInCart = await ExtractDistinctProductInCart(checkoutItems);
+
+            var shippingAddresses = await _dbContext.ShippingAddresses
+                .Where(ca => ca.CustomerId == userId)
+                .ToListAsync(cancellationToken);
+
+            var defaultAddress = shippingAddresses.Find(ca => ca.CustomerId == userId && ca.IsDefault);
+
+            int shippingFee;
+            DateTimeOffset expectedDeliveryTime;
+            if (defaultAddress == null)
             {
-                return Result.Failure<ConfirmCheckoutResponse>(getCustomerDistrictIdResult.Error);
+                shippingFee = 0;
+                expectedDeliveryTime = DateTimeOffset.Now.AddDays(7);
             }
-
-            var getCustomerCommuneCodeResult = await _shippingService.FindCommuneCodeAsync(getCustomerDistrictIdResult.Value, defaultAddress.CommuneName, cancellationToken);
-            if (getCustomerCommuneCodeResult.IsFailure)
+            else
             {
-                return Result.Failure<ConfirmCheckoutResponse>(getCustomerCommuneCodeResult.Error);
-            }
-
-            var customerDistrictId = getCustomerDistrictIdResult.Value;
-            var customerCommuneCode = getCustomerCommuneCodeResult.Value;
-
-            Dimension overallDimension = new()
-            {
-                Height = checkoutItems.Max(ci => ci.ProductVariant.Dimension.Height),
-                Width = checkoutItems.Sum(ci => ci.ProductVariant.Dimension.Width),
-                Length = checkoutItems.Max(ci => ci.ProductVariant.Dimension.Length)
-            };
-
-            var totalWeight = checkoutItems.Sum(ci => ci.ProductVariant.Weight);
-
-            var shippingFeeRequest = new ShippingFeeRequest
-            {
-                ToDistrictId = customerDistrictId,
-                ToWardCode = customerCommuneCode,
-                Height = (int)overallDimension.Height,
-                Length = (int)overallDimension.Length,
-                Width = (int)overallDimension.Width,
-                Weight = totalWeight,
-            };
-
-            var getShippingFeeResult = await _shippingService.GetShippingFeeAsync(shippingFeeRequest, cancellationToken);
-            if (getShippingFeeResult.IsFailure)
-            {
-                return Result.Failure<ConfirmCheckoutResponse>(getShippingFeeResult.Error);
-            }
-            shippingFee = getShippingFeeResult.Value.Data.Total;
-
-            var expectedDeliveryTimeRequest = new ExpectDeliveryTimeRequest
-            {
-                FromDistrictId = _shippingService.ShopDistrictId,
-                ToDistrictId = customerDistrictId,
-                FromWardCode = _shippingService.ShopCommuneCode,
-                ToWardCode = customerCommuneCode
-            };
-            var expectedDeliveryTimeResult = await _shippingService.GetExpectedDeliveryTime(expectedDeliveryTimeRequest, cancellationToken);
-            if (expectedDeliveryTimeResult.IsFailure)
-            {
-                return Result.Failure<ConfirmCheckoutResponse>(expectedDeliveryTimeResult.Error);
-            }
-
-            expectedDeliveryTime = expectedDeliveryTimeResult.Value;
-        }
-
-        var itemSubtotal = checkoutItems.Sum(i => i.TotalUnitPrice);
-        var orderSubtotal = itemSubtotal + shippingFee;
-
-        var shippingVoucher = await _dbContext.DiscountVouchers
-            .Where(dv => dv.Id == request.ShippingDiscountVoucherId)
-            .Include(dv => dv.VoucherUsages)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var orderVoucher = await _dbContext.DiscountVouchers
-            .Where(dv => dv.Id == request.OrderDiscountVoucherId)
-            .Include(dv => dv.VoucherUsages)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var shippingDiscount = 0m;
-        var orderDiscount = 0m;
-        if (shippingVoucher is null)
-        {
-            if (request.ShippingDiscountVoucherId is not null)
-                return Result.Failure<ConfirmCheckoutResponse>(DiscountVoucherErrors.ShippingVoucherNotFound);
-        }
-        else
-        {
-            shippingDiscount = shippingVoucher.GetDiscountValue(shippingFee);
-        }
-
-        if (orderVoucher is null)
-        {
-            if (request.OrderDiscountVoucherId is not null)
-                return Result.Failure<ConfirmCheckoutResponse>(DiscountVoucherErrors.OrderVoucherNotFound);
-        }
-        else
-        {
-            orderDiscount = orderVoucher.GetDiscountValue(itemSubtotal);
-        }
-
-
-
-        var paymentMethods = _dbContext.PaymentMethods.ToList();
-        var deliveryMethods = _dbContext.DeliveryMethods.ToList();
-        var orderTotal = orderSubtotal - orderDiscount - shippingDiscount;
-
-        var response = new ConfirmCheckoutResponse
-        {
-            Items = checkoutItems.Select(i =>
-            {
-                var product = productsInCart.First(p => p.Id == i.ProductVariant.ProductId);
-
-                string thumbnailImageUrl;
-                if (i.ProductVariant.ProductVariantOptionValues.Count == 0)
+                var getCustomerProvinceIdResult = await _shippingService.FindProvinceAsync(defaultAddress.ProvinceName, cancellationToken);
+                if (getCustomerProvinceIdResult.IsFailure)
                 {
-                    // load sku's Product and ProductImages
-                    thumbnailImageUrl = product.GetFirstThumbnailImageUrl();
-                }
-                else
-                {
-                    thumbnailImageUrl = i.ProductVariant.GetThumbnailImageUrl();
+                    return Result.Failure<ConfirmCheckoutResponse>(getCustomerProvinceIdResult.Error);
                 }
 
-                return new CheckoutItemDto()
+                var getCustomerDistrictIdResult = await _shippingService.FindDistrictIdAsync(getCustomerProvinceIdResult.Value, defaultAddress.DistrictName, cancellationToken);
+                if (getCustomerDistrictIdResult.IsFailure)
                 {
-                    Id = i.Id,
-                    ProductId = product.Id,
-                    ProductName = product.Name,
-                    ProductVariantId = i.ProductVariantId,
-                    ProductVariantName = i.ProductVariant.VariantName,
-                    Quantity = i.Quantity,
-                    ImageUrl = thumbnailImageUrl,
-                    UnitPrice = i.ProductVariant.UnitPrice,
-                    TotalPrice = i.TotalUnitPrice,
+                    return Result.Failure<ConfirmCheckoutResponse>(getCustomerDistrictIdResult.Error);
+                }
+
+                var getCustomerCommuneCodeResult = await _shippingService.FindCommuneCodeAsync(getCustomerDistrictIdResult.Value, defaultAddress.CommuneName, cancellationToken);
+                if (getCustomerCommuneCodeResult.IsFailure)
+                {
+                    return Result.Failure<ConfirmCheckoutResponse>(getCustomerCommuneCodeResult.Error);
+                }
+
+                var customerDistrictId = getCustomerDistrictIdResult.Value;
+                var customerCommuneCode = getCustomerCommuneCodeResult.Value;
+
+                Dimension overallDimension = new()
+                {
+                    Height = checkoutItems.Max(ci => ci.ProductVariant.Dimension.Height),
+                    Width = checkoutItems.Sum(ci => ci.ProductVariant.Dimension.Width),
+                    Length = checkoutItems.Max(ci => ci.ProductVariant.Dimension.Length)
                 };
-            }).ToList(),
 
-            PriceSummary = new()
+                var totalWeight = checkoutItems.Sum(ci => ci.ProductVariant.Weight);
+
+                var shippingFeeRequest = new ShippingFeeRequest
+                {
+                    ToDistrictId = customerDistrictId,
+                    ToWardCode = customerCommuneCode,
+                    Height = (int)overallDimension.Height,
+                    Length = (int)overallDimension.Length,
+                    Width = (int)overallDimension.Width,
+                    Weight = totalWeight,
+                };
+
+                var getShippingFeeResult = await _shippingService.GetShippingFeeAsync(shippingFeeRequest, cancellationToken);
+                if (getShippingFeeResult.IsFailure)
+                {
+                    return Result.Failure<ConfirmCheckoutResponse>(getShippingFeeResult.Error);
+                }
+                shippingFee = getShippingFeeResult.Value.Data.Total;
+
+                var expectedDeliveryTimeRequest = new ExpectDeliveryTimeRequest
+                {
+                    FromDistrictId = _shippingService.ShopDistrictId,
+                    ToDistrictId = customerDistrictId,
+                    FromWardCode = _shippingService.ShopCommuneCode,
+                    ToWardCode = customerCommuneCode
+                };
+                var expectedDeliveryTimeResult = await _shippingService.GetExpectedDeliveryTime(expectedDeliveryTimeRequest, cancellationToken);
+                if (expectedDeliveryTimeResult.IsFailure)
+                {
+                    return Result.Failure<ConfirmCheckoutResponse>(expectedDeliveryTimeResult.Error);
+                }
+
+                expectedDeliveryTime = expectedDeliveryTimeResult.Value;
+            }
+
+            var itemSubtotal = checkoutItems.Sum(i => i.TotalUnitPrice);
+            var orderSubtotal = itemSubtotal + shippingFee;
+
+            var shippingVoucher = await _dbContext.DiscountVouchers
+                .Where(dv => dv.Id == request.ShippingDiscountVoucherId)
+                .Include(dv => dv.VoucherUsages)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var orderVoucher = await _dbContext.DiscountVouchers
+                .Where(dv => dv.Id == request.OrderDiscountVoucherId)
+                .Include(dv => dv.VoucherUsages)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var shippingDiscount = 0m;
+            var orderDiscount = 0m;
+            if (shippingVoucher is null)
             {
-                Subtotal = itemSubtotal,
-                ShippingFee = shippingFee,
-                ShippingDiscount = shippingDiscount,
-                OrderVoucherDiscount = orderDiscount,
-                Total = orderTotal
-            },
-
-            PaymentMethods = paymentMethods.Select(pm => new PaymentMethodDto
+                if (request.ShippingDiscountVoucherId is not null)
+                    return Result.Failure<ConfirmCheckoutResponse>(DiscountVoucherErrors.ShippingVoucherNotFound);
+            }
+            else
             {
-                Id = pm.Id,
-                Name = pm.Name,
-                Description = pm.Description
-            }).ToList(),
+                shippingDiscount = shippingVoucher.GetDiscountValue(shippingFee);
+            }
 
-            DeliveryMethods = deliveryMethods.Select(dm => new DeliveryMethodDto
+            if (orderVoucher is null)
             {
-                Id = dm.Id,
-                Name = dm.Name,
-                Description = dm.Description,
-                ExpectedDeliveryWhen = expectedDeliveryTime
-            }).ToList(),
-
-            ShippingAddresses = shippingAddresses.Select(sa => new ShippingAddressDto
+                if (request.OrderDiscountVoucherId is not null)
+                    return Result.Failure<ConfirmCheckoutResponse>(DiscountVoucherErrors.OrderVoucherNotFound);
+            }
+            else
             {
-                Id = sa.Id,
-                UserId = sa.CustomerId,
-                ReceiverName = sa.ReceiverName,
-                PhoneNumber = sa.PhoneNumber,
-                Province = sa.ProvinceName,
-                District = sa.DistrictName,
-                Commune = sa.CommuneName,
-                DetailAddress = sa.DetailAddress,
-                IsDefault = sa.IsDefault,
-                AddressType = sa.Type.ToString()
-            }).ToList()
-        };
+                orderDiscount = orderVoucher.GetDiscountValue(itemSubtotal);
+            }
 
-        return Result.Success(response);
+
+
+            var paymentMethods = _dbContext.PaymentMethods.ToList();
+            var deliveryMethods = _dbContext.DeliveryMethods.ToList();
+            var orderTotal = orderSubtotal - orderDiscount - shippingDiscount;
+
+            var response = new ConfirmCheckoutResponse
+            {
+                Items = checkoutItems.Select(i =>
+                {
+                    var product = productsInCart.First(p => p.Id == i.ProductVariant.ProductId);
+
+                    string thumbnailImageUrl;
+                    if (i.ProductVariant.ProductVariantOptionValues.Count == 0)
+                    {
+                        // load sku's Product and ProductImages
+                        thumbnailImageUrl = product.GetFirstThumbnailImageUrl();
+                    }
+                    else
+                    {
+                        thumbnailImageUrl = i.ProductVariant.GetThumbnailImageUrl();
+                    }
+
+                    return new CheckoutItemDto()
+                    {
+                        Id = i.Id,
+                        ProductId = product.Id,
+                        ProductName = product.Name,
+                        ProductVariantId = i.ProductVariantId,
+                        ProductVariantName = i.ProductVariant?.VariantName,
+                        Quantity = i.Quantity,
+                        ImageUrl = thumbnailImageUrl,
+                        UnitPrice = i.ProductVariant?.UnitPrice,
+                        TotalPrice = i.TotalUnitPrice,
+                    };
+                }).ToList(),
+
+                PriceSummary = new()
+                {
+                    Subtotal = itemSubtotal,
+                    ShippingFee = shippingFee,
+                    ShippingDiscount = shippingDiscount,
+                    OrderVoucherDiscount = orderDiscount,
+                    Total = orderTotal
+                },
+
+                PaymentMethods = paymentMethods.Select(pm => new PaymentMethodDto
+                {
+                    Id = pm.Id,
+                    Name = pm.Name,
+                    Description = pm.Description
+                }).ToList(),
+
+                DeliveryMethods = deliveryMethods.Select(dm => new DeliveryMethodDto
+                {
+                    Id = dm.Id,
+                    Name = dm.Name,
+                    Description = dm.Description,
+                    ExpectedDeliveryWhen = expectedDeliveryTime
+                }).ToList(),
+
+                ShippingAddresses = shippingAddresses.Select(sa => new ShippingAddressDto
+                {
+                    Id = sa.Id,
+                    UserId = sa.CustomerId,
+                    ReceiverName = sa.ReceiverName,
+                    PhoneNumber = sa.PhoneNumber,
+                    Province = sa.ProvinceName,
+                    District = sa.DistrictName,
+                    Commune = sa.CommuneName,
+                    DetailAddress = sa.DetailAddress,
+                    IsDefault = sa.IsDefault,
+                    AddressType = sa.Type.ToString()
+                }).ToList()
+            };
+
+            return Result.Success(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw ex;
+        }
+
     }
 
     private async Task<List<ShoppingCartItem>> GetCartItems(int userId, List<int> itemIds, CancellationToken cancellationToken)
     {
         return await _dbContext.ShoppingCartItems
+            .AsSplitQuery()
             .Where(sci => itemIds.Contains(sci.Id) && sci.CustomerId == userId)
             .Include(sci => sci.ProductVariant)
                 .ThenInclude(pv => pv.ProductVariantOptionValues)
@@ -246,6 +256,7 @@ public class ConfirmCheckoutHandler(
         // todo: use projection to reduce the amount of data fetched, increase performance
         var productIds = items.Select(ci => ci.ProductVariant.ProductId).Distinct().ToList();
         var neededProducts = await _dbContext.Products
+            .AsSplitQuery()
             .Where(p => productIds.Contains(p.Id))
             .Include(p => p.Options)                        // these are for 
                 .ThenInclude(o => o.OptionValues)           // sku variations

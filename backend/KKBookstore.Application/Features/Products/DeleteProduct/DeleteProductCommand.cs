@@ -23,6 +23,14 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
     public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
         var product = await _dbContext.Products
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductVariantOptionValues)!
+                    .ThenInclude(sov => sov.OptionValue)
+                        .ThenInclude(ov => ov.Option)
+            .Include(p => p.Options)
+            .Include(p => p.Ratings)
+            .Include(p => p.ProductImages)
+            .Include(p => p.AttributeProductValues)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (product is null)
@@ -34,6 +42,15 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
 
         // Since AuditingInterceptor handles soft delete, we just need to call Remove
         // which will trigger EntityState.Deleted and the interceptor will handle the soft delete
+        var relatedCartItems = await _dbContext.ShoppingCartItems
+            .Where(sci => sci.ProductVariant != null)
+            .Include(sci => sci.ProductVariant)
+            .Where(sci => sci.ProductVariant.ProductId == request.Id)
+            .ToListAsync(cancellationToken);
+
+        relatedCartItems.ForEach(sci => sci.ProductVariantId = null);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
         _dbContext.Products.Remove(product);
 
         await _dbContext.SaveChangesAsync(cancellationToken);

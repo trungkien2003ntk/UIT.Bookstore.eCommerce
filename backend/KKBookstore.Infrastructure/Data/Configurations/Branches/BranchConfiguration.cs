@@ -19,7 +19,7 @@ internal class BranchConfiguration : IEntityTypeConfiguration<Branch>
 
         builder.HasIndex(t => t.Name)
             .IsUnique();
-        builder.HasOne(x => x.Address).WithOne().HasForeignKey<Branch>(x => x.AddressId);
+        builder.HasOne(x => x.Address).WithOne().HasForeignKey<Branch>(x => x.AddressId).OnDelete(DeleteBehavior.Cascade);
         builder.ConfigureAuditing();
     }
 }

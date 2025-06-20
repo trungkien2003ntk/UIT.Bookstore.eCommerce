@@ -4,7 +4,7 @@ using KKBookstore.Products.Events;
 
 namespace KKBookstore.Products;
 
-public class Rating : BaseAuditedEntity
+public class Rating : BaseFullAuditedEntity
 {
     public Rating()
     {
@@ -29,7 +29,7 @@ public class Rating : BaseAuditedEntity
 
     public string? Comment { get; set; }
     public int RatingValue { get; set; }
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public int ProductVariantId { get; set; }
     public int ProductId { get; set; }
     public string? Response { get; set; }

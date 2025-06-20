@@ -13,6 +13,6 @@ public class StockAdjustmentConfiguration : IEntityTypeConfiguration<StockAdjust
 
         builder.HasOne(x => x.Warehouse)
             .WithMany()
-            .HasForeignKey(x => x.WarehouseId);
+            .HasForeignKey(x => x.WarehouseId).OnDelete(DeleteBehavior.Restrict);
     }
 }

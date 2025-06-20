@@ -92,7 +92,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         return spentAmount > Value ? Value : spentAmount;
     }
 
-    public bool IsApplicable(decimal spentAmount, int userId)
+    public bool IsApplicable(decimal spentAmount, int userId, List<int> distinctProductTypeIds)
     {
         if (MinimumSpend > spentAmount)
         {
@@ -100,6 +100,16 @@ public class DiscountVoucher : BaseFullAuditedEntity
         }
 
         if (!CheckUsage(userId))
+        {
+            return false;
+        }
+
+        if (StartTime > DateTimeOffset.Now || EndTime < DateTimeOffset.Now)
+        {
+            return false;
+        }
+
+        if (ApplyToProductTypeId.HasValue && !distinctProductTypeIds.All(x => x == ApplyToProductTypeId.Value))
         {
             return false;
         }

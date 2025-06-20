@@ -2,7 +2,7 @@
 
 namespace KKBookstore.Products;
 
-public class ProductImage : BaseFullAuditedEntity
+public class ProductImage : BaseAuditedEntity
 {
     public ProductImage()
     {

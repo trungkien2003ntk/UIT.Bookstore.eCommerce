@@ -1,13 +1,12 @@
 using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Common.Interfaces;
-using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using KKBookstore.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Infrastructure.Services;
+namespace KKBookstore.Services;
 
 /// <summary>
 /// Intelligent branch selection service that allocates inventory from nearest branches using FIFO strategy
@@ -29,8 +28,8 @@ public class BranchSelectionService : IBranchSelectionService
     }
 
     public async Task<Result<List<OrderFulfillment>>> AllocateInventoryFromNearestBranchesAsync(
-        Order order, 
-        Address customerAddress, 
+        Order order,
+        Address customerAddress,
         CancellationToken cancellationToken = default)
     {
         try
@@ -41,7 +40,7 @@ public class BranchSelectionService : IBranchSelectionService
             var customerCoords = await _geoCoordService.GetCoordinatesAsync(customerAddress, cancellationToken);
             if (!customerCoords.Success)
             {
-                _logger.LogError("Failed to geocode customer address for order {OrderId}: {Error}", 
+                _logger.LogError("Failed to geocode customer address for order {OrderId}: {Error}",
                     order.Id, customerCoords.ErrorMessage);
                 return Result.Failure<List<OrderFulfillment>>(
                     Error.Failure("BranchSelection.GeocodingFailed", customerCoords.ErrorMessage ?? "Failed to geocode customer address"));
@@ -61,7 +60,7 @@ public class BranchSelectionService : IBranchSelectionService
             // Initialize unallocated items from order lines
             foreach (var orderLine in order.OrderLines)
             {
-                unallocatedItems[orderLine.ProductVariantId] = orderLine.Quantity;
+                unallocatedItems[orderLine.ProductVariantId!.Value] = orderLine.Quantity;
             }
 
             // Try to allocate inventory from each branch, starting with the nearest
@@ -83,15 +82,15 @@ public class BranchSelectionService : IBranchSelectionService
             var remainingItems = unallocatedItems.Where(x => x.Value > 0).ToList();
             if (remainingItems.Any())
             {
-                _logger.LogError("Could not allocate all items for order {OrderId}. Remaining: {RemainingItems}", 
+                _logger.LogError("Could not allocate all items for order {OrderId}. Remaining: {RemainingItems}",
                     order.Id, string.Join(", ", remainingItems.Select(x => $"Variant {x.Key}: {x.Value}")));
-                
+
                 return Result.Failure<List<OrderFulfillment>>(
-                    Error.Failure("BranchSelection.InsufficientInventory", 
+                    Error.Failure("BranchSelection.InsufficientInventory",
                         $"Insufficient inventory for variants: {string.Join(", ", remainingItems.Select(x => x.Key))}"));
             }
 
-            _logger.LogInformation("Successfully allocated inventory for order {OrderId} across {BranchCount} branches", 
+            _logger.LogInformation("Successfully allocated inventory for order {OrderId} across {BranchCount} branches",
                 order.Id, orderFulfillments.Count);
 
             return Result.Success(orderFulfillments);
@@ -110,7 +109,7 @@ public class BranchSelectionService : IBranchSelectionService
     }
 
     public async Task<Result<List<BranchDistanceInfo>>> GetBranchesByDistanceAsync(
-        Address customerAddress, 
+        Address customerAddress,
         CancellationToken cancellationToken = default)
     {
         try
@@ -152,7 +151,7 @@ public class BranchSelectionService : IBranchSelectionService
                 }
                 else
                 {
-                    _logger.LogWarning("Failed to geocode branch {BranchId} address: {Error}", 
+                    _logger.LogWarning("Failed to geocode branch {BranchId} address: {Error}",
                         branch.Id, branchCoords.ErrorMessage);
                 }
             }
@@ -160,9 +159,9 @@ public class BranchSelectionService : IBranchSelectionService
             // Sort by distance (nearest first)
             var sortedBranches = branchDistances.OrderBy(b => b.DistanceKm).ToList();
 
-            _logger.LogInformation("Found {BranchCount} branches within range. Nearest: {NearestBranch} ({Distance:F2}km)", 
-                sortedBranches.Count, 
-                sortedBranches.FirstOrDefault()?.BranchName, 
+            _logger.LogInformation("Found {BranchCount} branches within range. Nearest: {NearestBranch} ({Distance:F2}km)",
+                sortedBranches.Count,
+                sortedBranches.FirstOrDefault()?.BranchName,
                 sortedBranches.FirstOrDefault()?.DistanceKm);
 
             return Result.Success(sortedBranches);
@@ -188,9 +187,9 @@ public class BranchSelectionService : IBranchSelectionService
         {
             // Get available inventory for this variant at this branch (FIFO)
             var availableInventory = await _dbContext.Inventories
-                .Where(i => i.ProductVariantId == productVariantId && 
-                           i.WarehouseId == branchInfo.BranchId && 
-                           i.IsActive && 
+                .Where(i => i.ProductVariantId == productVariantId &&
+                           i.WarehouseId == branchInfo.BranchId &&
+                           i.IsActive &&
                            i.StockQuantity > 0)
                 .OrderBy(i => i.OriginalCreatedDate) // FIFO - oldest first
                 .ToListAsync(cancellationToken);
@@ -234,7 +233,7 @@ public class BranchSelectionService : IBranchSelectionService
         if (allocations.Any())
         {
             var fulfillment = new OrderFulfillment(order.Id, branchInfo.BranchId, (decimal)branchInfo.DistanceKm);
-            
+
             // Set the fulfillment reference for allocations
             foreach (var allocation in allocations)
             {
@@ -242,7 +241,7 @@ public class BranchSelectionService : IBranchSelectionService
                 fulfillment.OrderLineAllocations.Add(allocation);
             }
 
-            _logger.LogInformation("Allocated {ItemCount} items from branch {BranchName} (Distance: {Distance:F2}km) for order {OrderId}", 
+            _logger.LogInformation("Allocated {ItemCount} items from branch {BranchName} (Distance: {Distance:F2}km) for order {OrderId}",
                 allocations.Sum(a => a.Quantity), branchInfo.BranchName, branchInfo.DistanceKm, order.Id);
 
             return fulfillment;

@@ -10,7 +10,7 @@ public record AdminProductDto : BaseDto
     public string? Description { get; set; }
     public bool IsBook { get; set; }
     public bool IsActive { get; set; }
-    public int UnitMeasureId { get; set; } = 1;
+    public int? UnitMeasureId { get; set; }
     public decimal? AverageRating { get; set; }
     public int RatingsCount { get; set; }
 

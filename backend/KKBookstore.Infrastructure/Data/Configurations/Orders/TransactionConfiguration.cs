@@ -21,7 +21,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(t => t.ResponseCode).HasColumnName(nameof(Transaction.ResponseCode)).IsRequired();
         builder.Property(t => t.TransactionStatus).HasColumnName(nameof(Transaction.TransactionStatus)).IsRequired();
         builder.Property(t => t.OrderId).HasColumnName(nameof(Transaction.OrderId)).IsRequired();
-        builder.HasOne(t => t.Order).WithMany(o => o.Transactions).HasForeignKey(t => t.OrderId);
+        builder.HasOne(t => t.Order).WithMany(o => o.Transactions).HasForeignKey(t => t.OrderId).OnDelete(DeleteBehavior.Restrict);
     }
 }
 

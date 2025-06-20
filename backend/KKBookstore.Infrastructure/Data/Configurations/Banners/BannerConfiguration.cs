@@ -35,7 +35,7 @@ internal class BannerConfiguration : IEntityTypeConfiguration<Banner>
         builder.HasOne(b => b.ProductType)
             .WithMany()
             .HasForeignKey(b => b.ProductTypeId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Add indexes for performance
         builder.HasIndex(b => b.IsActive);

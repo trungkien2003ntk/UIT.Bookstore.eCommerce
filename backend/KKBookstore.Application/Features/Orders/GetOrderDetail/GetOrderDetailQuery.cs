@@ -83,11 +83,11 @@ public class GetOrderDetailHandler(
             OrderLines = order.OrderLines.Select(ol => new OrderLineDto
             {
                 Id = ol.Id,
-                ProductName = ol.ProductVariant.Product.Name,
+                ProductName = ol.ProductVariant?.Product.Name,
                 Quantity = ol.Quantity,
                 UnitPrice = ol.UnitPrice,
-                RecommendedRetailPrice = ol.ProductVariant.RecommendedRetailPrice,
-                ProductVariantOptionName = ol.ProductVariant.VariantName,
+                RecommendedRetailPrice = ol.ProductVariant?.RecommendedRetailPrice,
+                ProductVariantOptionName = ol.ProductVariant?.VariantName,
                 OrderId = ol.OrderId,
                 ProductVariantId = ol.ProductVariantId,
                 ThumbnailUrl = ol.ProductVariant.GetThumbnailImageUrl() ?? ""

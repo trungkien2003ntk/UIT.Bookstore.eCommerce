@@ -15,7 +15,7 @@ internal class ProductTypeAttributeMappingConfiguration : IEntityTypeConfigurati
         builder.Property(ptam => ptam.ProductTypeId).HasColumnName(nameof(ProductTypeAttributeMapping.ProductTypeId)).IsRequired();
         builder.Property(ptam => ptam.ProductTypeAttributeId).HasColumnName(nameof(ProductTypeAttributeMapping.ProductTypeAttributeId)).IsRequired();
 
-        builder.HasOne(x => x.ProductType).WithMany(y => y.Attributes).HasForeignKey(x => x.ProductTypeId);
-        builder.HasOne(x => x.ProductTypeAttribute).WithMany(y => y.ProductTypes).HasForeignKey(x => x.ProductTypeAttributeId);
+        builder.HasOne(x => x.ProductType).WithMany(y => y.Attributes).HasForeignKey(x => x.ProductTypeId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.ProductTypeAttribute).WithMany(y => y.ProductTypes).HasForeignKey(x => x.ProductTypeAttributeId).OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -18,11 +18,11 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.DeliveryInstruction).HasColumnName(nameof(Order.DeliveryInstruction)).HasMaxLength(OrderConsts.DeliveryInstructionMaxLength);
 
         builder.HasOne(o => o.ShippingAddress).WithMany().HasForeignKey(o => o.ShippingAddressId).OnDelete(DeleteBehavior.SetNull);
-        builder.HasOne(o => o.PaymentMethod).WithMany().HasForeignKey(o => o.PaymentMethodId);
-        builder.HasOne(o => o.DeliveryMethod).WithMany().HasForeignKey(o => o.DeliveryMethodId);
-        builder.HasOne(o => o.PriceDiscountVoucher).WithMany().HasForeignKey(o => o.PriceDiscountVoucherId);
-        builder.HasOne(o => o.Customer).WithMany().HasForeignKey(o => o.CustomerId);
-        builder.HasOne(o => o.ShippingDiscountVoucher).WithMany().HasForeignKey(o => o.ShippingDiscountVoucherId);
+        builder.HasOne(o => o.PaymentMethod).WithMany().HasForeignKey(o => o.PaymentMethodId).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(o => o.DeliveryMethod).WithMany().HasForeignKey(o => o.DeliveryMethodId).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(o => o.PriceDiscountVoucher).WithMany().HasForeignKey(o => o.PriceDiscountVoucherId).OnDelete(DeleteBehavior.NoAction);
+        builder.HasOne(o => o.Customer).WithMany().HasForeignKey(o => o.CustomerId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(o => o.ShippingDiscountVoucher).WithMany().HasForeignKey(o => o.ShippingDiscountVoucherId).OnDelete(DeleteBehavior.NoAction);
 
         builder.Property(o => o.TaxRate).HasPrecision(18, 2);
         builder.Property(o => o.ShippingFee).HasPrecision(18, 2);

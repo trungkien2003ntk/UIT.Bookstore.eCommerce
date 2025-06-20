@@ -63,14 +63,17 @@ public class UpdateShoppingCartMappingService(
         // todo: use projection to reduce the amount of data fetched, increase performance
         var productIds = shoppingCart.Items.Select(ci => ci.ProductVariant.ProductId).Distinct().ToList();
         var neededProducts = await _dbContext.Products
+            .IgnoreQueryFilters()
             .Where(p => productIds.Contains(p.Id))
             .Include(p => p.Options)                        // these are for 
                 .ThenInclude(o => o.OptionValues)           // sku variations
             .Include(p => p.ProductVariants)
-                .ThenInclude(s => s.ProductVariantOptionValues)        // these are for
+                .ThenInclude(s => s.ProductVariantOptionValues)!        // these are for
                     .ThenInclude(sov => sov.OptionValue)    // sku thumbnail image
                         .ThenInclude(ov => ov.Option)       // this is for SkuInCart option names
             .Include(p => p.ProductImages)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.Inventories)
             .ToListAsync();
         return neededProducts;
     }
@@ -88,22 +91,24 @@ public class UpdateShoppingCartMappingService(
             ProductId = ci.ProductVariant.ProductId,
             ProductVariantId = ci.ProductVariantId,
             IsSelected = ci.IsSelected,
-            ProductVariantName = ci.ProductVariant.VariantName,
+            ProductVariantName = ci.ProductVariant?.VariantName,
             ProductName = product.Name,
             ProductTypeId = product.ProductTypeId,
-            UnitPrice = ci.ProductVariant.UnitPrice,
-            RecommendedRetailPrice = ci.ProductVariant.RecommendedRetailPrice,
+            UnitPrice = ci.ProductVariant?.UnitPrice,
+            RecommendedRetailPrice = ci.ProductVariant?.RecommendedRetailPrice,
             Quantity = ci.Quantity,
-            AvailableQuantity = ci.ProductVariant.StockQuantity,
-            TotalQuantity = ci.ProductVariant.StockQuantity,
-            ImageUrl = ci.ProductVariant.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
+            AvailableQuantity = ci.ProductVariant?.StockQuantity ?? 0,
+            TotalQuantity = ci.ProductVariant?.StockQuantity ?? 0,
+            ImageUrl = ci.ProductVariant?.GetThumbnailImageUrl() ?? product.GetFirstThumbnailImageUrl(),
             Description = product.Description,
             CreationTime = ci.CreationTime,
             ProductVariantVariations = product.ProductVariants
+                .Where(pv => !pv.IsDeleted && pv.IsActive)
                 .Select(MapToProductVariantForCartDto)
                 .Select(sv => sv.PopulateIndex(productOptionAttributeDtos))
                 .ToList(),
-            ProductOptions = productOptionAttributeDtos
+            ProductOptions = productOptionAttributeDtos,
+            IsRemoved = ci.ProductVariant?.IsDeleted ?? true
         };
     }
 

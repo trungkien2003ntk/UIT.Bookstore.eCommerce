@@ -19,7 +19,7 @@ public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
         builder.Property(e => e.UnitCost).IsRequired().HasPrecision(18, 2);
         builder.Property(e => e.IsActive).IsRequired();
         builder.Property(e => e.SourceType).IsRequired().HasConversion<EnumToStringConverter<InventorySource>>().HasDefaultValue(InventorySource.None);
-        builder.HasOne(e => e.ProductVariant).WithMany(pv => pv.Inventories).HasForeignKey(e => e.ProductVariantId);
-        builder.HasOne(e => e.Warehouse).WithMany().HasForeignKey(e => e.WarehouseId);
+        builder.HasOne(e => e.ProductVariant).WithMany(pv => pv.Inventories).HasForeignKey(e => e.ProductVariantId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(e => e.Warehouse).WithMany().HasForeignKey(e => e.WarehouseId).OnDelete(DeleteBehavior.Cascade);
     }
 }

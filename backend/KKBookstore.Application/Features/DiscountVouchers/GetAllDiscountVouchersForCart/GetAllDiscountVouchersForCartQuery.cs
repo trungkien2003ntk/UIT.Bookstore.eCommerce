@@ -27,6 +27,7 @@ public class GetAllDiscountVouchersForCartHandler(
         var shoppingCartItems = await _dbContext.ShoppingCartItems
             .Where(sci => sci.CustomerId == userId && selectedItemIds.Contains(sci.Id))
             .Include(sci => sci.ProductVariant)
+                .ThenInclude(pv => pv.Product)
             .ToListAsync(cancellationToken);
 
         var createShoppingCartResult = ShoppingCart.Create(userId, shoppingCartItems);
@@ -38,6 +39,11 @@ public class GetAllDiscountVouchersForCartHandler(
         shoppingCart.SelectItems(selectedItemIds);
         var totalAmount = shoppingCart.TotalUnitPrice;
 
+        var distinctProductTypeIds = shoppingCart.Items
+            .Select(item => item.ProductVariant?.Product.ProductTypeId ?? 0)
+            .Distinct()
+            .ToList();
+
 
         // Get all discount vouchers that are active
         var discountVouchers = await _dbContext.DiscountVouchers
@@ -47,7 +53,7 @@ public class GetAllDiscountVouchersForCartHandler(
 
         // Filter out vouchers that are not applicable to the current shopping cart
         foreach (var discountVoucher in from discountVoucher in discountVouchers
-                                        where discountVoucher.IsApplicable(totalAmount, userId)
+                                        where discountVoucher.IsApplicable(totalAmount, userId, distinctProductTypeIds)
                                         select discountVoucher)
         {
             discountVoucher.IsRedeemable = true;

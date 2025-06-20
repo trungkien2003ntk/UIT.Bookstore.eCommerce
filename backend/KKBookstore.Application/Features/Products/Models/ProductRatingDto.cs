@@ -7,7 +7,7 @@ public record ProductRatingDto : BaseAuditedDto
 {
     public string Comment { get; init; }
     public int RatingValue { get; init; }
-    public int CustomerId { get; init; }
+    public int? CustomerId { get; init; }
     public string UserName { get; init; }
     public string FullName { get; init; }
     public string? UserAvatarUrl { get; init; }

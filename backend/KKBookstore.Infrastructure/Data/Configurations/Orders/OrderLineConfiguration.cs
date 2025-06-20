@@ -13,10 +13,10 @@ internal class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
         builder.ConfigureAuditing();
 
         builder.Property(t => t.OrderId).HasColumnName(nameof(OrderLine.OrderId)).IsRequired();
-        builder.Property(t => t.ProductVariantId).HasColumnName(nameof(OrderLine.ProductVariantId)).IsRequired();
+        builder.Property(t => t.ProductVariantId).HasColumnName(nameof(OrderLine.ProductVariantId));
         builder.Property(t => t.UnitPrice).HasColumnName(nameof(OrderLine.UnitPrice)).HasPrecision(18, 2).IsRequired();
         builder.Property(t => t.Quantity).HasColumnName(nameof(OrderLine.Quantity)).IsRequired();
-        builder.HasOne(t => t.Order).WithMany(t => t.OrderLines).HasForeignKey(t => t.OrderId);
-        builder.HasOne(t => t.ProductVariant).WithMany().HasForeignKey(t => t.ProductVariantId);
+        builder.HasOne(t => t.Order).WithMany(t => t.OrderLines).HasForeignKey(t => t.OrderId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(t => t.ProductVariant).WithMany().HasForeignKey(t => t.ProductVariantId).OnDelete(DeleteBehavior.SetNull);
     }
 }

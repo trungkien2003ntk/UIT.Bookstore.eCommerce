@@ -5,7 +5,7 @@ public class RatingDto
     public int Id { get; set; }
     public string Comment { get; set; }
     public int RatingValue { get; set; }
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public string CustomerName { get; set; }
     public DateTimeOffset CreationTime { get; set; }
     public int ProductVariantId { get; set; }

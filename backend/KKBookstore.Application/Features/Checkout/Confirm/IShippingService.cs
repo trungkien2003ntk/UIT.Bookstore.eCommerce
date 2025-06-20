@@ -14,7 +14,7 @@ public partial interface IShippingService
 
 public record ShippingFeeRequest
 {
-    public int ServiceId { get; private init; } = 53320;
+    public int ServiceId { get; private init; } = 53322;
     public int ServiceTypeId { get; private init; } = 2;
     public int ToDistrictId { get; set; }
     public string ToWardCode { get; set; }

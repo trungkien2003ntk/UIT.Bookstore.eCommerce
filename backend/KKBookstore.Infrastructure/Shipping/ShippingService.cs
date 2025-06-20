@@ -1,5 +1,6 @@
 ﻿using KKBookstore.Common.Interfaces;
 using KKBookstore.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 using System.Text;
@@ -11,8 +12,9 @@ public class ShippingService : IShippingService
     // httpclient to send request to shipping service
     private readonly HttpClient _httpClient;
     private readonly ShippingConfiguration configuration;
+    private readonly ILogger<ShippingService> _logger;
 
-    public ShippingService(IHttpClientFactory httpClientFactory, IOptions<ShippingConfiguration> configurationOption)
+    public ShippingService(IHttpClientFactory httpClientFactory, IOptions<ShippingConfiguration> configurationOption, ILogger<ShippingService> logger)
     {
         _httpClient = httpClientFactory.CreateClient();
         configuration = configurationOption.Value;
@@ -20,12 +22,14 @@ public class ShippingService : IShippingService
         // Add dedicated header for shipping service
         _httpClient.DefaultRequestHeaders.Add("Token", configuration.Token);
         _httpClient.DefaultRequestHeaders.Add("ShopId", configuration.ShopId.ToString());
+        _logger = logger;
     }
 
     public async Task<Result<GetProvinceResponse>> GetProvinceAsync(CancellationToken cancellationToken)
     {
         try
         {
+            _logger.LogInformation("Fetching provinces from shipping service.");
             var apiEndpoint = configuration.BaseApiUrl + configuration.BaseProvince;
             var result = await _httpClient.GetFromJsonAsync<GetProvinceResponse>(apiEndpoint, cancellationToken);
 
@@ -33,6 +37,7 @@ public class ShippingService : IShippingService
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error fetching provinces.");
             return Result.Failure<GetProvinceResponse>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
     }
@@ -41,11 +46,13 @@ public class ShippingService : IShippingService
     {
         try
         {
+            _logger.LogInformation("Fetching districts for province ID {ProvinceId} from shipping service.", provinceId);
             var apiEndpoint = configuration.BaseApiUrl + configuration.BaseDistrict + $"?province_id={provinceId}";
             return await _httpClient.GetFromJsonAsync<GetDistrictResponse>(apiEndpoint, cancellationToken);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error fetching districts for province ID {ProvinceId}.", provinceId);
             return Result.Failure<GetDistrictResponse>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
     }
@@ -54,11 +61,13 @@ public class ShippingService : IShippingService
     {
         try
         {
+            _logger.LogInformation("Fetching communes for district ID {DistrictId} from shipping service.", districtId);
             var apiEndpoint = configuration.BaseApiUrl + configuration.BaseWard + $"?district_id={districtId}";
             return await _httpClient.GetFromJsonAsync<GetCommuneResponse>(apiEndpoint, cancellationToken);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error fetching communes for district ID {DistrictId}.", districtId);
             return Result.Failure<GetCommuneResponse>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
     }
@@ -67,6 +76,7 @@ public class ShippingService : IShippingService
     {
         try
         {
+            _logger.LogInformation("Calculating shipping fee with request: {@Request}", request);
             var queryString = $"service_id={request.ServiceId}&service_type_id={request.ServiceTypeId}&to_district_id={request.ToDistrictId}&to_ward_code={request.ToWardCode}&height={request.Height}&length={request.Length}&width={request.Width}&weight={request.Weight}&insurance_value={request.InsuranceValue}&cod_failed_amount={request.CodFailedAmount}";
             var apiEndpoint = $"{configuration.BaseApiUrl}{configuration.Version}/{configuration.BaseShippingFee}?{queryString}";
 
@@ -75,6 +85,7 @@ public class ShippingService : IShippingService
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error calculating shipping fee with request: {@Request}", request);
             return Result.Failure<ShippingFeeResponse>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
     }
@@ -138,6 +149,7 @@ public class ShippingService : IShippingService
     {
         try
         {
+            _logger.LogInformation("Calculating expected delivery time with request: {@Request}", request);
             var apiEndpoint = $"{configuration.BaseApiUrl}{configuration.Version}/{configuration.BaseExpectedDeliveryTime}";
             var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
 
@@ -152,12 +164,14 @@ public class ShippingService : IShippingService
                 return Result.Failure<DateTimeOffset>(ShippingServiceErrors.RequestFailed(errors));
             }
 
+            _logger.LogError("Failed to calculate expected delivery time. Status code: {StatusCode}, Response: {Response}", response.StatusCode, responseBody);
             var result = DateTimeOffset.FromUnixTimeSeconds(responseBody.Data.LeadTimeUnix);
 
             return result;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error calculating expected delivery time with request: {@Request}", request);
             return Result.Failure<DateTimeOffset>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
     }

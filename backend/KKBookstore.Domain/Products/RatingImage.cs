@@ -2,7 +2,7 @@
 
 namespace KKBookstore.Products;
 
-public class RatingImage : BaseEntity
+public class RatingImage : BaseFullAuditedEntity
 {
     public RatingImage()
     {

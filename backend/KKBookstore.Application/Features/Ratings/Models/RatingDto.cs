@@ -10,9 +10,9 @@ public record RatingDto : BaseAuditedDto
     public int ProductId { get; init; }
     public int ProductVariantId { get; init; }
     public string ProductVariantName { get; init; } = string.Empty;
-    public int CustomerId { get; init; }
-    public string UserName { get; init; } = string.Empty;
-    public string FullName { get; init; } = string.Empty;
+    public int? CustomerId { get; init; }
+    public string? UserName { get; init; }
+    public string? FullName { get; init; }
     public string? UserAvatarUrl { get; init; }
     public int LikesCount { get; init; }
     public int ReportsCount { get; init; }

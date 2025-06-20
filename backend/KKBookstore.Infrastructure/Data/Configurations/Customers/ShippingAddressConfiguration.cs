@@ -15,6 +15,6 @@ internal class ShippingAddressConfiguration : IEntityTypeConfiguration<ShippingA
 
         builder.HasOne(t => t.Customer)
             .WithMany(c => c.ShippingAddresses)
-            .HasForeignKey(t => t.CustomerId);
+            .HasForeignKey(t => t.CustomerId).OnDelete(DeleteBehavior.Cascade);
     }
 }

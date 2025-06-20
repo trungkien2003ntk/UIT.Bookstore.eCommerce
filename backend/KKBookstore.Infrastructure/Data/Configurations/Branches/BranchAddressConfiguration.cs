@@ -12,6 +12,6 @@ public class BranchAddressConfiguration : IEntityTypeConfiguration<BranchAddress
         builder.HasBaseType<Address>();
         builder.Property(t => t.BranchId).HasColumnName(nameof(BranchAddress.BranchId)).IsRequired();
 
-        builder.HasOne<Branch>().WithOne(b => b.Address).HasForeignKey<BranchAddress>(b => b.BranchId);
+        builder.HasOne<Branch>().WithOne(b => b.Address).HasForeignKey<BranchAddress>(b => b.BranchId).OnDelete(DeleteBehavior.Cascade);
     }
 }

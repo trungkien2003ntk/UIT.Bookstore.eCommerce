@@ -29,11 +29,12 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         builder.HasOne(dv => dv.ApplyToProductType)
             .WithMany()
             .HasForeignKey(dv => dv.ApplyToProductTypeId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
         // Configure many-to-many relationship with CustomerType through VoucherCustomerType
         builder.HasMany(dv => dv.CustomerTypes)
             .WithOne(vct => vct.Voucher)
-            .HasForeignKey(vct => vct.VoucherId);
+            .HasForeignKey(vct => vct.VoucherId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

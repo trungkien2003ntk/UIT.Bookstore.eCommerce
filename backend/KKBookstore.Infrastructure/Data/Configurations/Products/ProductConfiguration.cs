@@ -25,8 +25,12 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.OwnsOne(t => t.Sku).Property(sv => sv.Value).HasMaxLength(ProductVariantConsts.SkuMaxLength).IsRequired();
 
-        builder.HasOne(t => t.ProductType).WithMany().HasForeignKey(t => t.ProductTypeId);
-        builder.HasOne(t => t.UnitMeasure).WithMany().HasForeignKey(t => t.UnitMeasureId);
-        builder.HasMany(t => t.Ratings).WithOne().HasForeignKey(t => t.ProductId);
+        builder.HasOne(t => t.ProductType).WithMany().HasForeignKey(t => t.ProductTypeId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(t => t.UnitMeasure).WithMany().HasForeignKey(t => t.UnitMeasureId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasMany(t => t.Ratings).WithOne().HasForeignKey(t => t.ProductId).OnDelete(DeleteBehavior.NoAction);
+        builder.HasMany(p => p.ProductImages)
+            .WithOne(e => e.Product)
+            .HasForeignKey(e => e.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -97,9 +97,9 @@ public class GetProductRatingListQueryHandler(
             Comment = r.Comment ?? "",
             RatingValue = r.RatingValue,
             CustomerId = r.CustomerId,
-            UserName = r.Customer.UserName ?? "Anonymous User",
-            FullName = r.Customer.FullName ?? "Anonymous User",
-            UserAvatarUrl = r.Customer.ImageUrl,
+            UserName = r.Customer?.UserName ?? "Anonymous User",
+            FullName = r.Customer?.FullName ?? "Anonymous User",
+            UserAvatarUrl = r.Customer?.ImageUrl,
             ProductVariantName = r.ProductVariant.VariantName,
             LikesCount = r.Likes.Count(x => x.Liked),
             ReportsCount = r.ReportsCount,
@@ -109,8 +109,7 @@ public class GetProductRatingListQueryHandler(
             CreationTime = r.CreationTime,
             CreatorId = r.CreatorId,
             LastModificationTime = r.LastModificationTime,
-            LastModifierId = r.LastModifierId
-
+            LastModifierId = r.LastModifierId,
         }).ToList();
 
         return new ProductRatingSummary

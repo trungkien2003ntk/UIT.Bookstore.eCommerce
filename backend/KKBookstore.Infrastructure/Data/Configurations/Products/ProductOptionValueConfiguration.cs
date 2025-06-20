@@ -16,6 +16,6 @@ internal class ProductOptionValueConfiguration : IEntityTypeConfiguration<Produc
         builder.Property(t => t.ThumbnailImageUrl).HasColumnName(nameof(ProductOptionValue.ThumbnailImageUrl));
         builder.Property(t => t.LargeImageUrl).HasColumnName(nameof(ProductOptionValue.LargeImageUrl));
 
-        builder.HasOne(t => t.Option).WithMany(o => o.OptionValues).HasForeignKey(t => t.OptionId);
+        builder.HasOne(t => t.Option).WithMany(o => o.OptionValues).HasForeignKey(t => t.OptionId).OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -55,6 +55,22 @@ public class AuditingInterceptor : SaveChangesInterceptor
                 // Optionally set state to Modified to mark as soft-deleted
                 entry.State = EntityState.Modified;
             }
+
+            if (entry.State == EntityState.Deleted && entry.Metadata.IsOwned())
+            {
+                // Find the owner of this owned entity
+                var navigation = entry.Metadata.FindOwnership();
+                if (navigation != null)
+                {
+                    var ownerType = navigation.PrincipalEntityType.ClrType;
+
+                    // If the owner supports soft delete, don't delete the owned entity
+                    if (typeof(IFullAuditedObject).IsAssignableFrom(ownerType))
+                    {
+                        entry.State = EntityState.Unchanged;
+                    }
+                }
+            }
         }
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);

@@ -13,7 +13,7 @@ public record AddShoppingCartItemResponse
     }
 
     public int ProductId { get; init; }
-    public int ProductVariantId { get; init; }
+    public int? ProductVariantId { get; init; }
     public int Quantity { get; init; }
     public decimal UnitPrice { get; init; }
 }

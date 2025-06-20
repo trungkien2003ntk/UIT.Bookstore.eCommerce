@@ -33,8 +33,10 @@ public class DefaultOrderProcessor(
                 .ThenInclude(s => s.Product)
                     .ThenInclude(p => p.ProductImages)
             .Include(sci => sci.ProductVariant)
-                .ThenInclude(s => s.ProductVariantOptionValues)
+                .ThenInclude(s => s.ProductVariantOptionValues)!
                     .ThenInclude(sov => sov.OptionValue)
+            .Include(sci => sci.ProductVariant)
+                .ThenInclude(sci => sci.Inventories)
             .AsSplitQuery()
             .ToListAsync(cancellationToken);
     }
@@ -49,7 +51,8 @@ public class DefaultOrderProcessor(
             }
         }
         return true;
-    }    protected override async Task ReduceStock(List<ShoppingCartItem> checkoutItems, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
+    }
+    protected override async Task ReduceStock(List<ShoppingCartItem> checkoutItems, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
     {
         // Reduce stock based on allocated inventory from specific branches
         foreach (var fulfillment in orderFulfillments)
@@ -67,7 +70,8 @@ public class DefaultOrderProcessor(
                 }
             }
         }
-    }    protected override Task RemoveFromCart(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
+    }
+    protected override Task RemoveFromCart(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken)
     {
         _dbContext.ShoppingCartItems.RemoveRange(checkoutItems);
         return Task.CompletedTask;
@@ -284,7 +288,8 @@ public class DefaultOrderProcessor(
     protected override bool RequiresAdminConfirmation(List<OrderFulfillment> orderFulfillments)
     {
         return _branchSelectionService.RequiresAdminConfirmation(orderFulfillments);
-    }    protected override async Task NotifyAdminForBranchSelection(Order order, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
+    }
+    protected override async Task NotifyAdminForBranchSelection(Order order, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
     {
         // Create email model for admin notification
         var branchOptions = orderFulfillments.Select(of => new BranchSelectionOption
@@ -293,7 +298,8 @@ public class DefaultOrderProcessor(
             BranchName = of.Branch?.Name ?? $"Branch {of.BranchId}",
             DistanceKm = of.DistanceFromCustomer,
             TotalItems = of.GetTotalAllocatedItems(),
-            TotalValue = of.GetTotalAllocatedValue()        }).ToList();
+            TotalValue = of.GetTotalAllocatedValue()
+        }).ToList();
 
         // Load customer information
         var customer = await dbContext.Customers

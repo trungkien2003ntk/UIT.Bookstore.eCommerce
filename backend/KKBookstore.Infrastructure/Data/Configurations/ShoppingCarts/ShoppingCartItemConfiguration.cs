@@ -15,7 +15,7 @@ internal class ShoppingCartItemConfiguration : IEntityTypeConfiguration<Shopping
         builder.Property(t => t.ProductVariantId).HasColumnName(nameof(ShoppingCartItem.ProductVariantId)).IsRequired();
         builder.Property(t => t.Quantity).HasColumnName(nameof(ShoppingCartItem.Quantity)).IsRequired();
 
-        builder.HasOne(t => t.ProductVariant).WithMany().HasForeignKey(t => t.ProductVariantId);
-        builder.HasOne(t => t.Customer).WithMany().HasForeignKey(t => t.CustomerId);
+        builder.HasOne(t => t.ProductVariant).WithMany().HasForeignKey(t => t.ProductVariantId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(t => t.Customer).WithMany().HasForeignKey(t => t.CustomerId).OnDelete(DeleteBehavior.Cascade);
     }
 }

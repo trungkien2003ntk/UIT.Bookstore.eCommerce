@@ -208,9 +208,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             _dbContext.ProductTypeAttributeProductValues.Remove(item);
         }
-    }
-
-    private void UpdateProductVariants(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
+    }    private void UpdateProductVariants(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
     {
         var existingProductVariants = product.ProductVariants.ToList();
 
@@ -219,8 +217,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             if (productVariant.Id == 0)
             {
-                // Add new
-                product.ProductVariants.Add(new ProductVariant
+                // Add new variant
+                var newVariant = new ProductVariant
                 {
                     ProductId = productDtoId,
                     RecommendedRetailPrice = productVariant.RecommendedRetailPrice,
@@ -232,11 +230,27 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     Dimension = productVariant.Dimension,
                     IsActive = true,
                     Tags = ""
-                });
+                };
+                
+                product.ProductVariants.Add(newVariant);
+                
+                // Add variant option values for new variant
+                if (productVariant.VariantOptions != null && productVariant.VariantOptions.Any())
+                {
+                    foreach (var optionValue in productVariant.VariantOptions)
+                    {
+                        newVariant.ProductVariantOptionValues ??= new List<ProductVariantOptionValue>();
+                        newVariant.ProductVariantOptionValues.Add(new ProductVariantOptionValue
+                        {
+                            OptionId = optionValue.ProductOptionId,
+                            OptionValueId = optionValue.ProductOptionValueId
+                        });
+                    }
+                }
             }
             else
             {
-                // Update existing
+                // Update existing variant
                 var existingProductVariant = existingProductVariants.FirstOrDefault(x => x.Id == productVariant.Id);
                 if (existingProductVariant != null)
                 {
@@ -245,7 +259,31 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     existingProductVariant.TaxRate = productVariant.TaxRate;
                     existingProductVariant.Comment = productVariant.Comment;
                     existingProductVariant.Weight = productVariant.Weight;
-                    existingProductVariant.Dimension = productVariant.Dimension;
+                    existingProductVariant.Dimension = productVariant.Dimension ?? existingProductVariant.Dimension;
+                    
+                    // Update variant option values
+                    if (productVariant.VariantOptions != null)
+                    {
+                        // Remove existing option values
+                        var existingOptionValues = existingProductVariant.ProductVariantOptionValues?.ToList() ?? new List<ProductVariantOptionValue>();
+                        foreach (var existingOptionValue in existingOptionValues)
+                        {
+                            _dbContext.ProductVariantOptionValues.Remove(existingOptionValue);
+                        }
+                        existingProductVariant.ProductVariantOptionValues?.Clear();
+                        
+                        // Add new option values
+                        foreach (var optionValue in productVariant.VariantOptions)
+                        {
+                            existingProductVariant.ProductVariantOptionValues ??= new List<ProductVariantOptionValue>();
+                            existingProductVariant.ProductVariantOptionValues.Add(new ProductVariantOptionValue
+                            {
+                                ProductVariantId = existingProductVariant.Id,
+                                OptionId = optionValue.ProductOptionId,
+                                OptionValueId = optionValue.ProductOptionValueId
+                            });
+                        }
+                    }
                 }
             }
         }
@@ -257,7 +295,12 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             if (!incomingIds.Contains(existingProductVariant.Id))
             {
-                _dbContext.ProductVariantOptionValues.RemoveRange(existingProductVariant.ProductVariantOptionValues);
+                // Remove variant option values first (foreign key constraint)
+                if (existingProductVariant.ProductVariantOptionValues != null)
+                {
+                    _dbContext.ProductVariantOptionValues.RemoveRange(existingProductVariant.ProductVariantOptionValues);
+                }
+                // Remove the variant
                 _dbContext.ProductVariants.Remove(existingProductVariant);
             }
         }
@@ -326,8 +369,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 AttributeValueId = x.AttributeValueId,
                 Name = x.AttributeValue.ProductTypeAttribute.Name,
                 Value = x.AttributeValue.Value
-            }).ToList(),
-            ProductVariants = product.ProductVariants.Select(x => new ProductVariantDto
+            }).ToList(),            ProductVariants = product.ProductVariants.Select(x => new ProductVariantDto
             {
                 Id = x.Id,
                 RecommendedRetailPrice = x.RecommendedRetailPrice,
@@ -336,6 +378,13 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 Comment = x.Comment,
                 Weight = x.Weight,
                 Dimension = x.Dimension,
+                VariantOptions = x.ProductVariantOptionValues?.Select(pov => new ProductVariantDto.VariantOptionDto
+                {
+                    ProductOptionId = pov.OptionId,
+                    ProductOptionValueId = pov.OptionValueId,
+                    Name = pov.Option?.Name,
+                    Value = pov.OptionValue?.Value
+                }).ToList() ?? new List<ProductVariantDto.VariantOptionDto>()
             }).ToList(),
             ProductImages = product.ProductImages.Select(x => new ProductImageDto
             {

@@ -86,12 +86,23 @@ public class Order : BaseAuditedEntity
         }
 
         return Result.Success();
-    }
-
-    private string GenerateOrderNumber()
+    }    private string GenerateOrderNumber()
     {
-        // generate order number follow pattern year-month-day/short_uid
-        return $"{OrderWhen.Year}-{OrderWhen.Month}-{OrderWhen.Day}/{Guid.NewGuid().ToString()[..5]}";
+        // Generate order number with format: SO-{yyMMdd}<HCM>{unique}
+        // SO = Sales Order prefix for e-commerce
+        // yyMMdd = Order date (2-digit year, month, day) for easy tracking
+        // HCM = Ho Chi Minh branch code (primary branch)
+        // unique = Timestamp-based unique identifier to avoid collisions
+        
+        var datePrefix = OrderWhen.ToString("yyMMdd");
+        var branchCode = "HCM"; // Primary branch code for Ho Chi Minh
+        
+        // Use timestamp + random component for uniqueness within the same millisecond
+        var timestamp = DateTimeOffset.Now.ToString("HHmmssff"); // Hours, minutes, seconds, centiseconds
+        var randomComponent = new Random().Next(10, 99); // 2-digit random number
+        var uniqueComponent = $"{timestamp}{randomComponent}";
+        
+        return $"SO-{datePrefix}{branchCode}{uniqueComponent}";
     }
 
     public decimal CalculateTotal()

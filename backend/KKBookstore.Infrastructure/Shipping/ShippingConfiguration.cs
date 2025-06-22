@@ -11,4 +11,6 @@ public class ShippingConfiguration
     public int ShopId { get; init; }
     public string Token { get; init; }
     public string BaseExpectedDeliveryTime { get; init; }
+    public string BaseAvailableServices { get; init; }
+    public int FromDistrictId { get; init; }
 }

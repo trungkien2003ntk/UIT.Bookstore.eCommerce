@@ -8,4 +8,15 @@ public class GetOrderListRequest
     public int PageSize { get; set; } = 12;
     public string? OrderStatuses { get; set; }
     public string? SearchQuery { get; set; }
+    
+    // Date Range Filtering
+    public DateTimeOffset? FromDate { get; set; }
+    public DateTimeOffset? ToDate { get; set; }
+    
+    // Customer Filtering
+    public int? CustomerId { get; set; }
+    
+    // Price Range Filtering
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
 }

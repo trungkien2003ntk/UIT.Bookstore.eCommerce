@@ -17,6 +17,7 @@ public record ConfirmCheckoutResponse
     public sealed record OrderPriceSummary
     {
         public decimal Subtotal { get; init; }
+        public decimal ProductDiscount { get; init; }
         public decimal ShippingFee { get; init; }
         public decimal ShippingDiscount { get; init; }
         public decimal OrderVoucherDiscount { get; init; }

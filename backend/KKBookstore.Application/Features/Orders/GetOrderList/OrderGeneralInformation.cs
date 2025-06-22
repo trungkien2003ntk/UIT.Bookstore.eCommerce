@@ -26,4 +26,17 @@ public record OrderGeneralInformation : BaseDto
     public DateTimeOffset OrderWhen { get; init; }
     public List<OrderLineDto> OrderLines { get; init; } = [];
 
+    // Customer Information
+    public string CustomerFullName { get; init; } = string.Empty;
+    public string CustomerEmail { get; init; } = string.Empty;
+    public string CustomerPhoneNumber { get; init; } = string.Empty;
+    public string CustomerAvartarUrl { get; init; } = string.Empty;
+
+    // Shipping Address Information  
+    public string ShippingReceiverName { get; init; } = string.Empty;
+    public string ShippingPhoneNumber { get; init; } = string.Empty;
+    public string ShippingDetailedAddress { get; init; } = string.Empty;
+    public string ShippingProvinceName { get; init; } = string.Empty;
+    public string ShippingDistrictName { get; init; } = string.Empty;
+    public string ShippingCommuneName { get; init; } = string.Empty;
 }

@@ -9,4 +9,5 @@ public class VnPayConfiguration
     public string CurrCode { get; set; }
     public string Version { get; set; }
     public string Locale { get; set; }
+    public string BankCode { get; set; }
 }

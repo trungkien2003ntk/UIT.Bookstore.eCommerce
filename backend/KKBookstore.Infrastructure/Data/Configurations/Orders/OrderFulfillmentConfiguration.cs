@@ -19,11 +19,9 @@ internal class OrderFulfillmentConfiguration : IEntityTypeConfiguration<OrderFul
         builder.Property(of => of.IsSelectedForPackaging).IsRequired();
         builder.Property(of => of.PackagingStartedWhen).IsRequired(false);
         builder.Property(of => of.PackagingCompletedWhen).IsRequired(false);
-        builder.Property(of => of.Notes).HasMaxLength(1000).IsRequired(false);
-
-        // Relationships
+        builder.Property(of => of.Notes).HasMaxLength(1000).IsRequired(false);        // Relationships
         builder.HasOne(of => of.Order)
-            .WithMany()
+            .WithMany(o => o.OrderFulfillments)
             .HasForeignKey(of => of.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 

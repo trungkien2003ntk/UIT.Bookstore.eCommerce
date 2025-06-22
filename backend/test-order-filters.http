@@ -1,0 +1,27 @@
+### Test Order List with no filters
+GET {{baseUrl}}/api/orders
+Content-Type: application/json
+
+### Test Order List with date range filter
+GET {{baseUrl}}/api/orders?FromDate=2024-01-01&ToDate=2024-12-31
+Content-Type: application/json
+
+### Test Order List with search filter (order number)
+GET {{baseUrl}}/api/orders?SearchQuery=ORDER
+Content-Type: application/json
+
+### Test Order List with customer filter
+GET {{baseUrl}}/api/orders?CustomerId=1
+Content-Type: application/json
+
+### Test Order List with price range filter
+GET {{baseUrl}}/api/orders?MinPrice=100&MaxPrice=1000
+Content-Type: application/json
+
+### Test Order List with multiple filters
+GET {{baseUrl}}/api/orders?FromDate=2024-01-01&ToDate=2024-12-31&SearchQuery=ORDER&MinPrice=100&MaxPrice=1000&OrderStatuses=Pending,Processing
+Content-Type: application/json
+
+### Test Order List with pagination and sorting
+GET {{baseUrl}}/api/orders?PageNumber=1&PageSize=5&SortBy=CreationTime&SortDirection=desc
+Content-Type: application/json

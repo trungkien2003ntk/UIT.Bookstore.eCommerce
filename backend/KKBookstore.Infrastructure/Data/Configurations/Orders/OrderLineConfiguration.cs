@@ -10,13 +10,16 @@ internal class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
     public void Configure(EntityTypeBuilder<OrderLine> builder)
     {
         builder.ToTable("OrderLines");
-        builder.ConfigureAuditing();
-
-        builder.Property(t => t.OrderId).HasColumnName(nameof(OrderLine.OrderId)).IsRequired();
+        builder.ConfigureAuditing();        builder.Property(t => t.OrderId).HasColumnName(nameof(OrderLine.OrderId)).IsRequired();
         builder.Property(t => t.ProductVariantId).HasColumnName(nameof(OrderLine.ProductVariantId));
         builder.Property(t => t.UnitPrice).HasColumnName(nameof(OrderLine.UnitPrice)).HasPrecision(18, 2).IsRequired();
         builder.Property(t => t.Quantity).HasColumnName(nameof(OrderLine.Quantity)).IsRequired();
+        builder.Property(t => t.PickingCompletionTime).HasColumnName(nameof(OrderLine.PickingCompletionTime));
+        builder.Property(t => t.DiscountVoucherId).HasColumnName(nameof(OrderLine.DiscountVoucherId));
+
+        // Configure navigation properties
         builder.HasOne(t => t.Order).WithMany(t => t.OrderLines).HasForeignKey(t => t.OrderId).OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(t => t.ProductVariant).WithMany().HasForeignKey(t => t.ProductVariantId).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(t => t.DiscountVoucher).WithMany().HasForeignKey(t => t.DiscountVoucherId).OnDelete(DeleteBehavior.SetNull);
     }
 }

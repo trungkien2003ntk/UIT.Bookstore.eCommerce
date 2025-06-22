@@ -3,6 +3,8 @@ using KKBookstore.Common.Interfaces;
 using KKBookstore.Application.Common.Models.RequestDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace KKBookstore.Controllers;
 
@@ -106,9 +108,7 @@ public class GhnWebhookController(
             // Still return 200 to prevent GHN from retrying
             return Ok(new { message = "Received but processing failed", error = "Internal server error" });
         }
-    }
-
-    /// <summary>
+    }    /// <summary>
     /// Health check endpoint for GHN webhook configuration.
     /// Can be used to verify that the webhook endpoint is accessible.
     /// </summary>
@@ -120,5 +120,106 @@ public class GhnWebhookController(
             service = "ghn-webhook",
             timestamp = DateTime.UtcNow
         });
+    }
+
+    /// <summary>
+    /// Manual endpoint to simulate GHN webhook calls for testing and manual order status updates.
+    /// This endpoint allows admins to manually trigger order status updates when GHN webhook integration is not available.
+    /// </summary>
+    /// <param name="payload">The webhook payload simulating GHN webhook data</param>
+    /// <returns>200 OK if processed successfully, error response if failed</returns>
+    [HttpPost("manual-trigger")]
+    [Authorize] // Add proper admin authorization when available
+    public async Task<IActionResult> ManualTriggerWebhook([FromBody] GhnWebhookPayload payload)
+    {
+        try
+        {
+            var adminUserId = User.Identity?.IsAuthenticated == true 
+                ? int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0")
+                : (int?)null;
+
+            _logger.LogInformation(
+                "Manual GHN webhook trigger by admin {AdminUserId} for order {OrderCode} with status {Status}. Type: {Type}",
+                adminUserId,
+                payload.OrderCode, 
+                payload.Status, 
+                payload.Type);
+
+            // Process different webhook types
+            switch (payload.Type.ToLowerInvariant())
+            {
+                case "create":
+                    _logger.LogInformation("Order {OrderCode} was manually marked as created in GHN system", payload.OrderCode);
+                    break;                case "switch_status":
+                case "update_status":
+                    // Process status update with admin context for manual triggers
+                    var result = await _ghnShippingService.ProcessOrderStatusUpdateAsync(
+                        payload.OrderCode, 
+                        payload.Status, 
+                        payload.Reason,
+                        adminUserId);
+
+                    if (result.IsFailure)
+                    {
+                        _logger.LogError(
+                            "Failed to process manual GHN status update for order {OrderCode}. Error: {Error}. Triggered by admin {AdminUserId}",
+                            payload.OrderCode, 
+                            result.Error.Description,
+                            adminUserId);
+                        
+                        return BadRequest(new { 
+                            message = "Failed to process manual webhook trigger", 
+                            error = result.Error.Description 
+                        });
+                    }
+
+                    _logger.LogInformation(
+                        "Successfully processed manual GHN status update for order {OrderCode} to status {Status}. Triggered by admin {AdminUserId}",
+                        payload.OrderCode, 
+                        payload.Status,
+                        adminUserId);
+                    break;
+
+                case "update_weight":
+                    _logger.LogInformation("Order {OrderCode} weight was manually updated to {Weight}g", 
+                        payload.OrderCode, payload.Weight);
+                    break;
+
+                case "update_cod":
+                    _logger.LogInformation("Order {OrderCode} COD amount was manually updated to {CODAmount}", 
+                        payload.OrderCode, payload.CODAmount);
+                    break;
+
+                case "update_fee":
+                    _logger.LogInformation("Order {OrderCode} shipping fee was manually updated to {TotalFee}", 
+                        payload.OrderCode, payload.TotalFee);
+                    break;
+
+                default:
+                    _logger.LogWarning("Unknown manual GHN webhook type: {Type} for order {OrderCode}", 
+                        payload.Type, payload.OrderCode);
+                    break;
+            }
+
+            // Return success response
+            return Ok(new { 
+                message = "Manual webhook trigger processed successfully", 
+                orderCode = payload.OrderCode,
+                status = payload.Status,
+                triggeredBy = adminUserId,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, 
+                "Unexpected error processing manual GHN webhook trigger for order {OrderCode}", 
+                payload.OrderCode);
+
+            return StatusCode(500, new { 
+                message = "Failed to process manual webhook trigger", 
+                error = "Internal server error" 
+            });
+        }
     }
 }

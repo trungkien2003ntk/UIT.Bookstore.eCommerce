@@ -41,7 +41,11 @@ public class GetRelatedProductsByImageQueryHandler(
                 return Result.Failure<List<ProductSummary>>(result.Error);
             }
 
-            return Result.Success(result.Value.Items.ToList());
+            var ordered = result.Value.Items
+                .OrderBy(p => aiProductIds.IndexOf(p.Id))
+                .ToList();
+
+            return Result.Success(ordered);
         }
         catch (Exception ex)
         {

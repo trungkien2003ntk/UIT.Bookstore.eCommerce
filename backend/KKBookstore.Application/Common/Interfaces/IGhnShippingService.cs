@@ -1,5 +1,5 @@
 using KKBookstore.Application.Common.Models.RequestDtos;
-using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Models;
 
 namespace KKBookstore.Common.Interfaces;
@@ -76,11 +76,21 @@ public interface IGhnShippingService
 
     /// <summary>
     /// Processes webhook status updates received from GHN delivery service.
-    /// Use this to handle real-time order status changes and update your system accordingly.
-    /// </summary>
+    /// Use this to handle real-time order status changes and update your system accordingly.    /// </summary>
     /// <param name="orderCode">The GHN order code that had a status update</param>
     /// <param name="ghnStatus">The new status from GHN</param>
     /// <param name="reason">Optional reason for the status change</param>
     /// <returns>Result indicating success or failure of processing the status update</returns>
     Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null);
+
+    /// <summary>
+    /// Processes an order status update from GHN webhook system with user context for manual triggers.
+    /// Updates the local order status based on GHN delivery status changes and records who triggered the update.
+    /// </summary>
+    /// <param name="orderCode">The GHN order code that had a status update</param>
+    /// <param name="ghnStatus">The new status from GHN</param>
+    /// <param name="reason">Optional reason for the status change</param>
+    /// <param name="triggeredByUserId">ID of the user who manually triggered the update (null for automatic webhooks)</param>
+    /// <returns>Result indicating success or failure of processing the status update</returns>
+    Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null, int? triggeredByUserId = null);
 }

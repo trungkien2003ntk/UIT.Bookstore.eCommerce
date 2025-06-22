@@ -14,7 +14,9 @@ public abstract class OrderProcessor(
 {
     protected readonly IApplicationDbContext _dbContext = dbContext;
     protected readonly IPaymentService _paymentService = paymentService;
-    protected readonly IEmailSender _emailService = emailService;    public async Task<Result<PlaceOrderResponse>> ProcessOrder(PlaceOrderCommand request, CancellationToken cancellationToken)
+    protected readonly IEmailSender _emailService = emailService;
+
+    public async Task<Result<PlaceOrderResponse>> ProcessOrder(PlaceOrderCommand request, CancellationToken cancellationToken)
     {
         using var transaction = await _dbContext.BeginTransactionAsync(cancellationToken);
         try
@@ -25,11 +27,22 @@ public abstract class OrderProcessor(
             {
                 await transaction.RollbackAsync(cancellationToken);
                 return Result.Failure<PlaceOrderResponse>(OrderErrors.InsufficientStock);
-            }
-
-            var order = await CreateOrder(request, checkoutItems, cancellationToken);
+            }            var order = await CreateOrder(request, checkoutItems, cancellationToken);
             await _dbContext.Orders.AddAsync(order, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+            
+            // Record initial order history (same status for from and to since it's creation)
+            var initialHistory = OrderHistory.Create(
+                orderId: order.Id,
+                fromStatus: OrderStatus.Pending,
+                toStatus: OrderStatus.Pending,
+                action: "Order created successfully",
+                triggeredByUserId: request.UserId
+            );
+            if (initialHistory.IsSuccess)
+            {
+                await _dbContext.OrderHistories.AddAsync(initialHistory.Value, cancellationToken);
+            }
 
             // NEW: Intelligent branch selection and inventory allocation
             var allocationResult = await AllocateInventoryFromNearestBranches(order, request, cancellationToken);
@@ -39,21 +52,27 @@ public abstract class OrderProcessor(
                 return Result.Failure<PlaceOrderResponse>(allocationResult.Error);
             }
 
-            var orderFulfillments = allocationResult.Value;
-
-            // Determine if admin confirmation is needed for packaging branch selection
+            var orderFulfillments = allocationResult.Value;            // Determine if admin confirmation is needed for packaging branch selection
             var requiresAdminConfirmation = RequiresAdminConfirmation(orderFulfillments);
             if (requiresAdminConfirmation)
             {
                 order.Status = OrderStatus.WaitForConfirmPackageBranch;
+                await RecordOrderHistory(order, OrderStatus.WaitForConfirmPackageBranch, "Order waiting for admin to confirm packaging branch", null, cancellationToken);
                 await NotifyAdminForBranchSelection(order, orderFulfillments, cancellationToken);
             }
-            else
+            else if (orderFulfillments.Count == 1)
             {
                 // Single branch - can proceed directly to packaging
                 order.Status = OrderStatus.Packaging;
+                await RecordOrderHistory(order, OrderStatus.Packaging, "Order automatically assigned to packaging branch", null, cancellationToken);
                 var singleFulfillment = orderFulfillments.First();
                 singleFulfillment.SelectForPackaging();
+            }
+            else if (orderFulfillments.Count == 0)
+            {
+                // No fulfillments found, rollback
+                await transaction.RollbackAsync(cancellationToken);
+                return Result.Failure<PlaceOrderResponse>(OrderErrors.NoFulfillmentsAvailable);
             }
 
             // Now reduce the actual stock
@@ -90,20 +109,39 @@ public abstract class OrderProcessor(
         catch (Exception ex)
         {
             // todo: log exception
+
             await transaction.RollbackAsync(cancellationToken);
             return Result.Failure<PlaceOrderResponse>(Error.Validation("error", ex.Message));
         }
-    }    protected abstract Task<List<ShoppingCartItem>> GetCheckoutItems(PlaceOrderCommand request, CancellationToken cancellationToken);
+    }
+    protected abstract Task<List<ShoppingCartItem>> GetCheckoutItems(PlaceOrderCommand request, CancellationToken cancellationToken);
     protected abstract Task<bool> CheckInventory(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken);
     protected abstract Task ReduceStock(List<ShoppingCartItem> checkoutItems, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken);
     protected abstract Task RemoveFromCart(List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken);
     protected abstract Task<Order> CreateOrder(PlaceOrderCommand request, List<ShoppingCartItem> checkoutItems, CancellationToken cancellationToken);
     protected abstract Task<bool> ApplyDiscountVouchers(Order order, PlaceOrderCommand request, CancellationToken cancellationToken);
     protected abstract Task<Result<string>> HandlePayment(PlaceOrderCommand request, Order order, CancellationToken cancellationToken);
-    protected abstract Task SendOrderConfirmation(int userId, Order order, CancellationToken cancellationToken);
-    
-    // NEW: Intelligent branch selection methods
+    protected abstract Task SendOrderConfirmation(int userId, Order order, CancellationToken cancellationToken);    // NEW: Intelligent branch selection methods
     protected abstract Task<Result<List<OrderFulfillment>>> AllocateInventoryFromNearestBranches(Order order, PlaceOrderCommand request, CancellationToken cancellationToken);
     protected abstract bool RequiresAdminConfirmation(List<OrderFulfillment> orderFulfillments);
-    protected abstract Task NotifyAdminForBranchSelection(Order order, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken);
+    protected abstract Task NotifyAdminForBranchSelection(Order order, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken);    // Helper method to record order history
+    protected async Task RecordOrderHistory(Order order, OrderStatus toStatus, string action, int? triggeredByUserId, CancellationToken cancellationToken, string? notes = null, string? externalReference = null)
+    {
+        var fromStatus = order.Status; // Capture current status before change
+        
+        var orderHistory = OrderHistory.Create(
+            orderId: order.Id,
+            fromStatus: fromStatus,
+            toStatus: toStatus,
+            action: action,
+            notes: notes,
+            triggeredByUserId: triggeredByUserId,
+            externalReference: externalReference
+        );
+
+        if (orderHistory.IsSuccess)
+        {
+            await _dbContext.OrderHistories.AddAsync(orderHistory.Value, cancellationToken);
+        }
+    }
 }

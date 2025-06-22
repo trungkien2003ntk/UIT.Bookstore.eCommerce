@@ -11,40 +11,42 @@ public class OrderConfirmationEmailModel : IEmailModel
     public int OrderId { get; }
     public string OrderNumber { get; }
     public decimal TotalAmount { get; }
+    public string TotalAmountFormatted => TotalAmount.ToString("N0") + " ₫";
     public DateTimeOffset OrderDate { get; }
     public DateTimeOffset ExpectedDeliveryDate { get; }
     public string? Note { get; }
     public List<OrderLineItem> OrderItems { get; }
     public decimal ShippingFee { get; }
+    public string ShippingFeeFormatted => ShippingFee.ToString("N0") + " ₫";
     public decimal? DiscountAmount { get; }
+    public string DiscountAmountFormatted => DiscountAmount.HasValue ? DiscountAmount.Value.ToString("N0") + " ₫" : "0 ₫";
     public string ShippingAddress { get; }
     public string PaymentMethod { get; }
-    public string DeliveryMethod { get; }
-
-    public object TemplateDataModel => new
+    public string DeliveryMethod { get; }    public object TemplateDataModel => new
     {
-        recipient_name = ReceiverFullName ?? "Khách hàng",
-        order_id = OrderId,
-        order_number = OrderNumber,
-        total_amount = TotalAmount,
-        order_date = OrderDate.ToString("dd/MM/yyyy HH:mm"),
-        expected_delivery_date = ExpectedDeliveryDate.ToString("dd/MM/yyyy"),
-        note = Note ?? "",
-        order_items = OrderItems.Select(item => new
+        RecipientName = ReceiverFullName ?? "Khách hàng",
+        OrderId = OrderId,
+        OrderNumber = OrderNumber,
+        TotalAmount = TotalAmount,
+        OrderDate = OrderDate.ToString("dd/MM/yyyy HH:mm"),
+        ExpectedDeliveryDate = ExpectedDeliveryDate.ToString("dd/MM/yyyy"),
+        Note = Note ?? "",
+        OrderItems = OrderItems.Select(item => new
         {
-            product_name = item.ProductName,
-            variant_name = item.VariantName,
-            quantity = item.Quantity,
-            unit_price = item.UnitPrice,
-            total_price = item.Quantity * item.UnitPrice,
-            thumbnail_url = item.ThumbnailUrl
+            ProductName = item.ProductName,
+            VariantName = item.VariantName,
+            Quantity = item.Quantity,
+            UnitPrice = item.UnitPrice,
+            UnitPriceFormatted = item.UnitPriceFormatted,
+            TotalPrice = item.Quantity * item.UnitPrice,
+            ThumbnailUrl = item.ThumbnailUrl
         }),
-        shipping_fee = ShippingFee,
-        discount_amount = DiscountAmount ?? 0,
-        shipping_address = ShippingAddress,
-        payment_method = PaymentMethod,
-        delivery_method = DeliveryMethod,
-        subtotal = OrderItems.Sum(item => item.Quantity * item.UnitPrice)
+        ShippingFee = ShippingFee,
+        DiscountAmount = DiscountAmount ?? 0,
+        ShippingAddress = ShippingAddress,
+        PaymentMethod = PaymentMethod,
+        DeliveryMethod = DeliveryMethod,
+        SubtotalFormatted = OrderItems.Sum(item => item.Quantity * item.UnitPrice).ToString("N0") + " ₫",
     };
 
     public OrderConfirmationEmailModel(
@@ -84,5 +86,6 @@ public class OrderLineItem
     public string VariantName { get; set; } = string.Empty;
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
+    public string UnitPriceFormatted => UnitPrice.ToString("N0") + " ₫";
     public string? ThumbnailUrl { get; set; }
 }

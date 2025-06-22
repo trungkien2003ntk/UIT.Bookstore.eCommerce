@@ -13,24 +13,22 @@ public class AdminBranchSelectionEmailModel : IEmailModel
     public string CustomerName { get; }
     public DateTime OrderDate { get; }
     public List<BranchSelectionOption> BranchOptions { get; }
-    public decimal TotalOrderValue { get; }
-
-    public object TemplateDataModel => new
+    public decimal TotalOrderValue { get; }    public object TemplateDataModel => new
     {
-        recipient_name = ReceiverFullName ?? "Admin",
-        order_id = OrderId,
-        order_number = OrderNumber,
-        customer_name = CustomerName,
-        order_date = OrderDate.ToString("dd/MM/yyyy HH:mm"),
-        branch_options = BranchOptions.Select(b => new
+        RecipientName = ReceiverFullName ?? "Admin",
+        OrderId = OrderId,
+        OrderNumber = OrderNumber,
+        CustomerName = CustomerName,
+        OrderDate = OrderDate.ToString("dd/MM/yyyy HH:mm"),
+        BranchOptions = BranchOptions.Select(b => new
         {
-            branch_id = b.BranchId,
-            branch_name = b.BranchName,
-            distance_km = b.DistanceKm.ToString("F2"),
-            total_items = b.TotalItems,
-            total_value = b.TotalValue.ToString("N0")
+            BranchId = b.BranchId,
+            BranchName = b.BranchName,
+            DistanceKm = b.DistanceKm.ToString("F2"),
+            TotalItems = b.TotalItems,
+            TotalValue = b.TotalValue.ToString("N0")
         }).ToList(),
-        total_order_value = TotalOrderValue.ToString("N0")
+        TotalOrderValue = TotalOrderValue.ToString("N0")
     };
 
     public AdminBranchSelectionEmailModel(

@@ -70,13 +70,37 @@ public class ShippingService : IShippingService
             _logger.LogError(ex, "Error fetching communes for district ID {DistrictId}.", districtId);
             return Result.Failure<GetCommuneResponse>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
-    }
-
-    public async Task<Result<ShippingFeeResponse>> GetShippingFeeAsync(ShippingFeeRequest request, CancellationToken cancellationToken)
+    }    public async Task<Result<ShippingFeeResponse>> GetShippingFeeAsync(ShippingFeeRequest request, CancellationToken cancellationToken)
     {
         try
         {
             _logger.LogInformation("Calculating shipping fee with request: {@Request}", request);
+            
+            // Fetch available services to get the service with the lowest service_id
+            var availableServicesResult = await GetAvailableServicesAsync(request.ToDistrictId, cancellationToken);
+            if (availableServicesResult.IsFailure)
+            {
+                _logger.LogError("Failed to fetch available services for district ID {ToDistrictId}: {Error}", 
+                    request.ToDistrictId, availableServicesResult.Error);
+                return Result.Failure<ShippingFeeResponse>(availableServicesResult.Error);
+            }
+
+            var availableServices = availableServicesResult.Value.Data;
+            if (availableServices == null || !availableServices.Any())
+            {
+                _logger.LogWarning("No available services found for district ID {ToDistrictId}", request.ToDistrictId);
+                return Result.Failure<ShippingFeeResponse>(ShippingServiceErrors.RequestFailed("No available services found for the destination district"));
+            }
+
+            // Select the service with the lowest service_id
+            var selectedService = availableServices.OrderBy(s => s.ServiceId).First();
+            _logger.LogInformation("Selected service with ID {ServiceId} and type ID {ServiceTypeId} for district {ToDistrictId}", 
+                selectedService.ServiceId, selectedService.ServiceTypeId, request.ToDistrictId);
+
+            // Update the request with the dynamic service information
+            request.ServiceId = selectedService.ServiceId;
+            request.ServiceTypeId = selectedService.ServiceTypeId;
+
             var queryString = $"service_id={request.ServiceId}&service_type_id={request.ServiceTypeId}&to_district_id={request.ToDistrictId}&to_ward_code={request.ToWardCode}&height={request.Height}&length={request.Length}&width={request.Width}&weight={request.Weight}&insurance_value={request.InsuranceValue}&cod_failed_amount={request.CodFailedAmount}";
             var apiEndpoint = $"{configuration.BaseApiUrl}{configuration.Version}/{configuration.BaseShippingFee}?{queryString}";
 
@@ -173,6 +197,40 @@ public class ShippingService : IShippingService
         {
             _logger.LogError(ex, "Error calculating expected delivery time with request: {@Request}", request);
             return Result.Failure<DateTimeOffset>(ShippingServiceErrors.RequestFailed(ex.Message));
+        }
+    }
+
+    public async Task<Result<AvailableServicesResponse>> GetAvailableServicesAsync(int toDistrictId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            _logger.LogInformation("Fetching available services for district ID {ToDistrictId} from shipping service.", toDistrictId);
+            
+            var request = new AvailableServicesRequest
+            {
+                ShopId = configuration.ShopId,
+                FromDistrict = configuration.FromDistrictId,
+                ToDistrict = toDistrictId
+            };
+            
+            var apiEndpoint = $"{configuration.BaseApiUrl}{configuration.Version}/{configuration.BaseAvailableServices}";
+            var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            
+            var response = await _httpClient.PostAsync(apiEndpoint, content, cancellationToken);
+            var result = await response.Content.ReadFromJsonAsync<AvailableServicesResponse>(cancellationToken: cancellationToken);
+            
+            if (result == null)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                return Result.Failure<AvailableServicesResponse>(ShippingServiceErrors.RequestFailed(errorContent));
+            }
+            
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching available services for district ID {ToDistrictId}.", toDistrictId);
+            return Result.Failure<AvailableServicesResponse>(ShippingServiceErrors.RequestFailed(ex.Message));
         }
     }
 }

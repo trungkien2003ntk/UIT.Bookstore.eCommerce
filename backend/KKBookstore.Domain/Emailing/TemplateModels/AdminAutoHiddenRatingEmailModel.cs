@@ -10,14 +10,12 @@ public class AdminAutoHiddenRatingEmailModel : IEmailModel
 
     public int RatingId { get; }
     public string Comment { get; }
-    public int AiScore { get; }
-
-    public object TemplateDataModel => new
+    public int AiScore { get; }    public object TemplateDataModel => new
     {
-        recipient_name = ReceiverFullName ?? "Admin",
-        rating_id = RatingId,
-        comment = Comment,
-        ai_score = AiScore
+        RecipientName = ReceiverFullName ?? "Admin",
+        RatingId = RatingId,
+        Comment = Comment,
+        AiScore = AiScore
     };
 
     public AdminAutoHiddenRatingEmailModel(int ratingId, string comment, int aiScore, string? receiverFullName = null)

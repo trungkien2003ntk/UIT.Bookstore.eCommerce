@@ -9,13 +9,11 @@ public class UserHiddenRatingEmailModel : IEmailModel
     public string? ReceiverFullName { get; set; }
 
     public int RatingId { get; }
-    public string Reason { get; }
-
-    public object TemplateDataModel => new
+    public string Reason { get; }    public object TemplateDataModel => new
     {
-        recipient_name = ReceiverFullName ?? "Khách hàng",
-        rating_id = RatingId,
-        reason = Reason
+        RecipientName = ReceiverFullName ?? "Khách hàng",
+        RatingId = RatingId,
+        Reason = Reason
     };
 
     public UserHiddenRatingEmailModel(int ratingId, string reason, string? receiverFullName = null)

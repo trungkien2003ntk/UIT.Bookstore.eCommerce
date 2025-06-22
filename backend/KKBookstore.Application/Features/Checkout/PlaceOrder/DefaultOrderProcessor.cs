@@ -193,11 +193,15 @@ public class DefaultOrderProcessor(
                 .ThenInclude(ol => ol.ProductVariant)
                     .ThenInclude(pv => pv.ProductVariantOptionValues!)
                         .ThenInclude(pvov => pvov.OptionValue)
+            .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.ProductVariant)
+                    .ThenInclude(pv => pv.Inventories)
             .Include(o => o.ShippingAddress)
             .Include(o => o.PaymentMethod)
             .Include(o => o.DeliveryMethod)
             .Include(o => o.PriceDiscountVoucher)
             .Include(o => o.ShippingDiscountVoucher)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
 
         if (orderWithDetails == null) return;

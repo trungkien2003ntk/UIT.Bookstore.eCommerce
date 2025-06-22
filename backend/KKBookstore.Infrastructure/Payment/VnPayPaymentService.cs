@@ -18,6 +18,7 @@ public class VnPayPaymentService(IOptions<VnPayConfiguration> options) : IPaymen
         pay.AddRequestData("vnp_Version", _configuration.Version);
         pay.AddRequestData("vnp_Command", _configuration.Command);
         pay.AddRequestData("vnp_TmnCode", _configuration.TmnCode);
+        //pay.AddRequestData("vnp_BankCode", _configuration.BankCode);
         pay.AddRequestData("vnp_Amount", ((int)request.Amount * 100).ToString());
         pay.AddRequestData("vnp_CreateDate", timeNow.ToString("yyyyMMddHHmmss"));
         pay.AddRequestData("vnp_CurrCode", _configuration.CurrCode);

@@ -50,7 +50,8 @@ public class UpdateShoppingCartMappingService(
             {
                 Subtotal = shoppingCart.TotalRecommendedRetailPrice,
                 TotalSaved = shoppingCart.TotalSavedAmount,
-                Total = shoppingCart.TotalUnitPrice,
+                TotalDiscounted = discountFromVoucherAmount,
+                Total = shoppingCart.TotalRecommendedRetailPrice - shoppingCart.TotalSavedAmount - discountFromVoucherAmount,
                 Breakdown = breakdown
             }
         };

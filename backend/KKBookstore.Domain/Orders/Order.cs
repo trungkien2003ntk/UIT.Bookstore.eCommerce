@@ -51,17 +51,16 @@ public class Order : BaseAuditedEntity
     public DateTimeOffset ExpectedDeliveryWhen { get; set; }
     public DateTimeOffset? PickingCompletedWhen { get; set; }
     public DateTimeOffset? ConfirmedDeliveryWhen { get; set; }
-    public DateTimeOffset? ConfirmedReceivedWhen { get; set; }
-
-    // navigation properties
+    public DateTimeOffset? ConfirmedReceivedWhen { get; set; }    // navigation properties
     public ShippingAddress ShippingAddress { get; set; }
     public PaymentMethod? PaymentMethod { get; set; }
     public DeliveryMethod? DeliveryMethod { get; set; }
     public DiscountVoucher? PriceDiscountVoucher { get; set; }
     public DiscountVoucher? ShippingDiscountVoucher { get; set; }
-    public Customer Customer { get; set; }
-    public ICollection<OrderLine> OrderLines { get; set; } = [];
+    public Customer Customer { get; set; }    public ICollection<OrderLine> OrderLines { get; set; } = [];
     public ICollection<Transaction> Transactions { get; set; } = [];
+    public ICollection<OrderFulfillment> OrderFulfillments { get; set; } = [];
+    public ICollection<OrderHistory> OrderHistories { get; set; } = [];
 
     public Result ApplyVoucher(DiscountVoucher voucher)
     {
@@ -118,6 +117,72 @@ public class Order : BaseAuditedEntity
     public bool IsCompleted()
     {
         return Status == OrderStatus.Received || Status == OrderStatus.Delivered;
+    }
+
+    public bool RequiresAdminBranchSelection()
+    {
+        return Status == OrderStatus.WaitForConfirmPackageBranch;
+    }
+
+    public bool CanStartPackaging()
+    {
+        return Status == OrderStatus.WaitForConfirmPackageBranch || Status == OrderStatus.Packaging;
+    }
+
+    public bool CanConfirmReceived()
+    {
+        return Status == OrderStatus.Delivered;
+    }
+
+    public Result SelectBranchForPackaging(int branchId)
+    {
+        if (!RequiresAdminBranchSelection())
+        {
+            return Result.Failure(Error.Validation("Order.InvalidStatus", 
+                "Order must be waiting for branch confirmation to select packaging branch"));
+        }
+
+        var fulfillment = OrderFulfillments.FirstOrDefault(of => of.BranchId == branchId);
+        if (fulfillment == null)
+        {
+            return Result.Failure(Error.Validation("OrderFulfillment.NotFound", 
+                "No inventory allocation found for the selected branch"));
+        }
+
+        fulfillment.SelectForPackaging();
+        Status = OrderStatus.Packaging;
+
+        return Result.Success();
+    }
+
+    public Result StartShipping(string ghnOrderCode)
+    {
+        if (Status != OrderStatus.Packaging)
+        {
+            return Result.Failure(Error.Validation("Order.InvalidStatus", 
+                "Order must be in packaging status to start shipping"));
+        }
+
+        Status = OrderStatus.Shipped;
+        Comment = string.IsNullOrEmpty(Comment) 
+            ? $"GHN Order Code: {ghnOrderCode}" 
+            : $"{Comment}\nGHN Order Code: {ghnOrderCode}";
+
+        return Result.Success();
+    }
+
+    public Result ConfirmReceived()
+    {
+        if (!CanConfirmReceived())
+        {
+            return Result.Failure(Error.Validation("Order.InvalidStatus", 
+                "Order must be delivered before it can be confirmed as received"));
+        }
+
+        Status = OrderStatus.Received;
+        ConfirmedReceivedWhen = DateTimeOffset.Now;
+
+        return Result.Success();
     }
 
     public static Result<Order> Create(

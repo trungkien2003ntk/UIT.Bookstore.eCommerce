@@ -117,6 +117,7 @@ public class ConfirmCheckoutHandler(
                 expectedDeliveryTime = expectedDeliveryTimeResult.Value;
             }
 
+            var itemTotalRecommended = checkoutItems.Sum(i => i.TotalRecommendedRetailPrice);
             var itemSubtotal = checkoutItems.Sum(i => i.TotalUnitPrice);
             var orderSubtotal = itemSubtotal + shippingFee;
 
@@ -191,7 +192,8 @@ public class ConfirmCheckoutHandler(
 
                 PriceSummary = new()
                 {
-                    Subtotal = itemSubtotal,
+                    Subtotal = itemTotalRecommended,
+                    ProductDiscount = itemTotalRecommended - itemSubtotal,
                     ShippingFee = shippingFee,
                     ShippingDiscount = shippingDiscount,
                     OrderVoucherDiscount = orderDiscount,

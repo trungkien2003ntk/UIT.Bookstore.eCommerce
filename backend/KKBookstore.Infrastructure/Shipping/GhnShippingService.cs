@@ -1,6 +1,6 @@
 using KKBookstore.Application.Common.Models.RequestDtos;
-using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using KKBookstore.Shipping;
@@ -72,7 +72,9 @@ public class GhnShippingService : IGhnShippingService
             "lost" => OrderStatus.Cancelled,
             _ => OrderStatus.Processing // Default fallback
         };
-    }    public GhnOrderStatus MapStringToGhnOrderStatus(string ghnStatus)
+    }    
+    
+    public GhnOrderStatus MapStringToGhnOrderStatus(string ghnStatus)
     {
         _logger.LogDebug("Mapping GHN status string '{GhnStatus}' to GhnOrderStatus enum", ghnStatus);
         
@@ -102,14 +104,17 @@ public class GhnShippingService : IGhnShippingService
             "lost" => GhnOrderStatus.Lost,
             _ => GhnOrderStatus.ReadyToPick // Default fallback
         };
+    }    public async Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null)
+    {
+        return await ProcessOrderStatusUpdateAsync(orderCode, ghnStatus, reason, null);
     }
 
-    public async Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null)
+    public async Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null, int? triggeredByUserId = null)
     {
         try
         {
-            _logger.LogInformation("Processing order status update for GHN order {OrderCode} to status {Status}",
-                orderCode, ghnStatus);
+            _logger.LogInformation("Processing order status update for GHN order {OrderCode} to status {Status}. Triggered by user: {UserId}",
+                orderCode, ghnStatus, triggeredByUserId);
 
             // Find order by GHN order code
             var order = await _context.Orders
@@ -125,15 +130,44 @@ public class GhnShippingService : IGhnShippingService
             var newStatus = MapGhnStatusToOrderStatus(ghnStatus);
             var previousStatus = order.Status;
 
+            // Skip if status hasn't changed
+            if (previousStatus == newStatus)
+            {
+                _logger.LogInformation("Order {OrderId} status unchanged ({Status}), skipping update", order.Id, newStatus);
+                return Result.Success();
+            }
+
             order.Status = newStatus;
             order.LastModificationTime = DateTime.UtcNow;
 
             // Add status change reason if provided
+            var statusChangeNote = string.Empty;
             if (!string.IsNullOrEmpty(reason))
             {
+                statusChangeNote = $"GHN Status Change: {reason}";
                 order.Comment = string.IsNullOrEmpty(order.Comment)
-                    ? $"GHN Status Change: {reason}"
-                    : $"{order.Comment}\nGHN Status Change: {reason}";
+                    ? statusChangeNote
+                    : $"{order.Comment}\n{statusChangeNote}";
+            }
+
+            // Record order history
+            var actionDescription = triggeredByUserId.HasValue 
+                ? "Manual GHN status update via admin trigger" 
+                : "Automatic GHN webhook status update";
+
+            var orderHistory = OrderHistory.Create(
+                orderId: order.Id,
+                fromStatus: previousStatus,
+                toStatus: newStatus,
+                action: actionDescription,
+                notes: statusChangeNote,
+                triggeredByUserId: triggeredByUserId,
+                externalReference: orderCode
+            );
+
+            if (orderHistory.IsSuccess)
+            {
+                await _context.OrderHistories.AddAsync(orderHistory.Value);
             }
 
             await _context.SaveChangesAsync();

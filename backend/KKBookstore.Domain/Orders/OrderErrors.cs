@@ -5,6 +5,7 @@ namespace KKBookstore.Orders;
 public static class OrderErrors
 {
     // list all possible order error using the KKBookstore.Common.Error record
+    public static readonly Error NotFound = Error.NotFound("Order.Error.NotFound", "Order was not found");
     public static readonly Error OrderNotFound = Error.NotFound("Order.Error.OrderNotFound", "Order was not found");
     public static readonly Error OrderAlreadyCancelled = Error.Conflict("Order.Error.OrderAlreadyCancelled", "Order was already cancelled");
     public static readonly Error OrderAlreadyDelivered = Error.Conflict("Order.Error.OrderAlreadyDelivered", "Order was already delivered");
@@ -40,6 +41,7 @@ public static class OrderErrors
     public static readonly Error InsufficientStock = Error.BusinessRuleViolation("Order.Error.InsufficientStock", "Insufficient stock");
     public static readonly Error OrderCreationFailed = Error.Failure("Order.Error.OrderCreationFailed", "Order creation failed");
 
+    public static readonly Error NoFulfillmentsAvailable = Error.BusinessRuleViolation("Order.Error.NoFulfillmentsAvailable", "No fulfillments available for this order");
 
     public static readonly Error DiscountVoucherNotAvailable = Error.BusinessRuleViolation("Order.Error.DiscountVoucherNotAvailable", "Discount voucher not available");
 }

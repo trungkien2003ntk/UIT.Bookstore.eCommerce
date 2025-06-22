@@ -65,6 +65,7 @@ public class GetOrderDetailHandler(
         var subtotal = order.Subtotal;
         var taxAmount = subtotal * order.TaxRate;
         var shippingFee = order.ShippingFee;
+        var productDiscount = order.ProductDiscount; ;
 
         var priceDiscountAmount = 0m;
         var shippingDiscountAmount = 0m;
@@ -79,7 +80,7 @@ public class GetOrderDetailHandler(
             shippingDiscountAmount = order.ShippingDiscountVoucher.GetDiscountValue(shippingFee);
         }
 
-        var total = subtotal + taxAmount + shippingFee - priceDiscountAmount - shippingDiscountAmount;
+        var total = subtotal + taxAmount + shippingFee - productDiscount - priceDiscountAmount - shippingDiscountAmount;
         var paidAmount = order.CalculateTotal(); // This should match our calculation
         var remainingAmount = total - paidAmount;
 
@@ -106,8 +107,9 @@ public class GetOrderDetailHandler(
                 TaxRate = order.TaxRate,
                 TaxAmount = taxAmount,
                 ShippingFee = shippingFee,
-                ProductDiscount = priceDiscountAmount,
+                OrderVoucherDiscount = priceDiscountAmount,
                 ShippingDiscount = shippingDiscountAmount,
+                ProductDiscount = productDiscount,
                 Total = total,
                 PaidAmount = paidAmount,
                 RemainingAmount = remainingAmount

@@ -13,46 +13,47 @@ public record GetOrderDetailResponse : BaseDto
     public DateTimeOffset? PickingCompletedWhen { get; init; }
     public DateTimeOffset? ConfirmedDeliveryWhen { get; init; }
     public DateTimeOffset? ConfirmedReceivedWhen { get; init; }
-    
+
     public required string Status { get; init; }
     public int CustomerId { get; init; }
     public string? Comment { get; init; }
     public string? DeliveryInstruction { get; init; }
-    
+
     // Price Summary - similar to ConfirmCheckoutResponse
     public required OrderPriceSummary PriceSummary { get; init; }
-    
+
     // Address and Methods
     public required DeliveryMethodDto DeliveryMethod { get; init; }
     public required PaymentMethodDto PaymentMethod { get; init; }
     public required ShippingAddressDto ShippingAddress { get; init; }
-    
+
     // Vouchers (full details, not just IDs)
     public DiscountVoucherDto? PriceDiscountVoucher { get; init; }
     public DiscountVoucherDto? ShippingDiscountVoucher { get; init; }
-    
+
     // Order Lines
     public IEnumerable<OrderLineDto> OrderLines { get; init; } = [];
-    
+
     // Fulfillment Information
     public IEnumerable<OrderFulfillmentDto> Fulfillments { get; init; } = [];
-    
+
     // Customer Information (denormalized for convenience)
     public required CustomerSummaryDto Customer { get; init; }
-    
+
     public sealed record OrderPriceSummary
     {
         public decimal Subtotal { get; init; }
+        public decimal ProductDiscount { get; init; }
         public decimal TaxRate { get; init; }
         public decimal TaxAmount { get; init; }
         public decimal ShippingFee { get; init; }
-        public decimal ProductDiscount { get; init; }
+        public decimal OrderVoucherDiscount { get; init; }
         public decimal ShippingDiscount { get; init; }
         public decimal Total { get; init; }
         public decimal PaidAmount { get; init; }
         public decimal RemainingAmount { get; init; }
     }
-    
+
     public sealed record DiscountVoucherDto : BaseDto
     {
         public required string Name { get; init; }
@@ -62,7 +63,7 @@ public record GetOrderDetailResponse : BaseDto
         public decimal MaxDiscountValue { get; init; }
         public bool IsPercentage { get; init; }
     }
-    
+
     public sealed record OrderFulfillmentDto : BaseDto
     {
         public int BranchId { get; init; }
@@ -76,7 +77,7 @@ public record GetOrderDetailResponse : BaseDto
         public string? TrackingNumber { get; init; }
         public string? ShippingCarrier { get; init; }
     }
-    
+
     public sealed record CustomerSummaryDto : BaseDto
     {
         public required string FullName { get; init; }

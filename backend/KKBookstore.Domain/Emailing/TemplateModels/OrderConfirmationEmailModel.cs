@@ -22,7 +22,8 @@ public class OrderConfirmationEmailModel : IEmailModel
     public string DiscountAmountFormatted => DiscountAmount.HasValue ? DiscountAmount.Value.ToString("N0") + " ₫" : "0 ₫";
     public string ShippingAddress { get; }
     public string PaymentMethod { get; }
-    public string DeliveryMethod { get; }    public object TemplateDataModel => new
+    public string DeliveryMethod { get; }
+    public object TemplateDataModel => new
     {
         RecipientName = ReceiverFullName ?? "Khách hàng",
         OrderId = OrderId,
@@ -38,15 +39,19 @@ public class OrderConfirmationEmailModel : IEmailModel
             Quantity = item.Quantity,
             UnitPrice = item.UnitPrice,
             UnitPriceFormatted = item.UnitPriceFormatted,
-            TotalPrice = item.Quantity * item.UnitPrice,
+            RecommendedRetailPrice = item.RecommendedRetailPrice,
+            RecomendedRetailPriceFormatted = item.RecommendedRetailPriceFormatted,
+            TotalPrice = item.Quantity * item.RecommendedRetailPrice,
+            TotalPriceFormatted = (item.Quantity * item.RecommendedRetailPrice).ToString("N0") + " ₫",
             ThumbnailUrl = item.ThumbnailUrl
         }),
         ShippingFee = ShippingFee,
         DiscountAmount = DiscountAmount ?? 0,
+        DiscountAmountFormatted = DiscountAmountFormatted,
         ShippingAddress = ShippingAddress,
         PaymentMethod = PaymentMethod,
         DeliveryMethod = DeliveryMethod,
-        SubtotalFormatted = OrderItems.Sum(item => item.Quantity * item.UnitPrice).ToString("N0") + " ₫",
+        SubtotalFormatted = OrderItems.Sum(item => item.Quantity * item.RecommendedRetailPrice).ToString("N0") + " ₫",
     };
 
     public OrderConfirmationEmailModel(
@@ -87,5 +92,7 @@ public class OrderLineItem
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public string UnitPriceFormatted => UnitPrice.ToString("N0") + " ₫";
+    public decimal RecommendedRetailPrice { get; set; }
+    public string RecommendedRetailPriceFormatted => RecommendedRetailPrice.ToString("N0") + " ₫";
     public string? ThumbnailUrl { get; set; }
 }

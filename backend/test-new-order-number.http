@@ -1,0 +1,31 @@
+### Test New Order Number Format
+# This file tests the new order number format: SO-yymmdd<HCM><unique>
+
+### 1. Create a new order to test the new order number format
+POST https://localhost:7196/api/checkout/place-order
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "shippingAddressId": 1,
+  "deliveryMethodId": 1,
+  "paymentMethodId": 1,
+  "comment": "Test order for new order number format"
+}
+
+### Expected Result:
+# - Order number format should be: SO-yymmdd<HCM><unique>
+# - Example: SO-241220HCM121534579912
+# - Where:
+#   - SO = Sales Order prefix
+#   - 241220 = Date (24/12/20 for 2024-12-20)
+#   - HCM = Ho Chi Minh branch code
+#   - 121534579912 = Unique timestamp-based identifier
+
+### 2. Get order details to verify the order number format
+GET https://localhost:7196/api/orders/{{order_id}}
+Authorization: Bearer {{access_token}}
+
+### 3. List recent orders to see multiple order numbers
+GET https://localhost:7196/api/orders?PageSize=5&SortBy=CreationTime&SortDirection=desc
+Authorization: Bearer {{access_token}}

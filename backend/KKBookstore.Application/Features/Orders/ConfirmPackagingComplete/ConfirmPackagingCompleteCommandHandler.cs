@@ -1,4 +1,3 @@
-using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Application.Common.Models.RequestDtos;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Models;
@@ -29,12 +28,24 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
     {
         try
         {
+            // Find the branch that is selected for packaging
+            var selectedFulfillment = await _dbContext.OrderFulfillments
+                .Where(of => of.OrderId == request.OrderId && of.IsSelectedForPackaging)
+                .FirstOrDefaultAsync();
+
+            if (selectedFulfillment == null)
+            {
+                return Result.Failure<ConfirmPackagingCompleteResponse>(
+                    Error.Validation("OrderFulfillment.NotSelected", "No branch selected for packaging"));
+            }
+            var branchId = selectedFulfillment.BranchId;
+
             // Get the order with all necessary data
             var order = await _dbContext.Orders
-                .Include(o => o.OrderFulfillments.Where(of => of.BranchId == request.BranchId))
+                .Include(o => o.OrderFulfillments.Where(of => of.BranchId == branchId))
                     .ThenInclude(of => of.Branch)
                         .ThenInclude(b => b.Address)
-                .Include(o => o.OrderFulfillments.Where(of => of.BranchId == request.BranchId))
+                .Include(o => o.OrderFulfillments.Where(of => of.BranchId == branchId))
                     .ThenInclude(of => of.OrderLineAllocations)
                         .ThenInclude(ola => ola.ProductVariant)
                             .ThenInclude(pv => pv.Product)
@@ -72,7 +83,7 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
 
             if (!ghnResult.Success)
             {
-                _logger.LogError("Failed to create GHN order for order {OrderId}: {Error}", 
+                _logger.LogError("Failed to create GHN order for order {OrderId}: {Error}",
                     order.Id, ghnResult.ErrorMessage);
                 return Result.Failure<ConfirmPackagingCompleteResponse>(
                     Error.Failure("GhnOrder.CreationFailed", ghnResult.ErrorMessage ?? "Failed to create shipping order"));
@@ -99,7 +110,7 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Completed packaging and created GHN order {GhnOrderCode} for order {OrderId}", 
+            _logger.LogInformation("Completed packaging and created GHN order {GhnOrderCode} for order {OrderId}",
                 ghnResult.OrderCode, order.Id);
 
             var response = new ConfirmPackagingCompleteResponse
@@ -124,7 +135,7 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
     {
         var branch = fulfillment.Branch;
         var shippingAddress = order.ShippingAddress;
-        var customer = order.Customer;        var items = fulfillment.OrderLineAllocations.Select(ola => new GhnOrderItem
+        var customer = order.Customer; var items = fulfillment.OrderLineAllocations.Select(ola => new GhnOrderItem
         {
             Name = ola.ProductVariant.Product.Name,
             Code = ola.ProductVariant.SkuValue?.Value ?? "N/A",
@@ -150,7 +161,8 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
             ToPhone = customer.PhoneNumber ?? string.Empty,
             ToAddress = $"{shippingAddress.DetailAddress}, {shippingAddress.CommuneName}, {shippingAddress.DistrictName}, {shippingAddress.ProvinceName}",
             ToWardCode = shippingAddress.CommuneCode ?? "00000",
-            ToDistrictId = shippingAddress.DistrictId,            CodAmount = (int)(order.CalculateTotal() * 100), // Convert to cents
+            ToDistrictId = shippingAddress.DistrictId,
+            CodAmount = (int)(order.CalculateTotal() * 100), // Convert to cents
             Content = $"Order {order.OrderNumber} - {items.Count} items",
             Weight = items.Sum(i => i.Weight * i.Quantity),
             Length = items.Any() ? items.Max(i => i.Length) ?? 20 : 20,

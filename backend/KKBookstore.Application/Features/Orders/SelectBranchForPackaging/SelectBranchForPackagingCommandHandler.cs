@@ -1,6 +1,5 @@
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Emailing;
-using KKBookstore.Emailing.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using MediatR;
@@ -47,7 +46,7 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
             // Check if order is in correct status
             if (order.Status != OrderStatus.WaitForConfirmPackageBranch)
             {
-                return Result.Failure(Error.Validation("Order.InvalidStatus", 
+                return Result.Failure(Error.Validation("Order.InvalidStatus",
                     "Order must be in WaitForConfirmPackageBranch status to select branch for packaging"));
             }
 
@@ -57,14 +56,14 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
 
             if (fulfillment == null)
             {
-                return Result.Failure(Error.Validation("OrderFulfillment.NotFound", 
+                return Result.Failure(Error.Validation("OrderFulfillment.NotFound",
                     "No inventory allocation found for the selected branch"));
             }
 
             // Check if branch has sufficient inventory
             if (!fulfillment.OrderLineAllocations.Any())
             {
-                return Result.Failure(Error.Validation("OrderFulfillment.NoInventory", 
+                return Result.Failure(Error.Validation("OrderFulfillment.NoInventory",
                     "Selected branch has no allocated inventory for this order"));
             }            // Select the branch for packaging
             fulfillment.SelectForPackaging();
@@ -93,7 +92,7 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
             // Send email notification to branch
             await SendBranchNotificationEmail(order, fulfillment.Branch, cancellationToken);
 
-            _logger.LogInformation("Selected branch {BranchId} for packaging order {OrderId}", 
+            _logger.LogInformation("Selected branch {BranchId} for packaging order {OrderId}",
                 request.BranchId, request.OrderId);
 
             return Result.Success();
@@ -101,7 +100,7 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error selecting branch for packaging order {OrderId}", request.OrderId);
-            return Result.Failure(Error.Failure("SelectBranchForPackaging.Failed", 
+            return Result.Failure(Error.Failure("SelectBranchForPackaging.Failed",
                 "Failed to select branch for packaging"));
         }
     }
@@ -109,7 +108,8 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
     private async Task SendBranchNotificationEmail(Order order, KKBookstore.Branches.Branch branch, CancellationToken cancellationToken)
     {
         try
-        {            var emailModel = new BranchPackagingNotificationEmailModel
+        {
+            var emailModel = new BranchPackagingNotificationEmailModel
             {
                 BranchName = branch.Name,
                 OrderNumber = order.OrderNumber,
@@ -127,7 +127,7 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
                 emailModel: emailModel
             );
 
-            _logger.LogInformation("Sent packaging notification email to branch {BranchName} for order {OrderNumber}", 
+            _logger.LogInformation("Sent packaging notification email to branch {BranchName} for order {OrderNumber}",
                 branch.Name, order.OrderNumber);
         }
         catch (Exception ex)

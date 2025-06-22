@@ -15,6 +15,7 @@ public record GetBranchListQuery()
 {
     public bool? IsDeleted { get; set; }
     public bool? IsDefault { get; set; }
+    public bool? IsActive { get; set; }
     public string? SearchQuery { get; set; }
 }
 
@@ -28,16 +29,9 @@ public class GetBranchListQueryHandler(
             .AsNoTracking()
             .Include(b => b.Address);
 
-        // Apply filters
-        if (request.IsDeleted.HasValue)
-        {
-            query = query.Where(b => b.IsDeleted == request.IsDeleted.Value);
-        }
-
-        if (request.IsDefault.HasValue)
-        {
-            query = query.Where(b => b.IsDefault == request.IsDefault.Value);
-        }
+        query = query.WhereIf(request.IsDeleted.HasValue, b => b.IsDeleted == request.IsDeleted!.Value)
+            .WhereIf(request.IsActive.HasValue, b => b.IsDeleted == !request.IsActive!.Value)
+            .WhereIf(request.IsDefault.HasValue, b => b.IsDefault == request.IsDefault!.Value);
 
         if (!string.IsNullOrWhiteSpace(request.SearchQuery))
         {
@@ -94,6 +88,7 @@ public class GetBranchListQueryHandler(
                 Description = b.Description,
                 IsDefault = b.IsDefault,
                 IsDeleted = b.IsDeleted,
+                IsActive = b.IsActive,
                 Address = new AddressSummary
                 {
                     ProvinceId = b.Address.ProvinceId,

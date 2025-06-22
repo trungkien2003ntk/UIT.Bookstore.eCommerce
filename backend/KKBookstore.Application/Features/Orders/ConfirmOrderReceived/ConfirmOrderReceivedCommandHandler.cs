@@ -1,4 +1,3 @@
-using KKBookstore.Application.Common.Interfaces;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Models;
 using KKBookstore.Orders;
@@ -26,7 +25,7 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
         try
         {
             var order = await _dbContext.Orders
-                .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.CustomerId == request.CustomerId, 
+                .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.CustomerId == request.CustomerId,
                     cancellationToken);
 
             if (order == null)
@@ -37,33 +36,12 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
             // Check if order can be confirmed as received
             if (order.Status != OrderStatus.Delivered)
             {
-                return Result.Failure(Error.Validation("Order.InvalidStatus", 
+                return Result.Failure(Error.Validation("Order.InvalidStatus",
                     "Order must be delivered before it can be confirmed as received"));
             }            // Update order status and timestamp
             var previousStatus = order.Status;
             order.Status = OrderStatus.Received;
             order.ConfirmedReceivedWhen = DateTimeOffset.Now;
-
-            // Add customer feedback if provided
-            var feedbackNotes = string.Empty;
-            if (!string.IsNullOrEmpty(request.FeedbackNotes) || request.Rating.HasValue)
-            {
-                var feedback = "Customer feedback: ";
-                if (request.Rating.HasValue)
-                {
-                    feedback += $"Rating: {request.Rating}/5 stars. ";
-                }
-                if (!string.IsNullOrEmpty(request.FeedbackNotes))
-                {
-                    feedback += $"Notes: {request.FeedbackNotes}";
-                }
-
-                order.Comment = string.IsNullOrEmpty(order.Comment) 
-                    ? feedback 
-                    : $"{order.Comment}\n{feedback}";
-                
-                feedbackNotes = feedback;
-            }
 
             // Record order history
             var orderHistory = OrderHistory.Create(
@@ -71,7 +49,7 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
                 fromStatus: previousStatus,
                 toStatus: OrderStatus.Received,
                 action: "Customer confirmed order received",
-                notes: feedbackNotes,
+                notes: null,
                 triggeredByUserId: request.CustomerId
             );
 
@@ -82,16 +60,16 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Customer {CustomerId} confirmed receipt of order {OrderId}", 
+            _logger.LogInformation("Customer {CustomerId} confirmed receipt of order {OrderId}",
                 request.CustomerId, request.OrderId);
 
             return Result.Success();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error confirming order {OrderId} as received by customer {CustomerId}", 
+            _logger.LogError(ex, "Error confirming order {OrderId} as received by customer {CustomerId}",
                 request.OrderId, request.CustomerId);
-            return Result.Failure(Error.Failure("ConfirmOrderReceived.Failed", 
+            return Result.Failure(Error.Failure("ConfirmOrderReceived.Failed",
                 "Failed to confirm order as received"));
         }
     }

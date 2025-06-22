@@ -16,6 +16,7 @@ public record UpdateBranchCommand : IRequest<Result<BranchDetail>>
     public string Email { get; set; } = string.Empty;
     public bool IsDefault { get; set; }
     public bool IsDeleted { get; set; }
+    public bool IsActive { get; set; }
 
     // Address info
     public int AddressId { get; set; }
@@ -68,6 +69,7 @@ public class UpdateBranchCommandHandler(
         branch.Email = request.Email;
         branch.IsDefault = request.IsDefault;
         branch.IsDeleted = request.IsDeleted;
+        branch.IsActive = request.IsActive;
 
         // Update address
         if (branch.Address != null)

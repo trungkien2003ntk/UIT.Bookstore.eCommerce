@@ -33,6 +33,7 @@ public class GetBranchDetailQueryHandler(
             Email = branch.Email,
             IsDefault = branch.IsDefault,
             IsDeleted = branch.IsDeleted,
+
             Address = new AddressDetail
             {
                 Id = branch.Address.Id,

@@ -27,6 +27,7 @@ public class OrderLine : BaseAuditedEntity
     public int? ProductVariantId { get; set; }
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
+    public decimal RecommendedRetailPrice { get; set; }
     public DateTimeOffset? PickingCompletionTime { get; set; }
     public int? DiscountVoucherId { get; set; }
 

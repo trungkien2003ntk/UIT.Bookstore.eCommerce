@@ -100,6 +100,7 @@ public class DefaultOrderProcessor(
                 ProductVariantId = item.ProductVariantId,
                 Quantity = item.Quantity,
                 UnitPrice = item.ProductVariant.UnitPrice,
+                RecommendedRetailPrice = item.ProductVariant.RecommendedRetailPrice,
                 ProductVariant = item.ProductVariant
             });
         }
@@ -213,11 +214,12 @@ public class DefaultOrderProcessor(
             VariantName = ol.ProductVariant.VariantName,
             Quantity = ol.Quantity,
             UnitPrice = ol.UnitPrice,
+            RecommendedRetailPrice = ol.RecommendedRetailPrice,
             ThumbnailUrl = ol.ProductVariant.GetThumbnailImageUrl()
         }).ToList();
 
         // Calculate discount amount
-        decimal? discountAmount = null;
+        decimal discountAmount = orderWithDetails.ProductDiscount;
         if (orderWithDetails.PriceDiscountVoucher != null)
         {
             discountAmount = orderWithDetails.PriceDiscountVoucher.GetDiscountValue(orderWithDetails.Subtotal);
@@ -225,7 +227,7 @@ public class DefaultOrderProcessor(
         if (orderWithDetails.ShippingDiscountVoucher != null)
         {
             var shippingDiscount = orderWithDetails.ShippingDiscountVoucher.GetDiscountValue(orderWithDetails.ShippingFee);
-            discountAmount = (discountAmount ?? 0) + shippingDiscount;
+            discountAmount = discountAmount + shippingDiscount;
         }
 
         // Build shipping address string

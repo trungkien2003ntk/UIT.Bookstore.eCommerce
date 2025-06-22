@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
 using KKBookstore.Common.Models;
 using KKBookstore.Contracts.Requests;
+using KKBookstore.Contracts.Requests.Dashboard;
+using KKBookstore.Features.Dashboard.GetCustomerAnalytics;
+using KKBookstore.Features.Dashboard.GetDashboardSummary;
+using KKBookstore.Features.Dashboard.GetInventoryAnalytics;
+using KKBookstore.Features.Dashboard.GetOrderAnalytics;
+using KKBookstore.Features.Dashboard.GetRevenueAnalytics;
 using KKBookstore.Features.Orders.GetOrderList;
 using KKBookstore.Features.Products.GetProductList;
 using KKBookstore.Features.Products.GetProductRatingList;
@@ -25,5 +31,12 @@ public class RequestProfile : Profile
 
         CreateMap<GetRelatedProductsByImageRequest, GetRelatedProductsByImageQuery>()
             .ForMember(dest => dest.Base64Image, opt => opt.MapFrom(src => src.Base64Image));
+
+        // Dashboard mappings
+        CreateMap<GetDashboardSummaryRequest, GetDashboardSummaryQuery>();
+        CreateMap<GetRevenueAnalyticsRequest, GetRevenueAnalyticsQuery>();
+        CreateMap<GetCustomerAnalyticsRequest, GetCustomerAnalyticsQuery>();
+        CreateMap<GetInventoryAnalyticsRequest, GetInventoryAnalyticsQuery>();
+        CreateMap<GetOrderAnalyticsRequest, GetOrderAnalyticsQuery>();
     }
 }

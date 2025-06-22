@@ -33,7 +33,8 @@ public class Order : BaseAuditedEntity
     }
 
     public string OrderNumber { get; set; }
-    public decimal Subtotal => OrderLines.Sum(ol => ol.Quantity * ol.UnitPrice);
+    public decimal Subtotal => OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice);
+    public decimal ProductDiscount => OrderLines.Sum(ol => ol.Quantity * (ol.RecommendedRetailPrice - ol.UnitPrice));
     public decimal TaxRate { get; set; }
     public string? Comment { get; set; }
     public string? DeliveryInstruction { get; set; } = string.Empty;
@@ -57,7 +58,8 @@ public class Order : BaseAuditedEntity
     public DeliveryMethod? DeliveryMethod { get; set; }
     public DiscountVoucher? PriceDiscountVoucher { get; set; }
     public DiscountVoucher? ShippingDiscountVoucher { get; set; }
-    public Customer Customer { get; set; }    public ICollection<OrderLine> OrderLines { get; set; } = [];
+    public Customer Customer { get; set; }
+    public ICollection<OrderLine> OrderLines { get; set; } = [];
     public ICollection<Transaction> Transactions { get; set; } = [];
     public ICollection<OrderFulfillment> OrderFulfillments { get; set; } = [];
     public ICollection<OrderHistory> OrderHistories { get; set; } = [];
@@ -86,22 +88,23 @@ public class Order : BaseAuditedEntity
         }
 
         return Result.Success();
-    }    private string GenerateOrderNumber()
+    }
+    private string GenerateOrderNumber()
     {
         // Generate order number with format: SO-{yyMMdd}<HCM>{unique}
         // SO = Sales Order prefix for e-commerce
         // yyMMdd = Order date (2-digit year, month, day) for easy tracking
         // HCM = Ho Chi Minh branch code (primary branch)
         // unique = Timestamp-based unique identifier to avoid collisions
-        
+
         var datePrefix = OrderWhen.ToString("yyMMdd");
         var branchCode = "HCM"; // Primary branch code for Ho Chi Minh
-        
+
         // Use timestamp + random component for uniqueness within the same millisecond
         var timestamp = DateTimeOffset.Now.ToString("HHmmssff"); // Hours, minutes, seconds, centiseconds
         var randomComponent = new Random().Next(10, 99); // 2-digit random number
         var uniqueComponent = $"{timestamp}{randomComponent}";
-        
+
         return $"SO-{datePrefix}{branchCode}{uniqueComponent}";
     }
 
@@ -149,14 +152,14 @@ public class Order : BaseAuditedEntity
     {
         if (!RequiresAdminBranchSelection())
         {
-            return Result.Failure(Error.Validation("Order.InvalidStatus", 
+            return Result.Failure(Error.Validation("Order.InvalidStatus",
                 "Order must be waiting for branch confirmation to select packaging branch"));
         }
 
         var fulfillment = OrderFulfillments.FirstOrDefault(of => of.BranchId == branchId);
         if (fulfillment == null)
         {
-            return Result.Failure(Error.Validation("OrderFulfillment.NotFound", 
+            return Result.Failure(Error.Validation("OrderFulfillment.NotFound",
                 "No inventory allocation found for the selected branch"));
         }
 
@@ -170,13 +173,13 @@ public class Order : BaseAuditedEntity
     {
         if (Status != OrderStatus.Packaging)
         {
-            return Result.Failure(Error.Validation("Order.InvalidStatus", 
+            return Result.Failure(Error.Validation("Order.InvalidStatus",
                 "Order must be in packaging status to start shipping"));
         }
 
         Status = OrderStatus.Shipped;
-        Comment = string.IsNullOrEmpty(Comment) 
-            ? $"GHN Order Code: {ghnOrderCode}" 
+        Comment = string.IsNullOrEmpty(Comment)
+            ? $"GHN Order Code: {ghnOrderCode}"
             : $"{Comment}\nGHN Order Code: {ghnOrderCode}";
 
         return Result.Success();
@@ -186,7 +189,7 @@ public class Order : BaseAuditedEntity
     {
         if (!CanConfirmReceived())
         {
-            return Result.Failure(Error.Validation("Order.InvalidStatus", 
+            return Result.Failure(Error.Validation("Order.InvalidStatus",
                 "Order must be delivered before it can be confirmed as received"));
         }
 

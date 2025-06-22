@@ -8,6 +8,7 @@ public class BranchSummary
     public string Email { get; set; } = string.Empty;
     public bool IsDefault { get; set; }
     public bool IsDeleted { get; set; }
+    public bool IsActive { get; set; }
     public AddressSummary Address { get; set; } = null!;
     public DateTimeOffset? CreationTime { get; set; }
 }

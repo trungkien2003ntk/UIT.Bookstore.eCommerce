@@ -15,6 +15,7 @@ public class DeleteBranchCommandHandler(
     public async Task<Result> Handle(DeleteBranchCommand request, CancellationToken cancellationToken)
     {
         var branch = await dbContext.Branches
+            .IgnoreQueryFilters()
             .Include(b => b.Address)
             .FirstOrDefaultAsync(b => b.Id == request.Id, cancellationToken);
 
@@ -26,6 +27,24 @@ public class DeleteBranchCommandHandler(
         if (branch.IsDefault)
         {
             return Result.Failure(BranchErrors.CannotDeleteDefault);
+        }
+
+        if (branch.IsDeleted)
+        {
+            return Result.Failure(BranchErrors.AlreadyDeleted);
+        }
+
+        // Check if there are any OrderFulfillments or StockTransactions referencing this branch
+        var hasOrderFulfillments = await dbContext.OrderFulfillments
+            .AnyAsync(of => of.BranchId == branch.Id, cancellationToken);
+        var hasStockTransactions = await dbContext.StockAdjustments
+            .AnyAsync(st => st.WarehouseId == branch.Id, cancellationToken);
+        var hasPositiveIntories = await dbContext.Inventories
+            .AnyAsync(i => i.WarehouseId == branch.Id && i.StockQuantity > 0, cancellationToken);
+
+        if (hasOrderFulfillments || hasStockTransactions || hasPositiveIntories)
+        {
+            return Result.Failure(BranchErrors.CannotDeleteWithFulfillmentsOrInventoriesOrTransactions);
         }
 
         // Delete the branch address

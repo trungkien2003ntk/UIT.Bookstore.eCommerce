@@ -16,6 +16,7 @@ internal class BranchConfiguration : IEntityTypeConfiguration<Branch>
         builder.Property(t => t.Description).HasColumnName(nameof(Branch.Description)).HasMaxLength(BranchConsts.DescriptionMaxLength).IsRequired();
         builder.Property(t => t.AddressId).HasColumnName(nameof(Branch.AddressId)).IsRequired();
         builder.Property(t => t.IsDefault).HasColumnName(nameof(Branch.IsDefault)).IsRequired();
+        builder.Property(t => t.IsActive).HasColumnName(nameof(Branch.IsActive)).IsRequired();
 
         builder.HasIndex(t => t.Name)
             .IsUnique();

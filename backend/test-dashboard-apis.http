@@ -1,0 +1,51 @@
+### Dashboard API Testing
+
+@baseUrl = https://localhost:7000/api
+@authToken = Bearer YOUR_JWT_TOKEN_HERE
+
+### Get Dashboard Summary
+GET {{baseUrl}}/dashboard/summary
+Authorization: {{authToken}}
+
+### Get Dashboard Summary with date filters
+GET {{baseUrl}}/dashboard/summary?fromDate=2024-01-01&toDate=2024-12-31&period=month&topProductsLimit=10
+Authorization: {{authToken}}
+
+### Get Revenue Analytics
+GET {{baseUrl}}/dashboard/revenue?fromDate=2024-01-01&toDate=2024-12-31&period=month
+Authorization: {{authToken}}
+
+### Get Customer Analytics
+GET {{baseUrl}}/dashboard/customers?period=month
+Authorization: {{authToken}}
+
+### Get Inventory Analytics
+GET {{baseUrl}}/dashboard/inventory
+Authorization: {{authToken}}
+
+### Get Order Analytics
+GET {{baseUrl}}/dashboard/orders?fromDate=2024-01-01&toDate=2024-12-31&period=week
+Authorization: {{authToken}}
+
+### Get Top Products
+GET {{baseUrl}}/dashboard/top-products?limit=5&period=month
+Authorization: {{authToken}}
+
+### Get Sales by Product Types
+GET {{baseUrl}}/dashboard/sales-by-product-types?period=month
+Authorization: {{authToken}}
+
+### Get KPIs (Key Performance Indicators)
+GET {{baseUrl}}/dashboard/kpis?period=month
+Authorization: {{authToken}}
+
+### Test without authentication (should return 401)
+GET {{baseUrl}}/dashboard/summary
+
+### Test with various parameters
+GET {{baseUrl}}/dashboard/top-products?limit=3&branchId=1&productTypeIds=1,2,3
+Authorization: {{authToken}}
+
+### Test inventory with low stock threshold
+GET {{baseUrl}}/dashboard/inventory?lowStockThreshold=5&lowStockProductsLimit=10
+Authorization: {{authToken}}

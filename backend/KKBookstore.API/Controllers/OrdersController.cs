@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
 using KKBookstore.Abstractions;
 using KKBookstore.Contracts.Requests;
-using KKBookstore.Features.Checkout.PlaceOrder;
+using KKBookstore.Features.Orders.ConfirmOrderReceived;
+using KKBookstore.Features.Orders.ConfirmPackagingComplete;
 using KKBookstore.Features.Orders.GetOrderDetail;
 using KKBookstore.Features.Orders.GetOrderList;
-using KKBookstore.Features.Orders.SendOrderEmail;
 using KKBookstore.Features.Orders.SelectBranchForPackaging;
-using KKBookstore.Features.Orders.ConfirmPackagingComplete;
+using KKBookstore.Features.Orders.SendOrderEmail;
 using KKBookstore.Features.Orders.UpdateOrderStatus;
-using KKBookstore.Features.Orders.ConfirmOrderReceived;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace KKBookstore.Controllers;
@@ -56,7 +55,7 @@ public class OrdersController(
     }
 
     // Admin Actions
-      /// <summary>
+    /// <summary>
     /// Admin selects a branch to handle packaging for an order
     /// </summary>
     [HttpPatch("{id}/select-branch-for-packaging")]
@@ -65,7 +64,8 @@ public class OrdersController(
         int id,
         [FromBody] SelectBranchForPackagingRequest request,
         CancellationToken cancellationToken = default)
-    {        var adminUserId = User.Identity?.IsAuthenticated == true 
+    {
+        var adminUserId = User.Identity?.IsAuthenticated == true
             ? int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0")
             : (int?)null;
 
@@ -81,8 +81,8 @@ public class OrdersController(
 
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }    /// <summary>
-    /// Branch admin confirms packaging is complete and creates shipping order
-    /// </summary>
+         /// Branch admin confirms packaging is complete and creates shipping order
+         /// </summary>
     [HttpPatch("{id}/confirm-packaging-complete")]
     [Authorize] // Add proper admin authorization when available
     public async Task<IActionResult> ConfirmPackagingCompleteAsync(
@@ -90,14 +90,13 @@ public class OrdersController(
         [FromBody] ConfirmPackagingCompleteRequest request,
         CancellationToken cancellationToken = default)
     {
-        var adminUserId = User.Identity?.IsAuthenticated == true 
+        var adminUserId = User.Identity?.IsAuthenticated == true
             ? int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0")
             : (int?)null;
 
         var command = new ConfirmPackagingCompleteCommand
         {
             OrderId = id,
-            BranchId = request.BranchId,
             Notes = request.Notes,
             AdminUserId = adminUserId
         };
@@ -106,8 +105,8 @@ public class OrdersController(
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }    /// <summary>
-    /// Admin manually updates order status (backup endpoint)
-    /// </summary>
+         /// Admin manually updates order status (backup endpoint)
+         /// </summary>
     [HttpPatch("{id}/update-status")]
     [Authorize] // Add proper admin authorization when available
     public async Task<IActionResult> UpdateOrderStatusAsync(
@@ -115,7 +114,7 @@ public class OrdersController(
         [FromBody] UpdateOrderStatusRequest request,
         CancellationToken cancellationToken = default)
     {
-        var adminUserId = User.Identity?.IsAuthenticated == true 
+        var adminUserId = User.Identity?.IsAuthenticated == true
             ? int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0")
             : (int?)null;
 
@@ -151,8 +150,6 @@ public class OrdersController(
         {
             OrderId = id,
             CustomerId = userId,
-            FeedbackNotes = request.FeedbackNotes,
-            Rating = request.Rating
         };
 
         var result = await Sender.Send(command, cancellationToken);

@@ -168,28 +168,30 @@ public class GetCustomerProductDetailQueryHandler(
                                 Name = pov.Option?.Name ?? string.Empty,
                                 Value = pov.OptionValue?.Value ?? string.Empty
                             }).ToList() ?? new List<ProductVariantOptionDto>()
-                        }).ToList() ?? new List<RatingDto>(),
-                    StockBreakdowns = pv.Inventories.Select(inv => new StockBreakdownDto
-                    {
-                        Id = inv.Id,
-                        BranchId = inv.WarehouseId ?? 0,
-                        BranchName = inv.Warehouse?.Name ?? "Unknown",
-                        Description = inv.Warehouse?.Description ?? string.Empty,
-                        StockQuantity = inv.StockQuantity,
-                        IsActive = inv.IsActive,
-                        Address = inv.Warehouse?.Address != null ? new BranchAddressDto
+                        }).ToList() ?? new List<RatingDto>(),                    StockBreakdowns = pv.Inventories?
+                        .Where(inv => inv.IsActive)
+                        .GroupBy(inv => inv.WarehouseId)
+                        .Select(g => new StockBreakdownDto
                         {
-                            PhoneNumber = inv.Warehouse.Address.PhoneNumber,
-                            ProvinceId = inv.Warehouse.Address.ProvinceId,
-                            ProvinceName = inv.Warehouse.Address.ProvinceName,
-                            DistrictId = inv.Warehouse.Address.DistrictId,
-                            DistrictName = inv.Warehouse.Address.DistrictName,
-                            CommuneCode = inv.Warehouse.Address.CommuneCode,
-                            CommuneName = inv.Warehouse.Address.CommuneName,
-                            DetailAddress = inv.Warehouse.Address.DetailAddress,
-                            Type = inv.Warehouse.Address.Type
-                        } : null
-                    }).ToList()
+                            Id = g.First().Id,
+                            BranchId = g.Key ?? 0,
+                            BranchName = g.First().Warehouse?.Name ?? "Unknown",
+                            Description = g.First().Warehouse?.Description ?? string.Empty,
+                            StockQuantity = g.Sum(inv => inv.StockQuantity), // Sum all stock quantities for this warehouse
+                            IsActive = true,
+                            Address = g.First().Warehouse?.Address != null ? new BranchAddressDto
+                            {
+                                PhoneNumber = g.First().Warehouse!.Address.PhoneNumber,
+                                ProvinceId = g.First().Warehouse.Address.ProvinceId,
+                                ProvinceName = g.First().Warehouse.Address.ProvinceName,
+                                DistrictId = g.First().Warehouse.Address.DistrictId,
+                                DistrictName = g.First().Warehouse.Address.DistrictName,
+                                CommuneCode = g.First().Warehouse.Address.CommuneCode,
+                                CommuneName = g.First().Warehouse.Address.CommuneName,
+                                DetailAddress = g.First().Warehouse.Address.DetailAddress,
+                                Type = g.First().Warehouse.Address.Type
+                            } : null
+                        }).ToList() ?? new List<StockBreakdownDto>()
                 };
             }),
             ProductVariantOptions = product.ProductVariants.SelectMany(pv => pv.ProductVariantOptionValues)

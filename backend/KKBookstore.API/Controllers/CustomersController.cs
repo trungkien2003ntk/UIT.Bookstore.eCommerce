@@ -67,8 +67,7 @@ public class CustomersController(
         CancellationToken cancellationToken = default
     )
     {
-        var token = Request.Headers.Authorization.ToString().Replace("Bearer ", string.Empty);
-        var result = await Sender.Send(new BlockCustomerCommand(id, token), cancellationToken);
+        var result = await Sender.Send(new BlockCustomerCommand(id), cancellationToken);
 
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }

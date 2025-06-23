@@ -1,5 +1,4 @@
 ﻿using KKBookstore.Models;
-using KKBookstore.ProductTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -12,7 +11,8 @@ public class DiscountVoucher : BaseFullAuditedEntity
     public DiscountVoucher()
     {
 
-    }    private DiscountVoucher(
+    }
+    private DiscountVoucher(
         string name,
         string code,
         string description,
@@ -103,7 +103,8 @@ public class DiscountVoucher : BaseFullAuditedEntity
         if (StartTime > DateTimeOffset.Now || EndTime < DateTimeOffset.Now)
         {
             return false;
-        }        if (!string.IsNullOrEmpty(ApplyToProductTypeIds))
+        }
+        if (!string.IsNullOrEmpty(ApplyToProductTypeIds))
         {
             var applicableProductTypeIds = ApplyToProductTypeIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(int.Parse)
@@ -202,7 +203,8 @@ public class DiscountVoucher : BaseFullAuditedEntity
         };
 
         return Result.Success();
-    }    public static Result<DiscountVoucher> Create(
+    }
+    public static Result<DiscountVoucher> Create(
         string code,
         string description,
         DiscountValueType valueType,
@@ -246,7 +248,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
             value,
             maximumDiscountValue,
             minimumSpend,
-            usageLimitPerUser,            usageLimitOverall,
+            usageLimitPerUser, usageLimitOverall,
             startWhen,
             endWhen,
             applyToProductTypeIds
@@ -272,7 +274,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         )
     {
         string? hierarchyIds = null;
-        
+
         if (applyToProductTypeId.HasValue)
         {
             hierarchyIds = await getHierarchyIds(applyToProductTypeId.Value, cancellationToken);
@@ -314,7 +316,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         )
     {
         string? hierarchyIds = null;
-        
+
         if (applyToProductTypeIds.Any())
         {
             hierarchyIds = await getHierarchyIds(applyToProductTypeIds, cancellationToken);
@@ -343,7 +345,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
 
         if (valueType == DiscountValueType.Percentage)
         {
-            int percentage = (int)(value * 100);
+            int percentage = (int)(value);
             nameBuilder.Append($"{percentage}%");
         }
         else

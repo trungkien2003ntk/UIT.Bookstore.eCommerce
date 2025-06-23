@@ -64,10 +64,12 @@ public static class DependencyInjection
         /// Config AuthN and AuthZ
         services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
         services.AddScoped<IIdentityService, IdentityService>();
-        
-        /// Config JWT Token Blacklist Service
+          /// Config JWT Token Blacklist Service
         services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
         services.AddHostedService<TokenBlacklistHostedService>();
+          /// Config JWT Token Version Service  
+        services.AddScoped<ITokenVersionService, TokenVersionService>();
+        services.AddHostedService<TokenVersionPreloadHostedService>();
         
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services

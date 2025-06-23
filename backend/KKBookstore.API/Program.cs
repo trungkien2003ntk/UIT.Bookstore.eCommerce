@@ -107,6 +107,9 @@ app.UseAuthentication();
 // Add JWT blacklist middleware after authentication but before authorization
 app.UseMiddleware<JwtBlacklistMiddleware>();
 
+// Add JWT token version validation middleware
+app.UseMiddleware<JwtTokenVersionMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();

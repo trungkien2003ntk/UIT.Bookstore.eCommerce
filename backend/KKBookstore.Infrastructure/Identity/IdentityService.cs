@@ -31,7 +31,8 @@ public class IdentityService(
     IPasswordHasher<User> passwordHasher,
     IOptions<JwtSettings> jwtSettings,
     IMapper mapper,
-    KKBookstoreDbContext dbContext
+    KKBookstoreDbContext dbContext,
+    ITokenVersionService tokenVersionService
 ) : IIdentityService
 {
     private readonly UserManager<User> _userManager = userManager;
@@ -39,6 +40,7 @@ public class IdentityService(
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
     private readonly IOptions<JwtSettings> _jwtSettings = jwtSettings;
     private readonly KKBookstoreDbContext _dbContext = dbContext;
+    private readonly ITokenVersionService _tokenVersionService = tokenVersionService;
 
     public async Task<Result<List<User>>> GetUsersInRoleAsync(string role)
     {
@@ -328,7 +330,6 @@ public class IdentityService(
 
         return responseResult;
     }
-
     public async Task<Result> ChangePasswordAsync(ChangePasswordCommand request)
     {
         var userResult = await FindUserAsync(new(request.Email));
@@ -355,6 +356,18 @@ public class IdentityService(
         {
             return Result.Failure(result.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
         }
+
+        // Regenerate token version to invalidate existing tokens
+        userResult.Value.RegenerateTokenVersion();
+        var updateResult = await _userManager.UpdateAsync(userResult.Value);
+
+        if (!updateResult.Succeeded)
+        {
+            return Result.Failure(updateResult.ToErrors().FirstOrDefault() ?? UserErrors.UpdateFailed);
+        }
+
+        // Invalidate cached token version
+        await _tokenVersionService.InvalidateTokenVersionCacheAsync(userResult.Value.Id);
 
         return Result.Success();
     }
@@ -457,7 +470,6 @@ public class IdentityService(
             BasicUserInfo: basicUserInfo
         ));
     }
-
     private async Task<JwtSecurityToken> GenerateAccessToken(User user)
     {
         var roles = await _userManager.GetRolesAsync(user);
@@ -466,6 +478,7 @@ public class IdentityService(
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.Email!),
             new(ClaimTypes.Role, roles.FirstOrDefault()!),
+            new("ver", user.TokenVersion.ToString()), // Add token version claim
             // Add other claims as needed...
         };
 

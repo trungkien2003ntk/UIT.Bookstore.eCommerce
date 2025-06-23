@@ -53,7 +53,7 @@ public class GetTrendyProductListQueryHandler(
                     AverageRating = Convert.ToDecimal(p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0),
                     IsActive = p.IsActive,
                     ThumbnailImageUrl = p.GetFirstThumbnailImageUrl(),
-                    TotalStockQuantity = p.ProductVariants.Sum(v => v.AvailableQuantity)
+                    TotalStockQuantity = p.ProductVariants.Sum(v => v.Inventories!.Sum(i => i.IsActive ? i.StockQuantity : 0))
                 })
             .AsQueryable();
 

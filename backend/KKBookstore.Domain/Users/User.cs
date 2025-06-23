@@ -5,11 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace KKBookstore.Users;
 
 public class User : IdentityUser<int>, IFullAuditedObject
-{
-    public User()
+{    public User()
     {
         FirstName = "";
         LastName = "";
+        FullName = "";
         IsActive = true;
     }
 
@@ -28,11 +28,12 @@ public class User : IdentityUser<int>, IFullAuditedObject
 
     public LoginType LoginType { get; set; }
 
-    public SignInSource SignInSource { get; set; }
-
-    public bool IsActive { get; set; }
+    public SignInSource SignInSource { get; set; }    public bool IsActive { get; set; }
 
     public UserStatus Status { get; set; }
+
+    // JWT Token Versioning for force logout
+    public Guid TokenVersion { get; set; } = Guid.NewGuid();
 
 
     // Auditing
@@ -58,4 +59,15 @@ public class User : IdentityUser<int>, IFullAuditedObject
     public User? LastModifier { get; set; }
 
     public DateTimeOffset? LastModificationTime { get; set; }
+    public void MarkAsBlocked()
+    {
+        IsActive = false;
+        Status = UserStatus.Blocked;
+        TokenVersion = Guid.NewGuid(); // Generate new token version to invalidate existing tokens
+    }
+
+    public void RegenerateTokenVersion()
+    {
+        TokenVersion = Guid.NewGuid();
+    }
 }

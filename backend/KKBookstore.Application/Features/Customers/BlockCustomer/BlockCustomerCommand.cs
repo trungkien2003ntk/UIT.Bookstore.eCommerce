@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Features.Customers.BlockCustomer;
 
-public record BlockCustomerCommand(int Id, string Token) : IRequest<Result>;
+public record BlockCustomerCommand(int Id) : IRequest<Result>;
 
 public class BlockCustomerCommandHandler(
     IApplicationDbContext dbContext,
-    ITokenBlacklistService tokenBlacklistService
+    ITokenVersionService tokenVersionService
 ) : IRequestHandler<BlockCustomerCommand, Result>
 {
     public async Task<Result> Handle(BlockCustomerCommand request, CancellationToken cancellationToken)
@@ -29,24 +29,16 @@ public class BlockCustomerCommandHandler(
         if (customer.Status == UserStatus.Blocked)
         {
             return Result.Failure(CustomerErrors.AlreadyBlocked);
-        }
-
-        try
+        }        try
         {
             // Set customer status to Blocked (blocked)
-            customer.Status = UserStatus.Blocked;
-
-            // Blacklist the provided token
-            if (!string.IsNullOrWhiteSpace(request.Token))
-            {
-                var blacklistResult = await tokenBlacklistService.BlacklistTokenAsync(request.Token, cancellationToken);
-                if (blacklistResult.IsFailure)
-                {
-                    return Result.Failure(blacklistResult.Error);
-                }
-            }
+            // This also regenerates TokenVersion which invalidates all existing tokens
+            customer.MarkAsBlocked();
 
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            // Invalidate cached token version to ensure immediate effect
+            await tokenVersionService.InvalidateTokenVersionCacheAsync(customer.Id, cancellationToken);
 
             return Result.Success();
         }

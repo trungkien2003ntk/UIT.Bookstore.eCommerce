@@ -21,7 +21,7 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         builder.Property(dv => dv.MinimumSpend).HasPrecision(18, 2).IsRequired();
         builder.Property(dv => dv.UsageLimitOverall).IsRequired();
         builder.Property(dv => dv.StartTime).IsRequired();
-        builder.Property(dv => dv.EndTime).IsRequired();        builder.Property(dv => dv.VoucherType).IsRequired().HasConversion<EnumToStringConverter<DiscountVoucherType>>();
+        builder.Property(dv => dv.EndTime).IsRequired(); builder.Property(dv => dv.VoucherType).IsRequired().HasConversion<EnumToStringConverter<DiscountVoucherType>>();
         builder.Property(dv => dv.Status).IsRequired().HasConversion<EnumToStringConverter<DiscountStatus>>();        // Configure comma-separated ProductType IDs
         builder.Property(dv => dv.ApplyToProductTypeIds).HasColumnName(nameof(DiscountVoucher.ApplyToProductTypeIds)).HasMaxLength(DiscountVoucherConsts.ProductTypeIdsMaxLength);
 

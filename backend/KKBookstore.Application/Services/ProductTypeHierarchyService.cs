@@ -15,7 +15,7 @@ public class ProductTypeHierarchyService : IProductTypeHierarchyService
     public async Task<string?> GetDescendantProductTypeIdsAsStringAsync(int productTypeId, CancellationToken cancellationToken)
     {
         var descendantIds = await GetDescendantProductTypeIdsAsync(productTypeId, cancellationToken);
-        
+
         if (descendantIds.Count == 0)
             return null;
 
@@ -59,7 +59,7 @@ public class ProductTypeHierarchyService : IProductTypeHierarchyService
     public async Task<string?> GetDescendantProductTypeIdsAsStringAsync(IEnumerable<int> productTypeIds, CancellationToken cancellationToken)
     {
         var descendantIds = await GetDescendantProductTypeIdsAsync(productTypeIds, cancellationToken);
-        
+
         if (descendantIds.Count == 0)
             return null;
 

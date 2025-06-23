@@ -30,7 +30,7 @@ public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Result>
             }
 
             var result = await _tokenBlacklistService.BlacklistTokenAsync(request.Token, cancellationToken);
-            
+
             if (result.IsSuccess)
             {
                 _logger.LogInformation("User successfully logged out and token blacklisted");

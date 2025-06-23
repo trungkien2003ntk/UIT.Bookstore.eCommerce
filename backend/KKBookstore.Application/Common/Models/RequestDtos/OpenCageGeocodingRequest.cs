@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace KKBookstore.Application.Common.Models.RequestDtos;
+namespace KKBookstore.Common.Models.RequestDtos;
 
 public class OpenCageGeocodingRequest
 {

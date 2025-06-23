@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Infrastructure.HostedServices;
+namespace KKBookstore.HostedServices;
 
 public class TokenVersionPreloadHostedService(
     IServiceProvider serviceProvider,
@@ -24,9 +24,9 @@ public class TokenVersionPreloadHostedService(
         {
             using var scope = _serviceProvider.CreateScope();
             var tokenVersionService = scope.ServiceProvider.GetRequiredService<ITokenVersionService>();
-            
+
             await tokenVersionService.PreloadTokenVersionsAsync(stoppingToken);
-            
+
             _logger.LogInformation("TokenVersionPreloadHostedService completed successfully");
         }
         catch (Exception ex)

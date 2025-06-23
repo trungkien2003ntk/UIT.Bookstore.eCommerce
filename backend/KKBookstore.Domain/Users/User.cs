@@ -5,7 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace KKBookstore.Users;
 
 public class User : IdentityUser<int>, IFullAuditedObject
-{    public User()
+{
+    public User()
     {
         FirstName = "";
         LastName = "";
@@ -28,7 +29,8 @@ public class User : IdentityUser<int>, IFullAuditedObject
 
     public LoginType LoginType { get; set; }
 
-    public SignInSource SignInSource { get; set; }    public bool IsActive { get; set; }
+    public SignInSource SignInSource { get; set; }
+    public bool IsActive { get; set; }
 
     public UserStatus Status { get; set; }
 

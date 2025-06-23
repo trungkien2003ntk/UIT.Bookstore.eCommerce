@@ -168,7 +168,8 @@ public class GetCustomerProductDetailQueryHandler(
                                 Name = pov.Option?.Name ?? string.Empty,
                                 Value = pov.OptionValue?.Value ?? string.Empty
                             }).ToList() ?? new List<ProductVariantOptionDto>()
-                        }).ToList() ?? new List<RatingDto>(),                    StockBreakdowns = pv.Inventories?
+                        }).ToList() ?? new List<RatingDto>(),
+                    StockBreakdowns = pv.Inventories?
                         .Where(inv => inv.IsActive)
                         .GroupBy(inv => inv.WarehouseId)
                         .Select(g => new StockBreakdownDto

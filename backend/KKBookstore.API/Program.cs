@@ -1,7 +1,7 @@
 using KKBookstore;
-using KKBookstore.API.Middleware;
 using KKBookstore.Infrastructure;
 using KKBookstore.Mappings;
+using KKBookstore.Middleware;
 using Microsoft.OpenApi.Models;
 using Serilog;
 

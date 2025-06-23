@@ -1,9 +1,7 @@
 using KKBookstore.Common.Interfaces;
-using Microsoft.Extensions.Logging;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace KKBookstore.API.Middleware;
+namespace KKBookstore.Middleware;
 
 public class JwtTokenVersionMiddleware(RequestDelegate next, ILogger<JwtTokenVersionMiddleware> logger)
 {
@@ -68,7 +66,7 @@ public class JwtTokenVersionMiddleware(RequestDelegate next, ILogger<JwtTokenVer
     private static bool ShouldSkipValidation(HttpContext context)
     {
         var path = context.Request.Path.Value?.ToLowerInvariant();
-        
+
         // Skip validation for authentication endpoints
         var skipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -88,11 +86,11 @@ public class JwtTokenVersionMiddleware(RequestDelegate next, ILogger<JwtTokenVer
     {
         context.Response.StatusCode = 401;
         context.Response.ContentType = "application/json";
-        
+
         var response = new
         {
             error = "Unauthorized",
-            message = message,
+            message,
             timestamp = DateTimeOffset.UtcNow
         };
 

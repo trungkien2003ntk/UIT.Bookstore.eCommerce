@@ -7,18 +7,16 @@ using KKBookstore.Data;
 using KKBookstore.Data.Interceptors;
 using KKBookstore.Emailing;
 using KKBookstore.Features.Admin.Services;
+using KKBookstore.Geolocation;
+using KKBookstore.HostedServices;
 using KKBookstore.Identity;
-using KKBookstore.Infrastructure.HostedServices;
-using KKBookstore.Infrastructure.Services;
 using KKBookstore.Payment;
 using KKBookstore.Search;
+using KKBookstore.Services;
 using KKBookstore.Shipping;
 using KKBookstore.Storage;
 using KKBookstore.Users;
 using KKBookstore.Web;
-using KKBookstore.Infrastructure.Geolocation;
-using KKBookstore.Application.Common.Interfaces;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,9 +25,9 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using KKBookstore.Services;
 
 namespace KKBookstore;
 
@@ -64,13 +62,13 @@ public static class DependencyInjection
         /// Config AuthN and AuthZ
         services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
         services.AddScoped<IIdentityService, IdentityService>();
-          /// Config JWT Token Blacklist Service
+        /// Config JWT Token Blacklist Service
         services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
         services.AddHostedService<TokenBlacklistHostedService>();
-          /// Config JWT Token Version Service  
+        /// Config JWT Token Version Service  
         services.AddScoped<ITokenVersionService, TokenVersionService>();
         services.AddHostedService<TokenVersionPreloadHostedService>();
-        
+
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services
             .AddAuthentication(opt =>
@@ -125,7 +123,7 @@ public static class DependencyInjection
                 provider.GetRequiredService<ShippingService>()
             );
         });        /// Config GHN Shipping
-        services.AddScoped<IGhnShippingService, Infrastructure.Shipping.GhnShippingService>();
+        services.AddScoped<IGhnShippingService, GhnShippingService>();
 
 
         /// Additional Config

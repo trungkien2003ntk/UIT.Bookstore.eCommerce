@@ -1,8 +1,7 @@
 using KKBookstore.Common.Interfaces;
-using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace KKBookstore.API.Middleware;
+namespace KKBookstore.Middleware;
 
 public class JwtBlacklistMiddleware
 {

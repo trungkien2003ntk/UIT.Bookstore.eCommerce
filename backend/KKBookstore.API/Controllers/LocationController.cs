@@ -1,5 +1,5 @@
 ﻿using KKBookstore.Abstractions;
-using KKBookstore.Application.Common.Interfaces;
+using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.Locations.GetCommuneList;
 using KKBookstore.Features.Locations.GetDistrictList;
 using KKBookstore.Features.Locations.GetProvinceList;
@@ -34,7 +34,8 @@ public class LocationController(
         var result = await Sender.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
-    }    [HttpGet("commune")]
+    }
+    [HttpGet("commune")]
     public async Task<IActionResult> GetCommuneListAsync(
         [FromQuery] GetCommuneListQuery query,
         CancellationToken cancellationToken = default
@@ -52,7 +53,7 @@ public class LocationController(
     )
     {
         var result = await geoCoordService.GetCoordinatesAsync(request.Address, cancellationToken);
-        
+
         return result.Success ? Ok(result) : BadRequest(result);
     }
 }

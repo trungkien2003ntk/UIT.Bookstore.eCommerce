@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace KKBookstore.Application.Common.Models.RequestDtos;
+namespace KKBookstore.Common.Models.RequestDtos;
 
 /// <summary>
 /// Represents the webhook payload structure from GHN delivery service.

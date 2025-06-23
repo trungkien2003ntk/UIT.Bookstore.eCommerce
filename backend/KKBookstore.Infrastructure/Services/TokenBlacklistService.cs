@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace KKBookstore.Infrastructure.Services;
+namespace KKBookstore.Services;
 
 public class TokenBlacklistService : ITokenBlacklistService
 {
@@ -176,7 +176,7 @@ public class TokenBlacklistService : ITokenBlacklistService
         {
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadJwtToken(token);
-            
+
             if (jsonToken.ValidTo == DateTime.MinValue)
             {
                 // If no expiration, set a default expiration (e.g., 1 day from now)

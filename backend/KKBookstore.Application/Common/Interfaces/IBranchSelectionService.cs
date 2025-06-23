@@ -1,4 +1,3 @@
-using KKBookstore.Application.Common.Models.ResultDtos;
 using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Models;
 using KKBookstore.Orders;
@@ -19,8 +18,8 @@ public interface IBranchSelectionService
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of order fulfillments with allocated inventory</returns>
     Task<Result<List<OrderFulfillment>>> AllocateInventoryFromNearestBranchesAsync(
-        Order order, 
-        Address customerAddress, 
+        Order order,
+        Address customerAddress,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -37,7 +36,7 @@ public interface IBranchSelectionService
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Branches with distance information</returns>
     Task<Result<List<BranchDistanceInfo>>> GetBranchesByDistanceAsync(
-        Address customerAddress, 
+        Address customerAddress,
         CancellationToken cancellationToken = default);
 }
 

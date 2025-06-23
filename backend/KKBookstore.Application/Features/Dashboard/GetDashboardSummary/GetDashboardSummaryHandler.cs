@@ -2,7 +2,6 @@ using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.Dashboard.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
-using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,30 +16,30 @@ public class GetDashboardSummaryHandler(
         try
         {
             var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
-            
+
             // Get total orders
             var ordersQuery = dbContext.Orders.AsQueryable();
             if (dateFilter.FromDate.HasValue)
                 ordersQuery = ordersQuery.Where(o => o.OrderWhen >= dateFilter.FromDate.Value);
             if (dateFilter.ToDate.HasValue)
                 ordersQuery = ordersQuery.Where(o => o.OrderWhen <= dateFilter.ToDate.Value);
-            
+
             var totalOrders = await ordersQuery.CountAsync(cancellationToken);
-            
+
             // Get total new users
             var usersQuery = dbContext.Users.AsQueryable();
             if (dateFilter.FromDate.HasValue)
                 usersQuery = usersQuery.Where(u => u.CreationTime >= dateFilter.FromDate.Value);
             if (dateFilter.ToDate.HasValue)
                 usersQuery = usersQuery.Where(u => u.CreationTime <= dateFilter.ToDate.Value);
-            
+
             var totalNewUsers = await usersQuery.CountAsync(cancellationToken);
-            
+
             // Get total revenue using Subtotal
             var totalRevenue = await ordersQuery
                 .Where(o => o.Status == OrderStatus.Delivered)
                 .SumAsync(o => o.Subtotal, cancellationToken);
-            
+
             // Get top products (simplified)
             var topProducts = await dbContext.OrderLines
                 .Include(ol => ol.ProductVariant)
@@ -58,7 +57,7 @@ public class GetDashboardSummaryHandler(
                 .OrderByDescending(tp => tp.TotalQuantitySold)
                 .Take(5)
                 .ToListAsync(cancellationToken);
-            
+
             // Get sales by product types (simplified)
             var salesByProductTypes = await dbContext.OrderLines
                 .Include(ol => ol.ProductVariant)
@@ -66,9 +65,10 @@ public class GetDashboardSummaryHandler(
                         .ThenInclude(p => p.ProductType)
                 .Where(ol => dateFilter.FromDate == null || ol.Order.OrderWhen >= dateFilter.FromDate.Value)
                 .Where(ol => dateFilter.ToDate == null || ol.Order.OrderWhen <= dateFilter.ToDate.Value)
-                .GroupBy(ol => new { 
-                    ol.ProductVariant.Product.ProductType.Id, 
-                    ol.ProductVariant.Product.ProductType.DisplayName 
+                .GroupBy(ol => new
+                {
+                    ol.ProductVariant.Product.ProductType.Id,
+                    ol.ProductVariant.Product.ProductType.DisplayName
                 })
                 .Select(g => new SalesByProductTypeDto
                 {
@@ -92,7 +92,8 @@ public class GetDashboardSummaryHandler(
                 TotalProductsSold = topProducts.Sum(p => p.TotalQuantitySold)
             };
 
-            return Result<DashboardSummaryDto>.Success(result);        }
+            return Result<DashboardSummaryDto>.Success(result);
+        }
         catch (Exception ex)
         {
             var error = Error.Failure("Dashboard.SummaryError", $"Error retrieving dashboard summary: {ex.Message}");

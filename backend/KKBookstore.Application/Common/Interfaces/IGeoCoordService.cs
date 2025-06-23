@@ -1,7 +1,7 @@
-using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Users;
 
-namespace KKBookstore.Application.Common.Interfaces;
+namespace KKBookstore.Common.Interfaces;
 
 public interface IGeoCoordService
 {

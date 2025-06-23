@@ -1,5 +1,4 @@
 using KKBookstore.Common.Interfaces;
-using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Features.Dashboard.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
@@ -19,9 +18,9 @@ public class GetCustomerAnalyticsHandler(
         {
             var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
             var previousPeriodFilter = GetPreviousPeriodFilter(dateFilter.FromDate, dateFilter.ToDate);
-            
+
             // Base queries
-            var usersQuery = dbContext.Users.Where(u => u.Status == UserStatus.Active);            var ordersQuery = dbContext.Orders.AsQueryable();
+            var usersQuery = dbContext.Users.Where(u => u.Status == UserStatus.Active); var ordersQuery = dbContext.Orders.AsQueryable();
 
             // Note: Orders don't have a direct BranchId - they are associated with customers
             // For branch-specific analytics, we could filter by warehouse/branch through shipping address if needed
@@ -33,11 +32,11 @@ public class GetCustomerAnalyticsHandler(
 
             // Calculate metrics
             var totalCustomersTask = usersQuery.CountAsync(cancellationToken);
-            
+
             var newCustomersTask = usersQuery
                 .Where(u => u.CreationTime >= dateFilter.FromDate && u.CreationTime <= dateFilter.ToDate)
                 .CountAsync(cancellationToken);
-            
+
             var activeCustomersTask = ordersQuery
                 .Where(o => o.CreationTime >= dateFilter.FromDate && o.CreationTime <= dateFilter.ToDate)
                 .Select(o => o.CustomerId)
@@ -46,10 +45,10 @@ public class GetCustomerAnalyticsHandler(
 
             // Calculate customer retention rate
             var retentionRateTask = CalculateCustomerRetentionRate(ordersQuery, dateFilter, previousPeriodFilter, cancellationToken);
-            
+
             // Calculate average customer value
             var avgCustomerValueTask = CalculateAverageCustomerValue(ordersQuery, dateFilter, cancellationToken);
-            
+
             // Get customer growth data
             var customerGrowthTask = GetCustomerGrowth(usersQuery, request.GroupBy, dateFilter, cancellationToken);
 
@@ -68,7 +67,8 @@ public class GetCustomerAnalyticsHandler(
                 CustomerGrowth = await customerGrowthTask
             };
 
-            return Result<CustomerAnalyticsDto>.Success(result);        }
+            return Result<CustomerAnalyticsDto>.Success(result);
+        }
         catch (Exception ex)
         {
             var error = Error.Failure("Dashboard.CustomerAnalyticsError", $"Error retrieving customer analytics: {ex.Message}");
@@ -94,7 +94,7 @@ public class GetCustomerAnalyticsHandler(
 
         // Get customers who ordered in current period and were also in previous period
         var retainedCustomers = await ordersQuery
-            .Where(o => o.CreationTime >= currentPeriod.FromDate && 
+            .Where(o => o.CreationTime >= currentPeriod.FromDate &&
                        o.CreationTime <= currentPeriod.ToDate &&
                        previousPeriodCustomers.Contains(o.CustomerId))
             .Select(o => o.CustomerId)
@@ -110,7 +110,7 @@ public class GetCustomerAnalyticsHandler(
         CancellationToken cancellationToken)
     {
         var customerValues = await ordersQuery
-            .Where(o => o.CreationTime >= dateFilter.FromDate && 
+            .Where(o => o.CreationTime >= dateFilter.FromDate &&
                        o.CreationTime <= dateFilter.ToDate &&
                        (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received))
             .GroupBy(o => o.CustomerId)
@@ -126,7 +126,7 @@ public class GetCustomerAnalyticsHandler(
         (DateTimeOffset FromDate, DateTimeOffset ToDate) dateFilter,
         CancellationToken cancellationToken)
     {
-        var usersInPeriod = usersQuery.Where(u => u.CreationTime >= dateFilter.FromDate && u.CreationTime <= dateFilter.ToDate);        var customerGrowth = groupBy.ToLower() switch
+        var usersInPeriod = usersQuery.Where(u => u.CreationTime >= dateFilter.FromDate && u.CreationTime <= dateFilter.ToDate); var customerGrowth = groupBy.ToLower() switch
         {
             "day" => await usersInPeriod
                 .Where(u => u.CreationTime.HasValue)
@@ -139,7 +139,7 @@ public class GetCustomerAnalyticsHandler(
                 })
                 .OrderBy(c => c.Date)
                 .ToListAsync(cancellationToken),
-                
+
             "week" => await usersInPeriod
                 .Where(u => u.CreationTime.HasValue)
                 .GroupBy(u => new DateTime(u.CreationTime!.Value.Year, 1, 1)
@@ -152,7 +152,7 @@ public class GetCustomerAnalyticsHandler(
                 })
                 .OrderBy(c => c.Date)
                 .ToListAsync(cancellationToken),
-                
+
             "month" => await usersInPeriod
                 .Where(u => u.CreationTime.HasValue)
                 .GroupBy(u => new DateTime(u.CreationTime!.Value.Year, u.CreationTime!.Value.Month, 1))
@@ -164,7 +164,7 @@ public class GetCustomerAnalyticsHandler(
                 })
                 .OrderBy(c => c.Date)
                 .ToListAsync(cancellationToken),
-                
+
             _ => await usersInPeriod
                 .Where(u => u.CreationTime.HasValue)
                 .GroupBy(u => u.CreationTime!.Value.Date)
@@ -190,12 +190,12 @@ public class GetCustomerAnalyticsHandler(
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetDateFilter(
-        string period, 
-        DateTimeOffset? fromDate, 
+        string period,
+        DateTimeOffset? fromDate,
         DateTimeOffset? toDate)
     {
         var now = DateTimeOffset.Now;
-        
+
         if (fromDate.HasValue && toDate.HasValue)
         {
             return (fromDate.Value, toDate.Value);
@@ -211,7 +211,7 @@ public class GetCustomerAnalyticsHandler(
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetPreviousPeriodFilter(
-        DateTimeOffset currentFromDate, 
+        DateTimeOffset currentFromDate,
         DateTimeOffset currentToDate)
     {
         var periodLength = currentToDate - currentFromDate;

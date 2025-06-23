@@ -43,7 +43,7 @@ public class OrderProfile : Profile
             .ForMember(dest => dest.ShippingDetailedAddress, opt => opt.MapFrom(src => src.ShippingAddress != null ? src.ShippingAddress.DetailAddress : string.Empty))
             .ForMember(dest => dest.ShippingProvinceName, opt => opt.MapFrom(src => src.ShippingAddress != null ? src.ShippingAddress.ProvinceName : string.Empty))
             .ForMember(dest => dest.ShippingDistrictName, opt => opt.MapFrom(src => src.ShippingAddress != null ? src.ShippingAddress.DistrictName : string.Empty))
-            .ForMember(dest => dest.ShippingCommuneName, opt => opt.MapFrom(src => src.ShippingAddress != null ? src.ShippingAddress.CommuneName : string.Empty));        CreateMap<OrderLine, OrderLineDto>()
+            .ForMember(dest => dest.ShippingCommuneName, opt => opt.MapFrom(src => src.ShippingAddress != null ? src.ShippingAddress.CommuneName : string.Empty)); CreateMap<OrderLine, OrderLineDto>()
             .ForMember(dest => dest.ProductVariantId, opt => opt.MapFrom(src => src.ProductVariantId))
             .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => MappingHelpers.GetProductThumbnailImageUrl(src.ProductVariant.Product)))
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductVariant.Product.Name))

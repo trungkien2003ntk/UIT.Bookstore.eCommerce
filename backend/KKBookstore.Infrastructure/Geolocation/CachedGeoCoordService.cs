@@ -1,10 +1,10 @@
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Users;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Infrastructure.Geolocation;
+namespace KKBookstore.Geolocation;
 
 public class CachedGeoCoordService : IGeoCoordService
 {
@@ -27,7 +27,7 @@ public class CachedGeoCoordService : IGeoCoordService
     public async Task<GeoCoordResult> GetCoordinatesAsync(Address address, CancellationToken cancellationToken = default)
     {
         var cacheKey = GenerateCacheKey(address);
-        
+
         if (_cache.TryGetValue(cacheKey, out GeoCoordResult? cachedResult) && cachedResult != null)
         {
             _logger.LogDebug("Cache hit for address geocoding: {CacheKey}", cacheKey);
@@ -49,7 +49,7 @@ public class CachedGeoCoordService : IGeoCoordService
     public async Task<GeoCoordResult> GetCoordinatesAsync(string fullAddress, CancellationToken cancellationToken = default)
     {
         var cacheKey = GenerateCacheKey(fullAddress);
-        
+
         if (_cache.TryGetValue(cacheKey, out GeoCoordResult? cachedResult) && cachedResult != null)
         {
             _logger.LogDebug("Cache hit for string geocoding: {CacheKey}", cacheKey);

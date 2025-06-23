@@ -27,11 +27,11 @@ public class OrderLineAllocation : BaseEntity
     }
 
     public OrderLineAllocation(
-        int orderLineId, 
-        int orderFulfillmentId, 
-        int productVariantId, 
-        int quantity, 
-        decimal unitPrice, 
+        int orderLineId,
+        int orderFulfillmentId,
+        int productVariantId,
+        int quantity,
+        decimal unitPrice,
         int inventoryId)
     {
         OrderLineId = orderLineId;

@@ -1,5 +1,4 @@
 using KKBookstore.Common.Interfaces;
-using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Features.Dashboard.Models;
 using KKBookstore.Models;
 using KKBookstore.Orders;
@@ -17,7 +16,7 @@ public class GetOrderAnalyticsHandler(
         try
         {
             var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
-            
+
             // Base query
             var ordersQuery = dbContext.Orders
                 .Where(o => o.CreationTime >= dateFilter.FromDate && o.CreationTime <= dateFilter.ToDate);            // Apply filters
@@ -67,7 +66,8 @@ public class GetOrderAnalyticsHandler(
                 OrderStatusDistribution = await orderStatusDistributionTask
             };
 
-            return Result<OrderAnalyticsDto>.Success(result);        }
+            return Result<OrderAnalyticsDto>.Success(result);
+        }
         catch (Exception ex)
         {
             var error = Error.Failure("Dashboard.OrderAnalyticsError", $"Error retrieving order analytics: {ex.Message}");
@@ -87,12 +87,14 @@ public class GetOrderAnalyticsHandler(
     }
 
     private async Task<double> CalculateAverageProcessingTime(IQueryable<Order> ordersQuery, CancellationToken cancellationToken)
-    {        var processedOrders = await ordersQuery
+    {
+        var processedOrders = await ordersQuery
             .Where(o => o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received)
             .Where(o => o.PaidWhen.HasValue)
-            .Select(o => new { 
-                OrderWhen = o.OrderWhen, 
-                DeliveredWhen = o.Status == OrderStatus.Delivered ? o.ConfirmedDeliveryWhen : o.ConfirmedReceivedWhen 
+            .Select(o => new
+            {
+                OrderWhen = o.OrderWhen,
+                DeliveredWhen = o.Status == OrderStatus.Delivered ? o.ConfirmedDeliveryWhen : o.ConfirmedReceivedWhen
             })
             .ToListAsync(cancellationToken);
 
@@ -107,7 +109,7 @@ public class GetOrderAnalyticsHandler(
     }
 
     private async Task<List<OrderStatusDistributionDto>> GetOrderStatusDistribution(
-        IQueryable<Order> ordersQuery, 
+        IQueryable<Order> ordersQuery,
         CancellationToken cancellationToken)
     {
         var totalOrders = await ordersQuery.CountAsync(cancellationToken);
@@ -133,12 +135,12 @@ public class GetOrderAnalyticsHandler(
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetDateFilter(
-        string period, 
-        DateTimeOffset? fromDate, 
+        string period,
+        DateTimeOffset? fromDate,
         DateTimeOffset? toDate)
     {
         var now = DateTimeOffset.Now;
-        
+
         if (fromDate.HasValue && toDate.HasValue)
         {
             return (fromDate.Value, toDate.Value);

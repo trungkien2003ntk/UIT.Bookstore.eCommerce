@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Infrastructure.HostedServices;
+namespace KKBookstore.HostedServices;
 
 public class TokenBlacklistHostedService : BackgroundService
 {
@@ -22,12 +22,12 @@ public class TokenBlacklistHostedService : BackgroundService
     public override async Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("TokenBlacklistHostedService starting...");
-        
+
         // Load blacklisted tokens into memory cache on startup
         using var scope = _serviceProvider.CreateScope();
         var tokenBlacklistService = scope.ServiceProvider.GetRequiredService<ITokenBlacklistService>();
         await tokenBlacklistService.LoadBlacklistedTokensAsync(cancellationToken);
-        
+
         await base.StartAsync(cancellationToken);
     }
 
@@ -43,9 +43,9 @@ public class TokenBlacklistHostedService : BackgroundService
 
                 using var scope = _serviceProvider.CreateScope();
                 var tokenBlacklistService = scope.ServiceProvider.GetRequiredService<ITokenBlacklistService>();
-                
+
                 await tokenBlacklistService.CleanupExpiredTokensAsync(stoppingToken);
-                
+
                 _logger.LogDebug("Token blacklist cleanup completed");
             }
             catch (OperationCanceledException)

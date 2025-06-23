@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace KKBookstore.Infrastructure.Services;
+namespace KKBookstore.Services;
 
 public class TokenVersionService(
     UserManager<User> userManager,
@@ -31,7 +31,7 @@ public class TokenVersionService(
             }
 
             var currentVersion = currentVersionResult.Value;
-            
+
             if (!Guid.TryParse(tokenVersion, out var tokenVersionGuid))
             {
                 _logger.LogWarning("Invalid token version format for user {UserId}: {TokenVersion}", userId, tokenVersion);
@@ -39,10 +39,10 @@ public class TokenVersionService(
             }
 
             var isValid = currentVersion == tokenVersionGuid;
-            
+
             if (!isValid)
             {
-                _logger.LogInformation("Token version mismatch for user {UserId}. Current: {Current}, Token: {Token}", 
+                _logger.LogInformation("Token version mismatch for user {UserId}. Current: {Current}, Token: {Token}",
                     userId, currentVersion, tokenVersionGuid);
             }
 
@@ -100,9 +100,9 @@ public class TokenVersionService(
         {
             var cacheKey = GetCacheKey(userId);
             _cache.Remove(cacheKey);
-            
+
             _logger.LogDebug("Token version cache invalidated for user {UserId}", userId);
-            
+
             await Task.CompletedTask;
         }
         catch (Exception ex)

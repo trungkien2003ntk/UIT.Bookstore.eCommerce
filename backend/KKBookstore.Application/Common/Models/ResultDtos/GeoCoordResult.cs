@@ -1,4 +1,4 @@
-namespace KKBookstore.Application.Common.Models.ResultDtos;
+namespace KKBookstore.Common.Models.ResultDtos;
 
 public class GeoCoordResult
 {
@@ -24,7 +24,7 @@ public class GeoCoordResult
     public double DistanceTo(double latitude, double longitude)
     {
         if (!Success) throw new InvalidOperationException("Cannot calculate distance from invalid coordinates");
-        
+
         return CalculateHaversineDistance(Latitude, Longitude, latitude, longitude);
     }
 
@@ -60,7 +60,7 @@ public class GeoCoordResult
                 Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
 
         var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        
+
         return R * c; // Distance in kilometers
     }
 

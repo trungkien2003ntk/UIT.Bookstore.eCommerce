@@ -15,7 +15,7 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(o => o.OrderNumber).HasColumnName(nameof(Order.OrderNumber)).HasMaxLength(OrderConsts.OrderNumberMaxLength).IsRequired();
         builder.Property(o => o.Comment).HasColumnName(nameof(Order.Comment)).HasMaxLength(OrderConsts.CommentMaxLength);
-        builder.Property(o => o.DeliveryInstruction).HasColumnName(nameof(Order.DeliveryInstruction)).HasMaxLength(OrderConsts.DeliveryInstructionMaxLength);        builder.HasOne(o => o.ShippingAddress).WithMany().HasForeignKey(o => o.ShippingAddressId).OnDelete(DeleteBehavior.SetNull);
+        builder.Property(o => o.DeliveryInstruction).HasColumnName(nameof(Order.DeliveryInstruction)).HasMaxLength(OrderConsts.DeliveryInstructionMaxLength); builder.HasOne(o => o.ShippingAddress).WithMany().HasForeignKey(o => o.ShippingAddressId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne(o => o.PaymentMethod).WithMany().HasForeignKey(o => o.PaymentMethodId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne(o => o.DeliveryMethod).WithMany().HasForeignKey(o => o.DeliveryMethodId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne(o => o.PriceDiscountVoucher).WithMany().HasForeignKey(o => o.PriceDiscountVoucherId).OnDelete(DeleteBehavior.NoAction);

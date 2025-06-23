@@ -17,16 +17,16 @@ public class GetRevenueAnalyticsHandler(
         {
             var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
             var previousPeriodFilter = GetPreviousPeriodFilter(dateFilter.FromDate, dateFilter.ToDate);
-            
+
             // Base query for current period
             var currentPeriodQuery = dbContext.Orders
-                .Where(o => o.CreationTime >= dateFilter.FromDate && 
+                .Where(o => o.CreationTime >= dateFilter.FromDate &&
                            o.CreationTime <= dateFilter.ToDate &&
                            (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received));
 
             // Base query for previous period
             var previousPeriodQuery = dbContext.Orders
-                .Where(o => o.CreationTime >= previousPeriodFilter.FromDate && 
+                .Where(o => o.CreationTime >= previousPeriodFilter.FromDate &&
                            o.CreationTime <= previousPeriodFilter.ToDate &&
                            (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received));            // Apply filters
             // Note: Orders don't have a direct BranchId - commenting out for now
@@ -47,7 +47,7 @@ public class GetRevenueAnalyticsHandler(
             // Calculate total revenue
             var totalRevenueTask = currentPeriodQuery
                 .SumAsync(o => o.Subtotal + o.ShippingFee, cancellationToken);
-            
+
             var previousPeriodRevenueTask = previousPeriodQuery
                 .SumAsync(o => o.Subtotal + o.ShippingFee, cancellationToken);
 
@@ -68,7 +68,8 @@ public class GetRevenueAnalyticsHandler(
                 RevenueByPeriod = await revenueByPeriodTask
             };
 
-            return Result<RevenueAnalyticsDto>.Success(result);        }
+            return Result<RevenueAnalyticsDto>.Success(result);
+        }
         catch (Exception ex)
         {
             var error = Error.Failure("Dashboard.GetRevenue", ex.Message);
@@ -77,10 +78,11 @@ public class GetRevenueAnalyticsHandler(
     }
 
     private async Task<List<RevenueByPeriodDto>> GetRevenueByPeriod(
-        IQueryable<Order> ordersQuery, 
-        string groupBy, 
+        IQueryable<Order> ordersQuery,
+        string groupBy,
         CancellationToken cancellationToken)
-    {        var revenueByPeriod = groupBy.ToLower() switch
+    {
+        var revenueByPeriod = groupBy.ToLower() switch
         {
             "day" => await ordersQuery
                 .Where(o => o.CreationTime.HasValue)
@@ -93,7 +95,7 @@ public class GetRevenueAnalyticsHandler(
                 })
                 .OrderBy(r => r.Date)
                 .ToListAsync(cancellationToken),
-                
+
             "week" => await ordersQuery
                 .Where(o => o.CreationTime.HasValue)
                 .GroupBy(o => new DateTime(o.CreationTime!.Value.Year, 1, 1)
@@ -106,7 +108,7 @@ public class GetRevenueAnalyticsHandler(
                 })
                 .OrderBy(r => r.Date)
                 .ToListAsync(cancellationToken),
-                
+
             "month" => await ordersQuery
                 .Where(o => o.CreationTime.HasValue)
                 .GroupBy(o => new DateTime(o.CreationTime!.Value.Year, o.CreationTime!.Value.Month, 1))
@@ -118,7 +120,7 @@ public class GetRevenueAnalyticsHandler(
                 })
                 .OrderBy(r => r.Date)
                 .ToListAsync(cancellationToken),
-                
+
             _ => await ordersQuery
                 .Where(o => o.CreationTime.HasValue)
                 .GroupBy(o => o.CreationTime!.Value.Date)
@@ -142,12 +144,12 @@ public class GetRevenueAnalyticsHandler(
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetDateFilter(
-        string period, 
-        DateTimeOffset? fromDate, 
+        string period,
+        DateTimeOffset? fromDate,
         DateTimeOffset? toDate)
     {
         var now = DateTimeOffset.Now;
-        
+
         if (fromDate.HasValue && toDate.HasValue)
         {
             return (fromDate.Value, toDate.Value);
@@ -164,7 +166,7 @@ public class GetRevenueAnalyticsHandler(
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetPreviousPeriodFilter(
-        DateTimeOffset currentFromDate, 
+        DateTimeOffset currentFromDate,
         DateTimeOffset currentToDate)
     {
         var periodLength = currentToDate - currentFromDate;

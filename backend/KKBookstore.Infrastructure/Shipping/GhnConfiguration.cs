@@ -1,4 +1,4 @@
-namespace KKBookstore.Infrastructure.Shipping;
+namespace KKBookstore.Shipping;
 
 /// <summary>
 /// Configuration settings for GHN shipping service integration

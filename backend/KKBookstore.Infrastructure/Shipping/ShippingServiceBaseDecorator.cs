@@ -41,7 +41,8 @@ public abstract class ShippingServiceBaseDecorator(
 
     public virtual async Task<Result<GetProvinceResponse>> GetProvinceAsync(CancellationToken cancellationToken)
     {
-        return await _wrappee.GetProvinceAsync(cancellationToken);    }
+        return await _wrappee.GetProvinceAsync(cancellationToken);
+    }
 
     public virtual async Task<Result<ShippingFeeResponse>> GetShippingFeeAsync(ShippingFeeRequest request, CancellationToken cancellationToken)
     {

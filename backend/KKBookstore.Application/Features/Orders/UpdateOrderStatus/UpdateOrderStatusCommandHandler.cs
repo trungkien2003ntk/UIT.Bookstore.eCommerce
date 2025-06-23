@@ -67,8 +67,9 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
             if (!string.IsNullOrEmpty(request.Notes))
             {
                 statusUpdateNote += $". Notes: {request.Notes}";
-            }            order.Comment = string.IsNullOrEmpty(order.Comment) 
-                ? statusUpdateNote 
+            }
+            order.Comment = string.IsNullOrEmpty(order.Comment)
+                ? statusUpdateNote
                 : $"{order.Comment}\n{statusUpdateNote}";
 
             // Record order history
@@ -88,16 +89,16 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Manually updated order {OrderId} status from {PreviousStatus} to {NewStatus}. Reason: {Reason}", 
+            _logger.LogInformation("Manually updated order {OrderId} status from {PreviousStatus} to {NewStatus}. Reason: {Reason}",
                 request.OrderId, previousStatus, request.Status, request.Reason);
 
             return Result.Success();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating order {OrderId} status to {Status}", 
+            _logger.LogError(ex, "Error updating order {OrderId} status to {Status}",
                 request.OrderId, request.Status);
-            return Result.Failure(Error.Failure("UpdateOrderStatus.Failed", 
+            return Result.Failure(Error.Failure("UpdateOrderStatus.Failed",
                 "Failed to update order status"));
         }
     }

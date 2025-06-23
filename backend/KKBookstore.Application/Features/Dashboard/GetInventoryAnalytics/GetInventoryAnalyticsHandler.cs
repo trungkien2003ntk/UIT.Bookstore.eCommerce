@@ -1,9 +1,7 @@
 using KKBookstore.Common.Interfaces;
-using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Features.Dashboard.Models;
 using KKBookstore.Models;
 using KKBookstore.Products;
-using KKBookstore.StockTransactions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +16,7 @@ public class GetInventoryAnalyticsHandler(
         try
         {
             var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
-              // Base queries
+            // Base queries
             var productsQuery = dbContext.Products.Where(p => !p.IsDeleted && p.IsActive);
             var inventoryQuery = dbContext.Inventories.AsQueryable();
             var stockAdjustmentsQuery = dbContext.StockAdjustments
@@ -39,24 +37,24 @@ public class GetInventoryAnalyticsHandler(
 
             // Calculate metrics
             var totalProductsTask = productsQuery.CountAsync(cancellationToken);
-            
+
             var lowStockProductsTask = GetLowStockProducts(
-                productsQuery, 
-                inventoryQuery, 
-                request.LowStockThreshold, 
-                request.LowStockProductsLimit, 
+                productsQuery,
+                inventoryQuery,
+                request.LowStockThreshold,
+                request.LowStockProductsLimit,
                 cancellationToken);
-              var outOfStockProductsTask = inventoryQuery
-                .Where(i => i.StockQuantity <= 0)
-                .CountAsync(cancellationToken);
-            
+            var outOfStockProductsTask = inventoryQuery
+              .Where(i => i.StockQuantity <= 0)
+              .CountAsync(cancellationToken);
+
             var totalStockAdjustmentsTask = stockAdjustmentsQuery.CountAsync(cancellationToken);
 
             await Task.WhenAll(
                 totalProductsTask, lowStockProductsTask, outOfStockProductsTask, totalStockAdjustmentsTask
             );
 
-            var lowStockProductsList = await lowStockProductsTask;            var result = new InventoryAnalyticsDto
+            var lowStockProductsList = await lowStockProductsTask; var result = new InventoryAnalyticsDto
             {
                 TotalProducts = await totalProductsTask,
                 LowStockProducts = lowStockProductsList.Count,
@@ -65,13 +63,15 @@ public class GetInventoryAnalyticsHandler(
                 LowStockProductsList = lowStockProductsList
             };
 
-            return Result<InventoryAnalyticsDto>.Success(result);        }
+            return Result<InventoryAnalyticsDto>.Success(result);
+        }
         catch (Exception ex)
         {
             var error = Error.Failure("Dashboard.InventoryAnalyticsError", $"Error retrieving inventory analytics: {ex.Message}");
             return Result.Failure<InventoryAnalyticsDto>(error);
         }
-    }    private async Task<List<LowStockProductDto>> GetLowStockProducts(
+    }
+    private async Task<List<LowStockProductDto>> GetLowStockProducts(
         IQueryable<Product> productsQuery,
         IQueryable<StockTransactions.Inventory> inventoryQuery,
         int lowStockThreshold,
@@ -79,17 +79,17 @@ public class GetInventoryAnalyticsHandler(
         CancellationToken cancellationToken)
     {
         var lowStockProducts = await (from p in productsQuery
-                                     join pv in dbContext.ProductVariants on p.Id equals pv.ProductId
-                                     join i in inventoryQuery on pv.Id equals i.ProductVariantId
-                                     where i.StockQuantity <= lowStockThreshold && i.StockQuantity > 0
-                                     select new LowStockProductDto
-                                     {
-                                         ProductId = p.Id,
-                                         ProductName = p.Name,
-                                         CurrentStock = i.StockQuantity,
-                                         MinimumStock = lowStockThreshold,
-                                         ProductTypeName = p.ProductType.DisplayName
-                                     })
+                                      join pv in dbContext.ProductVariants on p.Id equals pv.ProductId
+                                      join i in inventoryQuery on pv.Id equals i.ProductVariantId
+                                      where i.StockQuantity <= lowStockThreshold && i.StockQuantity > 0
+                                      select new LowStockProductDto
+                                      {
+                                          ProductId = p.Id,
+                                          ProductName = p.Name,
+                                          CurrentStock = i.StockQuantity,
+                                          MinimumStock = lowStockThreshold,
+                                          ProductTypeName = p.ProductType.DisplayName
+                                      })
                                      .OrderBy(p => p.CurrentStock)
                                      .Take(limit)
                                      .ToListAsync(cancellationToken);
@@ -98,12 +98,12 @@ public class GetInventoryAnalyticsHandler(
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetDateFilter(
-        string period, 
-        DateTimeOffset? fromDate, 
+        string period,
+        DateTimeOffset? fromDate,
         DateTimeOffset? toDate)
     {
         var now = DateTimeOffset.Now;
-        
+
         if (fromDate.HasValue && toDate.HasValue)
         {
             return (fromDate.Value, toDate.Value);

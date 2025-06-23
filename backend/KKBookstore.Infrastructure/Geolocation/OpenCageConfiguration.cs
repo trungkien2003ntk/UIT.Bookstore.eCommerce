@@ -1,4 +1,4 @@
-namespace KKBookstore.Infrastructure.Geolocation;
+namespace KKBookstore.Geolocation;
 
 public class OpenCageConfiguration
 {

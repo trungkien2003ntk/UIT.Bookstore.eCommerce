@@ -1,13 +1,13 @@
-using System.Text.Json;
-using System.Web;
-using KKBookstore.Application.Common.Interfaces;
-using KKBookstore.Application.Common.Models.RequestDtos;
-using KKBookstore.Application.Common.Models.ResultDtos;
+using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.RequestDtos;
+using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Users;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Web;
 
-namespace KKBookstore.Infrastructure.Geolocation;
+namespace KKBookstore.Geolocation;
 
 public class OpenCageGeocodingService : IGeoCoordService
 {
@@ -23,7 +23,7 @@ public class OpenCageGeocodingService : IGeoCoordService
         _httpClient = httpClient;
         _configuration = configuration.Value;
         _logger = logger;
-        
+
         _httpClient.BaseAddress = new Uri(_configuration.BaseUrl);
         _httpClient.Timeout = TimeSpan.FromSeconds(_configuration.TimeoutSeconds);
     }
@@ -52,7 +52,7 @@ public class OpenCageGeocodingService : IGeoCoordService
 
             var requestUrl = BuildRequestUrl(fullAddress);
             var response = await _httpClient.GetAsync(requestUrl, cancellationToken);
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("OpenCage API returned error status: {StatusCode}", response.StatusCode);
@@ -80,7 +80,7 @@ public class OpenCageGeocodingService : IGeoCoordService
 
             if (openCageResponse.Status.Code != 200)
             {
-                _logger.LogError("OpenCage API returned error: {Code} - {Message}", 
+                _logger.LogError("OpenCage API returned error: {Code} - {Message}",
                     openCageResponse.Status.Code, openCageResponse.Status.Message);
                 return new GeoCoordResult
                 {
@@ -162,12 +162,12 @@ public class OpenCageGeocodingService : IGeoCoordService
     {
         var encodedAddress = HttpUtility.UrlEncode(address);
         var url = $"/geocode/v1/json?q={encodedAddress}&key={_configuration.ApiKey}";
-        
+
         if (!string.IsNullOrWhiteSpace(_configuration.Language))
             url += $"&language={_configuration.Language}";
-        
+
         url += "&limit=1&no_annotations=1";
-        
+
         return url;
     }
 }

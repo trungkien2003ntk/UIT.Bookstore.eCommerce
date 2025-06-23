@@ -208,7 +208,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             _dbContext.ProductTypeAttributeProductValues.Remove(item);
         }
-    }    private void UpdateProductVariants(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
+    }
+    private void UpdateProductVariants(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
     {
         var existingProductVariants = product.ProductVariants.ToList();
 
@@ -231,9 +232,9 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     IsActive = true,
                     Tags = ""
                 };
-                
+
                 product.ProductVariants.Add(newVariant);
-                
+
                 // Add variant option values for new variant
                 if (productVariant.VariantOptions != null && productVariant.VariantOptions.Any())
                 {
@@ -260,7 +261,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     existingProductVariant.Comment = productVariant.Comment;
                     existingProductVariant.Weight = productVariant.Weight;
                     existingProductVariant.Dimension = productVariant.Dimension ?? existingProductVariant.Dimension;
-                    
+
                     // Update variant option values
                     if (productVariant.VariantOptions != null)
                     {
@@ -271,7 +272,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                             _dbContext.ProductVariantOptionValues.Remove(existingOptionValue);
                         }
                         existingProductVariant.ProductVariantOptionValues?.Clear();
-                        
+
                         // Add new option values
                         foreach (var optionValue in productVariant.VariantOptions)
                         {
@@ -369,7 +370,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 AttributeValueId = x.AttributeValueId,
                 Name = x.AttributeValue.ProductTypeAttribute.Name,
                 Value = x.AttributeValue.Value
-            }).ToList(),            ProductVariants = product.ProductVariants.Select(x => new ProductVariantDto
+            }).ToList(),
+            ProductVariants = product.ProductVariants.Select(x => new ProductVariantDto
             {
                 Id = x.Id,
                 RecommendedRetailPrice = x.RecommendedRetailPrice,

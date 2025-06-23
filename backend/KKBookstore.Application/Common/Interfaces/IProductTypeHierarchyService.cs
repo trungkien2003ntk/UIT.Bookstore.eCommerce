@@ -41,7 +41,7 @@ public interface IProductTypeHierarchyService
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of product type details</returns>
     Task<List<ProductTypeDetail>> GetProductTypeDetailsFromStringAsync(string productTypeIdsString, CancellationToken cancellationToken);
-    
+
     /// <summary>
     /// Gets product type details (ID and DisplayName) for a list of IDs
     /// </summary>

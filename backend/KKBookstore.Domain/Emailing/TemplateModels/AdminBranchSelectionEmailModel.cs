@@ -13,7 +13,8 @@ public class AdminBranchSelectionEmailModel : IEmailModel
     public string CustomerName { get; }
     public DateTime OrderDate { get; }
     public List<BranchSelectionOption> BranchOptions { get; }
-    public decimal TotalOrderValue { get; }    public object TemplateDataModel => new
+    public decimal TotalOrderValue { get; }
+    public object TemplateDataModel => new
     {
         RecipientName = ReceiverFullName ?? "Admin",
         OrderId = OrderId,

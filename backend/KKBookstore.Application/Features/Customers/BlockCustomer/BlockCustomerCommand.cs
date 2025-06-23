@@ -29,7 +29,8 @@ public class BlockCustomerCommandHandler(
         if (customer.Status == UserStatus.Blocked)
         {
             return Result.Failure(CustomerErrors.AlreadyBlocked);
-        }        try
+        }
+        try
         {
             // Set customer status to Blocked (blocked)
             // This also regenerates TokenVersion which invalidates all existing tokens

@@ -45,7 +45,7 @@ public class OrderFulfillment : BaseAuditedEntity
     {
         if (!IsSelectedForPackaging)
             throw new InvalidOperationException("Cannot start packaging without being selected first");
-        
+
         Status = OrderFulfillmentStatus.Packaging;
         PackagingStartedWhen = DateTimeOffset.Now;
     }
@@ -54,7 +54,7 @@ public class OrderFulfillment : BaseAuditedEntity
     {
         if (Status != OrderFulfillmentStatus.Packaging)
             throw new InvalidOperationException("Can only complete packaging when in packaging status");
-        
+
         Status = OrderFulfillmentStatus.ReadyForShipping;
         PackagingCompletedWhen = DateTimeOffset.Now;
     }

@@ -1,5 +1,5 @@
-using KKBookstore.Orders;
 using KKBookstore.Data.Extensions;
+using KKBookstore.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +10,7 @@ internal class OrderHistoryConfiguration : IEntityTypeConfiguration<OrderHistory
     public void Configure(EntityTypeBuilder<OrderHistory> builder)
     {
         builder.ToTable("OrderHistories");
-        
+
         builder.ConfigureAuditing();
 
         // Primary key

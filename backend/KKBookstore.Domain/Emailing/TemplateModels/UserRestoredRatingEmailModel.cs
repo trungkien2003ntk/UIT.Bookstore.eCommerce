@@ -8,7 +8,8 @@ public class UserRestoredRatingEmailModel : IEmailModel
 
     public string? ReceiverFullName { get; set; }
 
-    public int RatingId { get; }    public object TemplateDataModel => new
+    public int RatingId { get; }
+    public object TemplateDataModel => new
     {
         RecipientName = ReceiverFullName ?? "Khách hàng",
         RatingId = RatingId

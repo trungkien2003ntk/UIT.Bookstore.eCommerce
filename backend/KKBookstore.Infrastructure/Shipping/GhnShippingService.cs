@@ -1,16 +1,15 @@
-using KKBookstore.Application.Common.Models.RequestDtos;
 using KKBookstore.Common.Interfaces;
+using KKBookstore.Common.Models.RequestDtos;
 using KKBookstore.Common.Models.ResultDtos;
 using KKBookstore.Models;
 using KKBookstore.Orders;
-using KKBookstore.Shipping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
-namespace KKBookstore.Infrastructure.Shipping;
+namespace KKBookstore.Shipping;
 
 /// <summary>
 /// Comprehensive implementation of GHN shipping service for order management and tracking.
@@ -72,12 +71,12 @@ public class GhnShippingService : IGhnShippingService
             "lost" => OrderStatus.Cancelled,
             _ => OrderStatus.Processing // Default fallback
         };
-    }    
-    
+    }
+
     public GhnOrderStatus MapStringToGhnOrderStatus(string ghnStatus)
     {
         _logger.LogDebug("Mapping GHN status string '{GhnStatus}' to GhnOrderStatus enum", ghnStatus);
-        
+
         return ghnStatus.ToLower() switch
         {
             "ready_to_pick" => GhnOrderStatus.ReadyToPick,
@@ -104,7 +103,8 @@ public class GhnShippingService : IGhnShippingService
             "lost" => GhnOrderStatus.Lost,
             _ => GhnOrderStatus.ReadyToPick // Default fallback
         };
-    }    public async Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null)
+    }
+    public async Task<Result> ProcessOrderStatusUpdateAsync(string orderCode, string ghnStatus, string? reason = null)
     {
         return await ProcessOrderStatusUpdateAsync(orderCode, ghnStatus, reason, null);
     }
@@ -151,8 +151,8 @@ public class GhnShippingService : IGhnShippingService
             }
 
             // Record order history
-            var actionDescription = triggeredByUserId.HasValue 
-                ? "Manual GHN status update via admin trigger" 
+            var actionDescription = triggeredByUserId.HasValue
+                ? "Manual GHN status update via admin trigger"
                 : "Automatic GHN webhook status update";
 
             var orderHistory = OrderHistory.Create(
@@ -282,7 +282,8 @@ public class GhnShippingService : IGhnShippingService
                 Success = true,
                 OrderCode = data.OrderCode,
                 SortCode = data.SortCode,
-                TransType = data.TransType,                DistrictEncode = data.DistrictEncode,
+                TransType = data.TransType,
+                DistrictEncode = data.DistrictEncode,
                 WardEncode = data.WardEncode,
                 ExpectedDeliveryTime = DateTime.TryParse(data.ExpectedDeliveryTime, out var deliveryTime) ? deliveryTime : null,
                 Fee = new GhnOrderFee
@@ -771,7 +772,8 @@ public class GhnShippingService : IGhnShippingService
                 OrderCode = item.OrderCode,
                 Result = item.Result,
                 Message = item.Message
-            }).ToList() ?? new()        };
+            }).ToList() ?? new()
+        };
     }
 
     // Interface method implementations (single order operations)
@@ -957,7 +959,8 @@ internal class GhnCreateStoreData
 internal class GhnOrderOperationData
 {
     public string OrderCode { get; set; } = string.Empty;
-    public bool Result { get; set; }    public string Message { get; set; } = string.Empty;
+    public bool Result { get; set; }
+    public string Message { get; set; } = string.Empty;
 }
 
 #endregion

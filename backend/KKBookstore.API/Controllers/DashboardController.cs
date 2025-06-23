@@ -1,9 +1,9 @@
 using KKBookstore.Abstractions;
-using KKBookstore.Features.Dashboard.GetDashboardSummary;
-using KKBookstore.Features.Dashboard.GetRevenueAnalytics;
 using KKBookstore.Features.Dashboard.GetCustomerAnalytics;
+using KKBookstore.Features.Dashboard.GetDashboardSummary;
 using KKBookstore.Features.Dashboard.GetInventoryAnalytics;
 using KKBookstore.Features.Dashboard.GetOrderAnalytics;
+using KKBookstore.Features.Dashboard.GetRevenueAnalytics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +40,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
@@ -68,7 +68,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
@@ -94,7 +94,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
@@ -124,7 +124,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
@@ -150,7 +150,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
@@ -178,7 +178,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         // Return only the top products from the summary
         return result.IsSuccess ? Ok(result.Value.TopProducts) : ToActionResult(result);
     }
@@ -206,7 +206,7 @@ public class DashboardController(
         };
 
         var result = await Sender.Send(query, cancellationToken);
-        
+
         // Return only the sales by product types from the summary
         return result.IsSuccess ? Ok(result.Value.SalesByProductTypes) : ToActionResult(result);
     }
@@ -283,17 +283,17 @@ public class DashboardController(
             TotalRevenue = summaryResult.Value.TotalRevenue,
             AverageOrderValue = summaryResult.Value.AverageOrderValue,
             RevenueGrowth = revenueResult.Value.GrowthPercentage,
-            
+
             // Order KPIs
             TotalOrders = summaryResult.Value.TotalOrders,
             OrderFulfillmentRate = orderResult.Value.OrderFulfillmentRate,
             AverageProcessingTime = orderResult.Value.AverageProcessingTime,
-            
+
             // Customer KPIs
             TotalNewUsers = summaryResult.Value.TotalNewUsers,
             CustomerRetentionRate = customerResult.Value.CustomerRetentionRate,
             AverageCustomerValue = customerResult.Value.AverageCustomerValue,
-            
+
             // Product KPIs
             TotalProductsSold = summaryResult.Value.TotalProductsSold,
             StockAdjustmentOrders = summaryResult.Value.TotalStockAdjustmentOrders

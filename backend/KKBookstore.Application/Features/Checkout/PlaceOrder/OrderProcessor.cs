@@ -27,10 +27,11 @@ public abstract class OrderProcessor(
             {
                 await transaction.RollbackAsync(cancellationToken);
                 return Result.Failure<PlaceOrderResponse>(OrderErrors.InsufficientStock);
-            }            var order = await CreateOrder(request, checkoutItems, cancellationToken);
+            }
+            var order = await CreateOrder(request, checkoutItems, cancellationToken);
             await _dbContext.Orders.AddAsync(order, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            
+
             // Record initial order history (same status for from and to since it's creation)
             var initialHistory = OrderHistory.Create(
                 orderId: order.Id,
@@ -128,7 +129,7 @@ public abstract class OrderProcessor(
     protected async Task RecordOrderHistory(Order order, OrderStatus toStatus, string action, int? triggeredByUserId, CancellationToken cancellationToken, string? notes = null, string? externalReference = null)
     {
         var fromStatus = order.Status; // Capture current status before change
-        
+
         var orderHistory = OrderHistory.Create(
             orderId: order.Id,
             fromStatus: fromStatus,

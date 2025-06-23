@@ -9,7 +9,8 @@ public class UserHiddenRatingEmailModel : IEmailModel
     public string? ReceiverFullName { get; set; }
 
     public int RatingId { get; }
-    public string Reason { get; }    public object TemplateDataModel => new
+    public string Reason { get; }
+    public object TemplateDataModel => new
     {
         RecipientName = ReceiverFullName ?? "Khách hàng",
         RatingId = RatingId,

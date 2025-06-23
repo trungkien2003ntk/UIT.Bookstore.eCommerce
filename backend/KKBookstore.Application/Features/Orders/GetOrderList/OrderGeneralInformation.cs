@@ -3,7 +3,7 @@ using KKBookstore.Features.Orders.Models;
 
 namespace KKBookstore.Features.Orders.GetOrderList;
 
-public record OrderGeneralInformation : BaseDto
+public record OrderGeneralInformation : BaseAuditedDto
 {
     public string OrderNumber { get; init; }
     public DateTimeOffset? DueWhen { get; init; }
@@ -14,7 +14,7 @@ public record OrderGeneralInformation : BaseDto
     public string? Comment { get; init; }
     public string? DeliveryInstruction { get; init; }
     public int CustomerId { get; init; }
-    public int ShippingAddressId { get; init; }
+    public int? ShippingAddressId { get; init; }
     public string DeliveryMethodName { get; init; }
     public int? DiscountVoucherId { get; init; }
     public int? ShippingVoucherId { get; init; }

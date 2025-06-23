@@ -112,6 +112,7 @@ public class Order : BaseAuditedEntity
     {
         decimal shippingFee = ShippingFee;
         decimal subtotal = Subtotal;
+        decimal productDiscount = ProductDiscount;
         decimal shippingDiscount = 0m;
         decimal priceDiscount = 0m;
 
@@ -125,7 +126,7 @@ public class Order : BaseAuditedEntity
             priceDiscount = PriceDiscountVoucher.GetDiscountValue(subtotal);
         }
 
-        return subtotal + shippingFee - shippingDiscount - priceDiscount;
+        return subtotal + shippingFee - productDiscount - shippingDiscount - priceDiscount;
     }
 
     public bool IsCompleted()

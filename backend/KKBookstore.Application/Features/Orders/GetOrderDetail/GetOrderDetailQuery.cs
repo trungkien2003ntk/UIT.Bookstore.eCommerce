@@ -33,6 +33,9 @@ public class GetOrderDetailHandler(
                         .ThenInclude(p => p.AttributeProductValues)
                             .ThenInclude(apv => apv.AttributeValue)
                                 .ThenInclude(av => av.ProductTypeAttribute)
+            .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.ProductVariant)
+                    .ThenInclude(ol => ol.Ratings)
             .Include(o => o.DeliveryMethod)
             .Include(o => o.PaymentMethod)
             .Include(o => o.ShippingAddress)
@@ -186,7 +189,7 @@ public class GetOrderDetailHandler(
                 RecommendedRetailPrice = ol.ProductVariant?.RecommendedRetailPrice,
                 Quantity = ol.Quantity,
                 DiscountAmount = 0m, // Calculate if you have line-level discounts
-
+                Rated = ol.ProductVariantId.HasValue ? ol.ProductVariant.Ratings.Any(r => r.CustomerId == order.CustomerId) : false,
                 ThumbnailUrl = ol.ProductVariant?.GetThumbnailImageUrl() ??
                               ol.ProductVariant?.Product?.ProductImages?.FirstOrDefault()?.ThumbnailImageUrl ?? "",
                 LargeImageUrl = ol.ProductVariant?.Product?.ProductImages?.FirstOrDefault()?.LargeImageUrl,

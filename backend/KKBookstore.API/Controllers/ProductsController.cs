@@ -2,6 +2,7 @@
 using KKBookstore.Abstractions;
 using KKBookstore.Constants;
 using KKBookstore.Contracts.Requests;
+using KKBookstore.Contracts.Requests.Products;
 using KKBookstore.Features.Products.CreateProduct;
 using KKBookstore.Features.Products.CreateProductRating;
 using KKBookstore.Features.Products.DeleteProduct;
@@ -23,6 +24,7 @@ using KKBookstore.Features.Products.UpdateProduct;
 using KKBookstore.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace KKBookstore.Controllers;
 
@@ -187,18 +189,24 @@ public class ProductsController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-    [HttpPost("{id}/ratings")]
+    [HttpPost("{productId}/variants/{variantId}/ratings")]
     public async Task<IActionResult> CreateProductRating(
         [FromRoute] int id,
-        [FromBody] CreateProductRatingCommand command,
+        [FromRoute] int variantId,
+        [FromBody] CreateProductRatingRequest request,
         CancellationToken cancellationToken = default
     )
     {
-        if (id != command.ProductVariantId)
-        {
-            var resultTemp = Result.Failure(Error.Validation("Endpoint.InvalidRequest", "Product id in request doesn't match with the id in the route"));
-            return ToActionResult(resultTemp);
-        }
+        var customerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+        var command = new CreateProductRatingCommand(
+            variantId,
+            customerId,
+            request.Comment,
+            request.RatingValue,
+            request.ImageUrls
+        );
+
         var result = await Sender.Send(command, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }

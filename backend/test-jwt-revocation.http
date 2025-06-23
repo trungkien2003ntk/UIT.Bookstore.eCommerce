@@ -1,0 +1,60 @@
+### JWT Token Revocation Testing
+
+# Base URL
+@baseUrl = http://localhost:5234
+
+# 1. First, let's try to sign in to get a valid JWT token
+# Using admin credentials from seeded data
+POST {{baseUrl}}/api/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Abc123*",
+  "signInSource": 2
+}
+
+###
+
+# 2. Test accessing a protected endpoint with the JWT token
+# Replace the token below with the actual token from the login response
+@jwt_token = YOUR_JWT_TOKEN_HERE
+
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# 3. Test the logout endpoint (this will blacklist the token)
+POST {{baseUrl}}/api/auth/logout
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# 4. Try to access the protected endpoint again with the blacklisted token
+# This should return 401 Unauthorized
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# 5. Test accessing any protected endpoint with the blacklisted token
+# This should also return 401 Unauthorized
+GET {{baseUrl}}/api/branches
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# 6. Test with an invalid token format
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer invalid_token_format
+
+###
+
+# 7. Test accessing a public endpoint (should work without authentication)
+GET {{baseUrl}}/api/products
+
+###
+
+# 8. Test accessing Swagger (should work without authentication)
+GET {{baseUrl}}/swagger/index.html

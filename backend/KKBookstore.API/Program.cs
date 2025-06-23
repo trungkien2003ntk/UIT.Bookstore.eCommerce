@@ -1,4 +1,5 @@
 using KKBookstore;
+using KKBookstore.API.Middleware;
 using KKBookstore.Infrastructure;
 using KKBookstore.Mappings;
 using Microsoft.OpenApi.Models;
@@ -79,7 +80,6 @@ builder.Services
     .AddInfrastructureServices(builder.Configuration)
     .AddDomainServices();
 
-
 // add serilog to builder
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 {
@@ -89,7 +89,6 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 });
 
 var app = builder.Build();
-
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -104,6 +103,9 @@ app.UseHttpsRedirection();
 app.UseExceptionHandler();
 
 app.UseAuthentication();
+
+// Add JWT blacklist middleware after authentication but before authorization
+app.UseMiddleware<JwtBlacklistMiddleware>();
 
 app.UseAuthorization();
 

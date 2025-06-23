@@ -1,6 +1,7 @@
 ﻿using KKBookstore.Banners;
 using KKBookstore.Branches;
 using KKBookstore.Customers;
+using KKBookstore.Identity;
 using KKBookstore.Orders;
 using KKBookstore.Products;
 using KKBookstore.Products.Events;
@@ -25,6 +26,7 @@ public interface IApplicationDbContext
     public DbSet<IdentityUserRole<int>> UserRoles { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
+    public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
     public DbSet<Banner> Banners { get; set; }
     public DbSet<Branch> Branches { get; set; }
     public DbSet<BranchAddress> BranchAddresses { get; set; }

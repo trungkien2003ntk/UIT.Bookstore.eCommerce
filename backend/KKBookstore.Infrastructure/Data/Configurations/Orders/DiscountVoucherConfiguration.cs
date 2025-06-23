@@ -21,15 +21,9 @@ internal class DiscountVoucherConfiguration : IEntityTypeConfiguration<DiscountV
         builder.Property(dv => dv.MinimumSpend).HasPrecision(18, 2).IsRequired();
         builder.Property(dv => dv.UsageLimitOverall).IsRequired();
         builder.Property(dv => dv.StartTime).IsRequired();
-        builder.Property(dv => dv.EndTime).IsRequired();
-        builder.Property(dv => dv.VoucherType).IsRequired().HasConversion<EnumToStringConverter<DiscountVoucherType>>();
-        builder.Property(dv => dv.Status).IsRequired().HasConversion<EnumToStringConverter<DiscountStatus>>();
-
-        // Configure one-to-one relationship with ProductType
-        builder.HasOne(dv => dv.ApplyToProductType)
-            .WithMany()
-            .HasForeignKey(dv => dv.ApplyToProductTypeId)
-            .OnDelete(DeleteBehavior.SetNull);
+        builder.Property(dv => dv.EndTime).IsRequired();        builder.Property(dv => dv.VoucherType).IsRequired().HasConversion<EnumToStringConverter<DiscountVoucherType>>();
+        builder.Property(dv => dv.Status).IsRequired().HasConversion<EnumToStringConverter<DiscountStatus>>();        // Configure comma-separated ProductType IDs
+        builder.Property(dv => dv.ApplyToProductTypeIds).HasColumnName(nameof(DiscountVoucher.ApplyToProductTypeIds)).HasMaxLength(DiscountVoucherConsts.ProductTypeIdsMaxLength);
 
         // Configure many-to-many relationship with CustomerType through VoucherCustomerType
         builder.HasMany(dv => dv.CustomerTypes)

@@ -27,6 +27,7 @@ public class KKBookstoreDbContext(
 {
     public DbSet<Author> Authors { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
     public DbSet<Banner> Banners { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<Branch> Branches { get; set; }

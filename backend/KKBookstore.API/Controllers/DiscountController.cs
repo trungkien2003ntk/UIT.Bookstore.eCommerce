@@ -34,7 +34,6 @@ public class DiscountController(ISender sender) : ApiController(sender)
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
-
     [Authorize(Roles = $"{AppRoles.Customer}, {AppRoles.Admin}")]
     [HttpPost("get-vouchers-cart")]
     public async Task<IActionResult> GetAllDiscountVouchersForCartAsync(

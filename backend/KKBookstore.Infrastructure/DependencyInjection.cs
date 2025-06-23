@@ -8,6 +8,8 @@ using KKBookstore.Data.Interceptors;
 using KKBookstore.Emailing;
 using KKBookstore.Features.Admin.Services;
 using KKBookstore.Identity;
+using KKBookstore.Infrastructure.HostedServices;
+using KKBookstore.Infrastructure.Services;
 using KKBookstore.Payment;
 using KKBookstore.Search;
 using KKBookstore.Shipping;
@@ -62,6 +64,11 @@ public static class DependencyInjection
         /// Config AuthN and AuthZ
         services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
         services.AddScoped<IIdentityService, IdentityService>();
+        
+        /// Config JWT Token Blacklist Service
+        services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
+        services.AddHostedService<TokenBlacklistHostedService>();
+        
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services
             .AddAuthentication(opt =>

@@ -21,12 +21,14 @@ public record CreateDiscountVoucherCommand : IRequest<Result<DiscountVoucherDto>
     public int UsageLimitOverall { get; init; }
     public DateTimeOffset StartTime { get; init; }
     public DateTimeOffset EndTime { get; init; }
-    public int? ApplyToProductTypeId { get; init; }
+    public int? ApplyToProductTypeId { get; init; } // Legacy field for backward compatibility
+    public List<int> ApplyToProductTypeIdsList { get; init; } = []; // New field for multiple product type IDs
     public List<int> CustomerTypeIds { get; init; } = [];
 }
 
 public class CreateDiscountVoucherCommandHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    IProductTypeHierarchyService productTypeHierarchyService
 ) : IRequestHandler<CreateDiscountVoucherCommand, Result<DiscountVoucherDto>>
 {
     public async Task<Result<DiscountVoucherDto>> Handle(CreateDiscountVoucherCommand request, CancellationToken cancellationToken)
@@ -56,16 +58,30 @@ public class CreateDiscountVoucherCommandHandler(
                 Error.Validation("DiscountVoucher.CodeAlreadyExists", "A voucher with this code already exists"));
         }
 
-        // Validate ProductType exists if specified
+        // Validate ProductTypes exist if specified
+        var productTypeIdsToValidate = new List<int>();
+
+        // Legacy support: if single ID is provided, add it to the list
         if (request.ApplyToProductTypeId.HasValue)
         {
-            var productTypeExists = await dbContext.ProductTypes
-                .AnyAsync(pt => pt.Id == request.ApplyToProductTypeId.Value, cancellationToken);
+            productTypeIdsToValidate.Add(request.ApplyToProductTypeId.Value);
+        }
 
-            if (!productTypeExists)
+        // Add multiple IDs from the new field
+        productTypeIdsToValidate.AddRange(request.ApplyToProductTypeIdsList);
+
+        if (productTypeIdsToValidate.Any())
+        {
+            var existingProductTypeIds = await dbContext.ProductTypes
+                .Where(pt => productTypeIdsToValidate.Contains(pt.Id))
+                .Select(pt => pt.Id)
+                .ToListAsync(cancellationToken);
+
+            var missingIds = productTypeIdsToValidate.Except(existingProductTypeIds).ToList();
+            if (missingIds.Any())
             {
                 return Result.Failure<DiscountVoucherDto>(
-                    Error.NotFound("ProductType.NotFound", "The specified product type does not exist"));
+                    Error.NotFound("ProductType.NotFound", $"Product types with IDs [{string.Join(", ", missingIds)}] do not exist"));
             }
         }
 
@@ -85,6 +101,15 @@ public class CreateDiscountVoucherCommandHandler(
             }
         }
 
+        // Get product type hierarchy IDs if specified
+        string? productTypeHierarchyIds = null;
+        if (productTypeIdsToValidate.Any())
+        {
+            productTypeHierarchyIds = await productTypeHierarchyService.GetDescendantProductTypeIdsAsStringAsync(
+                productTypeIdsToValidate,
+                cancellationToken);
+        }
+
         // Create the discount voucher
         var createResult = DiscountVoucher.Create(
             request.Code,
@@ -99,7 +124,7 @@ public class CreateDiscountVoucherCommandHandler(
             request.UsageLimitOverall,
             request.StartTime,
             request.EndTime,
-            request.ApplyToProductTypeId
+            productTypeHierarchyIds
         );
 
         if (createResult.IsFailure)
@@ -121,15 +146,24 @@ public class CreateDiscountVoucherCommandHandler(
             dbContext.VoucherCustomerTypes.Add(voucherCustomerType);
         }
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        // Load the created voucher with related data
+        await dbContext.SaveChangesAsync(cancellationToken);        // Load the created voucher with related data
         var createdVoucher = await dbContext.DiscountVouchers
-            .Include(dv => dv.ApplyToProductType)
             .Include(dv => dv.VoucherUsages)
             .Include(dv => dv.CustomerTypes)
                 .ThenInclude(vct => vct.CustomerType)
             .FirstAsync(dv => dv.Id == discountVoucher.Id, cancellationToken);
+
+        // Get all product type details if ApplyToProductTypeIds is populated
+        var allProductTypeDetails = new List<ProductTypeDetail>();
+        var productTypeIdsList = new List<int>();
+        if (!string.IsNullOrEmpty(createdVoucher.ApplyToProductTypeIds))
+        {
+            allProductTypeDetails = await productTypeHierarchyService.GetProductTypeDetailsFromStringAsync(
+                createdVoucher.ApplyToProductTypeIds,
+                cancellationToken);
+
+            productTypeIdsList = allProductTypeDetails.Select(pt => pt.Id).ToList();
+        }
 
         var result = new DiscountVoucherDto
         {
@@ -147,8 +181,16 @@ public class CreateDiscountVoucherCommandHandler(
             UsageLimitOverall = createdVoucher.UsageLimitOverall,
             StartTime = createdVoucher.StartTime,
             EndTime = createdVoucher.EndTime,
-            ApplyToProductTypeId = createdVoucher.ApplyToProductTypeId,
-            ApplyToProductTypeName = createdVoucher.ApplyToProductType?.DisplayName,
+
+            // Product Type fields - new approach
+            ApplyToProductTypeIds = createdVoucher.ApplyToProductTypeIds,
+            ApplyToProductTypeIdsList = productTypeIdsList,
+            ApplyToProductTypes = allProductTypeDetails.Select(pt => new ApplyToProductTypeDto
+            {
+                Id = pt.Id,
+                DisplayName = pt.DisplayName
+            }).ToList(),
+
             CustomerTypeIds = createdVoucher.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
             CustomerTypeNames = createdVoucher.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
             UsageCount = createdVoucher.VoucherUsages.Count,
@@ -158,11 +200,6 @@ public class CreateDiscountVoucherCommandHandler(
                 Id = vct.CustomerType.Id,
                 Name = vct.CustomerType.Name
             }).ToList(),
-            ApplyToProductType = createdVoucher.ApplyToProductType != null ? new ApplyToProductTypeDto
-            {
-                Id = createdVoucher.ApplyToProductType.Id,
-                DisplayName = createdVoucher.ApplyToProductType.DisplayName
-            } : null,
             CreationTime = createdVoucher.CreationTime,
             CreatorId = createdVoucher.CreatorId,
             LastModificationTime = createdVoucher.LastModificationTime,

@@ -4,6 +4,7 @@ using KKBookstore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KKBookstore.Data.Migrations
 {
     [DbContext(typeof(KKBookstoreDbContext))]
-    partial class KKBookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250623090152_RefactorDiscountVoucherApplyToProductTypeId")]
+    partial class RefactorDiscountVoucherApplyToProductTypeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,35 +241,6 @@ namespace KKBookstore.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("CustomerTypes", (string)null);
-                });
-
-            modelBuilder.Entity("KKBookstore.Identity.BlacklistedToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("ExpireAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpireAt");
-
-                    b.HasIndex("Token")
-                        .IsUnique();
-
-                    b.ToTable("BlacklistedTokens", (string)null);
                 });
 
             modelBuilder.Entity("KKBookstore.Identity.RefreshToken", b =>

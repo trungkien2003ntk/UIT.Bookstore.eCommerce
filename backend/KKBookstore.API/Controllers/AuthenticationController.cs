@@ -3,6 +3,7 @@ using KKBookstore.Contracts.Requests.Auth;
 using KKBookstore.Contracts.Requests.Users;
 using KKBookstore.Features.Authentication;
 using KKBookstore.Features.Users.ChangePassword;
+using KKBookstore.Features.Users.Logout;
 using KKBookstore.Features.Users.RefreshAccessToken;
 using KKBookstore.Features.Users.Register;
 using KKBookstore.Features.Users.RequestOtp;
@@ -147,5 +148,23 @@ public class AuthenticationController(ISender sender) : ApiController(sender)
     {
         var result = await Sender.Send(command, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> LogoutAsync(CancellationToken cancellationToken = default)
+    {
+        // Extract JWT token from Authorization header
+        var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+        {
+            return BadRequest("Authorization header is missing or invalid");
+        }
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+        var command = new LogoutCommand(token);
+        var result = await Sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? NoContent() : ToActionResult(result);
     }
 }

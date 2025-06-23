@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using KKBookstore.Common.Behaviours;
+using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.Checkout.PlaceOrder;
 using KKBookstore.Features.ShoppingCarts.GetShoppingCartItemList;
 using KKBookstore.Features.ShoppingCarts.UpdateShoppingCartItem;
@@ -18,10 +19,9 @@ public static class DependencyInjection
         // Manual Mapping Services
         services.AddScoped<IUpdateShoppingCartMappingService, UpdateShoppingCartMappingService>();
         services.AddScoped<IGetShoppingCartMappingService, GetShoppingCartMappingService>();
-        services.AddScoped<DefaultOrderProcessor>();
-
-        // Services
+        services.AddScoped<DefaultOrderProcessor>();        // Services
         services.AddScoped<ProductTypeAttributeService>();
+        services.AddScoped<IProductTypeHierarchyService, ProductTypeHierarchyService>();
 
         // todo: Refactor the code to get rid of AutoMapper
         services.AddAutoMapper(assembly);

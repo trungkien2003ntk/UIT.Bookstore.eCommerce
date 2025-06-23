@@ -18,16 +18,19 @@ public record DiscountVoucherDto : BaseFullAuditedDto
     public int UsageLimitOverall { get; init; }
     public DateTimeOffset StartTime { get; init; }
     public DateTimeOffset EndTime { get; init; }
-    public int? ApplyToProductTypeId { get; init; }
-    public string? ApplyToProductTypeName { get; init; }
+
+    // Product Type fields - new approach
+    public string? ApplyToProductTypeIds { get; init; }
+    public List<int> ApplyToProductTypeIdsList { get; init; } = [];
+    public List<ApplyToProductTypeDto> ApplyToProductTypes { get; init; } = [];
+
+    // Legacy fields for backward compatibility
     public List<int> CustomerTypeIds { get; init; } = [];
     public List<string> CustomerTypeNames { get; init; } = [];
     public int UsageCount { get; init; }
     public decimal UsedPercentage { get; init; }
-
     public List<CustomerTypeDto> CustomerTypes { get; init; } = [];
-    public ApplyToProductTypeDto? ApplyToProductType { get; init; }
-    
+
     // Cart integration - indicates if voucher can be applied to selected cart items
     public bool? CanApply { get; init; }
 }

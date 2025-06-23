@@ -55,6 +55,11 @@ public class IdentityService(
     {
         var user = await _userManager.FindByEmailAsync(findUserDto.Email);
 
+        if (user is not null && user.Status != UserStatus.Active && !user.IsActive)
+        {
+            return Result.Failure<User>(UserErrors.InvalidCredentials);
+        }
+
         return user == null
             ? Result.Failure<User>(UserErrors.NotFound)
             : Result.Success(user);

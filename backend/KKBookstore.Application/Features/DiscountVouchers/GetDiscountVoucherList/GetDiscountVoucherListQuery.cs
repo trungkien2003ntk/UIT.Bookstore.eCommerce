@@ -41,7 +41,6 @@ public class GetDiscountVoucherListQueryHandler(
     public async Task<Result<PagedResult<DiscountVoucherDto>>> Handle(GetDiscountVoucherListQuery request, CancellationToken cancellationToken)
     {
         var query = dbContext.DiscountVouchers
-            .Include(dv => dv.ApplyToProductType)
             .Include(dv => dv.VoucherUsages)
             .Include(dv => dv.CustomerTypes)
                 .ThenInclude(vct => vct.CustomerType)
@@ -108,14 +107,15 @@ public class GetDiscountVoucherListQueryHandler(
         var result = MapToDiscountVoucherDtoResult(paginatedVouchers!, request.UserId, cartTotal, distinctProductTypeIds);
         return Result.Success(result);
     }
-
     private static IQueryable<DiscountVoucher> ApplyFilters(IQueryable<DiscountVoucher> query, GetDiscountVoucherListQuery request)
     {
         query = query
             .WhereIf(request.Status.HasValue, dv => dv.Status == request.Status!.Value)
             .WhereIf(request.VoucherType.HasValue, dv => dv.VoucherType == request.VoucherType!.Value)
             .WhereIf(request.ValueType.HasValue, dv => dv.ValueType == request.ValueType!.Value)
-            .WhereIf(request.ApplyToProductTypeId.HasValue, dv => dv.ApplyToProductTypeId == request.ApplyToProductTypeId!.Value)
+            .WhereIf(request.ApplyToProductTypeId.HasValue, dv =>
+                dv.ApplyToProductTypeIds != null &&
+                dv.ApplyToProductTypeIds.Contains(request.ApplyToProductTypeId!.Value.ToString()))
             .WhereIf(request.MinValue.HasValue, dv => dv.Value >= request.MinValue!.Value)
             .WhereIf(request.MaxValue.HasValue, dv => dv.Value <= request.MaxValue!.Value);
 
@@ -191,8 +191,11 @@ public class GetDiscountVoucherListQueryHandler(
                 UsageLimitOverall = dv.UsageLimitOverall,
                 StartTime = dv.StartTime,
                 EndTime = dv.EndTime,
-                ApplyToProductTypeId = dv.ApplyToProductTypeId,
-                ApplyToProductTypeName = dv.ApplyToProductType?.DisplayName,
+                ApplyToProductTypeIds = dv.ApplyToProductTypeIds,
+                ApplyToProductTypeIdsList = !string.IsNullOrEmpty(dv.ApplyToProductTypeIds)
+                    ? dv.ApplyToProductTypeIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
+                    : new List<int>(),
+                ApplyToProductTypes = new List<ApplyToProductTypeDto>(), // Empty for list query - populate in detail query
                 CustomerTypeIds = dv.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
                 CustomerTypeNames = dv.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
                 UsageCount = dv.VoucherUsages.Count,
@@ -202,11 +205,6 @@ public class GetDiscountVoucherListQueryHandler(
                     Id = vct.CustomerType.Id,
                     Name = vct.CustomerType.Name
                 }).ToList(),
-                ApplyToProductType = dv.ApplyToProductType != null ? new ApplyToProductTypeDto
-                {
-                    Id = dv.ApplyToProductType.Id,
-                    DisplayName = dv.ApplyToProductType.DisplayName
-                } : null,
                 CreationTime = dv.CreationTime,
                 CreatorId = dv.CreatorId,
                 LastModificationTime = dv.LastModificationTime,

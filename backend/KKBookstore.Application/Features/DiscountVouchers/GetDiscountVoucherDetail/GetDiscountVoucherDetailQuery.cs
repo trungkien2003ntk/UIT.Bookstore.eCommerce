@@ -10,19 +10,32 @@ namespace KKBookstore.Features.DiscountVouchers.GetDiscountVoucherDetail;
 public record GetDiscountVoucherDetailQuery(int Id) : IRequest<Result<DiscountVoucherDto>>;
 
 public class GetDiscountVoucherDetailQueryHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    IProductTypeHierarchyService productTypeHierarchyService
 ) : IRequestHandler<GetDiscountVoucherDetailQuery, Result<DiscountVoucherDto>>
 {
     public async Task<Result<DiscountVoucherDto>> Handle(GetDiscountVoucherDetailQuery request, CancellationToken cancellationToken)
     {
         var discountVoucher = await dbContext.DiscountVouchers
-            .Include(dv => dv.ApplyToProductType)
             .Include(dv => dv.VoucherUsages)
             .Include(dv => dv.CustomerTypes)
                 .ThenInclude(vct => vct.CustomerType)
             .FirstOrDefaultAsync(dv => dv.Id == request.Id, cancellationToken); if (discountVoucher == null)
         {
             return Result.Failure<DiscountVoucherDto>(DiscountVoucherErrors.NotFound);
+        }
+
+        // Get all product type details if ApplyToProductTypeIds is populated
+        var allProductTypeDetails = new List<ProductTypeDetail>();
+        var productTypeIdsList = new List<int>();
+
+        if (!string.IsNullOrEmpty(discountVoucher.ApplyToProductTypeIds))
+        {
+            allProductTypeDetails = await productTypeHierarchyService.GetProductTypeDetailsFromStringAsync(
+                discountVoucher.ApplyToProductTypeIds,
+                cancellationToken);
+
+            productTypeIdsList = allProductTypeDetails.Select(pt => pt.Id).ToList();
         }
 
         var result = new DiscountVoucherDto
@@ -41,8 +54,16 @@ public class GetDiscountVoucherDetailQueryHandler(
             UsageLimitOverall = discountVoucher.UsageLimitOverall,
             StartTime = discountVoucher.StartTime,
             EndTime = discountVoucher.EndTime,
-            ApplyToProductTypeId = discountVoucher.ApplyToProductTypeId,
-            ApplyToProductTypeName = discountVoucher.ApplyToProductType?.DisplayName,
+
+            // Product Type fields - new approach
+            ApplyToProductTypeIds = discountVoucher.ApplyToProductTypeIds,
+            ApplyToProductTypeIdsList = productTypeIdsList,
+            ApplyToProductTypes = allProductTypeDetails.Select(pt => new ApplyToProductTypeDto
+            {
+                Id = pt.Id,
+                DisplayName = pt.DisplayName
+            }).ToList(),
+
             CustomerTypeIds = discountVoucher.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
             CustomerTypeNames = discountVoucher.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
             UsageCount = discountVoucher.VoucherUsages.Count,
@@ -52,11 +73,6 @@ public class GetDiscountVoucherDetailQueryHandler(
                 Id = vct.CustomerType.Id,
                 Name = vct.CustomerType.Name
             }).ToList(),
-            ApplyToProductType = discountVoucher.ApplyToProductType != null ? new ApplyToProductTypeDto
-            {
-                Id = discountVoucher.ApplyToProductType.Id,
-                DisplayName = discountVoucher.ApplyToProductType.DisplayName
-            } : null,
             CreationTime = discountVoucher.CreationTime,
             CreatorId = discountVoucher.CreatorId,
             LastModificationTime = discountVoucher.LastModificationTime,

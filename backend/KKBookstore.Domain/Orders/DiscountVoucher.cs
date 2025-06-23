@@ -12,8 +12,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
     public DiscountVoucher()
     {
 
-    }
-    private DiscountVoucher(
+    }    private DiscountVoucher(
         string name,
         string code,
         string description,
@@ -27,7 +26,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         int usageLimitOverall,
         DateTimeOffset startTime,
         DateTimeOffset endTime,
-        int? applyToProductTypeId = null
+        string? applyToProductTypeIds = null
         ) : base()
     {
         Name = name;
@@ -43,7 +42,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         UsageLimitOverall = usageLimitOverall;
         StartTime = startTime;
         EndTime = endTime;
-        ApplyToProductTypeId = applyToProductTypeId;
+        ApplyToProductTypeIds = applyToProductTypeIds;
     }    // Discount voucher basic properties
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
@@ -68,11 +67,8 @@ public class DiscountVoucher : BaseFullAuditedEntity
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
     [NotMapped]
-    public bool IsRedeemable { get; set; }
-
-    // Optional one-to-one relationship with ProductType
-    public int? ApplyToProductTypeId { get; set; }
-    public ProductType? ApplyToProductType { get; set; }
+    public bool IsRedeemable { get; set; }    // Optional comma-separated list of ProductType IDs (includes children)
+    public string? ApplyToProductTypeIds { get; set; }
 
     // Many-to-many relationship with CustomerType
     public ICollection<VoucherCustomerType> CustomerTypes { get; set; } = [];
@@ -107,11 +103,16 @@ public class DiscountVoucher : BaseFullAuditedEntity
         if (StartTime > DateTimeOffset.Now || EndTime < DateTimeOffset.Now)
         {
             return false;
-        }
-
-        if (ApplyToProductTypeId.HasValue && !distinctProductTypeIds.All(x => x == ApplyToProductTypeId.Value))
+        }        if (!string.IsNullOrEmpty(ApplyToProductTypeIds))
         {
-            return false;
+            var applicableProductTypeIds = ApplyToProductTypeIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToHashSet();
+
+            if (!distinctProductTypeIds.Any(id => applicableProductTypeIds.Contains(id)))
+            {
+                return false;
+            }
         }
 
         return true;
@@ -201,9 +202,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         };
 
         return Result.Success();
-    }
-
-    public static Result<DiscountVoucher> Create(
+    }    public static Result<DiscountVoucher> Create(
         string code,
         string description,
         DiscountValueType valueType,
@@ -216,7 +215,7 @@ public class DiscountVoucher : BaseFullAuditedEntity
         int usageLimitOverall,
         DateTimeOffset startWhen,
         DateTimeOffset endWhen,
-        int? applyToProductTypeId = null
+        string? applyToProductTypeIds = null
         )
     {
         // validation logic
@@ -247,12 +246,95 @@ public class DiscountVoucher : BaseFullAuditedEntity
             value,
             maximumDiscountValue,
             minimumSpend,
+            usageLimitPerUser,            usageLimitOverall,
+            startWhen,
+            endWhen,
+            applyToProductTypeIds
+        ));
+    }
+
+    public static async Task<Result<DiscountVoucher>> CreateWithProductTypeHierarchy(
+        string code,
+        string description,
+        DiscountValueType valueType,
+        DiscountVoucherType voucherType,
+        DiscountStatus status,
+        decimal value,
+        decimal? maximumDiscountValue,
+        decimal minimumSpend,
+        int? usageLimitPerUser,
+        int usageLimitOverall,
+        DateTimeOffset startWhen,
+        DateTimeOffset endWhen,
+        int? applyToProductTypeId,
+        Func<int, CancellationToken, Task<string?>> getHierarchyIds,
+        CancellationToken cancellationToken = default
+        )
+    {
+        string? hierarchyIds = null;
+        
+        if (applyToProductTypeId.HasValue)
+        {
+            hierarchyIds = await getHierarchyIds(applyToProductTypeId.Value, cancellationToken);
+        }
+
+        return Create(
+            code,
+            description,
+            valueType,
+            voucherType,
+            status,
+            value,
+            maximumDiscountValue,
+            minimumSpend,
             usageLimitPerUser,
             usageLimitOverall,
             startWhen,
             endWhen,
-            applyToProductTypeId
-        ));
+            hierarchyIds
+        );
+    }
+
+    public static async Task<Result<DiscountVoucher>> CreateWithProductTypeHierarchy(
+        string code,
+        string description,
+        DiscountValueType valueType,
+        DiscountVoucherType voucherType,
+        DiscountStatus status,
+        decimal value,
+        decimal? maximumDiscountValue,
+        decimal minimumSpend,
+        int? usageLimitPerUser,
+        int usageLimitOverall,
+        DateTimeOffset startWhen,
+        DateTimeOffset endWhen,
+        IEnumerable<int> applyToProductTypeIds,
+        Func<IEnumerable<int>, CancellationToken, Task<string?>> getHierarchyIds,
+        CancellationToken cancellationToken = default
+        )
+    {
+        string? hierarchyIds = null;
+        
+        if (applyToProductTypeIds.Any())
+        {
+            hierarchyIds = await getHierarchyIds(applyToProductTypeIds, cancellationToken);
+        }
+
+        return Create(
+            code,
+            description,
+            valueType,
+            voucherType,
+            status,
+            value,
+            maximumDiscountValue,
+            minimumSpend,
+            usageLimitPerUser,
+            usageLimitOverall,
+            startWhen,
+            endWhen,
+            hierarchyIds
+        );
     }
 
     private static string CreateDiscountName(decimal value, decimal? maximumDiscountValue, DiscountValueType valueType)

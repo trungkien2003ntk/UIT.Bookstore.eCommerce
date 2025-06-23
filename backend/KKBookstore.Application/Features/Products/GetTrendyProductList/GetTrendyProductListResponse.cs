@@ -14,6 +14,7 @@ public record GetTrendyProductListResponse
         public bool IsBook { get; set; }
         public int SoldCount { get; set; }
         public string ThumbnailImageUrl { get; set; }
+        public int TotalStockQuantity { get; set; }
         public decimal MinUnitPrice { get; set; }
         public decimal MinRecommendedRetailPrice { get; set; }
         public decimal MinDiscountRate => (MinRecommendedRetailPrice - MinUnitPrice) / MinRecommendedRetailPrice * 100;

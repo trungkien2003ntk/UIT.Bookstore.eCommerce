@@ -21,18 +21,18 @@ public record UpdateDiscountVoucherCommand : IRequest<Result<DiscountVoucherDto>
     public int UsageLimitOverall { get; init; }
     public DateTimeOffset StartTime { get; init; }
     public DateTimeOffset EndTime { get; init; }
-    public int? ApplyToProductTypeId { get; init; }
+    public List<int> ApplyToProductTypeIdsList { get; init; } = []; // New field for multiple product type IDs
     public List<int> CustomerTypeIds { get; init; } = [];
 }
 
 public class UpdateDiscountVoucherCommandHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    IProductTypeHierarchyService productTypeHierarchyService
 ) : IRequestHandler<UpdateDiscountVoucherCommand, Result<DiscountVoucherDto>>
 {
     public async Task<Result<DiscountVoucherDto>> Handle(UpdateDiscountVoucherCommand request, CancellationToken cancellationToken)
     {
         var discountVoucher = await dbContext.DiscountVouchers
-            .Include(dv => dv.ApplyToProductType)
             .Include(dv => dv.VoucherUsages)
             .Include(dv => dv.CustomerTypes)
             .FirstOrDefaultAsync(dv => dv.Id == request.Id, cancellationToken);
@@ -99,16 +99,24 @@ public class UpdateDiscountVoucherCommandHandler(
                     Error.Validation("DiscountVoucher.CodeAlreadyExists", "A voucher with this code already exists"));
             }
 
-            // Validate ProductType exists if specified
-            if (request.ApplyToProductTypeId.HasValue)
-            {
-                var productTypeExists = await dbContext.ProductTypes
-                    .AnyAsync(pt => pt.Id == request.ApplyToProductTypeId.Value, cancellationToken);
+            // Validate ProductTypes exist if specified
+            var productTypeIdsToValidate = new List<int>();
 
-                if (!productTypeExists)
+            // Add multiple IDs from the new field
+            productTypeIdsToValidate.AddRange(request.ApplyToProductTypeIdsList);
+
+            if (productTypeIdsToValidate.Any())
+            {
+                var existingProductTypeIds = await dbContext.ProductTypes
+                    .Where(pt => productTypeIdsToValidate.Contains(pt.Id))
+                    .Select(pt => pt.Id)
+                    .ToListAsync(cancellationToken);
+
+                var missingIds = productTypeIdsToValidate.Except(existingProductTypeIds).ToList();
+                if (missingIds.Any())
                 {
                     return Result.Failure<DiscountVoucherDto>(
-                        Error.NotFound("ProductType.NotFound", "The specified product type does not exist"));
+                        Error.NotFound("ProductType.NotFound", $"Product types with IDs [{string.Join(", ", missingIds)}] do not exist"));
                 }
             }
 
@@ -139,6 +147,15 @@ public class UpdateDiscountVoucherCommandHandler(
                 return Result.Failure<DiscountVoucherDto>(DiscountVoucherErrors.InvalidValueRange);
             }
 
+            // Get product type hierarchy IDs if specified
+            string? productTypeHierarchyIds = null;
+            if (productTypeIdsToValidate.Any())
+            {
+                productTypeHierarchyIds = await productTypeHierarchyService.GetDescendantProductTypeIdsAsStringAsync(
+                    productTypeIdsToValidate,
+                    cancellationToken);
+            }
+
             // Update all properties except Status
             discountVoucher.Code = request.Code;
             discountVoucher.Description = request.Description;
@@ -151,10 +168,10 @@ public class UpdateDiscountVoucherCommandHandler(
             discountVoucher.UsageLimitOverall = request.UsageLimitOverall;
             discountVoucher.StartTime = request.StartTime;
             discountVoucher.EndTime = request.EndTime;
-            discountVoucher.ApplyToProductTypeId = request.ApplyToProductTypeId;
+            discountVoucher.ApplyToProductTypeIds = productTypeHierarchyIds;
 
             // Update name based on new values
-            discountVoucher.Name = CreateDiscountName(request.Value, discountVoucher.MaximumDiscountValue, request.ValueType);            // Update CustomerType relationships
+            discountVoucher.Name = CreateDiscountName(request.Value, discountVoucher.MaximumDiscountValue, request.ValueType);// Update CustomerType relationships
             // Remove existing relationships
             var existingCustomerTypes = discountVoucher.CustomerTypes.ToList();
             foreach (var existing in existingCustomerTypes)
@@ -174,15 +191,25 @@ public class UpdateDiscountVoucherCommandHandler(
             }
         }
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        // Reload the voucher with updated data
+        await dbContext.SaveChangesAsync(cancellationToken);        // Reload the voucher with updated data
         var updatedVoucher = await dbContext.DiscountVouchers
-            .Include(dv => dv.ApplyToProductType)
             .Include(dv => dv.VoucherUsages)
             .Include(dv => dv.CustomerTypes)
                 .ThenInclude(vct => vct.CustomerType)
             .FirstAsync(dv => dv.Id == discountVoucher.Id, cancellationToken);
+
+        // Get all product type details if ApplyToProductTypeIds is populated
+        var allProductTypeDetails = new List<ProductTypeDetail>();
+        var productTypeIdsList = new List<int>();
+
+        if (!string.IsNullOrEmpty(updatedVoucher.ApplyToProductTypeIds))
+        {
+            allProductTypeDetails = await productTypeHierarchyService.GetProductTypeDetailsFromStringAsync(
+                updatedVoucher.ApplyToProductTypeIds,
+                cancellationToken);
+
+            productTypeIdsList = allProductTypeDetails.Select(pt => pt.Id).ToList();
+        }
 
         var result = new DiscountVoucherDto
         {
@@ -200,8 +227,16 @@ public class UpdateDiscountVoucherCommandHandler(
             UsageLimitOverall = updatedVoucher.UsageLimitOverall,
             StartTime = updatedVoucher.StartTime,
             EndTime = updatedVoucher.EndTime,
-            ApplyToProductTypeId = updatedVoucher.ApplyToProductTypeId,
-            ApplyToProductTypeName = updatedVoucher.ApplyToProductType?.DisplayName,
+
+            // Product Type fields - new approach
+            ApplyToProductTypeIds = updatedVoucher.ApplyToProductTypeIds,
+            ApplyToProductTypeIdsList = productTypeIdsList,
+            ApplyToProductTypes = allProductTypeDetails.Select(pt => new ApplyToProductTypeDto
+            {
+                Id = pt.Id,
+                DisplayName = pt.DisplayName
+            }).ToList(),
+
             CustomerTypeIds = updatedVoucher.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
             CustomerTypeNames = updatedVoucher.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
             UsageCount = updatedVoucher.VoucherUsages.Count,
@@ -211,11 +246,6 @@ public class UpdateDiscountVoucherCommandHandler(
                 Id = vct.CustomerType.Id,
                 Name = vct.CustomerType.Name
             }).ToList(),
-            ApplyToProductType = updatedVoucher.ApplyToProductType != null ? new ApplyToProductTypeDto
-            {
-                Id = updatedVoucher.ApplyToProductType.Id,
-                DisplayName = updatedVoucher.ApplyToProductType.DisplayName
-            } : null,
             CreationTime = updatedVoucher.CreationTime,
             CreatorId = updatedVoucher.CreatorId,
             LastModificationTime = updatedVoucher.LastModificationTime,

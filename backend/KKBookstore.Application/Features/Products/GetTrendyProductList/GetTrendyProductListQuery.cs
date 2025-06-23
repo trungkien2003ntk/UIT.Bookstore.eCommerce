@@ -36,6 +36,7 @@ public class GetTrendyProductListQueryHandler(
             .Include(p => p.ProductType)
             .Include(p => p.Ratings)
             .Include(p => p.ProductVariants)
+                .ThenInclude(p => p.Inventories)
             .Select(p =>
                 new ProductSummary
                 {
@@ -51,7 +52,8 @@ public class GetTrendyProductListQueryHandler(
                     MinRecommendedRetailPrice = p.ProductVariants.Min(s => s.RecommendedRetailPrice),
                     AverageRating = Convert.ToDecimal(p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue) : 0),
                     IsActive = p.IsActive,
-                    ThumbnailImageUrl = p.GetFirstThumbnailImageUrl()
+                    ThumbnailImageUrl = p.GetFirstThumbnailImageUrl(),
+                    TotalStockQuantity = p.ProductVariants.Sum(v => v.AvailableQuantity)
                 })
             .AsQueryable();
 

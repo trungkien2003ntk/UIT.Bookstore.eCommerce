@@ -15,7 +15,7 @@ public class GetUserQueryHandler(
     public async Task<Result<GetUserResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
         var user = await dbContext.Users
-            .Where(u => u.IsActive)
+            .Where(u => u.Status == UserStatus.Active && u.IsActive)
             .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
         if (user is null)

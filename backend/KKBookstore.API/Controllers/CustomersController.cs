@@ -1,5 +1,6 @@
 using AutoMapper;
 using KKBookstore.Abstractions;
+using KKBookstore.Constants;
 using KKBookstore.Features.Customers.BlockCustomer;
 using KKBookstore.Features.Customers.GetCustomerDetail;
 using KKBookstore.Features.Customers.GetCustomerList;
@@ -8,6 +9,7 @@ using KKBookstore.Features.Customers.UnblockCustomer;
 using KKBookstore.Features.Customers.UpdateCustomer;
 using KKBookstore.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KKBookstore.Controllers;
@@ -58,13 +60,15 @@ public class CustomersController(
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 
+    [Authorize(Roles = AppRoles.Admin)]
     [HttpPost("{id}/block")]
     public async Task<IActionResult> BlockCustomer(
         [FromRoute] int id,
         CancellationToken cancellationToken = default
     )
     {
-        var result = await Sender.Send(new BlockCustomerCommand(id), cancellationToken);
+        var token = Request.Headers.Authorization.ToString().Replace("Bearer ", string.Empty);
+        var result = await Sender.Send(new BlockCustomerCommand(id, token), cancellationToken);
 
         return result.IsSuccess ? Ok() : ToActionResult(result);
     }

@@ -15,13 +15,15 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         var assembly = typeof(DependencyInjection).Assembly;
-
         // Manual Mapping Services
         services.AddScoped<IUpdateShoppingCartMappingService, UpdateShoppingCartMappingService>();
         services.AddScoped<IGetShoppingCartMappingService, GetShoppingCartMappingService>();
-        services.AddScoped<DefaultOrderProcessor>();        // Services
+        services.AddScoped<DefaultOrderProcessor>();
+
+        // Services
         services.AddScoped<ProductTypeAttributeService>();
         services.AddScoped<IProductTypeHierarchyService, ProductTypeHierarchyService>();
+        services.AddScoped<ICustomerService, CustomerService>();
 
         // todo: Refactor the code to get rid of AutoMapper
         services.AddAutoMapper(assembly);

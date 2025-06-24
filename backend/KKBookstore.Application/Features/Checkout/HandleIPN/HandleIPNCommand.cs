@@ -9,26 +9,28 @@ namespace KKBookstore.Features.Checkout.HandleIPN;
 
 public record HandleIPNCommand : IRequest<Result<HandleIPNResponse>>
 {
-    public string TmnCode { get; set; }
+    public string TmnCode { get; set; } = string.Empty;
     public int Amount { get; set; }
-    public string BankCode { get; set; }
-    public string BankTranNo { get; set; }
-    public string CardType { get; set; }
-    public string PayDate { get; set; }
-    public string OrderInfo { get; set; }
+    public string BankCode { get; set; } = string.Empty;
+    public string BankTranNo { get; set; } = string.Empty;
+    public string CardType { get; set; } = string.Empty;
+    public string PayDate { get; set; } = string.Empty;
+    public string OrderInfo { get; set; } = string.Empty;
     public int TransactionNo { get; set; }
-    public string ResponseCode { get; set; }
-    public string TransactionStatus { get; set; }
-    public string TxnRef { get; set; }
-    public string SecureHashType { get; set; }
-    public string SecureHash { get; set; }
+    public string ResponseCode { get; set; } = string.Empty;
+    public string TransactionStatus { get; set; } = string.Empty;
+    public string TxnRef { get; set; } = string.Empty;
+    public string SecureHashType { get; set; } = string.Empty;
+    public string SecureHash { get; set; } = string.Empty;
 }
 
 public class HandleIPNHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    ICustomerService customerService
 ) : IRequestHandler<HandleIPNCommand, Result<HandleIPNResponse>>
 {
     private readonly IApplicationDbContext _dbContext = dbContext;
+    private readonly ICustomerService _customerService = customerService;
 
     public async Task<Result<HandleIPNResponse>> Handle(HandleIPNCommand request, CancellationToken cancellationToken)
     {
@@ -103,10 +105,24 @@ public class HandleIPNHandler(
                 OrderId = OrderId,
                 Order = existingOrder
             };
-
             existingOrder.Status = isSuccess ? OrderStatus.Processing : OrderStatus.Pending;
 
             await _dbContext.Transactions.AddAsync(transaction, cancellationToken);
+
+            // Update customer spending for successful online payments
+            if (isSuccess)
+            {
+                var orderTotal = existingOrder.CalculateTotal();
+                var customerUpdateResult = await _customerService.UpdateCustomerSpentAmountAsync(
+                    existingOrder.CustomerId, orderTotal, cancellationToken);
+                
+                if (customerUpdateResult.IsFailure)
+                {
+                    // Log the error but don't fail the transaction - the payment was successful
+                    // The customer update can be retried later if needed
+                    // todo: Consider adding a retry mechanism or audit log for failed customer updates
+                }
+            }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
             await dbTransaction.CommitAsync(cancellationToken);
@@ -117,8 +133,7 @@ public class HandleIPNHandler(
                 RspCode = "00",
                 Message = "Success"
             });
-        }
-        catch (Exception ex)
+        }        catch (Exception)
         {
             await dbTransaction.RollbackAsync(cancellationToken);
             return Result.Failure<HandleIPNResponse>(TransactionErrors.FailedToCommitTransaction);

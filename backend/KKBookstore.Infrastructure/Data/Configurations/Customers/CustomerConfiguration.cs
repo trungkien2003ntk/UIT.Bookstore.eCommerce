@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace KKBookstore.Data.Configurations.Customers;
 
 internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
-{
-    public void Configure(EntityTypeBuilder<Customer> builder)
+{    public void Configure(EntityTypeBuilder<Customer> builder)
     {
         builder.HasBaseType<User>();
 
         builder.Property(x => x.CustomerTypeId).HasColumnName(nameof(Customer.CustomerTypeId)).IsRequired();
+        builder.Property(x => x.TotalSpent).HasColumnName(nameof(Customer.TotalSpent)).HasPrecision(18, 2).HasDefaultValue(0).IsRequired();
 
         builder.HasOne(x => x.CustomerType)
             .WithMany()

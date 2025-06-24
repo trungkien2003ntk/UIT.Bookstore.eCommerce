@@ -32,38 +32,30 @@ public class GetOrderAnalyticsHandler(
                     .Select(s => Enum.Parse<OrderStatus>(s, true))
                     .ToList();
                 ordersQuery = ordersQuery.Where(o => statusEnums.Contains(o.Status));
-            }
-
-            // Calculate metrics
-            var totalOrdersTask = ordersQuery.CountAsync(cancellationToken);
-            var pendingOrdersTask = ordersQuery.CountAsync(o => o.Status == OrderStatus.Pending, cancellationToken);
-            var processingOrdersTask = ordersQuery.CountAsync(o => o.Status == OrderStatus.Processing, cancellationToken);
-            var shippedOrdersTask = ordersQuery.CountAsync(o => o.Status == OrderStatus.Shipped, cancellationToken);
-            var deliveredOrdersTask = ordersQuery.CountAsync(o => o.Status == OrderStatus.Delivered, cancellationToken);
-            var cancelledOrdersTask = ordersQuery.CountAsync(o => o.Status == OrderStatus.Cancelled, cancellationToken);
+            }            // Execute queries sequentially to avoid DbContext connection issues
+            var totalOrders = await ordersQuery.CountAsync(cancellationToken);
+            var pendingOrders = await ordersQuery.CountAsync(o => o.Status == OrderStatus.Pending, cancellationToken);
+            var processingOrders = await ordersQuery.CountAsync(o => o.Status == OrderStatus.Processing, cancellationToken);
+            var shippedOrders = await ordersQuery.CountAsync(o => o.Status == OrderStatus.Shipped, cancellationToken);
+            var deliveredOrders = await ordersQuery.CountAsync(o => o.Status == OrderStatus.Delivered, cancellationToken);
+            var cancelledOrders = await ordersQuery.CountAsync(o => o.Status == OrderStatus.Cancelled, cancellationToken);
 
             // Calculate fulfillment rate and processing time
-            var fulfillmentRateTask = CalculateOrderFulfillmentRate(ordersQuery, cancellationToken);
-            var avgProcessingTimeTask = CalculateAverageProcessingTime(ordersQuery, cancellationToken);
-            var orderStatusDistributionTask = GetOrderStatusDistribution(ordersQuery, cancellationToken);
-
-            await Task.WhenAll(
-                totalOrdersTask, pendingOrdersTask, processingOrdersTask, shippedOrdersTask,
-                deliveredOrdersTask, cancelledOrdersTask, fulfillmentRateTask, avgProcessingTimeTask,
-                orderStatusDistributionTask
-            );
+            var fulfillmentRate = await CalculateOrderFulfillmentRate(ordersQuery, cancellationToken);
+            var avgProcessingTime = await CalculateAverageProcessingTime(ordersQuery, cancellationToken);
+            var orderStatusDistribution = await GetOrderStatusDistribution(ordersQuery, cancellationToken);
 
             var result = new OrderAnalyticsDto
             {
-                TotalOrders = await totalOrdersTask,
-                PendingOrders = await pendingOrdersTask,
-                ProcessingOrders = await processingOrdersTask,
-                ShippedOrders = await shippedOrdersTask,
-                DeliveredOrders = await deliveredOrdersTask,
-                CancelledOrders = await cancelledOrdersTask,
-                OrderFulfillmentRate = await fulfillmentRateTask,
-                AverageProcessingTime = await avgProcessingTimeTask,
-                OrderStatusDistribution = await orderStatusDistributionTask
+                TotalOrders = totalOrders,
+                PendingOrders = pendingOrders,
+                ProcessingOrders = processingOrders,
+                ShippedOrders = shippedOrders,
+                DeliveredOrders = deliveredOrders,
+                CancelledOrders = cancelledOrders,
+                OrderFulfillmentRate = fulfillmentRate,
+                AverageProcessingTime = avgProcessingTime,
+                OrderStatusDistribution = orderStatusDistribution
             };
 
             return Result<OrderAnalyticsDto>.Success(result);

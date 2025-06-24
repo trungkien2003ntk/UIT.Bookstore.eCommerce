@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Features.Dashboard.Models;
 using KKBookstore.Models;
@@ -10,54 +11,47 @@ namespace KKBookstore.Features.Dashboard.GetRevenueAnalytics;
 public class GetRevenueAnalyticsHandler(
     IApplicationDbContext dbContext
 ) : IRequestHandler<GetRevenueAnalyticsQuery, Result<RevenueAnalyticsDto>>
-{
-    public async Task<Result<RevenueAnalyticsDto>> Handle(GetRevenueAnalyticsQuery request, CancellationToken cancellationToken)
+{    public async Task<Result<RevenueAnalyticsDto>> Handle(GetRevenueAnalyticsQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
-            var previousPeriodFilter = GetPreviousPeriodFilter(dateFilter.FromDate, dateFilter.ToDate);
+            var (FromDate, ToDate) = GetDateFilter(request.Period, request.FromDate, request.ToDate);
+            var previousPeriodFilter = GetPreviousPeriodFilter(FromDate, ToDate);
 
-            // Base query for current period
-            var currentPeriodQuery = dbContext.Orders
-                .Where(o => o.CreationTime >= dateFilter.FromDate &&
-                           o.CreationTime <= dateFilter.ToDate &&
-                           (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received));
+            // Build base query with includes
+            var baseQuery = dbContext.Orders
+                .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.ProductVariant)
+                .ThenInclude(pv => pv.Product)
+                .AsNoTracking();
 
-            // Base query for previous period
-            var previousPeriodQuery = dbContext.Orders
+            // Apply status filter
+            var statusFilter = new[] { OrderStatus.Delivered, OrderStatus.Received };
+
+            // Build current period query
+            var currentPeriodQuery = baseQuery
+                .Where(o => o.CreationTime >= FromDate &&
+                           o.CreationTime <= ToDate &&
+                           statusFilter.Contains(o.Status));
+
+            // Build previous period query
+            var previousPeriodQuery = baseQuery
                 .Where(o => o.CreationTime >= previousPeriodFilter.FromDate &&
                            o.CreationTime <= previousPeriodFilter.ToDate &&
-                           (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received));            // Apply filters
-            // Note: Orders don't have a direct BranchId - commenting out for now
-            // if (request.BranchId.HasValue)
-            // {
-            //     currentPeriodQuery = currentPeriodQuery.Where(o => o.BranchId == request.BranchId.Value);
-            //     previousPeriodQuery = previousPeriodQuery.Where(o => o.BranchId == request.BranchId.Value);
-            // }
+                           statusFilter.Contains(o.Status));
 
+            // Apply product type filter if specified
             if (request.ProductTypeIds.Any())
             {
                 currentPeriodQuery = currentPeriodQuery.Where(o => o.OrderLines
                     .Any(ol => request.ProductTypeIds.Contains(ol.ProductVariant.Product.ProductTypeId)));
                 previousPeriodQuery = previousPeriodQuery.Where(o => o.OrderLines
                     .Any(ol => request.ProductTypeIds.Contains(ol.ProductVariant.Product.ProductTypeId)));
-            }
-
-            // Calculate total revenue
-            var totalRevenueTask = currentPeriodQuery
-                .SumAsync(o => o.Subtotal + o.ShippingFee, cancellationToken);
-
-            var previousPeriodRevenueTask = previousPeriodQuery
-                .SumAsync(o => o.Subtotal + o.ShippingFee, cancellationToken);
-
-            // Get revenue by period
-            var revenueByPeriodTask = GetRevenueByPeriod(currentPeriodQuery, request.GroupBy, cancellationToken);
-
-            await Task.WhenAll(totalRevenueTask, previousPeriodRevenueTask, revenueByPeriodTask);
-
-            var totalRevenue = await totalRevenueTask;
-            var previousPeriodRevenue = await previousPeriodRevenueTask;
+            }            // Execute queries sequentially to avoid DbContext connection issues
+            var totalRevenue = await CalculateTotalRevenue(currentPeriodQuery, cancellationToken);
+            var previousPeriodRevenue = await CalculateTotalRevenue(previousPeriodQuery, cancellationToken);
+            var revenueByPeriod = await GetRevenueByPeriod(currentPeriodQuery, request.GroupBy, cancellationToken);
+            
             var growthPercentage = CalculateGrowthPercentage(totalRevenue, previousPeriodRevenue);
 
             var result = new RevenueAnalyticsDto
@@ -65,7 +59,7 @@ public class GetRevenueAnalyticsHandler(
                 TotalRevenue = totalRevenue,
                 PreviousPeriodRevenue = previousPeriodRevenue,
                 GrowthPercentage = growthPercentage,
-                RevenueByPeriod = await revenueByPeriodTask
+                RevenueByPeriod = revenueByPeriod
             };
 
             return Result<RevenueAnalyticsDto>.Success(result);
@@ -75,66 +69,104 @@ public class GetRevenueAnalyticsHandler(
             var error = Error.Failure("Dashboard.GetRevenue", ex.Message);
             return Result.Failure<RevenueAnalyticsDto>(error);
         }
-    }
+    }    private async Task<decimal> CalculateTotalRevenue(IQueryable<Order> ordersQuery, CancellationToken cancellationToken)
+    {
+        // Get all orders with their line items to calculate revenue in memory
+        // This avoids EF Core translation issues with complex aggregations
+        var orders = await ordersQuery
+            .Select(o => new
+            {
+                o.ShippingFee,
+                OrderLines = o.OrderLines.Select(ol => new
+                {
+                    ol.Quantity,
+                    ol.RecommendedRetailPrice
+                }).ToList()
+            })
+            .ToListAsync(cancellationToken);
 
-    private async Task<List<RevenueByPeriodDto>> GetRevenueByPeriod(
+        // Calculate total revenue in memory
+        var totalRevenue = orders.Sum(o => 
+            o.ShippingFee + o.OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice));
+
+        return totalRevenue;
+    }    private async Task<List<RevenueByPeriodDto>> GetRevenueByPeriod(
         IQueryable<Order> ordersQuery,
         string groupBy,
         CancellationToken cancellationToken)
     {
+        // Get orders with minimal data needed for grouping and revenue calculation
+        var orders = await ordersQuery
+            .Where(o => o.CreationTime.HasValue)
+            .Select(o => new
+            {
+                o.CreationTime,
+                o.ShippingFee,
+                OrderLines = o.OrderLines.Select(ol => new
+                {
+                    ol.Quantity,
+                    ol.RecommendedRetailPrice
+                }).ToList()
+            })
+            .ToListAsync(cancellationToken);
+
+        // Group and calculate revenue in memory to avoid EF translation issues
         var revenueByPeriod = groupBy.ToLower() switch
         {
-            "day" => await ordersQuery
-                .Where(o => o.CreationTime.HasValue)
+            "day" => orders
                 .GroupBy(o => o.CreationTime!.Value.Date)
                 .Select(g => new RevenueByPeriodDto
                 {
                     Date = g.Key,
-                    Revenue = g.Sum(o => o.Subtotal + o.ShippingFee),
+                    Revenue = g.Sum(o => o.ShippingFee + o.OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice)),
                     OrderCount = g.Count()
                 })
                 .OrderBy(r => r.Date)
-                .ToListAsync(cancellationToken),
+                .ToList(),
 
-            "week" => await ordersQuery
-                .Where(o => o.CreationTime.HasValue)
-                .GroupBy(o => new DateTime(o.CreationTime!.Value.Year, 1, 1)
-                    .AddDays((o.CreationTime!.Value.DayOfYear - 1) / 7 * 7))
+            "week" => orders
+                .GroupBy(o => GetWeekStartDate(o.CreationTime!.Value))
                 .Select(g => new RevenueByPeriodDto
                 {
                     Date = g.Key,
-                    Revenue = g.Sum(o => o.Subtotal + o.ShippingFee),
+                    Revenue = g.Sum(o => o.ShippingFee + o.OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice)),
                     OrderCount = g.Count()
                 })
                 .OrderBy(r => r.Date)
-                .ToListAsync(cancellationToken),
+                .ToList(),
 
-            "month" => await ordersQuery
-                .Where(o => o.CreationTime.HasValue)
+            "month" => orders
                 .GroupBy(o => new DateTime(o.CreationTime!.Value.Year, o.CreationTime!.Value.Month, 1))
                 .Select(g => new RevenueByPeriodDto
                 {
                     Date = g.Key,
-                    Revenue = g.Sum(o => o.Subtotal + o.ShippingFee),
+                    Revenue = g.Sum(o => o.ShippingFee + o.OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice)),
                     OrderCount = g.Count()
                 })
                 .OrderBy(r => r.Date)
-                .ToListAsync(cancellationToken),
+                .ToList(),
 
-            _ => await ordersQuery
-                .Where(o => o.CreationTime.HasValue)
+            _ => orders
                 .GroupBy(o => o.CreationTime!.Value.Date)
                 .Select(g => new RevenueByPeriodDto
                 {
                     Date = g.Key,
-                    Revenue = g.Sum(o => o.Subtotal + o.ShippingFee),
+                    Revenue = g.Sum(o => o.ShippingFee + o.OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice)),
                     OrderCount = g.Count()
                 })
                 .OrderBy(r => r.Date)
-                .ToListAsync(cancellationToken)
+                .ToList()
         };
 
         return revenueByPeriod;
+    }
+
+    private static DateTime GetWeekStartDate(DateTimeOffset date)
+    {
+        var year = date.Year;
+        var dayOfYear = date.DayOfYear;
+        var weekNumber = (dayOfYear - 1) / 7;
+        return new DateTime(year, 1, 1).AddDays(weekNumber * 7);
     }
 
     private static double CalculateGrowthPercentage(decimal current, decimal previous)

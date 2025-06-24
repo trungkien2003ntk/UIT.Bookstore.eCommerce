@@ -37,9 +37,10 @@ public class GetDashboardSummaryHandler(
 
             // Get total revenue using Subtotal
             var totalRevenue = await ordersQuery
-                .Where(o => o.Status == OrderStatus.Delivered)
-                .SumAsync(o => o.Subtotal, cancellationToken);
-
+                .AsNoTracking()
+                .Where(o => o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received)
+                .SelectMany(o => o.OrderLines)
+                .SumAsync(ol => ol.Quantity * ol.RecommendedRetailPrice, cancellationToken);
             // Get top products (simplified)
             var topProducts = await dbContext.OrderLines
                 .Include(ol => ol.ProductVariant)

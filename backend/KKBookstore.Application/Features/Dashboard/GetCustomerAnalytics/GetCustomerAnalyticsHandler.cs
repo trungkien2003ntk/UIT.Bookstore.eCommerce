@@ -17,10 +17,12 @@ public class GetCustomerAnalyticsHandler(
         try
         {
             var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
-            var previousPeriodFilter = GetPreviousPeriodFilter(dateFilter.FromDate, dateFilter.ToDate);
-
-            // Base queries
-            var usersQuery = dbContext.Users.Where(u => u.Status == UserStatus.Active); var ordersQuery = dbContext.Orders.AsQueryable();
+            var previousPeriodFilter = GetPreviousPeriodFilter(dateFilter.FromDate, dateFilter.ToDate);            // Base queries
+            var usersQuery = dbContext.Users.Where(u => u.Status == UserStatus.Active);
+            var ordersQuery = dbContext.Orders
+                .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.ProductVariant)
+                .AsNoTracking();
 
             // Note: Orders don't have a direct BranchId - they are associated with customers
             // For branch-specific analytics, we could filter by warehouse/branch through shipping address if needed
@@ -28,43 +30,36 @@ public class GetCustomerAnalyticsHandler(
             // if (request.BranchId.HasValue)
             // {
             //     ordersQuery = ordersQuery.Where(o => o.BranchId == request.BranchId.Value);
-            // }
+            // }            // Calculate metrics sequentially to avoid DbContext connection issues
+            var totalCustomers = await usersQuery.CountAsync(cancellationToken);
 
-            // Calculate metrics
-            var totalCustomersTask = usersQuery.CountAsync(cancellationToken);
-
-            var newCustomersTask = usersQuery
+            var newCustomers = await usersQuery
                 .Where(u => u.CreationTime >= dateFilter.FromDate && u.CreationTime <= dateFilter.ToDate)
                 .CountAsync(cancellationToken);
 
-            var activeCustomersTask = ordersQuery
+            var activeCustomers = await ordersQuery
                 .Where(o => o.CreationTime >= dateFilter.FromDate && o.CreationTime <= dateFilter.ToDate)
                 .Select(o => o.CustomerId)
                 .Distinct()
                 .CountAsync(cancellationToken);
 
             // Calculate customer retention rate
-            var retentionRateTask = CalculateCustomerRetentionRate(ordersQuery, dateFilter, previousPeriodFilter, cancellationToken);
+            var retentionRate = await CalculateCustomerRetentionRate(ordersQuery, dateFilter, previousPeriodFilter, cancellationToken);
 
             // Calculate average customer value
-            var avgCustomerValueTask = CalculateAverageCustomerValue(ordersQuery, dateFilter, cancellationToken);
+            var avgCustomerValue = await CalculateAverageCustomerValue(ordersQuery, dateFilter, cancellationToken);
 
             // Get customer growth data
-            var customerGrowthTask = GetCustomerGrowth(usersQuery, request.GroupBy, dateFilter, cancellationToken);
-
-            await Task.WhenAll(
-                totalCustomersTask, newCustomersTask, activeCustomersTask,
-                retentionRateTask, avgCustomerValueTask, customerGrowthTask
-            );
+            var customerGrowth = await GetCustomerGrowth(usersQuery, request.GroupBy, dateFilter, cancellationToken);
 
             var result = new CustomerAnalyticsDto
             {
-                TotalCustomers = await totalCustomersTask,
-                NewCustomers = await newCustomersTask,
-                ActiveCustomers = await activeCustomersTask,
-                CustomerRetentionRate = await retentionRateTask,
-                AverageCustomerValue = await avgCustomerValueTask,
-                CustomerGrowth = await customerGrowthTask
+                TotalCustomers = totalCustomers,
+                NewCustomers = newCustomers,
+                ActiveCustomers = activeCustomers,
+                CustomerRetentionRate = retentionRate,
+                AverageCustomerValue = avgCustomerValue,
+                CustomerGrowth = customerGrowth
             };
 
             return Result<CustomerAnalyticsDto>.Success(result);
@@ -102,35 +97,54 @@ public class GetCustomerAnalyticsHandler(
             .CountAsync(cancellationToken);
 
         return (double)retainedCustomers / previousPeriodCustomers.Count * 100;
-    }
-
-    private async Task<decimal> CalculateAverageCustomerValue(
+    }    private async Task<decimal> CalculateAverageCustomerValue(
         IQueryable<Order> ordersQuery,
         (DateTimeOffset FromDate, DateTimeOffset ToDate) dateFilter,
         CancellationToken cancellationToken)
     {
-        var customerValues = await ordersQuery
+        // Get orders with their order lines to calculate customer values
+        var customerOrders = await ordersQuery
             .Where(o => o.CreationTime >= dateFilter.FromDate &&
                        o.CreationTime <= dateFilter.ToDate &&
                        (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received))
-            .GroupBy(o => o.CustomerId)
-            .Select(g => g.Sum(o => o.Subtotal + o.ShippingFee))
+            .Select(o => new
+            {
+                o.CustomerId,
+                o.ShippingFee,
+                OrderLines = o.OrderLines.Select(ol => new
+                {
+                    ol.Quantity,
+                    ol.RecommendedRetailPrice
+                }).ToList()
+            })
             .ToListAsync(cancellationToken);
 
-        return customerValues.Any() ? customerValues.Average() : 0;
-    }
+        // Calculate customer values in memory
+        var customerValues = customerOrders
+            .GroupBy(o => o.CustomerId)
+            .Select(g => g.Sum(o => o.ShippingFee + o.OrderLines.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice)))
+            .ToList();
 
-    private async Task<List<CustomerGrowthDto>> GetCustomerGrowth(
+        return customerValues.Any() ? customerValues.Average() : 0;
+    }private async Task<List<CustomerGrowthDto>> GetCustomerGrowth(
         IQueryable<User> usersQuery,
         string groupBy,
         (DateTimeOffset FromDate, DateTimeOffset ToDate) dateFilter,
         CancellationToken cancellationToken)
     {
-        var usersInPeriod = usersQuery.Where(u => u.CreationTime >= dateFilter.FromDate && u.CreationTime <= dateFilter.ToDate); var customerGrowth = groupBy.ToLower() switch
+        // Get all users in the period with their creation dates
+        var usersInPeriod = await usersQuery
+            .Where(u => u.CreationTime >= dateFilter.FromDate && 
+                       u.CreationTime <= dateFilter.ToDate && 
+                       u.CreationTime.HasValue)
+            .Select(u => u.CreationTime!.Value)
+            .ToListAsync(cancellationToken);
+
+        // Group and calculate in memory to avoid EF translation issues
+        var customerGrowth = groupBy.ToLower() switch
         {
-            "day" => await usersInPeriod
-                .Where(u => u.CreationTime.HasValue)
-                .GroupBy(u => u.CreationTime!.Value.Date)
+            "day" => usersInPeriod
+                .GroupBy(date => date.Date)
                 .Select(g => new CustomerGrowthDto
                 {
                     Date = g.Key,
@@ -138,12 +152,10 @@ public class GetCustomerAnalyticsHandler(
                     TotalCustomers = 0 // Will be calculated below
                 })
                 .OrderBy(c => c.Date)
-                .ToListAsync(cancellationToken),
+                .ToList(),
 
-            "week" => await usersInPeriod
-                .Where(u => u.CreationTime.HasValue)
-                .GroupBy(u => new DateTime(u.CreationTime!.Value.Year, 1, 1)
-                    .AddDays((u.CreationTime!.Value.DayOfYear - 1) / 7 * 7))
+            "week" => usersInPeriod
+                .GroupBy(date => GetWeekStartDate(date))
                 .Select(g => new CustomerGrowthDto
                 {
                     Date = g.Key,
@@ -151,11 +163,10 @@ public class GetCustomerAnalyticsHandler(
                     TotalCustomers = 0
                 })
                 .OrderBy(c => c.Date)
-                .ToListAsync(cancellationToken),
+                .ToList(),
 
-            "month" => await usersInPeriod
-                .Where(u => u.CreationTime.HasValue)
-                .GroupBy(u => new DateTime(u.CreationTime!.Value.Year, u.CreationTime!.Value.Month, 1))
+            "month" => usersInPeriod
+                .GroupBy(date => new DateTime(date.Year, date.Month, 1))
                 .Select(g => new CustomerGrowthDto
                 {
                     Date = g.Key,
@@ -163,11 +174,10 @@ public class GetCustomerAnalyticsHandler(
                     TotalCustomers = 0
                 })
                 .OrderBy(c => c.Date)
-                .ToListAsync(cancellationToken),
+                .ToList(),
 
-            _ => await usersInPeriod
-                .Where(u => u.CreationTime.HasValue)
-                .GroupBy(u => u.CreationTime!.Value.Date)
+            _ => usersInPeriod
+                .GroupBy(date => date.Date)
                 .Select(g => new CustomerGrowthDto
                 {
                     Date = g.Key,
@@ -175,11 +185,14 @@ public class GetCustomerAnalyticsHandler(
                     TotalCustomers = 0
                 })
                 .OrderBy(c => c.Date)
-                .ToListAsync(cancellationToken)
+                .ToList()
         };
 
         // Calculate cumulative total customers
-        var runningTotal = await usersQuery.Where(u => u.CreationTime < dateFilter.FromDate).CountAsync(cancellationToken);
+        var runningTotal = await usersQuery
+            .Where(u => u.CreationTime < dateFilter.FromDate)
+            .CountAsync(cancellationToken);
+            
         foreach (var growth in customerGrowth)
         {
             runningTotal += growth.NewCustomers;
@@ -187,6 +200,14 @@ public class GetCustomerAnalyticsHandler(
         }
 
         return customerGrowth;
+    }
+
+    private static DateTime GetWeekStartDate(DateTimeOffset date)
+    {
+        var year = date.Year;
+        var dayOfYear = date.DayOfYear;
+        var weekNumber = (dayOfYear - 1) / 7;
+        return new DateTime(year, 1, 1).AddDays(weekNumber * 7);
     }
 
     private static (DateTimeOffset FromDate, DateTimeOffset ToDate) GetDateFilter(

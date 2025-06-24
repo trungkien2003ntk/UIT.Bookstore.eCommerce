@@ -33,34 +33,29 @@ public class GetInventoryAnalyticsHandler(
             if (request.ProductTypeIds.Any())
             {
                 productsQuery = productsQuery.Where(p => request.ProductTypeIds.Contains(p.ProductTypeId));
-            }
+            }            // Execute queries sequentially to avoid DbContext connection issues
+            var totalProducts = await productsQuery.CountAsync(cancellationToken);
 
-            // Calculate metrics
-            var totalProductsTask = productsQuery.CountAsync(cancellationToken);
-
-            var lowStockProductsTask = GetLowStockProducts(
+            var lowStockProducts = await GetLowStockProducts(
                 productsQuery,
                 inventoryQuery,
                 request.LowStockThreshold,
                 request.LowStockProductsLimit,
                 cancellationToken);
-            var outOfStockProductsTask = inventoryQuery
-              .Where(i => i.StockQuantity <= 0)
-              .CountAsync(cancellationToken);
+                
+            var outOfStockProducts = await inventoryQuery
+                .Where(i => i.StockQuantity <= 0)
+                .CountAsync(cancellationToken);
 
-            var totalStockAdjustmentsTask = stockAdjustmentsQuery.CountAsync(cancellationToken);
+            var totalStockAdjustments = await stockAdjustmentsQuery.CountAsync(cancellationToken);
 
-            await Task.WhenAll(
-                totalProductsTask, lowStockProductsTask, outOfStockProductsTask, totalStockAdjustmentsTask
-            );
-
-            var lowStockProductsList = await lowStockProductsTask; var result = new InventoryAnalyticsDto
+            var result = new InventoryAnalyticsDto
             {
-                TotalProducts = await totalProductsTask,
-                LowStockProducts = lowStockProductsList.Count,
-                OutOfStockProducts = await outOfStockProductsTask,
-                TotalStockTransactions = await totalStockAdjustmentsTask,
-                LowStockProductsList = lowStockProductsList
+                TotalProducts = totalProducts,
+                LowStockProducts = lowStockProducts.Count,
+                OutOfStockProducts = outOfStockProducts,
+                TotalStockTransactions = totalStockAdjustments,
+                LowStockProductsList = lowStockProducts
             };
 
             return Result<InventoryAnalyticsDto>.Success(result);

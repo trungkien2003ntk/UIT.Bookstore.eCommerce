@@ -3,6 +3,7 @@ using KKBookstore.Features.Dashboard.GetCustomerAnalytics;
 using KKBookstore.Features.Dashboard.GetDashboardSummary;
 using KKBookstore.Features.Dashboard.GetInventoryAnalytics;
 using KKBookstore.Features.Dashboard.GetOrderAnalytics;
+using KKBookstore.Features.Dashboard.GetProfitAnalytics;
 using KKBookstore.Features.Dashboard.GetRevenueAnalytics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -58,6 +59,34 @@ public class DashboardController(
         CancellationToken cancellationToken = default)
     {
         var query = new GetRevenueAnalyticsQuery
+        {
+            FromDate = fromDate,
+            ToDate = toDate,
+            Period = period,
+            GroupBy = groupBy,
+            BranchId = branchId,
+            ProductTypeIds = productTypeIds ?? new List<int>()
+        };
+
+        var result = await Sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    /// <summary>
+    /// Get detailed profit analytics with cost, revenue, and margin analysis
+    /// </summary>
+    [HttpGet("profit")]
+    public async Task<IActionResult> GetProfitAnalyticsAsync(
+        [FromQuery] DateTimeOffset? fromDate,
+        [FromQuery] DateTimeOffset? toDate,
+        [FromQuery] string period = "month",
+        [FromQuery] string groupBy = "day",
+        [FromQuery] int? branchId = null,
+        [FromQuery] List<int>? productTypeIds = null,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetProfitAnalyticsQuery
         {
             FromDate = fromDate,
             ToDate = toDate,

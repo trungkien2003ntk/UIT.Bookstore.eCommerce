@@ -15,82 +15,38 @@ public class GetDashboardSummaryHandler(
     {
         try
         {
-            var dateFilter = GetDateFilter(request.Period, request.FromDate, request.ToDate);
+            var currentPeriod = GetDateFilter(request.Period, request.FromDate, request.ToDate);
+            var previousPeriod = GetPreviousPeriodFilter(request.Period, request.FromDate, request.ToDate);
 
-            // Get total orders
-            var ordersQuery = dbContext.Orders.AsQueryable();
-            if (dateFilter.FromDate.HasValue)
-                ordersQuery = ordersQuery.Where(o => o.OrderWhen >= dateFilter.FromDate.Value);
-            if (dateFilter.ToDate.HasValue)
-                ordersQuery = ordersQuery.Where(o => o.OrderWhen <= dateFilter.ToDate.Value);
+            // Get current period metrics
+            var currentMetrics = await GetPeriodMetrics(currentPeriod, cancellationToken);
 
-            var totalOrders = await ordersQuery.CountAsync(cancellationToken);
+            // Get previous period metrics
+            var previousMetrics = await GetPeriodMetrics(previousPeriod, cancellationToken);
 
-            // Get total new users
-            var usersQuery = dbContext.Users.AsQueryable();
-            if (dateFilter.FromDate.HasValue)
-                usersQuery = usersQuery.Where(u => u.CreationTime >= dateFilter.FromDate.Value);
-            if (dateFilter.ToDate.HasValue)
-                usersQuery = usersQuery.Where(u => u.CreationTime <= dateFilter.ToDate.Value);
-
-            var totalNewUsers = await usersQuery.CountAsync(cancellationToken);
-
-            // Get total revenue using Subtotal
-            var totalRevenue = await ordersQuery
-                .AsNoTracking()
-                .Where(o => o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received)
-                .SelectMany(o => o.OrderLines)
-                .SumAsync(ol => ol.Quantity * ol.RecommendedRetailPrice, cancellationToken);
-            // Get top products (simplified)
-            var topProducts = await dbContext.OrderLines
-                .Include(ol => ol.ProductVariant)
-                    .ThenInclude(pv => pv.Product)
-                .Where(ol => dateFilter.FromDate == null || ol.Order.OrderWhen >= dateFilter.FromDate.Value)
-                .Where(ol => dateFilter.ToDate == null || ol.Order.OrderWhen <= dateFilter.ToDate.Value)
-                .GroupBy(ol => new { ol.ProductVariant.Product.Id, ol.ProductVariant.Product.Name })
-                .Select(g => new TopProductDto
-                {
-                    ProductId = g.Key.Id,
-                    ProductName = g.Key.Name,
-                    TotalQuantitySold = g.Sum(ol => ol.Quantity),
-                    TotalRevenue = g.Sum(ol => ol.Quantity * ol.UnitPrice)
-                })
-                .OrderByDescending(tp => tp.TotalQuantitySold)
-                .Take(5)
-                .ToListAsync(cancellationToken);
-
-            // Get sales by product types (simplified)
-            var salesByProductTypes = await dbContext.OrderLines
-                .Include(ol => ol.ProductVariant)
-                    .ThenInclude(pv => pv.Product)
-                        .ThenInclude(p => p.ProductType)
-                .Where(ol => dateFilter.FromDate == null || ol.Order.OrderWhen >= dateFilter.FromDate.Value)
-                .Where(ol => dateFilter.ToDate == null || ol.Order.OrderWhen <= dateFilter.ToDate.Value)
-                .GroupBy(ol => new
-                {
-                    ol.ProductVariant.Product.ProductType.Id,
-                    ol.ProductVariant.Product.ProductType.DisplayName
-                })
-                .Select(g => new SalesByProductTypeDto
-                {
-                    ProductTypeId = g.Key.Id,
-                    ProductTypeName = g.Key.DisplayName,
-                    TotalQuantitySold = g.Sum(ol => ol.Quantity),
-                    TotalRevenue = g.Sum(ol => ol.Quantity * ol.UnitPrice)
-                })
-                .OrderByDescending(s => s.TotalRevenue)
-                .ToListAsync(cancellationToken);
-
+            // Calculate percentage changes
             var result = new DashboardSummaryDto
             {
-                TotalOrders = totalOrders,
-                TotalNewUsers = totalNewUsers,
-                TotalRevenue = totalRevenue,
-                TopProducts = topProducts,
-                SalesByProductTypes = salesByProductTypes,
+                TotalOrders = currentMetrics.TotalOrders,
+                TotalOrdersChangePercent = CalculatePercentageChange(previousMetrics.TotalOrders, currentMetrics.TotalOrders),
+
+                TotalNewUsers = currentMetrics.TotalNewUsers,
+                TotalNewUsersChangePercent = CalculatePercentageChange(previousMetrics.TotalNewUsers, currentMetrics.TotalNewUsers),
+
+                TotalRevenue = currentMetrics.TotalRevenue,
+                TotalRevenueChangePercent = CalculatePercentageChange(previousMetrics.TotalRevenue, currentMetrics.TotalRevenue),
+
+                AverageOrderValue = currentMetrics.AverageOrderValue,
+                AverageOrderValueChangePercent = CalculatePercentageChange(previousMetrics.AverageOrderValue, currentMetrics.AverageOrderValue),
+
+                TotalProductsSold = currentMetrics.TotalProductsSold,
+                TotalProductsSoldChangePercent = CalculatePercentageChange(previousMetrics.TotalProductsSold, currentMetrics.TotalProductsSold),
+
                 TotalStockAdjustmentOrders = 0, // TODO: Implement when stock transactions are available
-                AverageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0,
-                TotalProductsSold = topProducts.Sum(p => p.TotalQuantitySold)
+                TotalStockAdjustmentOrdersChangePercent = 0,
+
+                TopProducts = await GetTopProductsWithComparison(currentPeriod, previousPeriod, cancellationToken),
+                SalesByProductTypes = await GetSalesByProductTypesWithComparison(currentPeriod, previousPeriod, cancellationToken)
             };
 
             return Result<DashboardSummaryDto>.Success(result);
@@ -100,6 +56,206 @@ public class GetDashboardSummaryHandler(
             var error = Error.Failure("Dashboard.SummaryError", $"Error retrieving dashboard summary: {ex.Message}");
             return Result.Failure<DashboardSummaryDto>(error);
         }
+    }
+
+    private async Task<PeriodMetrics> GetPeriodMetrics(
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) period,
+        CancellationToken cancellationToken)
+    {
+        // Get total orders for period
+        var ordersQuery = dbContext.Orders.AsQueryable();
+        if (period.FromDate.HasValue)
+            ordersQuery = ordersQuery.Where(o => o.OrderWhen >= period.FromDate.Value);
+        if (period.ToDate.HasValue)
+            ordersQuery = ordersQuery.Where(o => o.OrderWhen <= period.ToDate.Value);
+
+        var totalOrders = await ordersQuery.CountAsync(cancellationToken);
+
+        // Get total new users for period
+        var usersQuery = dbContext.Users.AsQueryable();
+        if (period.FromDate.HasValue)
+            usersQuery = usersQuery.Where(u => u.CreationTime >= period.FromDate.Value);
+        if (period.ToDate.HasValue)
+            usersQuery = usersQuery.Where(u => u.CreationTime <= period.ToDate.Value);
+
+        var totalNewUsers = await usersQuery.CountAsync(cancellationToken);
+
+        // Get total revenue and products sold for period
+        var orderLinesQuery = dbContext.OrderLines
+            .Include(ol => ol.Order)
+            .Where(ol => ol.Order.Status == OrderStatus.Delivered || ol.Order.Status == OrderStatus.Received);
+
+        if (period.FromDate.HasValue)
+            orderLinesQuery = orderLinesQuery.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
+        if (period.ToDate.HasValue)
+            orderLinesQuery = orderLinesQuery.Where(ol => ol.Order.OrderWhen <= period.ToDate.Value);
+
+        var revenueAndQuantity = await orderLinesQuery
+            .GroupBy(ol => 1) // Group all records together
+            .Select(g => new
+            {
+                TotalRevenue = g.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice),
+                TotalQuantity = g.Sum(ol => ol.Quantity)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var totalRevenue = revenueAndQuantity?.TotalRevenue ?? 0;
+        var totalProductsSold = revenueAndQuantity?.TotalQuantity ?? 0;
+        var averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+        return new PeriodMetrics
+        {
+            TotalOrders = totalOrders,
+            TotalNewUsers = totalNewUsers,
+            TotalRevenue = totalRevenue,
+            TotalProductsSold = totalProductsSold,
+            AverageOrderValue = averageOrderValue
+        };
+    }
+
+    private async Task<List<TopProductDto>> GetTopProductsWithComparison(
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) currentPeriod,
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) previousPeriod,
+        CancellationToken cancellationToken)
+    {
+        // Get current period top products
+        var currentProducts = await GetTopProductsForPeriod(currentPeriod, cancellationToken);
+
+        // Get previous period data for comparison
+        var previousProductsData = await GetProductsDataForPeriod(previousPeriod, cancellationToken);
+        var previousProductsDict = previousProductsData.ToDictionary(p => p.ProductId, p => p.TotalQuantitySold);
+
+        // Add percentage changes
+        foreach (var product in currentProducts)
+        {
+            var previousQuantity = previousProductsDict.GetValueOrDefault(product.ProductId, 0);
+            product.QuantityChangePercent = CalculatePercentageChange(previousQuantity, product.TotalQuantitySold);
+        }
+
+        return currentProducts;
+    }
+
+    private async Task<List<TopProductDto>> GetTopProductsForPeriod(
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) period,
+        CancellationToken cancellationToken)
+    {
+        var query = dbContext.OrderLines
+            .Include(ol => ol.ProductVariant)
+                .ThenInclude(pv => pv.Product)
+                    .ThenInclude(p => p.ProductType)
+            .AsQueryable();
+
+        if (period.FromDate.HasValue)
+            query = query.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
+        if (period.ToDate.HasValue)
+            query = query.Where(ol => ol.Order.OrderWhen <= period.ToDate.Value);
+
+        return await query
+            .GroupBy(ol => new { ol.ProductVariant.Product.Id, ol.ProductVariant.Product.Name })
+            .Select(g => new TopProductDto
+            {
+                ProductId = g.Key.Id,
+                ProductName = g.Key.Name,
+                TotalQuantitySold = g.Sum(ol => ol.Quantity),
+                TotalRevenue = g.Sum(ol => ol.Quantity * ol.UnitPrice)
+            })
+            .OrderByDescending(tp => tp.TotalQuantitySold)
+            .Take(5)
+            .ToListAsync(cancellationToken);
+    }
+
+    private async Task<List<TopProductDto>> GetProductsDataForPeriod(
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) period,
+        CancellationToken cancellationToken)
+    {
+        var query = dbContext.OrderLines
+            .Include(ol => ol.ProductVariant)
+                .ThenInclude(pv => pv.Product)
+            .AsQueryable();
+
+        if (period.FromDate.HasValue)
+            query = query.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
+        if (period.ToDate.HasValue)
+            query = query.Where(ol => ol.Order.OrderWhen <= period.ToDate.Value);
+
+        return await query
+            .GroupBy(ol => new
+            {
+                ol.ProductVariant.Product.Id,
+                ol.ProductVariant.Product.Name,
+                ol.ProductVariant.Product.ProductType.DisplayName
+            }).Select(g => new TopProductDto
+            {
+                ProductId = g.Key.Id,
+                ProductName = g.Key.Name,
+                ProductTypeName = g.Key.DisplayName,
+                ProductImageUrl = g.Select(ol => ol.ProductVariant.Product.ProductImages.FirstOrDefault().ThumbnailImageUrl).FirstOrDefault(),
+                TotalQuantitySold = g.Sum(ol => ol.Quantity),
+                TotalRevenue = g.Sum(ol => ol.Quantity * ol.UnitPrice)
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    private async Task<List<SalesByProductTypeDto>> GetSalesByProductTypesWithComparison(
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) currentPeriod,
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) previousPeriod,
+        CancellationToken cancellationToken)
+    {
+        // Get current period data
+        var currentData = await GetSalesByProductTypesForPeriod(currentPeriod, cancellationToken);
+
+        // Get previous period data
+        var previousData = await GetSalesByProductTypesForPeriod(previousPeriod, cancellationToken);
+        var previousDataDict = previousData.ToDictionary(p => p.ProductTypeId, p => p.TotalRevenue);
+
+        // Add percentage changes
+        foreach (var item in currentData)
+        {
+            var previousRevenue = previousDataDict.GetValueOrDefault(item.ProductTypeId, 0);
+            item.RevenueChangePercent = CalculatePercentageChange(previousRevenue, item.TotalRevenue);
+        }
+
+        return currentData;
+    }
+
+    private async Task<List<SalesByProductTypeDto>> GetSalesByProductTypesForPeriod(
+        (DateTimeOffset? FromDate, DateTimeOffset? ToDate) period,
+        CancellationToken cancellationToken)
+    {
+        var query = dbContext.OrderLines
+            .Include(ol => ol.ProductVariant)
+                .ThenInclude(pv => pv.Product)
+                    .ThenInclude(p => p.ProductType)
+            .AsQueryable();
+
+        if (period.FromDate.HasValue)
+            query = query.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
+        if (period.ToDate.HasValue)
+            query = query.Where(ol => ol.Order.OrderWhen <= period.ToDate.Value);
+
+        return await query
+            .GroupBy(ol => new
+            {
+                ol.ProductVariant.Product.ProductType.Id,
+                ol.ProductVariant.Product.ProductType.DisplayName
+            })
+            .Select(g => new SalesByProductTypeDto
+            {
+                ProductTypeId = g.Key.Id,
+                ProductTypeName = g.Key.DisplayName,
+                TotalQuantitySold = g.Sum(ol => ol.Quantity),
+                TotalRevenue = g.Sum(ol => ol.Quantity * ol.UnitPrice)
+            })
+            .OrderByDescending(s => s.TotalRevenue)
+            .ToListAsync(cancellationToken);
+    }
+
+    private decimal CalculatePercentageChange(decimal previousValue, decimal currentValue)
+    {
+        if (previousValue == 0)
+            return currentValue > 0 ? 100 : 0;
+
+        return Math.Round(((currentValue - previousValue) / previousValue) * 100, 2);
     }
 
     private (DateTimeOffset? FromDate, DateTimeOffset? ToDate) GetDateFilter(string period, DateTimeOffset? fromDate, DateTimeOffset? toDate)
@@ -115,5 +271,32 @@ public class GetDashboardSummaryHandler(
             "year" => (now.AddYears(-1), now),
             _ => (fromDate, toDate)
         };
+    }
+
+    private (DateTimeOffset? FromDate, DateTimeOffset? ToDate) GetPreviousPeriodFilter(string period, DateTimeOffset? fromDate, DateTimeOffset? toDate)
+    {
+        if (fromDate.HasValue && toDate.HasValue)
+        {
+            var periodLength = toDate.Value - fromDate.Value;
+            return (fromDate.Value - periodLength, fromDate.Value);
+        }
+
+        var now = DateTimeOffset.Now;
+        return period?.ToLower() switch
+        {
+            "week" => (now.AddDays(-14), now.AddDays(-7)),
+            "month" => (now.AddMonths(-2), now.AddMonths(-1)),
+            "year" => (now.AddYears(-2), now.AddYears(-1)),
+            _ => (null, null)
+        };
+    }
+
+    private class PeriodMetrics
+    {
+        public int TotalOrders { get; set; }
+        public int TotalNewUsers { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public int TotalProductsSold { get; set; }
+        public decimal AverageOrderValue { get; set; }
     }
 }

@@ -3,11 +3,23 @@ namespace KKBookstore.Features.Dashboard.Models;
 public class DashboardSummaryDto
 {
     public int TotalOrders { get; set; }
+    public decimal TotalOrdersChangePercent { get; set; }
+
     public int TotalNewUsers { get; set; }
+    public decimal TotalNewUsersChangePercent { get; set; }
+
     public int TotalStockAdjustmentOrders { get; set; }
+    public decimal TotalStockAdjustmentOrdersChangePercent { get; set; }
+
     public decimal TotalRevenue { get; set; }
+    public decimal TotalRevenueChangePercent { get; set; }
+
     public decimal AverageOrderValue { get; set; }
+    public decimal AverageOrderValueChangePercent { get; set; }
+
     public int TotalProductsSold { get; set; }
+    public decimal TotalProductsSoldChangePercent { get; set; }
+
     public List<SalesByProductTypeDto> SalesByProductTypes { get; set; } = [];
     public List<TopProductDto> TopProducts { get; set; } = [];
 }
@@ -18,7 +30,7 @@ public class SalesByProductTypeDto
     public string ProductTypeName { get; set; } = string.Empty;
     public int TotalQuantitySold { get; set; }
     public decimal TotalRevenue { get; set; }
-    public double PercentageOfTotalSales { get; set; }
+    public decimal RevenueChangePercent { get; set; }
 }
 
 public class TopProductDto
@@ -29,6 +41,7 @@ public class TopProductDto
     public int TotalQuantitySold { get; set; }
     public decimal TotalRevenue { get; set; }
     public string? ProductImageUrl { get; set; }
+    public decimal QuantityChangePercent { get; set; }
 }
 
 public class RevenueAnalyticsDto

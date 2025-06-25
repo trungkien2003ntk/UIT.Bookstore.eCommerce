@@ -87,17 +87,17 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
                     order.Id, ghnResult.ErrorMessage);
                 return Result.Failure<ConfirmPackagingCompleteResponse>(
                     Error.Failure("GhnOrder.CreationFailed", ghnResult.ErrorMessage ?? "Failed to create shipping order"));
-            }            // Update order status and store GHN tracking info
+            }            // Update order status to Processing (waiting for pickup)
             var previousStatus = order.Status;
-            order.Status = OrderStatus.Shipped;
+            order.Status = OrderStatus.Processing;
             order.Comment = $"GHN Order Code: {ghnResult.OrderCode}";
 
             // Record order history
             var orderHistory = OrderHistory.Create(
                 orderId: order.Id,
                 fromStatus: previousStatus,
-                toStatus: OrderStatus.Shipped,
-                action: "Packaging completed and shipped via GHN",
+                toStatus: OrderStatus.Processing,
+                action: "Packaging completed, waiting for pickup",
                 notes: $"GHN Order Code: {ghnResult.OrderCode}. {request.Notes}".Trim(),
                 triggeredByUserId: request.AdminUserId,
                 externalReference: ghnResult.OrderCode

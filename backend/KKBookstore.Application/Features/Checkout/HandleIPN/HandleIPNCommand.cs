@@ -1,8 +1,12 @@
 ﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Constants;
+using KKBookstore.Emailing;
+using KKBookstore.Emailing.TemplateModels;
 using KKBookstore.Models;
 using KKBookstore.Orders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Globalization;
 
 namespace KKBookstore.Features.Checkout.HandleIPN;
@@ -26,11 +30,19 @@ public record HandleIPNCommand : IRequest<Result<HandleIPNResponse>>
 
 public class HandleIPNHandler(
     IApplicationDbContext dbContext,
-    ICustomerService customerService
+    ICustomerService customerService,
+    IBranchSelectionService branchSelectionService,
+    IEmailService emailService,
+    IIdentityService identityService,
+    ILogger<HandleIPNHandler> logger
 ) : IRequestHandler<HandleIPNCommand, Result<HandleIPNResponse>>
 {
     private readonly IApplicationDbContext _dbContext = dbContext;
     private readonly ICustomerService _customerService = customerService;
+    private readonly IBranchSelectionService _branchSelectionService = branchSelectionService;
+    private readonly IEmailService _emailService = emailService;
+    private readonly IIdentityService _identityService = identityService;
+    private readonly ILogger<HandleIPNHandler> _logger = logger;
 
     public async Task<Result<HandleIPNResponse>> Handle(HandleIPNCommand request, CancellationToken cancellationToken)
     {
@@ -83,6 +95,8 @@ public class HandleIPNHandler(
 
             var existingOrder = await _dbContext.Orders
                 .Include(o => o.Transactions)
+                .Include(o => o.OrderFulfillments)
+                    .ThenInclude(of => of.Branch)
                 .FirstOrDefaultAsync(o => o.Id == OrderId, cancellationToken);
 
             if (existingOrder == null)
@@ -105,13 +119,39 @@ public class HandleIPNHandler(
                 OrderId = OrderId,
                 Order = existingOrder
             };
-            existingOrder.Status = isSuccess ? OrderStatus.Processing : OrderStatus.Pending;
 
             await _dbContext.Transactions.AddAsync(transaction, cancellationToken);
 
-            // Update customer spending for successful online payments
+            // Handle order status based on payment result
             if (isSuccess)
             {
+                // Payment successful - now handle branch selection logic
+                var orderFulfillments = existingOrder.OrderFulfillments.ToList();
+                
+                if (_branchSelectionService.RequiresAdminConfirmation(orderFulfillments))
+                {
+                    // Multiple branches - requires admin confirmation
+                    existingOrder.Status = OrderStatus.WaitForConfirmPackageBranch;
+                    
+                    // Notify admins about branch selection needed
+                    await NotifyAdminForBranchSelection(existingOrder, orderFulfillments, cancellationToken);
+                }
+                else if (orderFulfillments.Count == 1)
+                {
+                    // Single branch - can proceed directly to packaging
+                    existingOrder.Status = OrderStatus.Packaging;
+                    var singleFulfillment = orderFulfillments.First();
+                    singleFulfillment.SelectForPackaging();
+                }
+                else
+                {
+                    // No fulfillments - this shouldn't happen but handle gracefully
+                    // Keep in pending status and log the issue for investigation
+                    existingOrder.Status = OrderStatus.Pending;
+                    // TODO: Log this issue for investigation as it indicates a problem with inventory allocation
+                }
+                
+                // Update customer spending for successful online payments
                 var orderTotal = existingOrder.CalculateTotal();
                 var customerUpdateResult = await _customerService.UpdateCustomerSpentAmountAsync(
                     existingOrder.CustomerId, orderTotal, cancellationToken);
@@ -122,6 +162,11 @@ public class HandleIPNHandler(
                     // The customer update can be retried later if needed
                     // todo: Consider adding a retry mechanism or audit log for failed customer updates
                 }
+            }
+            else
+            {
+                // Payment failed - keep order in pending status
+                existingOrder.Status = OrderStatus.Pending;
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -144,6 +189,69 @@ public class HandleIPNHandler(
     {
         var parts = txnRef.Split('_');
         return int.Parse(parts[0]);
+    }
+
+    private async Task NotifyAdminForBranchSelection(Order order, List<OrderFulfillment> orderFulfillments, CancellationToken cancellationToken)
+    {
+        // Get customer information for the email
+        var customer = await _dbContext.Customers
+            .FirstOrDefaultAsync(c => c.Id == order.CustomerId, cancellationToken);
+
+        var customerName = customer?.FullName ?? customer?.UserName ?? "Unknown Customer";
+
+        // Build branch options from fulfillments
+        var branchOptions = orderFulfillments.Select(of => new BranchSelectionOption
+        {
+            BranchId = of.BranchId,
+            BranchName = of.Branch?.Name ?? $"Branch {of.BranchId}",
+            DistanceKm = of.DistanceFromCustomer,
+            TotalItems = of.GetTotalAllocatedItems(),
+            TotalValue = of.GetTotalAllocatedValue()
+        }).ToList();
+
+        var emailModel = new AdminBranchSelectionEmailModel(
+            orderId: order.Id,
+            orderNumber: order.OrderNumber,
+            customerName: customerName,
+            orderDate: order.OrderWhen.DateTime,
+            branchOptions: branchOptions,
+            totalOrderValue: order.CalculateTotal()
+        );
+
+        // Get admin users to notify
+        var adminUsers = await _identityService.GetUsersInRoleAsync(AppRoles.Admin);
+        if (adminUsers.IsFailure || adminUsers.Value.Count == 0)
+        {
+            _logger.LogWarning("No admin users found to notify for branch selection for order {OrderId}", order.Id);
+            return;
+        }
+
+        var adminEmails = adminUsers.Value
+            .Where(u => !string.IsNullOrEmpty(u.Email))
+            .Select(u => u.Email!)
+            .ToList();
+
+        if (adminEmails.Count == 0)
+        {
+            _logger.LogWarning("No admin emails configured for branch selection notifications");
+            return;
+        }
+
+        // Send email to all admins
+        foreach (var adminEmail in adminEmails)
+        {
+            try
+            {
+                await _emailService.SendAsync(adminEmail, emailModel.Subject, emailModel);
+                _logger.LogInformation("Branch selection notification sent to admin {AdminEmail} for order {OrderId}",
+                    adminEmail, order.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send branch selection notification to admin {AdminEmail} for order {OrderId}",
+                    adminEmail, order.Id);
+            }
+        }
     }
 
     public static DateTimeOffset ConvertNumericDateToDateTimeOffset(string numericDate, int gmtOffset = 7)

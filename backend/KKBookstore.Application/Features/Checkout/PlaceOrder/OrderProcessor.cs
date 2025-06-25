@@ -53,23 +53,11 @@ public abstract class OrderProcessor(
                 return Result.Failure<PlaceOrderResponse>(allocationResult.Error);
             }
 
-            var orderFulfillments = allocationResult.Value;            // Determine if admin confirmation is needed for packaging branch selection
-            var requiresAdminConfirmation = RequiresAdminConfirmation(orderFulfillments);
-            if (requiresAdminConfirmation)
-            {
-                order.Status = OrderStatus.WaitForConfirmPackageBranch;
-                await RecordOrderHistory(order, OrderStatus.WaitForConfirmPackageBranch, "Order waiting for admin to confirm packaging branch", null, cancellationToken);
-                await NotifyAdminForBranchSelection(order, orderFulfillments, cancellationToken);
-            }
-            else if (orderFulfillments.Count == 1)
-            {
-                // Single branch - can proceed directly to packaging
-                order.Status = OrderStatus.Packaging;
-                await RecordOrderHistory(order, OrderStatus.Packaging, "Order automatically assigned to packaging branch", null, cancellationToken);
-                var singleFulfillment = orderFulfillments.First();
-                singleFulfillment.SelectForPackaging();
-            }
-            else if (orderFulfillments.Count == 0)
+            var orderFulfillments = allocationResult.Value;            // Note: Order stays in Pending status until payment is confirmed
+            // Branch selection information is stored in OrderFulfillments for later processing
+            // The actual status change to WaitForConfirmPackageBranch or Packaging happens in IPN handler
+            
+            if (orderFulfillments.Count == 0)
             {
                 // No fulfillments found, rollback
                 await transaction.RollbackAsync(cancellationToken);

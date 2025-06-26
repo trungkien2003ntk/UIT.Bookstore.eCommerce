@@ -97,7 +97,7 @@ public class GetShoppingCartMappingService(
                 .Select(sv => sv.PopulateIndex(productOptionAttributeDtos))
                 .ToList(),
             ProductOptions = productOptionAttributeDtos,
-            IsRemoved = ci.ProductVariant?.IsDeleted ?? true
+            IsRemoved = (ci.ProductVariant?.IsDeleted ?? true) || (!ci.ProductVariant?.IsActive ?? true)
         };
     }
 

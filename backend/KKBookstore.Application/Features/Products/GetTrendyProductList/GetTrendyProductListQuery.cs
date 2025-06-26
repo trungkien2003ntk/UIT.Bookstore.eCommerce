@@ -19,6 +19,7 @@ public class GetTrendyProductListQueryHandler(
         var numberOfTrendyProducts = 12;
 
         var boughtProductIds = await dbContext.OrderLines
+            .AsSplitQuery()
             .Include(ol => ol.ProductVariant)
             .Select(ol => ol.ProductVariant.ProductId)
             .ToListAsync(cancellationToken);
@@ -31,6 +32,7 @@ public class GetTrendyProductListQueryHandler(
             .ToList();
 
         var productGeneralQueryable = dbContext.Products
+            .AsSplitQuery()
             .Where(p => topMostPurchasedProductIds.Contains(p.Id))
             .Include(p => p.ProductImages)
             .Include(p => p.ProductType)

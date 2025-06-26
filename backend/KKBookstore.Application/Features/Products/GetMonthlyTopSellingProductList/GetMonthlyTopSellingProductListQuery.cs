@@ -29,6 +29,7 @@ public class GetMonthlyTopSellingProductListQueryHandler(
             .Include(ol => ol.ProductVariant)
             .Include(ol => ol.Order)
             .Where(ol => ol.Order.OrderWhen >= oneMonthAgo)
+            .AsSplitQuery()
             .AsQueryable();
 
         // If ProductTypeId is provided, filter by it
@@ -63,6 +64,7 @@ public class GetMonthlyTopSellingProductListQueryHandler(
 
         // Query to get detailed information about the top-selling products
         var productQueryable = dbContext.Products
+            .AsSplitQuery()
             .Where(p => topSellingProductIds.Contains(p.Id))
             .Include(p => p.ProductImages)
             .Include(p => p.ProductType)

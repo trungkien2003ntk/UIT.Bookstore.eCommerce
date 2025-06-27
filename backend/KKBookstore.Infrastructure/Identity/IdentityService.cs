@@ -473,6 +473,17 @@ public class IdentityService(
     private async Task<JwtSecurityToken> GenerateAccessToken(User user)
     {
         var roles = await _userManager.GetRolesAsync(user);
+
+        if (user.TokenVersion == Guid.Empty)
+        {
+            user.RegenerateTokenVersion(); // Ensure token version is set
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                throw new InvalidOperationException("Failed to update user token version.");
+            }
+        }
+
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),

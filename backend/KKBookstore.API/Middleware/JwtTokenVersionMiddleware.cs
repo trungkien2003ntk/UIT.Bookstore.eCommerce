@@ -53,12 +53,16 @@ public class JwtTokenVersionMiddleware(RequestDelegate next, ILogger<JwtTokenVer
             }
 
             // Token version is valid, continue with the request
-            await _next(context);
         }
-        catch (Exception ex)
+        catch (ArgumentNullException ex)
         {
             _logger.LogError(ex, "Error in JWT token version validation middleware");
             await WriteUnauthorizedResponse(context, "Token validation error");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error in JWT token version validation middleware");
+            await _next(context);
         }
     }
 

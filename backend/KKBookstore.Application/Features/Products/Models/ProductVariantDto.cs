@@ -20,7 +20,7 @@ public sealed record ProductVariantDto : BaseDto
     public ICollection<RatingDto> Ratings { get; set; } = []; public sealed record VariantOptionDto
     {
         public int ProductOptionId { get; set; }
-        public int ProductOptionValueId { get; set; }
+        public int? ProductOptionValueId { get; set; }
         public string? Name { get; set; }
         public string? Value { get; set; }
     }

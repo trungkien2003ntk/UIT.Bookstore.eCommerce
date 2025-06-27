@@ -1,4 +1,5 @@
 ﻿using KKBookstore.Common.Models.ResultDtos;
+using KKBookstore.Customers;
 using KKBookstore.Users;
 
 namespace KKBookstore.Features.Users.GetUser;
@@ -16,4 +17,11 @@ public record GetUserResponse : BaseDto
     public string? ImageUrl { get; init; }
 
     public List<string> Roles { get; init; } = [];
+    public CustomerTypeDto? CustomerType { get; init; }
+}
+
+public class CustomerTypeDto
+{
+    public int? Id { get; set; }
+    public string? Name { get; set; } = string.Empty;
 }

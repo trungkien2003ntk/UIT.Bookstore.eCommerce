@@ -1,4 +1,6 @@
 ﻿using KKBookstore.Common.Interfaces;
+using KKBookstore.Constants;
+using KKBookstore.Customers;
 using KKBookstore.Models;
 using KKBookstore.Users;
 using MediatR;
@@ -30,6 +32,20 @@ public class GetUserQueryHandler(
                 select role.Name
             ).ToListAsync(cancellationToken);
 
+        CustomerTypeDto? customerType = null;
+        if (userRoles.Count > 0 && userRoles.Contains(AppRoles.Customer))
+        {
+            customerType = await dbContext.Customers
+                .Include(c => c.CustomerType)
+                .Where(ct => ct.Id == user.Id && ct.CustomerTypeId != null)
+                .Select(ct => new CustomerTypeDto
+                {
+                    Id = ct.CustomerTypeId,
+                    Name = ct.CustomerType.Name
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+ 
         var userDto = new GetUserResponse
         {
             Id = user.Id,
@@ -42,7 +58,8 @@ public class GetUserQueryHandler(
             FullName = user.FullName,
             Status = user.Status.ToString(),
             ImageUrl = user.ImageUrl,
-            Roles = userRoles
+            Roles = userRoles,
+            CustomerType = customerType
         };
 
         return Result.Success(userDto);

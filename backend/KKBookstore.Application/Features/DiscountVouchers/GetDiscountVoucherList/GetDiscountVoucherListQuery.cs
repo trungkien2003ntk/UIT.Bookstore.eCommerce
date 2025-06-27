@@ -35,7 +35,8 @@ public record GetDiscountVoucherListQuery()
 }
 
 public class GetDiscountVoucherListQueryHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    IProductTypeHierarchyService productTypeHierarchyService
 ) : IRequestHandler<GetDiscountVoucherListQuery, Result<PagedResult<DiscountVoucherDto>>>
 {
     public async Task<Result<PagedResult<DiscountVoucherDto>>> Handle(GetDiscountVoucherListQuery request, CancellationToken cancellationToken)
@@ -104,7 +105,19 @@ public class GetDiscountVoucherListQueryHandler(
                 .ToListAsync(cancellationToken)
             : [];
 
-        var result = MapToDiscountVoucherDtoResult(paginatedVouchers!, request.UserId, cartTotal, distinctProductTypeIds);
+        // Get all unique product type IDs from vouchers for efficient lookup
+        var allVoucherProductTypeIds = paginatedVouchers!.Items
+            .Where(dv => !string.IsNullOrEmpty(dv.ApplyToProductTypeIds))
+            .SelectMany(dv => dv.ApplyToProductTypeIds!.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
+            .Distinct()
+            .ToList();
+
+        // Get product type details for all vouchers
+        var allProductTypeDetails = allVoucherProductTypeIds.Any()
+            ? await productTypeHierarchyService.GetProductTypeDetailsAsync(allVoucherProductTypeIds, cancellationToken)
+            : new List<ProductTypeDetail>();
+
+        var result = MapToDiscountVoucherDtoResult(paginatedVouchers!, allProductTypeDetails, request.UserId, cartTotal, distinctProductTypeIds);
         return Result.Success(result);
     }
     private static IQueryable<DiscountVoucher> ApplyFilters(IQueryable<DiscountVoucher> query, GetDiscountVoucherListQuery request)
@@ -159,6 +172,7 @@ public class GetDiscountVoucherListQueryHandler(
 
     private static PagedResult<DiscountVoucherDto> MapToDiscountVoucherDtoResult(
         PagedResult<DiscountVoucher> paginatedVouchers,
+        List<ProductTypeDetail> allProductTypeDetails,
         int? userId = null,
         decimal? cartTotal = null,
         List<int>? distinctProductTypeIds = null)
@@ -174,6 +188,18 @@ public class GetDiscountVoucherListQueryHandler(
                           dv.EndTime >= DateTimeOffset.Now &&
                           dv.IsApplicable(cartTotal.Value, userId.Value, distinctProductTypeIds!);
             }
+
+            // Get product type IDs for this voucher
+            var voucherProductTypeIds = !string.IsNullOrEmpty(dv.ApplyToProductTypeIds)
+                ? dv.ApplyToProductTypeIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
+                : new List<int>();
+
+            // Get product type names for this voucher
+            var voucherProductTypeNames = voucherProductTypeIds
+                .Select(id => allProductTypeDetails.FirstOrDefault(pt => pt.Id == id)?.DisplayName)
+                .Where(name => !string.IsNullOrEmpty(name))
+                .Cast<string>()
+                .ToList();
 
             return new DiscountVoucherDto
             {
@@ -192,10 +218,9 @@ public class GetDiscountVoucherListQueryHandler(
                 StartTime = dv.StartTime,
                 EndTime = dv.EndTime,
                 ApplyToProductTypeIds = dv.ApplyToProductTypeIds,
-                ApplyToProductTypeIdsList = !string.IsNullOrEmpty(dv.ApplyToProductTypeIds)
-                    ? dv.ApplyToProductTypeIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
-                    : new List<int>(),
+                ApplyToProductTypeIdsList = voucherProductTypeIds,
                 ApplyToProductTypes = new List<ApplyToProductTypeDto>(), // Empty for list query - populate in detail query
+                ApplyToProductTypeNames = voucherProductTypeNames,
                 CustomerTypeIds = dv.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
                 CustomerTypeNames = dv.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),
                 UsageCount = dv.VoucherUsages.Count,

@@ -23,6 +23,7 @@ public record DiscountVoucherDto : BaseFullAuditedDto
     public string? ApplyToProductTypeIds { get; init; }
     public List<int> ApplyToProductTypeIdsList { get; init; } = [];
     public List<ApplyToProductTypeDto> ApplyToProductTypes { get; init; } = [];
+    public List<string> ApplyToProductTypeNames { get; init; } = [];
 
     // Legacy fields for backward compatibility
     public List<int> CustomerTypeIds { get; init; } = [];

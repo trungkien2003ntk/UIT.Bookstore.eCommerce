@@ -63,6 +63,7 @@ public class GetDiscountVoucherDetailQueryHandler(
                 Id = pt.Id,
                 DisplayName = pt.DisplayName
             }).ToList(),
+            ApplyToProductTypeNames = allProductTypeDetails.Select(pt => pt.DisplayName).ToList(),
 
             CustomerTypeIds = discountVoucher.CustomerTypes.Select(vct => vct.CustomerTypeId).ToList(),
             CustomerTypeNames = discountVoucher.CustomerTypes.Select(vct => vct.CustomerType.Name).ToList(),

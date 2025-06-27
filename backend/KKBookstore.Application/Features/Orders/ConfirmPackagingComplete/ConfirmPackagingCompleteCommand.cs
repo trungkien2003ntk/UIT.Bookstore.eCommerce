@@ -14,6 +14,6 @@ public class ConfirmPackagingCompleteResponse
 {
     public string GhnOrderCode { get; set; } = string.Empty;
     public string GhnTrackingUrl { get; set; } = string.Empty;
-    public DateTime? ExpectedDeliveryTime { get; set; }
+    public DateTimeOffset? ExpectedDeliveryTime { get; set; }
     public decimal ShippingCost { get; set; }
 }

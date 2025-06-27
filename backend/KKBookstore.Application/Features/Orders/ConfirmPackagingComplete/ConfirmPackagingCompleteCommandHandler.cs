@@ -26,8 +26,11 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
 
     public async Task<Result<ConfirmPackagingCompleteResponse>> Handle(ConfirmPackagingCompleteCommand request, CancellationToken cancellationToken)
     {
+        using var transaction = await _dbContext.BeginTransactionAsync(cancellationToken);
         try
         {
+            // start transaction
+
             // Find the branch that is selected for packaging
             var selectedFulfillment = await _dbContext.OrderFulfillments
                 .Where(of => of.OrderId == request.OrderId && of.IsSelectedForPackaging)
@@ -77,30 +80,30 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
             fulfillment.CompletePackaging();
             fulfillment.Notes = request.Notes;
 
-            // Create GHN shipping order
-            var ghnOrderRequest = CreateGhnOrderRequest(order, fulfillment);
-            var ghnResult = await _ghnShippingService.CreateOrderAsync(ghnOrderRequest);
+            //// Create GHN shipping order
+            //var ghnOrderRequest = CreateGhnOrderRequest(order, fulfillment);
+            //var ghnResult = await _ghnShippingService.CreateOrderAsync(ghnOrderRequest);
 
-            if (!ghnResult.Success)
-            {
-                _logger.LogError("Failed to create GHN order for order {OrderId}: {Error}",
-                    order.Id, ghnResult.ErrorMessage);
-                return Result.Failure<ConfirmPackagingCompleteResponse>(
-                    Error.Failure("GhnOrder.CreationFailed", ghnResult.ErrorMessage ?? "Failed to create shipping order"));
-            }            // Update order status to Processing (waiting for pickup)
+            //if (!ghnResult.Success)
+            //{
+            //    _logger.LogError("Failed to create GHN order for order {OrderId}: {Error}",
+            //        order.Id, ghnResult.ErrorMessage);
+            //    return Result.Failure<ConfirmPackagingCompleteResponse>(
+            //        Error.Failure("GhnOrder.CreationFailed", ghnResult.ErrorMessage ?? "Failed to create shipping order"));
+            //}            // Update order status to Processing (waiting for pickup)
             var previousStatus = order.Status;
             order.Status = OrderStatus.Processing;
-            order.Comment = $"GHN Order Code: {ghnResult.OrderCode}";
+            //order.Comment = $"GHN Order Code: {ghnResult.OrderCode}";
 
             // Record order history
             var orderHistory = OrderHistory.Create(
                 orderId: order.Id,
                 fromStatus: previousStatus,
                 toStatus: OrderStatus.Processing,
-                action: "Packaging completed, waiting for pickup",
-                notes: $"GHN Order Code: {ghnResult.OrderCode}. {request.Notes}".Trim(),
-                triggeredByUserId: request.AdminUserId,
-                externalReference: ghnResult.OrderCode
+                action: "Đóng gói hoàn tất, đang chờ lấy hàng",
+                //notes: $"GHN Order Code: {ghnResult.OrderCode}. {request.Notes}".Trim(),
+                triggeredByUserId: request.AdminUserId
+            //externalReference: ghnResult.OrderCode
             );
 
             if (orderHistory.IsSuccess)
@@ -110,21 +113,25 @@ public class ConfirmPackagingCompleteCommandHandler : IRequestHandler<ConfirmPac
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Completed packaging and created GHN order {GhnOrderCode} for order {OrderId}",
-                ghnResult.OrderCode, order.Id);
+            //_logger.LogInformation("Completed packaging and created GHN order {GhnOrderCode} for order {OrderId}",
+            //    ghnResult.OrderCode, order.Id);
 
             var response = new ConfirmPackagingCompleteResponse
             {
-                GhnOrderCode = ghnResult.OrderCode ?? string.Empty,
-                GhnTrackingUrl = $"https://tracking.ghn.vn/{ghnResult.OrderCode}",
-                ExpectedDeliveryTime = ghnResult.ExpectedDeliveryTime,
-                ShippingCost = ghnResult.TotalFee
+                GhnOrderCode = string.Empty,
+                GhnTrackingUrl = string.Empty,
+                ExpectedDeliveryTime = order.ExpectedDeliveryWhen,
+                ShippingCost = order.ShippingFee
             };
+
+            await transaction.CommitAsync(cancellationToken);
 
             return Result.Success(response);
         }
         catch (Exception ex)
         {
+            await transaction.RollbackAsync(cancellationToken);
+
             _logger.LogError(ex, "Error confirming packaging complete for order {OrderId}", request.OrderId);
             return Result.Failure<ConfirmPackagingCompleteResponse>(
                 Error.Failure("ConfirmPackagingComplete.Failed", "Failed to confirm packaging complete"));

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using KKBookstore.Common.Interfaces;
+using KKBookstore.Constants;
+using KKBookstore.Customers;
 using KKBookstore.Models;
 using KKBookstore.Users;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace KKBookstore.Features.Users.Register;
 
@@ -19,7 +22,8 @@ public record RegisterCommand(
 
 public class RegisterCommandHandler(
     IIdentityService identityService,
-    IMapper mapper
+    IMapper mapper,
+    IApplicationDbContext dbContext
 ) : IRequestHandler<RegisterCommand, Result<RegisterResponse>>
 {
     private readonly IIdentityService _identityService = identityService;
@@ -36,6 +40,20 @@ public class RegisterCommandHandler(
             if (result.IsFailure)
             {
                 return Result.Failure<RegisterResponse>(result.Error);
+            }
+
+            if (request.Role == AppRoles.Customer)
+            {
+                var customer = dbContext.Customers
+                    .IgnoreQueryFilters()
+                    .FirstOrDefault(c => c.Email == request.Email);
+                var regularCustomerType = dbContext.CustomerTypes
+                    .IgnoreQueryFilters()
+                    .FirstOrDefault(ct => ct.Tier == CustomerTier.Regular);
+
+                customer.CustomerTypeId = regularCustomerType.Id;
+
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
 
             RegisterResponse tokenResponse = mapper.Map<RegisterResponse>(result.Value);

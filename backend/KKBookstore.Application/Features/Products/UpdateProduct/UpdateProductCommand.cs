@@ -276,36 +276,46 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     existingProductVariant.Weight = productVariant.Weight;
                     existingProductVariant.Dimension = productVariant.Dimension ?? existingProductVariant.Dimension;
 
-                    // Update variant option values
+                    // Update variant option values intelligently
                     if (productVariant.VariantOptions != null)
                     {
-                        // Remove existing option values
+                        existingProductVariant.ProductVariantOptionValues ??= [];
                         var existingOptionValues = existingProductVariant.ProductVariantOptionValues?.ToList() ?? new List<ProductVariantOptionValue>();
-                        foreach (var existingOptionValue in existingOptionValues)
+                        var incomingOptionValues = productVariant.VariantOptions.ToList();
+
+                        // Remove option values that are no longer needed
+                        var toRemove = existingOptionValues.Where(existing =>
+                            !incomingOptionValues.Any(incoming =>
+                                incoming.ProductOptionId == existing.OptionId &&
+                                incoming.ProductOptionValueId == existing.OptionValueId)).ToList();
+
+                        foreach (var item in toRemove)
                         {
-                            _dbContext.ProductVariantOptionValues.Remove(existingOptionValue);
+                            _dbContext.ProductVariantOptionValues.Remove(item);
                         }
-                        existingProductVariant.ProductVariantOptionValues?.Clear();
 
                         // Add new option values
-                        foreach (var optionValue in productVariant.VariantOptions)
-                        {
-                            existingProductVariant.ProductVariantOptionValues ??= new List<ProductVariantOptionValue>();
+                        var toAdd = incomingOptionValues.Where(incoming =>
+                            !existingOptionValues.Any(existing =>
+                                existing.OptionId == incoming.ProductOptionId &&
+                                existing.OptionValueId == incoming.ProductOptionValueId)).ToList();
 
+                        foreach (var optionValue in toAdd)
+                        {
+                            // Handle new option value creation if needed
                             if (optionValue.ProductOptionValueId is null)
                             {
-                                // If no option value ID, we assume it's a new option value
                                 var newOptionValue = new ProductOptionValue
                                 {
                                     Value = optionValue.Value ?? "",
                                     OptionId = optionValue.ProductOptionId
                                 };
                                 _dbContext.ProductOptionValues.Add(newOptionValue);
-                                await _dbContext.SaveChangesAsync();
+                                // Don't save here - let the main SaveChanges handle it
                                 optionValue.ProductOptionValueId = newOptionValue.Id;
                             }
 
-                            existingProductVariant.ProductVariantOptionValues.Add(new ProductVariantOptionValue
+                            existingProductVariant.ProductVariantOptionValues!.Add(new ProductVariantOptionValue
                             {
                                 ProductVariantId = existingProductVariant.Id,
                                 OptionId = optionValue.ProductOptionId,

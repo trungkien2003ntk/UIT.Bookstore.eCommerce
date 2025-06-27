@@ -37,7 +37,7 @@ public abstract class OrderProcessor(
                 orderId: order.Id,
                 fromStatus: OrderStatus.Pending,
                 toStatus: OrderStatus.Pending,
-                action: "Order created successfully",
+                action: "Đơn hàng được tạo thành công",
                 triggeredByUserId: request.UserId
             );
             if (initialHistory.IsSuccess)
@@ -154,7 +154,7 @@ public abstract class OrderProcessor(
             // Multiple branch options available - requires admin selection
             order.Status = OrderStatus.WaitForConfirmPackageBranch;
             await RecordOrderHistory(order, OrderStatus.WaitForConfirmPackageBranch, 
-                "COD Order created - waiting for branch confirmation", userId, cancellationToken);
+                "Đơn hàng COD được tạo - đang chờ xác nhận chi nhánh", userId, cancellationToken);
             
             await NotifyAdminForBranchSelection(order, orderFulfillments, cancellationToken);
         }
@@ -163,14 +163,14 @@ public abstract class OrderProcessor(
             // Single branch fulfillment - proceed directly to packaging
             order.Status = OrderStatus.Packaging;
             await RecordOrderHistory(order, OrderStatus.Packaging, 
-                "COD Order created - proceeding to packaging", userId, cancellationToken);
+                "Đơn hàng COD được tạo - chuyển sang đóng gói", userId, cancellationToken);
         }
         else
         {
             // Multiple fulfillments from same branch or other case
             order.Status = OrderStatus.Packaging;
             await RecordOrderHistory(order, OrderStatus.Packaging, 
-                "COD Order created - proceeding to packaging", userId, cancellationToken);
+                "Đơn hàng COD được tạo - chuyển sang đóng gói", userId, cancellationToken);
         }
     }
 }

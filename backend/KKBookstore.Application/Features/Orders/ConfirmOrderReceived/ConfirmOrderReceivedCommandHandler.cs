@@ -74,7 +74,7 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
                 orderId: order.Id,
                 fromStatus: previousStatus,
                 toStatus: OrderStatus.Received,
-                action: "Customer confirmed order received",
+                action: "Khách hàng xác nhận đã nhận được đơn hàng",
                 notes: null,
                 triggeredByUserId: request.CustomerId
             );

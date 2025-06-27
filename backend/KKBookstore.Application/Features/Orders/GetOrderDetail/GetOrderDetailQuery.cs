@@ -44,6 +44,8 @@ public class GetOrderDetailHandler(
             .Include(o => o.OrderFulfillments)
                 .ThenInclude(of => of.Branch)
                     .ThenInclude(b => b!.Address)
+            .Include(o => o.OrderHistories)
+                .ThenInclude(oh => oh.TriggeredByUser)
             .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -225,7 +227,25 @@ public class GetOrderDetailHandler(
                 PackagingCompletedWhen = of.PackagingCompletedWhen,
                 TrackingNumber = of.Notes, // Use notes field for tracking info for now
                 ShippingCarrier = "GHN" // Since we're using GHN for shipping
-            })
+            }),
+
+            OrderHistories = order.OrderHistories
+                .OrderByDescending(oh => oh.Timestamp)
+                .Select(oh => new GetOrderDetailResponse.OrderHistoryDto
+                {
+                    Id = oh.Id,
+                    OrderId = oh.OrderId,
+                    FromStatus = oh.FromStatus.ToString(),
+                    ToStatus = oh.ToStatus.ToString(),
+                    Action = oh.Action,
+                    Notes = oh.Notes,
+                    TriggeredByUserId = oh.TriggeredByUserId,
+                    TriggeredByUserName = oh.TriggeredByUser != null 
+                        ? (oh.TriggeredByUser.FullName ?? $"{oh.TriggeredByUser.FirstName} {oh.TriggeredByUser.LastName}").Trim()
+                        : null,
+                    ExternalReference = oh.ExternalReference,
+                    Timestamp = oh.Timestamp
+                })
         };
 
         return response;

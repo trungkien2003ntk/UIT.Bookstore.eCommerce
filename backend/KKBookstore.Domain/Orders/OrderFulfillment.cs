@@ -52,8 +52,8 @@ public class OrderFulfillment : BaseAuditedEntity
 
     public void CompletePackaging()
     {
-        if (Status != OrderFulfillmentStatus.Packaging)
-            throw new InvalidOperationException("Can only complete packaging when in packaging status");
+        if (Status != OrderFulfillmentStatus.SelectedForPackaging)
+            throw new InvalidOperationException("Can only complete packaging when in selected for packaging status");
 
         Status = OrderFulfillmentStatus.ReadyForShipping;
         PackagingCompletedWhen = DateTimeOffset.Now;

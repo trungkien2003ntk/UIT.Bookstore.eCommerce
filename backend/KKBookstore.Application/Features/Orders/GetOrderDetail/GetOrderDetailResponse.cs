@@ -40,6 +40,9 @@ public record GetOrderDetailResponse : BaseDto
     // Customer Information (denormalized for convenience)
     public required CustomerSummaryDto Customer { get; init; }
 
+    // Order History - NEW FIELD
+    public IEnumerable<OrderHistoryDto> OrderHistories { get; init; } = [];
+
     public sealed record OrderPriceSummary
     {
         public decimal Subtotal { get; init; }
@@ -84,5 +87,18 @@ public record GetOrderDetailResponse : BaseDto
         public required string Email { get; init; }
         public required string PhoneNumber { get; init; }
         public required string CustomerType { get; init; }
+    }
+
+    public sealed record OrderHistoryDto : BaseDto
+    {
+        public int OrderId { get; init; }
+        public required string FromStatus { get; init; }
+        public required string ToStatus { get; init; }
+        public required string Action { get; init; }
+        public string? Notes { get; init; }
+        public int? TriggeredByUserId { get; init; }
+        public string? TriggeredByUserName { get; init; }
+        public string? ExternalReference { get; init; }
+        public DateTimeOffset Timestamp { get; init; }
     }
 }

@@ -53,6 +53,7 @@ public class JwtTokenVersionMiddleware(RequestDelegate next, ILogger<JwtTokenVer
             }
 
             // Token version is valid, continue with the request
+            await _next(context);
         }
         catch (ArgumentNullException ex)
         {

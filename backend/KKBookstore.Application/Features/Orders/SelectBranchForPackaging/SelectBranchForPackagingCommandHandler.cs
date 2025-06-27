@@ -74,7 +74,7 @@ public class SelectBranchForPackagingCommandHandler : IRequestHandler<SelectBran
                 orderId: order.Id,
                 fromStatus: order.Status,
                 toStatus: OrderStatus.Packaging,
-                action: $"Admin selected branch '{fulfillment.Branch.Name}' for packaging",
+                action: $"Quản trị viên đã chọn chi nhánh '{fulfillment.Branch.Name}' để đóng gói",
                 notes: request.Notes,
                 triggeredByUserId: request.AdminUserId
             );

@@ -56,39 +56,6 @@ public class HandleIPNHandler(
             var responseCode = request.ResponseCode;
             var isSuccess = responseCode == "00";
 
-            if (!isSuccess)
-            {
-                switch (int.Parse(responseCode))
-                {
-                    case (int)TransactionErrorType.AccountNotRegistered: // 400
-                    case (int)TransactionErrorType.ExpiredTransaction:
-                    case (int)TransactionErrorType.TransactionCancelled:
-                        return Result.Failure<HandleIPNResponse>(TransactionErrors.BadRequest);
-
-                    case (int)TransactionErrorType.IncorrectAuthentication: // 401
-                    case (int)TransactionErrorType.IncorrectPassword:
-                    case (int)TransactionErrorType.IncorrectPaymentPassword:
-                        return Result.Failure<HandleIPNResponse>(TransactionErrors.InvalidCredentials);
-
-                    case (int)TransactionErrorType.InsufficientBalance: // 402
-                    case (int)TransactionErrorType.ExceededDailyTransactionLimit:
-                        return Result.Failure<HandleIPNResponse>(TransactionErrors.PaymentError);
-
-                    case (int)TransactionErrorType.AccountLocked: // 403
-                    case (int)TransactionErrorType.SuspectedFraud:
-                        return Result.Failure<HandleIPNResponse>(TransactionErrors.Forbidden);
-
-                    case (int)TransactionErrorType.BankMaintenance: //503
-                        return Result.Failure<HandleIPNResponse>(TransactionErrors.ServiceUnavailable);
-
-                    case (int)TransactionErrorType.OtherErrors:
-                        return Result.Failure<HandleIPNResponse>(TransactionErrors.Unknown);
-
-                    default:
-                        break;
-                }
-            }
-
             var payDate = ConvertNumericDateToDateTimeOffset(request.PayDate);
             var OrderId = GetIdFromTxnRef(request.TxnRef);
 
@@ -119,6 +86,7 @@ public class HandleIPNHandler(
                 OrderId = OrderId,
                 Order = existingOrder
             };
+            existingOrder.PaidWhen = payDate;
 
             await _dbContext.Transactions.AddAsync(transaction, cancellationToken);
 
@@ -127,12 +95,29 @@ public class HandleIPNHandler(
             {
                 // Payment successful - now handle branch selection logic
                 var orderFulfillments = existingOrder.OrderFulfillments.ToList();
-                
+                var previousStatus = existingOrder.Status;
+
                 if (_branchSelectionService.RequiresAdminConfirmation(orderFulfillments))
                 {
                     // Multiple branches - requires admin confirmation
                     existingOrder.Status = OrderStatus.WaitForConfirmPackageBranch;
-                    
+
+                    // Record order history for status change
+                    var branchSelectionHistory = OrderHistory.Create(
+                        orderId: existingOrder.Id,
+                        fromStatus: previousStatus,
+                        toStatus: OrderStatus.WaitForConfirmPackageBranch,
+                        action: "Thanh toán thành công - Có nhiều chi nhánh khả dụng, đang chờ quản trị viên chọn chi nhánh đóng gói",
+                        notes: $"Transaction No: {request.TransactionNo}, Bank: {request.BankCode}",
+                        triggeredByUserId: null, // System triggered by payment webhook
+                        externalReference: request.TxnRef
+                    );
+
+                    if (branchSelectionHistory.IsSuccess)
+                    {
+                        await _dbContext.OrderHistories.AddAsync(branchSelectionHistory.Value, cancellationToken);
+                    }
+
                     // Notify admins about branch selection needed
                     await NotifyAdminForBranchSelection(existingOrder, orderFulfillments, cancellationToken);
                 }
@@ -142,20 +127,53 @@ public class HandleIPNHandler(
                     existingOrder.Status = OrderStatus.Packaging;
                     var singleFulfillment = orderFulfillments.First();
                     singleFulfillment.SelectForPackaging();
+
+                    // Record order history for status change
+                    var packagingHistory = OrderHistory.Create(
+                        orderId: existingOrder.Id,
+                        fromStatus: previousStatus,
+                        toStatus: OrderStatus.Packaging,
+                        action: "Thanh toán thành công - Chỉ có một chi nhánh khả dụng, tự động chọn để đóng gói",
+                        notes: $"Transaction No: {request.TransactionNo}, Bank: {request.BankCode}, Branch: {singleFulfillment.Branch?.Name}",
+                        triggeredByUserId: null, // System triggered by payment webhook
+                        externalReference: request.TxnRef
+                    );
+
+                    if (packagingHistory.IsSuccess)
+                    {
+                        await _dbContext.OrderHistories.AddAsync(packagingHistory.Value, cancellationToken);
+                    }
                 }
                 else
                 {
                     // No fulfillments - this shouldn't happen but handle gracefully
                     // Keep in pending status and log the issue for investigation
                     existingOrder.Status = OrderStatus.Pending;
+
+                    // Record order history for error condition
+                    var errorHistory = OrderHistory.Create(
+                        orderId: existingOrder.Id,
+                        fromStatus: previousStatus,
+                        toStatus: OrderStatus.Pending,
+                        action: "Thanh toán thành công nhưng không tìm thấy đơn vị thực hiện - cần điều tra",
+                        notes: $"Transaction No: {request.TransactionNo}, Bank: {request.BankCode}. Error: No order fulfillments found after payment.",
+                        triggeredByUserId: null, // System triggered by payment webhook
+                        externalReference: request.TxnRef
+                    );
+
+                    if (errorHistory.IsSuccess)
+                    {
+                        await _dbContext.OrderHistories.AddAsync(errorHistory.Value, cancellationToken);
+                    }
+
                     // TODO: Log this issue for investigation as it indicates a problem with inventory allocation
                 }
-                
+
                 // Update customer spending for successful online payments
                 var orderTotal = existingOrder.CalculateTotal();
                 var customerUpdateResult = await _customerService.UpdateCustomerSpentAmountAsync(
                     existingOrder.CustomerId, orderTotal, cancellationToken);
-                
+
                 if (customerUpdateResult.IsFailure)
                 {
                     // Log the error but don't fail the transaction - the payment was successful
@@ -165,8 +183,69 @@ public class HandleIPNHandler(
             }
             else
             {
-                // Payment failed - keep order in pending status
+                // Payment failed - keep order in pending status and record history
+                var previousStatus = existingOrder.Status;
                 existingOrder.Status = OrderStatus.Pending;
+
+                // Record order history for failed payment
+                var failureHistory = OrderHistory.Create(
+                    orderId: existingOrder.Id,
+                    fromStatus: previousStatus,
+                    toStatus: OrderStatus.Pending,
+                    action: "Thanh toán thất bại - Đơn hàng vẫn đang chờ",
+                    notes: $"Transaction No: {request.TransactionNo}, Response Code: {request.ResponseCode}, Bank: {request.BankCode}",
+                    triggeredByUserId: null, // System triggered by payment webhook
+                    externalReference: request.TxnRef
+                );
+
+                if (failureHistory.IsSuccess)
+                {
+                    await _dbContext.OrderHistories.AddAsync(failureHistory.Value, cancellationToken);
+                }
+
+                // Handle specific failure types and return appropriate errors after recording history
+                switch (int.Parse(responseCode))
+                {
+                    case (int)TransactionErrorType.AccountNotRegistered: // 400
+                    case (int)TransactionErrorType.ExpiredTransaction:
+                    case (int)TransactionErrorType.TransactionCancelled:
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        await dbTransaction.CommitAsync(cancellationToken);
+                        return Result.Failure<HandleIPNResponse>(TransactionErrors.BadRequest);
+
+                    case (int)TransactionErrorType.IncorrectAuthentication: // 401
+                    case (int)TransactionErrorType.IncorrectPassword:
+                    case (int)TransactionErrorType.IncorrectPaymentPassword:
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        await dbTransaction.CommitAsync(cancellationToken);
+                        return Result.Failure<HandleIPNResponse>(TransactionErrors.InvalidCredentials);
+
+                    case (int)TransactionErrorType.InsufficientBalance: // 402
+                    case (int)TransactionErrorType.ExceededDailyTransactionLimit:
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        await dbTransaction.CommitAsync(cancellationToken);
+                        return Result.Failure<HandleIPNResponse>(TransactionErrors.PaymentError);
+
+                    case (int)TransactionErrorType.AccountLocked: // 403
+                    case (int)TransactionErrorType.SuspectedFraud:
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        await dbTransaction.CommitAsync(cancellationToken);
+                        return Result.Failure<HandleIPNResponse>(TransactionErrors.Forbidden);
+
+                    case (int)TransactionErrorType.BankMaintenance: //503
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        await dbTransaction.CommitAsync(cancellationToken);
+                        return Result.Failure<HandleIPNResponse>(TransactionErrors.ServiceUnavailable);
+
+                    case (int)TransactionErrorType.OtherErrors:
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        await dbTransaction.CommitAsync(cancellationToken);
+                        return Result.Failure<HandleIPNResponse>(TransactionErrors.Unknown);
+
+                    default:
+                        // Unknown error code, still record as generic failure
+                        break;
+                }
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -178,7 +257,8 @@ public class HandleIPNHandler(
                 RspCode = "00",
                 Message = "Success"
             });
-        }        catch (Exception)
+        }
+        catch (Exception)
         {
             await dbTransaction.RollbackAsync(cancellationToken);
             return Result.Failure<HandleIPNResponse>(TransactionErrors.FailedToCommitTransaction);

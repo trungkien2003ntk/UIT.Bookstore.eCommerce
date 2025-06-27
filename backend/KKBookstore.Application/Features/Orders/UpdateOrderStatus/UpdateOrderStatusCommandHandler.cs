@@ -77,7 +77,7 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
                 orderId: order.Id,
                 fromStatus: previousStatus,
                 toStatus: request.Status,
-                action: "Manual status update by admin",
+                action: "Cập nhật trạng thái thủ công bởi quản trị viên",
                 notes: statusUpdateNote,
                 triggeredByUserId: request.AdminUserId
             );

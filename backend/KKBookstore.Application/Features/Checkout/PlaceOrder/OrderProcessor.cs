@@ -53,9 +53,9 @@ public abstract class OrderProcessor(
                 return Result.Failure<PlaceOrderResponse>(allocationResult.Error);
             }
 
-            var orderFulfillments = allocationResult.Value;            // Note: Order stays in Pending status until payment is confirmed
-            // Branch selection information is stored in OrderFulfillments for later processing
-            // The actual status change to WaitForConfirmPackageBranch or Packaging happens in IPN handler
+            var orderFulfillments = allocationResult.Value;
+            // Note: Online payment orders stay in Pending status until payment is confirmed via IPN
+            // COD orders are processed immediately to their next status (WaitForConfirmPackageBranch or Packaging)
             
             if (orderFulfillments.Count == 0)
             {
@@ -83,6 +83,9 @@ public abstract class OrderProcessor(
                 return Result.Failure<PlaceOrderResponse>(paymentUrlResult.Error);
             }
             var paymentUrl = paymentUrlResult.Value;
+
+            // For COD orders, immediately process to next status since no payment confirmation needed
+            await ProcessCODOrderFulfillment(order, orderFulfillments, request.UserId, cancellationToken);
 
             var result = new PlaceOrderResponse()
             {
@@ -131,6 +134,43 @@ public abstract class OrderProcessor(
         if (orderHistory.IsSuccess)
         {
             await _dbContext.OrderHistories.AddAsync(orderHistory.Value, cancellationToken);
+        }
+    }
+
+    // Helper method to process COD orders immediately since they don't need payment confirmation
+    protected async Task ProcessCODOrderFulfillment(Order order, List<OrderFulfillment> orderFulfillments, int userId, CancellationToken cancellationToken)
+    {
+        var paymentMethod = await _dbContext.PaymentMethods.FindAsync([order.PaymentMethodId], cancellationToken);
+        
+        // Only process if it's a COD payment
+        if (paymentMethod?.Type != PaymentMethodType.CashOnDelivery)
+        {
+            return; // For non-COD orders, keep them in Pending until payment confirmation
+        }
+
+        // Apply the same logic as in HandleIPNCommand for successful payments
+        if (RequiresAdminConfirmation(orderFulfillments))
+        {
+            // Multiple branch options available - requires admin selection
+            order.Status = OrderStatus.WaitForConfirmPackageBranch;
+            await RecordOrderHistory(order, OrderStatus.WaitForConfirmPackageBranch, 
+                "COD Order created - waiting for branch confirmation", userId, cancellationToken);
+            
+            await NotifyAdminForBranchSelection(order, orderFulfillments, cancellationToken);
+        }
+        else if (orderFulfillments.Count == 1)
+        {
+            // Single branch fulfillment - proceed directly to packaging
+            order.Status = OrderStatus.Packaging;
+            await RecordOrderHistory(order, OrderStatus.Packaging, 
+                "COD Order created - proceeding to packaging", userId, cancellationToken);
+        }
+        else
+        {
+            // Multiple fulfillments from same branch or other case
+            order.Status = OrderStatus.Packaging;
+            await RecordOrderHistory(order, OrderStatus.Packaging, 
+                "COD Order created - proceeding to packaging", userId, cancellationToken);
         }
     }
 }

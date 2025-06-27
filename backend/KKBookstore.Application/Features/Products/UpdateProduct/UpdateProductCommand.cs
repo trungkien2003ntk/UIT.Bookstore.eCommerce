@@ -54,11 +54,11 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 return Result.Failure<AdminProductDto>(ProductTypeErrors.NotFound);
             }
 
-            var unitMeasure = await _dbContext.UnitMeasures.FirstOrDefaultAsync(x => x.Id == request.UnitMeasureId, cancellationToken);
-            if (unitMeasure is null)
-            {
-                return Result.Failure<AdminProductDto>(UnitMeasureErrors.NotFound);
-            }
+            //var unitMeasure = await _dbContext.UnitMeasures.FirstOrDefaultAsync(x => x.Id == request.UnitMeasureId, cancellationToken);
+            //if (unitMeasure is null)
+            //{
+            //    return Result.Failure<AdminProductDto>(UnitMeasureErrors.NotFound);
+            //}
 
 
             _logger.LogInformation("Updating product with ID {ProductId}", request.Id);
@@ -69,7 +69,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.Description = request.Description ?? "";
             product.IsBook = request.IsBook;
             product.IsActive = request.IsActive;
-            product.UnitMeasureId = request.UnitMeasureId;
+            //product.UnitMeasureId = request.UnitMeasureId;
 
             _logger.LogInformation("Updating Product Type");
             request.ProductType ??= new ProductTypeDto()
@@ -84,19 +84,19 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             UpdateProductType(product, request.ProductType);
 
             _logger.LogInformation("Updating Unit Measure");
-            request.UnitMeasure ??= new UnitMeasureDto()
-            {
-                Description = unitMeasure.Description,
-                Name = unitMeasure.Name,
-                Id = unitMeasure.Id
-            };
-            UpdateUnitMeasure(product, request.UnitMeasure);
+            //request.UnitMeasure ??= new UnitMeasureDto()
+            //{
+            //    Description = unitMeasure.Description,
+            //    Name = unitMeasure.Name,
+            //    Id = unitMeasure.Id
+            //};
+            //UpdateUnitMeasure(product, request.UnitMeasure);
 
             _logger.LogInformation("Updating Attribute Product Values");
             UpdateAttributeProductValues(product, request.AttributeProductValues);
 
             _logger.LogInformation("Updating Product Variants");
-            UpdateProductVariants(product, request.Id, request.ProductVariants);
+            await UpdateProductVariantsAsync(product, request.Id, request.ProductVariants);
 
             _logger.LogInformation("Updating Product Images");
             UpdateProductImages(product, request.ProductImages);
@@ -209,7 +209,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             _dbContext.ProductTypeAttributeProductValues.Remove(item);
         }
     }
-    private void UpdateProductVariants(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
+    private async Task UpdateProductVariantsAsync(Product product, int productDtoId, ICollection<ProductVariantDto> productVariants)
     {
         var existingProductVariants = product.ProductVariants.ToList();
 
@@ -241,10 +241,24 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     foreach (var optionValue in productVariant.VariantOptions)
                     {
                         newVariant.ProductVariantOptionValues ??= new List<ProductVariantOptionValue>();
+
+                        if (optionValue.ProductOptionValueId is null)
+                        {
+                            // If no option value ID, we assume it's a new option value
+                            var newOptionValue = new ProductOptionValue
+                            {
+                                Value = optionValue.Value ?? "",
+                                OptionId = optionValue.ProductOptionId
+                            };
+                            _dbContext.ProductOptionValues.Add(newOptionValue);
+                            await _dbContext.SaveChangesAsync();
+                            optionValue.ProductOptionValueId = newOptionValue.Id;
+                        }
+
                         newVariant.ProductVariantOptionValues.Add(new ProductVariantOptionValue
                         {
                             OptionId = optionValue.ProductOptionId,
-                            OptionValueId = optionValue.ProductOptionValueId
+                            OptionValueId = optionValue.ProductOptionValueId.Value
                         });
                     }
                 }
@@ -277,11 +291,25 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                         foreach (var optionValue in productVariant.VariantOptions)
                         {
                             existingProductVariant.ProductVariantOptionValues ??= new List<ProductVariantOptionValue>();
+
+                            if (optionValue.ProductOptionValueId is null)
+                            {
+                                // If no option value ID, we assume it's a new option value
+                                var newOptionValue = new ProductOptionValue
+                                {
+                                    Value = optionValue.Value ?? "",
+                                    OptionId = optionValue.ProductOptionId
+                                };
+                                _dbContext.ProductOptionValues.Add(newOptionValue);
+                                await _dbContext.SaveChangesAsync();
+                                optionValue.ProductOptionValueId = newOptionValue.Id;
+                            }
+
                             existingProductVariant.ProductVariantOptionValues.Add(new ProductVariantOptionValue
                             {
                                 ProductVariantId = existingProductVariant.Id,
                                 OptionId = optionValue.ProductOptionId,
-                                OptionValueId = optionValue.ProductOptionValueId
+                                OptionValueId = optionValue.ProductOptionValueId.Value
                             });
                         }
                     }

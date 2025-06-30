@@ -42,8 +42,27 @@ public class TokenVersionService(
 
             if (!isValid)
             {
-                _logger.LogInformation("Token version mismatch for user {UserId}. Current: {Current}, Token: {Token}",
-                    userId, currentVersion, tokenVersionGuid);
+                // empty cache for this user to force a refresh and check again
+                await InvalidateTokenVersionCacheAsync(userId, cancellationToken);
+            }
+
+            currentVersionResult = await GetCurrentTokenVersionAsync(userId, cancellationToken);
+
+            if (currentVersionResult.IsFailure)
+            {
+                return Result.Failure<bool>(currentVersionResult.Error);
+            }
+
+            // Re-check the current version after cache invalidation
+            isValid = currentVersionResult.Value == tokenVersionGuid;
+
+            if (isValid)
+            {
+                _logger.LogDebug("Token version is valid for user {UserId}: {TokenVersion}", userId, tokenVersion);
+            }
+            else
+            {
+                _logger.LogWarning("Token version is invalid for user {UserId}: {TokenVersion}", userId, tokenVersion);
             }
 
             return Result.Success(isValid);

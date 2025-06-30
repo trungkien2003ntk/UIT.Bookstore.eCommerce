@@ -123,7 +123,7 @@ public class Order : BaseAuditedEntity
 
         if (PriceDiscountVoucher != null)
         {
-            priceDiscount = PriceDiscountVoucher.GetDiscountValue(subtotal);
+            priceDiscount = PriceDiscountVoucher.GetDiscountValue(subtotal - productDiscount);
         }
 
         return subtotal + shippingFee - productDiscount - shippingDiscount - priceDiscount;

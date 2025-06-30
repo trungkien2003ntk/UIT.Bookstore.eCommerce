@@ -10,7 +10,8 @@ namespace KKBookstore.Features.Customers.UnblockCustomer;
 public record UnblockCustomerCommand(int Id) : IRequest<Result>;
 
 public class UnblockCustomerCommandHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    ITokenVersionService tokenVersionService
 ) : IRequestHandler<UnblockCustomerCommand, Result>
 {
     public async Task<Result> Handle(UnblockCustomerCommand request, CancellationToken cancellationToken)
@@ -34,6 +35,9 @@ public class UnblockCustomerCommandHandler(
         {
             // Set customer status to Active (unblocked)
             customer.Status = UserStatus.Active;
+            customer.IsActive = true;
+            // Invalidate cached token version to ensure immediate effect
+            await tokenVersionService.InvalidateTokenVersionCacheAsync(customer.Id, cancellationToken);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 

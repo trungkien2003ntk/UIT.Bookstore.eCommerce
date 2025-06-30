@@ -190,6 +190,7 @@ public class DefaultOrderProcessor(
             .Include(o => o.OrderLines)
                 .ThenInclude(ol => ol.ProductVariant)
                     .ThenInclude(pv => pv.Product)
+                        .ThenInclude(p => p.ProductImages.Take(1))
             .Include(o => o.OrderLines)
                 .ThenInclude(ol => ol.ProductVariant)
                     .ThenInclude(pv => pv.ProductVariantOptionValues!)
@@ -215,7 +216,7 @@ public class DefaultOrderProcessor(
             Quantity = ol.Quantity,
             UnitPrice = ol.UnitPrice,
             RecommendedRetailPrice = ol.RecommendedRetailPrice,
-            ThumbnailUrl = ol.ProductVariant.GetThumbnailImageUrl()
+            ThumbnailUrl = ol.ProductVariant.Product.GetFirstThumbnailImageUrl()
         }).ToList();
 
         // Calculate discount amount

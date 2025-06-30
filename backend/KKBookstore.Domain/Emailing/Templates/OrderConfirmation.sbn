@@ -48,11 +48,11 @@
                     <div style="color: #666; font-size: 13px; margin-bottom: 5px;">{{ item.variant_name }}</div>
                     {% endif %}
                     <div style="color: #666; font-size: 13px;">
-                        Số lượng: {{ item.quantity }} × {{ item.unit_price_formatted }} ₫
+                        Số lượng: {{ item.quantity }} × {{ item.unit_price_formatted }} 
                     </div>
                 </td>
                 <td style="text-align: right; vertical-align: top; font-weight: bold; color: #01bf65;">
-                    {{ item.total_price_formatted }} ₫
+                    {{ item.total_price_formatted }} 
                 </td>
             </tr>
         </table>
@@ -65,21 +65,21 @@
     <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="padding: 8px 0; color: #666;">Tạm tính:</td>
-            <td style="text-align: right; padding: 8px 0; color: #333;">{{ model.subtotal_formatted }} ₫</td>
+            <td style="text-align: right; padding: 8px 0; color: #333;">{{ model.subtotal_formatted }} </td>
         </tr>
         <tr>
             <td style="padding: 8px 0; color: #666;">Phí vận chuyển:</td>
-            <td style="text-align: right; padding: 8px 0; color: #333;">{{ model.shipping_fee_formatted }} ₫</td>
+            <td style="text-align: right; padding: 8px 0; color: #333;">{{ model.shipping_fee_formatted }} </td>
         </tr>
         {% if model.discount_amount > 0 %}
         <tr>
             <td style="padding: 8px 0; color: #e74c3c;">Giảm giá:</td>
-            <td style="text-align: right; padding: 8px 0; color: #e74c3c;">-{{ model.discount_amount_formatted }} ₫</td>
+            <td style="text-align: right; padding: 8px 0; color: #e74c3c;">-{{ model.discount_amount_formatted }} </td>
         </tr>
         {% endif %}
         <tr style="border-top: 2px solid #01bf65;">
             <td style="padding: 12px 0; font-weight: bold; font-size: 16px; color: #333;">Tổng cộng:</td>
-            <td style="text-align: right; padding: 12px 0; font-weight: bold; font-size: 16px; color: #01bf65;">{{ model.total_amount_formatted }} ₫</td>
+            <td style="text-align: right; padding: 12px 0; font-weight: bold; font-size: 16px; color: #01bf65;">{{ model.total_amount_formatted }} </td>
         </tr>
     </table>
 </div>

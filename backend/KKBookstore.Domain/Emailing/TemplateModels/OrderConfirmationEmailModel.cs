@@ -29,6 +29,7 @@ public class OrderConfirmationEmailModel : IEmailModel
         OrderId = OrderId,
         OrderNumber = OrderNumber,
         TotalAmount = TotalAmount,
+        TotalAmountFormatted = TotalAmountFormatted,
         OrderDate = OrderDate.ToString("dd/MM/yyyy HH:mm"),
         ExpectedDeliveryDate = ExpectedDeliveryDate.ToString("dd/MM/yyyy"),
         Note = Note ?? "",
@@ -46,6 +47,7 @@ public class OrderConfirmationEmailModel : IEmailModel
             ThumbnailUrl = item.ThumbnailUrl
         }),
         ShippingFee = ShippingFee,
+        ShippingFeeFormatted,
         DiscountAmount = DiscountAmount ?? 0,
         DiscountAmountFormatted = DiscountAmountFormatted,
         ShippingAddress = ShippingAddress,

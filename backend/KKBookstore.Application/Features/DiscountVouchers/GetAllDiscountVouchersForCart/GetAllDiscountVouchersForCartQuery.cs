@@ -24,6 +24,16 @@ public class GetAllDiscountVouchersForCartHandler(
         var userId = request.UserId;
         var selectedItemIds = request.SelectedItemIds;
 
+        // Get customer to check customer type
+        var customer = await _dbContext.Customers
+            .Include(c => c.CustomerType)
+            .FirstOrDefaultAsync(c => c.Id == userId, cancellationToken);
+
+        if (customer == null)
+        {
+            return Result.Failure<GetAllDiscountVouchersForCartResponse>(Error.NotFound("Customer.NotFound", "Customer not found"));
+        }
+
         var shoppingCartItems = await _dbContext.ShoppingCartItems
             .Where(sci => sci.CustomerId == userId && selectedItemIds.Contains(sci.Id))
             .Include(sci => sci.ProductVariant)
@@ -49,14 +59,21 @@ public class GetAllDiscountVouchersForCartHandler(
         var discountVouchers = await _dbContext.DiscountVouchers
             .Where(dv => dv.StartTime <= DateTimeOffset.Now && dv.EndTime >= DateTimeOffset.Now)
             .Include(dv => dv.VoucherUsages)
+            .Include(dv => dv.CustomerTypes)
             .ToListAsync(cancellationToken);
 
-        // Filter out vouchers that are not applicable to the current shopping cart
-        foreach (var discountVoucher in from discountVoucher in discountVouchers
-                                        where discountVoucher.IsApplicable(totalAmount, userId, distinctProductTypeIds)
-                                        select discountVoucher)
+        // Set redeemable status for all vouchers
+        foreach (var discountVoucher in discountVouchers)
         {
-            discountVoucher.IsRedeemable = true;
+            // Check if voucher is applicable to current shopping cart
+            bool isApplicable = discountVoucher.IsApplicable(totalAmount, userId, distinctProductTypeIds);
+            
+            // Check if customer type is allowed for this voucher
+            bool isCustomerTypeAllowed = !discountVoucher.CustomerTypes.Any() || 
+                                       discountVoucher.CustomerTypes.Any(vct => vct.CustomerTypeId == customer.CustomerTypeId);
+            
+            // Voucher is redeemable only if both conditions are met
+            discountVoucher.IsRedeemable = isApplicable && isCustomerTypeAllowed;
         }
 
         var allVouchers = discountVouchers

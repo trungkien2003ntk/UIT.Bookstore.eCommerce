@@ -5,6 +5,7 @@ namespace KKBookstore.Features.Products.Models;
 
 public sealed record ProductVariantDto : BaseDto
 {
+    public string? Sku { get; set; }
     public decimal RecommendedRetailPrice { get; set; }
     public decimal UnitPrice { get; set; }
     public int Weight { get; set; }
@@ -12,6 +13,7 @@ public sealed record ProductVariantDto : BaseDto
     public decimal TaxRate { get; set; }
     public string? Comment { get; set; }
     public int StockQuantity { get; set; }
+    public int TotalQuantity { get; set; }
     public decimal? AverageRating { get; set; }
     public int RatingsCount { get; set; }
 

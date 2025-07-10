@@ -19,7 +19,7 @@ public class CurrentUser : ICurrentUser
         {
             var idString = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (string.IsNullOrEmpty(idString) || int.TryParse(idString, out int id))
+            if (string.IsNullOrEmpty(idString) || !int.TryParse(idString, out int id))
             {
                 return null;
             }

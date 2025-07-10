@@ -148,29 +148,9 @@ public abstract class OrderProcessor(
             return; // For non-COD orders, keep them in Pending until payment confirmation
         }
 
-        // Apply the same logic as in HandleIPNCommand for successful payments
-        if (RequiresAdminConfirmation(orderFulfillments))
-        {
-            // Multiple branch options available - requires admin selection
-            order.Status = OrderStatus.WaitForConfirmPackageBranch;
-            await RecordOrderHistory(order, OrderStatus.WaitForConfirmPackageBranch, 
-                "Đơn hàng COD được tạo - đang chờ xác nhận chi nhánh", userId, cancellationToken);
-            
-            await NotifyAdminForBranchSelection(order, orderFulfillments, cancellationToken);
-        }
-        else if (orderFulfillments.Count == 1)
-        {
-            // Single branch fulfillment - proceed directly to packaging
-            order.Status = OrderStatus.Packaging;
-            await RecordOrderHistory(order, OrderStatus.Packaging, 
-                "Đơn hàng COD được tạo - chuyển sang đóng gói", userId, cancellationToken);
-        }
-        else
-        {
-            // Multiple fulfillments from same branch or other case
-            order.Status = OrderStatus.Packaging;
-            await RecordOrderHistory(order, OrderStatus.Packaging, 
-                "Đơn hàng COD được tạo - chuyển sang đóng gói", userId, cancellationToken);
-        }
+        // COD orders should go to Processing status (pending confirmation) instead of warehouse selection or packaging
+        order.Status = OrderStatus.Processing;
+        await RecordOrderHistory(order, OrderStatus.Processing, 
+            "Đơn hàng COD được tạo - chờ xác nhận", userId, cancellationToken);
     }
 }

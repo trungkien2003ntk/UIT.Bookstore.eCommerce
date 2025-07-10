@@ -115,6 +115,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                 return new ProductVariantDto
                 {
                     Id = pv.Id,
+                    Sku = pv.SkuValue?.Value,
                     RecommendedRetailPrice = pv.RecommendedRetailPrice,
                     UnitPrice = pv.UnitPrice,
                     Weight = pv.Weight,
@@ -122,6 +123,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                     TaxRate = pv.TaxRate,
                     Comment = pv.Comment,
                     StockQuantity = pv.StockQuantity,
+                    TotalQuantity = pv.StockQuantity,
                     AverageRating = avgRating,
                     RatingsCount = ratingsCount,
                     Ratings = pv.Ratings?.Select(r => new RatingDto

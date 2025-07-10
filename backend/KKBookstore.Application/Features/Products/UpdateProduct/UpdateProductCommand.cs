@@ -222,13 +222,14 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 var newVariant = new ProductVariant
                 {
                     ProductId = productDtoId,
+                    SkuValue = !string.IsNullOrEmpty(productVariant.Sku) ? new SkuValue(productVariant.Sku) : new SkuValue(Guid.NewGuid().ToString()),
                     RecommendedRetailPrice = productVariant.RecommendedRetailPrice,
                     UnitPrice = productVariant.UnitPrice,
                     TaxRate = productVariant.TaxRate,
                     Comment = productVariant.Comment,
                     ValidFrom = DateTimeOffset.UtcNow,
                     Weight = productVariant.Weight,
-                    Dimension = productVariant.Dimension,
+                    Dimension = productVariant.Dimension ?? new Dimension(),
                     IsActive = true,
                     Tags = ""
                 };
@@ -269,6 +270,10 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 var existingProductVariant = existingProductVariants.FirstOrDefault(x => x.Id == productVariant.Id);
                 if (existingProductVariant != null)
                 {
+                    if (!string.IsNullOrEmpty(productVariant.Sku))
+                    {
+                        existingProductVariant.SkuValue = new SkuValue(productVariant.Sku);
+                    }
                     existingProductVariant.RecommendedRetailPrice = productVariant.RecommendedRetailPrice;
                     existingProductVariant.UnitPrice = productVariant.UnitPrice;
                     existingProductVariant.TaxRate = productVariant.TaxRate;
@@ -397,11 +402,11 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 Description = product.ProductType.Description,
                 ParentProductTypeId = product.ProductType.ParentProductTypeId
             },
-            UnitMeasure = new UnitMeasureDto
+            UnitMeasure = product.UnitMeasure != null ? new UnitMeasureDto
             {
                 Id = product.UnitMeasure.Id,
                 Name = product.UnitMeasure.Name
-            },
+            } : null,
             AttributeProductValues = product.AttributeProductValues.Select(x => new ProductTypeAttributeProductValueDto
             {
                 AttributeId = x.AttributeValue.ProductTypeAttributeId,
@@ -412,12 +417,15 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             ProductVariants = product.ProductVariants.Select(x => new ProductVariantDto
             {
                 Id = x.Id,
+                Sku = x.SkuValue?.Value,
                 RecommendedRetailPrice = x.RecommendedRetailPrice,
                 UnitPrice = x.UnitPrice,
                 TaxRate = x.TaxRate,
                 Comment = x.Comment,
                 Weight = x.Weight,
                 Dimension = x.Dimension,
+                StockQuantity = x.StockQuantity,
+                TotalQuantity = x.StockQuantity,
                 VariantOptions = x.ProductVariantOptionValues?.Select(pov => new ProductVariantDto.VariantOptionDto
                 {
                     ProductOptionId = pov.OptionId,

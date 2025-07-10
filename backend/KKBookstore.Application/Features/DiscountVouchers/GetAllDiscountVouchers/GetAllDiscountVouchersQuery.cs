@@ -9,18 +9,43 @@ namespace KKBookstore.Features.DiscountVouchers.GetAllDiscountVouchers;
 public record GetAllDiscountVouchersQuery : IRequest<Result<GetAllDiscountVouchersResponse>>;
 
 public class GetAllDiscountVouchersHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    ICurrentUser currentUser
 ) : IRequestHandler<GetAllDiscountVouchersQuery, Result<GetAllDiscountVouchersResponse>>
 {
     private readonly IApplicationDbContext _dbContext = dbContext;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<Result<GetAllDiscountVouchersResponse>> Handle(GetAllDiscountVouchersQuery request, CancellationToken cancellationToken)
     {
+        // Get customer information if user is logged in
+        var currentUserId = _currentUser.Id;
+        int? customerTypeId = null;
+        
+        if (currentUserId.HasValue)
+        {
+            var customer = await _dbContext.Customers
+                .Where(c => c.Id == currentUserId.Value)
+                .Select(c => new { c.CustomerTypeId })
+                .FirstOrDefaultAsync(cancellationToken);
+            
+            customerTypeId = customer?.CustomerTypeId;
+        }
+
         // Get all discount vouchers that are active
         var discountVouchers = await _dbContext.DiscountVouchers
             .Where(dv => dv.StartTime <= DateTimeOffset.Now && dv.EndTime >= DateTimeOffset.Now)
             .Include(dv => dv.VoucherUsages)
+            .Include(dv => dv.CustomerTypes)
             .ToListAsync(cancellationToken);
+
+        // Filter by customer type if user is logged in
+        if (customerTypeId.HasValue)
+        {
+            discountVouchers = discountVouchers
+                .Where(dv => !dv.CustomerTypes.Any() || dv.CustomerTypes.Any(vct => vct.CustomerTypeId == customerTypeId.Value))
+                .ToList();
+        }
 
         var allVouchers = discountVouchers
             .Select(dv =>

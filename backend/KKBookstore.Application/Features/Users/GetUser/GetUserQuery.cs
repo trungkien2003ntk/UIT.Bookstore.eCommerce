@@ -2,6 +2,7 @@
 using KKBookstore.Constants;
 using KKBookstore.Customers;
 using KKBookstore.Models;
+using KKBookstore.Orders;
 using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,8 @@ public class GetUserQueryHandler(
             ).ToListAsync(cancellationToken);
 
         CustomerTypeDto? customerType = null;
+        decimal? totalSpent = null;
+        
         if (userRoles.Count > 0 && userRoles.Contains(AppRoles.Customer))
         {
             customerType = await dbContext.Customers
@@ -44,6 +47,15 @@ public class GetUserQueryHandler(
                     Name = ct.CustomerType.Name
                 })
                 .FirstOrDefaultAsync(cancellationToken);
+
+            // Calculate total spent amount from completed orders
+            // Use ToListAsync first to enable client-side evaluation of CalculateTotal()
+            var completedOrders = await dbContext.Orders
+                .Where(o => o.CustomerId == user.Id && 
+                           (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received))
+                .ToListAsync(cancellationToken);
+            
+            totalSpent = completedOrders.Sum(o => o.CalculateTotal());
         }
  
         var userDto = new GetUserResponse
@@ -59,7 +71,8 @@ public class GetUserQueryHandler(
             Status = user.Status.ToString(),
             ImageUrl = user.ImageUrl,
             Roles = userRoles,
-            CustomerType = customerType
+            CustomerType = customerType,
+            TotalSpent = totalSpent
         };
 
         return Result.Success(userDto);

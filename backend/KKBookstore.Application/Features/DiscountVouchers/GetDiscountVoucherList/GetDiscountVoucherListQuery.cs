@@ -36,11 +36,26 @@ public record GetDiscountVoucherListQuery()
 
 public class GetDiscountVoucherListQueryHandler(
     IApplicationDbContext dbContext,
-    IProductTypeHierarchyService productTypeHierarchyService
+    IProductTypeHierarchyService productTypeHierarchyService,
+    ICurrentUser currentUser
 ) : IRequestHandler<GetDiscountVoucherListQuery, Result<PagedResult<DiscountVoucherDto>>>
 {
     public async Task<Result<PagedResult<DiscountVoucherDto>>> Handle(GetDiscountVoucherListQuery request, CancellationToken cancellationToken)
     {
+        // Get customer information if user is logged in
+        var currentUserId = currentUser.Id;
+        int? customerTypeId = null;
+        
+        if (currentUserId.HasValue)
+        {
+            var customer = await dbContext.Customers
+                .Where(c => c.Id == currentUserId.Value)
+                .Select(c => new { c.CustomerTypeId })
+                .FirstOrDefaultAsync(cancellationToken);
+            
+            customerTypeId = customer?.CustomerTypeId;
+        }
+
         var query = dbContext.DiscountVouchers
             .Include(dv => dv.VoucherUsages)
             .Include(dv => dv.CustomerTypes)
@@ -50,6 +65,12 @@ public class GetDiscountVoucherListQueryHandler(
 
         // Apply filters
         query = ApplyFilters(query, request);
+
+        // Filter by customer type if user is logged in
+        if (customerTypeId.HasValue)
+        {
+            query = query.Where(dv => !dv.CustomerTypes.Any() || dv.CustomerTypes.Any(vct => vct.CustomerTypeId == customerTypeId.Value));
+        }
 
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(request.SearchQuery))

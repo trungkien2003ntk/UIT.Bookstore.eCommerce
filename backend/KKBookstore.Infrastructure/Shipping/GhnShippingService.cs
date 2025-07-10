@@ -152,7 +152,7 @@ public class GhnShippingService : IGhnShippingService
 
             // Record order history
             var actionDescription = triggeredByUserId.HasValue
-                ? "Cập nhật trạng thái GHN thủ công bởi quản trị viên"
+                ? $"Cập nhật trạng thái GHN thủ công bởi quản trị viên, trạng thái mới: {newStatus}"
                 : "Cập nhật trạng thái GHN tự động từ webhook";
 
             var orderHistory = OrderHistory.Create(

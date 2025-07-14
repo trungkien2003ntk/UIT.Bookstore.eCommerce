@@ -11,13 +11,16 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly ILogger<UpdateOrderStatusCommandHandler> _logger;
+    private readonly ICustomerService _customerService;
 
     public UpdateOrderStatusCommandHandler(
         IApplicationDbContext dbContext,
-        ILogger<UpdateOrderStatusCommandHandler> logger)
+        ILogger<UpdateOrderStatusCommandHandler> logger,
+        ICustomerService customerService)
     {
         _dbContext = dbContext;
         _logger = logger;
+        _customerService = customerService;
     }
 
     public async Task<Result> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
@@ -25,6 +28,10 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
         try
         {
             var order = await _dbContext.Orders
+                .Include(o => o.PaymentMethod)
+                .Include(o => o.PriceDiscountVoucher)
+                .Include(o => o.ShippingDiscountVoucher)
+                .Include(o => o.OrderLines)
                 .FirstOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken);
 
             if (order == null)
@@ -49,6 +56,25 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
                     break;
                 case OrderStatus.Received:
                     order.ConfirmedReceivedWhen = DateTimeOffset.Now;
+                    if (order.PaymentMethod?.Type == PaymentMethodType.CashOnDelivery)
+                    {
+                        var orderTotal = order.CalculateTotal();
+                        var customerUpdateResult = await _customerService.UpdateCustomerSpentAmountAsync(
+                            order.CustomerId, orderTotal, cancellationToken);
+
+                        if (customerUpdateResult.IsFailure)
+                        {
+                            _logger.LogWarning("Failed to update customer {CustomerId} spending for COD order {OrderId}. Error: {Error}",
+                                order.CustomerId, order.Id, customerUpdateResult.Error);
+                            // Continue with order confirmation even if customer update fails
+                            // The customer update can be retried later if needed
+                        }
+                        else
+                        {
+                            _logger.LogInformation("Updated customer {CustomerId} spending for COD order {OrderId} with amount {Amount}",
+                                order.CustomerId, order.Id, orderTotal);
+                        }
+                    }
                     break;
                 case OrderStatus.Cancelled:
                     // Cancel order logic

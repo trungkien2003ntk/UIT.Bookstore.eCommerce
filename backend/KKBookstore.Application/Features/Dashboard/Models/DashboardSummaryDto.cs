@@ -20,6 +20,12 @@ public class DashboardSummaryDto
     public int TotalProductsSold { get; set; }
     public decimal TotalProductsSoldChangePercent { get; set; }
 
+    public decimal TotalProfit { get; set; }
+    public decimal TotalProfitChangePercent { get; set; }
+
+    public decimal ProfitMargin { get; set; }
+    public decimal ProfitMarginChangePercent { get; set; }
+
     public List<SalesByProductTypeDto> SalesByProductTypes { get; set; } = [];
     public List<TopProductDto> TopProducts { get; set; } = [];
 }

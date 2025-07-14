@@ -18,6 +18,7 @@ public class CustomerDetail
     public UserStatus Status { get; set; }
     public int? CustomerTypeId { get; set; }
     public string? CustomerTypeName { get; set; }
+    public decimal TotalSpent { get; set; }
     public DateTimeOffset? CreationTime { get; set; }
     public int? CreatorId { get; set; }
     public DateTimeOffset? LastModificationTime { get; set; }

@@ -31,6 +31,10 @@ public class ModerationAuditLog : BaseAuditedEntity
     public int? AiScore { get; set; } // AI badness score (1-100)
     public DateTimeOffset Timestamp { get; set; }
 
+    // Enhanced moderation properties
+    public int? ModerationLevel { get; set; } // Moderation level used (1=Relaxed, 2=Medium, 3=Strict)
+    public int? ThresholdUsed { get; set; } // Threshold value used for auto-hide decision
+
     // Navigation properties
     public Rating Rating { get; set; } = null!;
 }

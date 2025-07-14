@@ -64,6 +64,9 @@ public class HandleIPNHandler(
                 .Include(o => o.Transactions)
                 .Include(o => o.OrderFulfillments)
                     .ThenInclude(of => of.Branch)
+                .Include(o => o.OrderLines)
+                .Include(o => o.PriceDiscountVoucher)
+                .Include(o => o.ShippingDiscountVoucher)
                 .FirstOrDefaultAsync(o => o.Id == OrderId, cancellationToken);
 
             if (existingOrder == null)

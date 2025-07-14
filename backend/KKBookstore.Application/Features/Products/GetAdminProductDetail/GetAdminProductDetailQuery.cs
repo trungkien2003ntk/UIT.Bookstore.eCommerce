@@ -67,6 +67,9 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
             totalRatingsCount = product.Ratings.Count;
         }
 
+        // Calculate sentiment summary for the product
+        var sentimentSummary = CalculateAdminProductSentimentSummary(product);
+
         var productDto = new AdminProductDto
         {
             Id = product.Id,
@@ -79,6 +82,8 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
             UnitMeasureId = product.UnitMeasureId,
             AverageRating = overallRating,
             RatingsCount = totalRatingsCount,
+            TotalStockQuantity = product.ProductVariants.Sum(pv => pv.StockQuantity),
+            SentimentSummary = sentimentSummary,
             ProductType = new ProductTypeDto
             {
                 Id = product.ProductType.Id,
@@ -112,6 +117,9 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                     ratingsCount = pv.Ratings.Count;
                 }
 
+                // Calculate sentiment summary for this variant
+                var variantSentimentSummary = CalculateAdminVariantSentimentSummary(pv);
+
                 return new ProductVariantDto
                 {
                     Id = pv.Id,
@@ -126,6 +134,7 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
                     TotalQuantity = pv.StockQuantity,
                     AverageRating = avgRating,
                     RatingsCount = ratingsCount,
+                    SentimentSummary = variantSentimentSummary,
                     Ratings = pv.Ratings?.Select(r => new RatingDto
                     {
                         Id = r.Id,
@@ -192,5 +201,86 @@ public class GetAdminProductDetailQueryHandler : IRequestHandler<GetAdminProduct
         };
 
         return Result.Success(productDto);
+    }
+
+    private static AdminProductSentimentSummary? CalculateAdminProductSentimentSummary(Product product)
+    {
+        var allRatings = product.Ratings?.Where(r => r.SentimentScore.HasValue).ToList() ?? new List<Rating>();
+        var variantRatings = product.ProductVariants
+            .SelectMany(pv => pv.Ratings?.Where(r => r.SentimentScore.HasValue) ?? new List<Rating>())
+            .ToList();
+
+        allRatings.AddRange(variantRatings);
+
+        if (!allRatings.Any())
+            return null;
+
+        var positiveCount = allRatings.Count(r => r.SentimentLabel == "Positive");
+        var negativeCount = allRatings.Count(r => r.SentimentLabel == "Negative");
+        var neutralCount = allRatings.Count(r => r.SentimentLabel == "Neutral");
+
+        var dominantSentiment = GetDominantSentiment(positiveCount, negativeCount, neutralCount);
+        var sentimentDistribution = CalculateSentimentDistribution(positiveCount, negativeCount, neutralCount);
+
+        var variantSentiments = product.ProductVariants
+            .Select(pv => CalculateAdminVariantSentimentSummary(pv))
+            .Where(vs => vs != null)
+            .ToList();
+
+        return new AdminProductSentimentSummary
+        {
+            AverageSentimentScore = allRatings.Average(r => r.SentimentScore!.Value),
+            TotalRatings = allRatings.Count,
+            PositiveRatings = positiveCount,
+            NegativeRatings = negativeCount,
+            NeutralRatings = neutralCount,
+            DominantSentiment = dominantSentiment,
+            SentimentDistribution = sentimentDistribution,
+            VariantSentiments = variantSentiments
+        };
+    }
+
+    private static AdminVariantSentimentDto? CalculateAdminVariantSentimentSummary(ProductVariant variant)
+    {
+        var ratings = variant.Ratings?.Where(r => r.SentimentScore.HasValue).ToList() ?? new List<Rating>();
+
+        if (!ratings.Any())
+            return null;
+
+        var positiveCount = ratings.Count(r => r.SentimentLabel == "Positive");
+        var negativeCount = ratings.Count(r => r.SentimentLabel == "Negative");
+        var neutralCount = ratings.Count(r => r.SentimentLabel == "Neutral");
+
+        return new AdminVariantSentimentDto
+        {
+            ProductVariantId = variant.Id,
+            VariantSku = variant.SkuValue?.Value,
+            AverageSentimentScore = ratings.Average(r => r.SentimentScore!.Value),
+            TotalRatings = ratings.Count,
+            PositiveRatings = positiveCount,
+            NegativeRatings = negativeCount,
+            NeutralRatings = neutralCount,
+            DominantSentiment = GetDominantSentiment(positiveCount, negativeCount, neutralCount)
+        };
+    }
+
+    private static string GetDominantSentiment(int positive, int negative, int neutral)
+    {
+        if (positive > negative && positive > neutral)
+            return "Positive";
+        if (negative > positive && negative > neutral)
+            return "Negative";
+        if (neutral > positive && neutral > negative)
+            return "Neutral";
+        return "Mixed";
+    }
+
+    private static decimal CalculateSentimentDistribution(int positive, int negative, int neutral)
+    {
+        var total = positive + negative + neutral;
+        if (total == 0) return 0;
+
+        var maxCount = Math.Max(positive, Math.Max(negative, neutral));
+        return (decimal)maxCount / total * 100;
     }
 }

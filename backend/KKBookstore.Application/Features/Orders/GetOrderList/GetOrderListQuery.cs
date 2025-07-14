@@ -101,6 +101,9 @@ public class GetOrderListHandler(
             var projectedOrders = await sortedQuery
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
+                .Include(o => o.OrderLines)
+                .Include(o => o.PriceDiscountVoucher)
+                .Include(o => o.ShippingDiscountVoucher)
                 .Select(o => new OrderGeneralInformation
                 {
                     Id = o.Id,

@@ -8,6 +8,7 @@ using KKBookstore.Orders;
 using KKBookstore.Products;
 using KKBookstore.Products.Events;
 using KKBookstore.ProductTypes;
+using KKBookstore.Settings;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
 using KKBookstore.StockTransactions;
@@ -71,6 +72,7 @@ public class KKBookstoreDbContext(
     public DbSet<StockTransferItem> StockTransferItems { get; set; }
     public DbSet<RatingReport> RatingReports { get; set; }
     public DbSet<ModerationAuditLog> ModerationAuditLogs { get; set; }
+    public DbSet<ApplicationSetting> Settings { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

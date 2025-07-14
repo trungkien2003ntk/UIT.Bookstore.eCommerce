@@ -42,7 +42,16 @@ public class Rating : BaseFullAuditedEntity
     public string? AiModerationCategory { get; set; } // Category of violation
     public string? AiModerationExplanation { get; set; } // AI explanation
     public DateTimeOffset? AiModerationDate { get; set; } // When AI evaluation occurred
-    public bool IsAiModerated { get; set; } // Whether this rating has been AI moderated    // navigation property
+    public bool IsAiModerated { get; set; } // Whether this rating has been AI moderated
+
+    // Enhanced moderation properties
+    public int? ModerationLevel { get; set; } // Moderation level used (1=Relaxed, 2=Medium, 3=Strict)
+
+    // Sentiment analysis properties
+    public decimal? SentimentScore { get; set; } // Sentiment score (-1.0 to 1.0)
+    public string? SentimentLabel { get; set; } // Positive, Negative, Neutral
+
+    // navigation property
     public Customer Customer { get; set; } = null!;
     public ProductVariant ProductVariant { get; set; } = null!;
     public ICollection<RatingLike> Likes { get; set; } = new List<RatingLike>();

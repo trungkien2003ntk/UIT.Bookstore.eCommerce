@@ -134,19 +134,6 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         }
     }
 
-    private void UpdateUnitMeasure(Product product, UnitMeasureDto unitMeasure)
-    {
-        if (product.UnitMeasure.Id != unitMeasure.Id)
-        {
-            product.UnitMeasure = new UnitMeasure
-            {
-                Id = unitMeasure.Id,
-                Name = unitMeasure.Name
-            };
-        }
-    }
-
-
     private void UpdateAttributeProductValues(Product product, ICollection<ProductTypeAttributeProductValueDto> newValues)
     {
         var attributeIds = newValues.Select(x => x.AttributeId).ToHashSet();
@@ -223,6 +210,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 {
                     ProductId = productDtoId,
                     SkuValue = !string.IsNullOrEmpty(productVariant.Sku) ? new SkuValue(productVariant.Sku) : new SkuValue(Guid.NewGuid().ToString()),
+                    Barcode = productVariant.Sku ?? " ",
                     RecommendedRetailPrice = productVariant.RecommendedRetailPrice,
                     UnitPrice = productVariant.UnitPrice,
                     TaxRate = productVariant.TaxRate,
@@ -280,6 +268,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                     existingProductVariant.Comment = productVariant.Comment;
                     existingProductVariant.Weight = productVariant.Weight;
                     existingProductVariant.Dimension = productVariant.Dimension ?? existingProductVariant.Dimension;
+                    existingProductVariant.Barcode = productVariant.Sku ?? " ";
 
                     // Update variant option values intelligently
                     if (productVariant.VariantOptions != null)
@@ -316,7 +305,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                                     OptionId = optionValue.ProductOptionId
                                 };
                                 _dbContext.ProductOptionValues.Add(newOptionValue);
-                                // Don't save here - let the main SaveChanges handle it
+                                await _dbContext.SaveChangesAsync();
                                 optionValue.ProductOptionValueId = newOptionValue.Id;
                             }
 

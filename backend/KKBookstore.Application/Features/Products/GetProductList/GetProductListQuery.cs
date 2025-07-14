@@ -233,6 +233,7 @@ public class GetProductListQueryHandler(
                 MinRecommendedRetailPrice = p.ProductVariants.Count != 0 ? p.ProductVariants.Min(s => s.RecommendedRetailPrice) : 0,
                 AverageRating = (decimal)(p.Ratings.Count > 0 ? p.Ratings.Average(r => r.RatingValue) : 0),
                 RatingsCount = p.Ratings.Count(r => r.Status == RatingStatus.Posted || r.Status == RatingStatus.PendingReview),
+                SentimentSummary = CalculateProductSentimentSummary(p),
                 CreationTime = p.CreationTime,
                 IsActive = p.IsActive,
                 TotalStockQuantity = warehouseId.HasValue
@@ -449,5 +450,51 @@ public class GetProductListQueryHandler(
     {
         public int Id { get; set; }
         public int? ParentProductTypeId { get; set; }
+    }
+
+    private static ProductSummary.ProductSentimentSummary? CalculateProductSentimentSummary(Product product)
+    {
+        var allRatings = product.Ratings?.Where(r => r.SentimentScore.HasValue && (r.Status == RatingStatus.Posted || r.Status == RatingStatus.PendingReview)).ToList() ?? new List<Rating>();
+
+        if (!allRatings.Any())
+            return null;
+
+        var positiveCount = allRatings.Count(r => r.SentimentLabel == "Positive");
+        var negativeCount = allRatings.Count(r => r.SentimentLabel == "Negative");
+        var neutralCount = allRatings.Count(r => r.SentimentLabel == "Neutral");
+
+        var dominantSentiment = GetDominantSentiment(positiveCount, negativeCount, neutralCount);
+        var sentimentDistribution = CalculateSentimentDistribution(positiveCount, negativeCount, neutralCount);
+
+        return new ProductSummary.ProductSentimentSummary
+        {
+            AverageSentimentScore = allRatings.Average(r => r.SentimentScore!.Value),
+            TotalRatings = allRatings.Count,
+            PositiveRatings = positiveCount,
+            NegativeRatings = negativeCount,
+            NeutralRatings = neutralCount,
+            DominantSentiment = dominantSentiment,
+            SentimentDistribution = sentimentDistribution
+        };
+    }
+
+    private static string GetDominantSentiment(int positive, int negative, int neutral)
+    {
+        if (positive > negative && positive > neutral)
+            return "Positive";
+        if (negative > positive && negative > neutral)
+            return "Negative";
+        if (neutral > positive && neutral > negative)
+            return "Neutral";
+        return "Mixed";
+    }
+
+    private static decimal CalculateSentimentDistribution(int positive, int negative, int neutral)
+    {
+        var total = positive + negative + neutral;
+        if (total == 0) return 0;
+
+        var maxCount = Math.Max(positive, Math.Max(negative, neutral));
+        return (decimal)maxCount / total * 100;
     }
 }

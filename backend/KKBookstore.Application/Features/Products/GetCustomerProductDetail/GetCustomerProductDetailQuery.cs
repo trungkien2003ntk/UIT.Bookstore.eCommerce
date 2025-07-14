@@ -96,6 +96,9 @@ public class GetCustomerProductDetailQueryHandler(
             totalRatingsCount = product.Ratings.Count;
         }
 
+        // Calculate sentiment summary for the product
+        var sentimentSummary = CalculateProductSentimentSummary(product);
+
         var productResponse = new GetCustomerProductDetailResponse
         {
             Id = product.Id,
@@ -108,6 +111,7 @@ public class GetCustomerProductDetailQueryHandler(
             IsBook = product.IsBook,
             AverageRating = overallRating,
             RatingsCount = totalRatingsCount,
+            SentimentSummary = sentimentSummary,
             ThumbnailImageUrls = product.ProductImages?.Select(pi => pi.ThumbnailImageUrl ?? string.Empty) ?? Array.Empty<string>(),
             LargeImageUrls = product.ProductImages?.Select(pi => pi.LargeImageUrl ?? string.Empty) ?? Array.Empty<string>(),
             TotalStockQuantity = product.ProductVariants.Sum(pv => pv.StockQuantity),
@@ -129,6 +133,9 @@ public class GetCustomerProductDetailQueryHandler(
                     ratingsCount = pv.Ratings.Count;
                 }
 
+                // Calculate sentiment summary for this variant
+                var variantSentimentSummary = CalculateVariantSentimentSummary(pv);
+
                 return new CustomerProductVariantDto()
                 {
                     Id = pv.Id,
@@ -143,6 +150,7 @@ public class GetCustomerProductDetailQueryHandler(
                     StockQuantity = pv.StockQuantity,
                     AverageRating = avgRating,
                     RatingsCount = ratingsCount,
+                    SentimentSummary = variantSentimentSummary,
                     OptionValues = pv.ProductVariantOptionValues?.Select(pov => new OptionValueDto()
                     {
                         Name = pov.Option?.Name ?? string.Empty,
@@ -236,5 +244,73 @@ public class GetCustomerProductDetailQueryHandler(
         }
 
         return productResponse;
+    }
+
+    private static GetCustomerProductDetailResponse.ProductSentimentSummary? CalculateProductSentimentSummary(Product product)
+    {
+        var allRatings = product.Ratings?.Where(r => r.SentimentScore.HasValue).ToList() ?? new List<Rating>();
+        
+        if (!allRatings.Any())
+            return null;
+
+        var positiveCount = allRatings.Count(r => r.SentimentLabel == "Positive");
+        var negativeCount = allRatings.Count(r => r.SentimentLabel == "Negative");
+        var neutralCount = allRatings.Count(r => r.SentimentLabel == "Neutral");
+
+        var dominantSentiment = GetDominantSentiment(positiveCount, negativeCount, neutralCount);
+        var sentimentDistribution = CalculateSentimentDistribution(positiveCount, negativeCount, neutralCount);
+
+        return new GetCustomerProductDetailResponse.ProductSentimentSummary
+        {
+            AverageSentimentScore = allRatings.Average(r => r.SentimentScore!.Value),
+            TotalRatings = allRatings.Count,
+            PositiveRatings = positiveCount,
+            NegativeRatings = negativeCount,
+            NeutralRatings = neutralCount,
+            DominantSentiment = dominantSentiment,
+            SentimentDistribution = sentimentDistribution
+        };
+    }
+
+    private static VariantSentimentSummary? CalculateVariantSentimentSummary(ProductVariant variant)
+    {
+        var ratings = variant.Ratings?.Where(r => r.SentimentScore.HasValue).ToList() ?? new List<Rating>();
+
+        if (!ratings.Any())
+            return null;
+
+        var positiveCount = ratings.Count(r => r.SentimentLabel == "Positive");
+        var negativeCount = ratings.Count(r => r.SentimentLabel == "Negative");
+        var neutralCount = ratings.Count(r => r.SentimentLabel == "Neutral");
+
+        return new VariantSentimentSummary
+        {
+            AverageSentimentScore = ratings.Average(r => r.SentimentScore!.Value),
+            TotalRatings = ratings.Count,
+            PositiveRatings = positiveCount,
+            NegativeRatings = negativeCount,
+            NeutralRatings = neutralCount,
+            DominantSentiment = GetDominantSentiment(positiveCount, negativeCount, neutralCount)
+        };
+    }
+
+    private static string GetDominantSentiment(int positive, int negative, int neutral)
+    {
+        if (positive > negative && positive > neutral)
+            return "Positive";
+        if (negative > positive && negative > neutral)
+            return "Negative";
+        if (neutral > positive && neutral > negative)
+            return "Neutral";
+        return "Mixed";
+    }
+
+    private static decimal CalculateSentimentDistribution(int positive, int negative, int neutral)
+    {
+        var total = positive + negative + neutral;
+        if (total == 0) return 0;
+
+        var maxCount = Math.Max(positive, Math.Max(negative, neutral));
+        return (decimal)maxCount / total * 100;
     }
 }

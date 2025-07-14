@@ -5,6 +5,7 @@ using KKBookstore.Features.Products.Models;
 using KKBookstore.Mappings.Helpers;
 using KKBookstore.Models;
 using KKBookstore.Products;
+using KKBookstore.Settings;
 using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,16 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
         var currentUser = await _dbContext.Users
             .FirstOrDefaultAsync(u => u.Id == request.CustomerId, cancellationToken);
 
+        var currentLevel = await _dbContext.Settings
+            .FirstOrDefaultAsync(x => x.Key == ApplicationSettingKeys.CurrentModerationLevel, cancellationToken: cancellationToken);
+
+        if (currentLevel == null)
+        {
+            return Result.Failure<ProductRatingDto>(Error.NotFound("NotFound", "Not Found"));
+        }
+
+        var currLevelEnum = Enum.Parse<ModerationLevel>(currentLevel.Value);
+
         if (currentUser == null)
         {
             return Result.Failure<ProductRatingDto>(UserErrors.NotFound);
@@ -80,7 +91,7 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
         var rating = createRatingResult.Value;
 
         await _dbContext.Ratings.AddAsync(rating, cancellationToken);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         // Immediately evaluate comment with AI moderation if enabled and comment exists
         if (_config.IsEnabled && !string.IsNullOrWhiteSpace(rating.Comment))
@@ -89,8 +100,10 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
 
             try
             {
-                var moderationResult = await _moderationService.EvaluateCommentAsync(
+                // Use context-aware moderation for better accuracy
+                var moderationResult = await _moderationService.EvaluateCommentWithContextAsync(
                     rating.Comment,
+                    rating.ProductId,
                     _config.DefaultLanguage);
 
                 if (moderationResult.Success)
@@ -100,21 +113,36 @@ public class CreateProductRatingCommandHandler : IRequestHandler<CreateProductRa
                         moderationResult.Category,
                         moderationResult.Explanation);
 
-                    // Auto-hide if score exceeds threshold
-                    if (rating.ShouldBeAutoHidden(_config.AutoHideThreshold))
+                    // Store sentiment analysis results
+                    if (moderationResult.SentimentScore.HasValue)
+                    {
+                        rating.SentimentScore = moderationResult.SentimentScore;
+                        rating.SentimentLabel = moderationResult.SentimentLabel;
+                    }
+
+                    // Store moderation level used
+                    rating.ModerationLevel = (int)currLevelEnum;
+
+                    // Auto-hide if score exceeds current level threshold
+                    var currentLevelSettings = _config.GetCurrentLevelSettings(currentLevel.Value);
+                    if (rating.ShouldBeAutoHidden(currentLevelSettings.AutoHideThreshold))
                     {
                         rating.Status = RatingStatus.Hidden;
-                        _logger.LogInformation("Auto-hiding new rating {RatingId} due to AI score {Score}",
-                            rating.Id, moderationResult.BadnessScore);
+                        _logger.LogInformation("Auto-hiding new rating {RatingId} due to AI score {Score} (Level: {Level}, Threshold: {Threshold})",
+                            rating.Id, moderationResult.BadnessScore, currLevelEnum, currentLevelSettings.AutoHideThreshold);
                     }
 
                     // Create audit log
                     var auditLog = new ModerationAuditLog(
                         rating.Id,
                         rating.Status == RatingStatus.Hidden ? "AUTO_HIDDEN_ON_CREATE" : "AI_EVALUATED_ON_CREATE",
-                        $"AI Score: {moderationResult.BadnessScore}, Category: {moderationResult.Category}, Explanation: {moderationResult.Explanation}",
+                        $"AI Score: {moderationResult.BadnessScore}, Category: {moderationResult.Category}, Explanation: {moderationResult.Explanation}, Sentiment: {moderationResult.SentimentLabel} ({moderationResult.SentimentScore})",
                         null,
-                        moderationResult.BadnessScore);
+                        moderationResult.BadnessScore)
+                    {
+                        ModerationLevel = (int)currLevelEnum,
+                        ThresholdUsed = currentLevelSettings.AutoHideThreshold
+                    };
 
                     _dbContext.ModerationAuditLogs.Add(auditLog);
                 }

@@ -28,6 +28,8 @@ public class GetCustomerDetailQueryHandler(
             return Result.Failure<CustomerDetail>(CustomerErrors.NotFound);
         }
 
+        var totalSpent = customer.TotalSpent;
+
         var customerDetail = new CustomerDetail
         {
             Id = customer.Id,
@@ -44,6 +46,7 @@ public class GetCustomerDetailQueryHandler(
             Status = customer.Status,
             CustomerTypeId = customer.CustomerTypeId,
             CustomerTypeName = customer.CustomerType?.Name,
+            TotalSpent = totalSpent,
             CreationTime = customer.CreationTime,
             CreatorId = customer.CreatorId,
             LastModificationTime = customer.LastModificationTime,

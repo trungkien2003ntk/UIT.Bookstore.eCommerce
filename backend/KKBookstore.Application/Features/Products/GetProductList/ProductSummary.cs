@@ -22,5 +22,17 @@ public record ProductSummary : BaseDto
     public bool IsActive { get; set; }
     public int TotalStockQuantity { get; set; }
     public string StockStatus => TotalStockQuantity > 0 ? "In Stock" : "Out of Stock";
+    public ProductSentimentSummary? SentimentSummary { get; set; }
     public ICollection<ProductVariantSummaryDto> Variants { get; set; } = [];
+
+    public sealed class ProductSentimentSummary
+    {
+        public decimal? AverageSentimentScore { get; set; }
+        public int TotalRatings { get; set; }
+        public int PositiveRatings { get; set; }
+        public int NegativeRatings { get; set; }
+        public int NeutralRatings { get; set; }
+        public string DominantSentiment { get; set; } = string.Empty;
+        public decimal SentimentDistribution { get; set; }
+    }
 }

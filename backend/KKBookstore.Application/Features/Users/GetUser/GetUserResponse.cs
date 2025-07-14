@@ -19,6 +19,7 @@ public record GetUserResponse : BaseDto
     public List<string> Roles { get; init; } = [];
     public CustomerTypeDto? CustomerType { get; init; }
     public decimal? TotalSpent { get; init; }
+    public CustomerTier? SpendingTier { get; init; }
 }
 
 public class CustomerTypeDto

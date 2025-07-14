@@ -43,8 +43,8 @@ public class OrderFulfillment : BaseAuditedEntity
 
     public void StartPackaging()
     {
-        if (!IsSelectedForPackaging)
-            throw new InvalidOperationException("Cannot start packaging without being selected first");
+        //if (!IsSelectedForPackaging)
+        //    throw new InvalidOperationException("Cannot start packaging without being selected first");
 
         Status = OrderFulfillmentStatus.Packaging;
         PackagingStartedWhen = DateTimeOffset.Now;
@@ -52,8 +52,8 @@ public class OrderFulfillment : BaseAuditedEntity
 
     public void CompletePackaging()
     {
-        if (Status != OrderFulfillmentStatus.SelectedForPackaging)
-            throw new InvalidOperationException("Can only complete packaging when in selected for packaging status");
+        //if (Status != OrderFulfillmentStatus.SelectedForPackaging)
+        //    throw new InvalidOperationException("Can only complete packaging when in selected for packaging status");
 
         Status = OrderFulfillmentStatus.ReadyForShipping;
         PackagingCompletedWhen = DateTimeOffset.Now;

@@ -24,10 +24,14 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
     }
 
     public async Task<Result> Handle(ConfirmOrderReceivedCommand request, CancellationToken cancellationToken)
-    {        try
+    {
+        try
         {
             var order = await _dbContext.Orders
                 .Include(o => o.PaymentMethod)
+                .Include(o => o.PriceDiscountVoucher)
+                .Include(o => o.ShippingDiscountVoucher)
+                .Include(o => o.OrderLines)
                 .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.CustomerId == request.CustomerId,
                     cancellationToken);
 
@@ -54,7 +58,7 @@ public class ConfirmOrderReceivedCommandHandler : IRequestHandler<ConfirmOrderRe
                 var orderTotal = order.CalculateTotal();
                 var customerUpdateResult = await _customerService.UpdateCustomerSpentAmountAsync(
                     order.CustomerId, orderTotal, cancellationToken);
-                
+
                 if (customerUpdateResult.IsFailure)
                 {
                     _logger.LogWarning("Failed to update customer {CustomerId} spending for COD order {OrderId}. Error: {Error}",

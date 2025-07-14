@@ -204,6 +204,7 @@ public class DefaultOrderProcessor(
             .Include(o => o.PriceDiscountVoucher)
             .Include(o => o.ShippingDiscountVoucher)
             .AsSplitQuery()
+            .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
 
         if (orderWithDetails == null) return;

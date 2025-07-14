@@ -19,8 +19,19 @@ public record CustomerProductVariantDto : BaseDto
     public string? LargeImageUrl { get; set; }
     public decimal? AverageRating { get; set; }
     public int RatingsCount { get; set; }
+    public VariantSentimentSummary? SentimentSummary { get; set; }
     public IEnumerable<OptionValueDto>? OptionValues { get; set; }
     public IEnumerable<StockBreakdownDto> StockBreakdowns { get; set; } = [];
     public IEnumerable<RatingDto> Ratings { get; set; } = [];
+}
+
+public record VariantSentimentSummary
+{
+    public decimal? AverageSentimentScore { get; set; }
+    public int TotalRatings { get; set; }
+    public int PositiveRatings { get; set; }
+    public int NegativeRatings { get; set; }
+    public int NeutralRatings { get; set; }
+    public string DominantSentiment { get; set; } = string.Empty;
 }
 

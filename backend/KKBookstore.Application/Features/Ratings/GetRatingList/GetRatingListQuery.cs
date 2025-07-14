@@ -26,7 +26,8 @@ public record GetRatingListQuery()
 }
 
 public class GetRatingListQueryHandler(
-    IApplicationDbContext dbContext
+    IApplicationDbContext dbContext,
+    ICurrentUser currentUser
 ) : IRequestHandler<GetRatingListQuery, Result<PagedResult<RatingDto>>>
 {
     public async Task<Result<PagedResult<RatingDto>>> Handle(GetRatingListQuery request, CancellationToken cancellationToken)
@@ -47,8 +48,8 @@ public class GetRatingListQueryHandler(
             .AsQueryable()
             .AsSplitQuery();
 
-        // Apply filters
         query = ApplyFilters(query, request);
+
 
         // Apply status filter
         var statusFilterResult = ApplyStatusFilter(query, request);

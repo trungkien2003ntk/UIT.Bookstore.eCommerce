@@ -1512,35 +1512,53 @@ namespace KKBookstore.Data.Migrations
 
                     b.Property<string>("Action")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Action");
 
                     b.Property<int?>("AiScore")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("AiScore");
 
                     b.Property<DateTimeOffset?>("CreationTime")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
 
                     b.Property<int?>("CreatorId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
 
                     b.Property<string>("Details")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Details");
 
                     b.Property<DateTimeOffset?>("LastModificationTime")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
 
                     b.Property<int?>("LastModifierId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int?>("ModerationLevel")
+                        .HasColumnType("int")
+                        .HasColumnName("ModerationLevel");
 
                     b.Property<int?>("ModeratorId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ModeratorId");
 
                     b.Property<int>("RatingId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("RatingId");
+
+                    b.Property<int?>("ThresholdUsed")
+                        .HasColumnType("int")
+                        .HasColumnName("ThresholdUsed");
 
                     b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("Timestamp");
 
                     b.HasKey("Id");
 
@@ -1550,7 +1568,7 @@ namespace KKBookstore.Data.Migrations
 
                     b.HasIndex("RatingId");
 
-                    b.ToTable("ModerationAuditLogs");
+                    b.ToTable("ModerationAuditLogs", (string)null);
                 });
 
             modelBuilder.Entity("KKBookstore.Products.Product", b =>
@@ -2054,16 +2072,20 @@ namespace KKBookstore.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AiModerationCategory")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("AiModerationCategory");
 
                     b.Property<DateTimeOffset?>("AiModerationDate")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("AiModerationDate");
 
                     b.Property<string>("AiModerationExplanation")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("AiModerationExplanation");
 
                     b.Property<int?>("AiModerationScore")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("AiModerationScore");
 
                     b.Property<string>("Comment")
                         .HasMaxLength(2048)
@@ -2090,7 +2112,8 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnName("DeletionTime");
 
                     b.Property<bool>("IsAiModerated")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsAiModerated");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
@@ -2103,6 +2126,10 @@ namespace KKBookstore.Data.Migrations
                     b.Property<int?>("LastModifierId")
                         .HasColumnType("int")
                         .HasColumnName("LastModifierId");
+
+                    b.Property<int?>("ModerationLevel")
+                        .HasColumnType("int")
+                        .HasColumnName("ModerationLevel");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int")
@@ -2117,12 +2144,22 @@ namespace KKBookstore.Data.Migrations
                         .HasColumnName("RatingValue");
 
                     b.Property<int>("ReportsCount")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ReportsCount");
 
                     b.Property<string>("Response")
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)")
                         .HasColumnName("Response");
+
+                    b.Property<string>("SentimentLabel")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("SentimentLabel");
+
+                    b.Property<decimal?>("SentimentScore")
+                        .HasColumnType("decimal(5,4)")
+                        .HasColumnName("SentimentScore");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -2333,6 +2370,48 @@ namespace KKBookstore.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("UnitMeasures", (string)null);
+                });
+
+            modelBuilder.Entity("KKBookstore.Settings.ApplicationSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset?>("CreationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("LastModificationTime")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<int?>("LastModifierId")
+                        .HasColumnType("int")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.ToTable("ApplicationSettings", (string)null);
                 });
 
             modelBuilder.Entity("KKBookstore.ShoppingCarts.ShoppingCartItem", b =>
@@ -3824,11 +3903,13 @@ namespace KKBookstore.Data.Migrations
                 {
                     b.HasOne("KKBookstore.Users.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("KKBookstore.Users.User", "LastModifier")
                         .WithMany()
-                        .HasForeignKey("LastModifierId");
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("KKBookstore.Products.Rating", "Rating")
                         .WithMany()
@@ -4272,6 +4353,23 @@ namespace KKBookstore.Data.Migrations
                     b.Navigation("Creator");
 
                     b.Navigation("Deleter");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("KKBookstore.Settings.ApplicationSetting", b =>
+                {
+                    b.HasOne("KKBookstore.Users.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("KKBookstore.Users.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Creator");
 
                     b.Navigation("LastModifier");
                 });

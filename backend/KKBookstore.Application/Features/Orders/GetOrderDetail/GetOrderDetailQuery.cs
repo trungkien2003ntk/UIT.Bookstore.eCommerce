@@ -77,7 +77,7 @@ public class GetOrderDetailHandler(
 
         if (order.PriceDiscountVoucher != null)
         {
-            priceDiscountAmount = order.PriceDiscountVoucher.GetDiscountValue(subtotal);
+            priceDiscountAmount = order.PriceDiscountVoucher.GetDiscountValue(subtotal - productDiscount);
         }
 
         if (order.ShippingDiscountVoucher != null)
@@ -240,7 +240,7 @@ public class GetOrderDetailHandler(
                     Action = oh.Action,
                     Notes = oh.Notes,
                     TriggeredByUserId = oh.TriggeredByUserId,
-                    TriggeredByUserName = oh.TriggeredByUser != null 
+                    TriggeredByUserName = oh.TriggeredByUser != null
                         ? (oh.TriggeredByUser.FullName ?? $"{oh.TriggeredByUser.FirstName} {oh.TriggeredByUser.LastName}").Trim()
                         : null,
                     ExternalReference = oh.ExternalReference,

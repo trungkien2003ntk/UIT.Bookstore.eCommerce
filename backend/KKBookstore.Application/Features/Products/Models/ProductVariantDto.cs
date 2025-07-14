@@ -16,6 +16,7 @@ public sealed record ProductVariantDto : BaseDto
     public int TotalQuantity { get; set; }
     public decimal? AverageRating { get; set; }
     public int RatingsCount { get; set; }
+    public AdminVariantSentimentDto? SentimentSummary { get; set; }
 
     public ICollection<VariantOptionDto> VariantOptions { get; set; } = [];
     public ICollection<StockBreakdownDto> StockBreakdowns { get; set; } = [];

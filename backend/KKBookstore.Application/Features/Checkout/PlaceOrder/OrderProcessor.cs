@@ -56,7 +56,7 @@ public abstract class OrderProcessor(
             var orderFulfillments = allocationResult.Value;
             // Note: Online payment orders stay in Pending status until payment is confirmed via IPN
             // COD orders are processed immediately to their next status (WaitForConfirmPackageBranch or Packaging)
-            
+
             if (orderFulfillments.Count == 0)
             {
                 // No fulfillments found, rollback
@@ -141,16 +141,48 @@ public abstract class OrderProcessor(
     protected async Task ProcessCODOrderFulfillment(Order order, List<OrderFulfillment> orderFulfillments, int userId, CancellationToken cancellationToken)
     {
         var paymentMethod = await _dbContext.PaymentMethods.FindAsync([order.PaymentMethodId], cancellationToken);
-        
+
         // Only process if it's a COD payment
         if (paymentMethod?.Type != PaymentMethodType.CashOnDelivery)
         {
             return; // For non-COD orders, keep them in Pending until payment confirmation
         }
 
-        // COD orders should go to Processing status (pending confirmation) instead of warehouse selection or packaging
-        order.Status = OrderStatus.Processing;
-        await RecordOrderHistory(order, OrderStatus.Processing, 
-            "Đơn hàng COD được tạo - chờ xác nhận", userId, cancellationToken);
+        /// Apply the same logic as in HandleIPNCommand for successful payments
+        if (RequiresAdminConfirmation(orderFulfillments))
+        {
+            // Multiple branch options available - requires admin selection
+            order.Status = OrderStatus.WaitForConfirmPackageBranch;
+            await RecordOrderHistory(order, OrderStatus.WaitForConfirmPackageBranch,
+                "Đơn hàng COD được tạo - đang chờ xác nhận chi nhánh", userId, cancellationToken);
+
+            await NotifyAdminForBranchSelection(order, orderFulfillments, cancellationToken);
+        }
+        else if (orderFulfillments.Count == 1)
+        {
+            // Single branch fulfillment - proceed directly to packaging
+            order.Status = OrderStatus.Packaging;
+            orderFulfillments.ForEach(x =>
+            {
+                x.SelectForPackaging();
+                x.StartPackaging();
+            });
+            await RecordOrderHistory(order, OrderStatus.Packaging,
+                "Đơn hàng COD được tạo - chuyển sang đóng gói", userId, cancellationToken);
+        }
+        else
+        {
+            // Multiple fulfillments from same branch or other case
+            order.Status = OrderStatus.Packaging;
+            orderFulfillments.ForEach(x =>
+            {
+                x.SelectForPackaging();
+                x.StartPackaging();
+            });
+            await RecordOrderHistory(order, OrderStatus.Packaging,
+                "Đơn hàng COD được tạo - chuyển sang đóng gói", userId, cancellationToken);
+        }
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

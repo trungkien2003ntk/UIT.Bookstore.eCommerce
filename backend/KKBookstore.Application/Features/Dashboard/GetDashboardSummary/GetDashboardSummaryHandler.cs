@@ -42,6 +42,12 @@ public class GetDashboardSummaryHandler(
                 TotalProductsSold = currentMetrics.TotalProductsSold,
                 TotalProductsSoldChangePercent = CalculatePercentageChange(previousMetrics.TotalProductsSold, currentMetrics.TotalProductsSold),
 
+                TotalProfit = currentMetrics.TotalProfit,
+                TotalProfitChangePercent = CalculatePercentageChange(previousMetrics.TotalProfit, currentMetrics.TotalProfit),
+
+                ProfitMargin = currentMetrics.ProfitMargin,
+                ProfitMarginChangePercent = CalculatePercentageChange(previousMetrics.ProfitMargin, currentMetrics.ProfitMargin),
+
                 TotalStockAdjustmentOrders = 0, // TODO: Implement when stock transactions are available
                 TotalStockAdjustmentOrdersChangePercent = 0,
 
@@ -80,9 +86,10 @@ public class GetDashboardSummaryHandler(
 
         var totalNewUsers = await usersQuery.CountAsync(cancellationToken);
 
-        // Get total revenue and products sold for period
+        // Get total revenue, products sold, and profit for period
         var orderLinesQuery = dbContext.OrderLines
             .Include(ol => ol.Order)
+            .Include(ol => ol.ProductVariant)
             .Where(ol => ol.Order.Status == OrderStatus.Delivered || ol.Order.Status == OrderStatus.Received);
 
         if (period.FromDate.HasValue)
@@ -94,14 +101,18 @@ public class GetDashboardSummaryHandler(
             .GroupBy(ol => 1) // Group all records together
             .Select(g => new
             {
-                TotalRevenue = g.Sum(ol => ol.Quantity * ol.RecommendedRetailPrice),
-                TotalQuantity = g.Sum(ol => ol.Quantity)
+                TotalRevenue = g.Sum(ol => ol.Quantity * ol.UnitPrice), // Fixed: Use actual selling price (UnitPrice) not RecommendedRetailPrice
+                TotalQuantity = g.Sum(ol => ol.Quantity),
+                TotalCost = g.Sum(ol => ol.Quantity * ol.ProductVariant.UnitPrice), // Cost basis for profit calculation
+                TotalProfit = g.Sum(ol => ol.Quantity * (ol.UnitPrice - ol.ProductVariant.UnitPrice)) // Profit = (Selling Price - Cost) * Quantity
             })
             .FirstOrDefaultAsync(cancellationToken);
 
         var totalRevenue = revenueAndQuantity?.TotalRevenue ?? 0;
         var totalProductsSold = revenueAndQuantity?.TotalQuantity ?? 0;
+        var totalProfit = revenueAndQuantity?.TotalProfit ?? 0;
         var averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+        var profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
 
         return new PeriodMetrics
         {
@@ -109,7 +120,9 @@ public class GetDashboardSummaryHandler(
             TotalNewUsers = totalNewUsers,
             TotalRevenue = totalRevenue,
             TotalProductsSold = totalProductsSold,
-            AverageOrderValue = averageOrderValue
+            AverageOrderValue = averageOrderValue,
+            TotalProfit = totalProfit,
+            ProfitMargin = profitMargin
         };
     }
 
@@ -140,10 +153,11 @@ public class GetDashboardSummaryHandler(
         CancellationToken cancellationToken)
     {
         var query = dbContext.OrderLines
+            .Include(ol => ol.Order)
             .Include(ol => ol.ProductVariant)
                 .ThenInclude(pv => pv.Product)
                     .ThenInclude(p => p.ProductType)
-            .AsQueryable();
+            .Where(ol => ol.Order.Status == OrderStatus.Delivered || ol.Order.Status == OrderStatus.Received);
 
         if (period.FromDate.HasValue)
             query = query.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
@@ -169,9 +183,10 @@ public class GetDashboardSummaryHandler(
         CancellationToken cancellationToken)
     {
         var query = dbContext.OrderLines
+            .Include(ol => ol.Order)
             .Include(ol => ol.ProductVariant)
                 .ThenInclude(pv => pv.Product)
-            .AsQueryable();
+            .Where(ol => ol.Order.Status == OrderStatus.Delivered || ol.Order.Status == OrderStatus.Received);
 
         if (period.FromDate.HasValue)
             query = query.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
@@ -223,10 +238,11 @@ public class GetDashboardSummaryHandler(
         CancellationToken cancellationToken)
     {
         var query = dbContext.OrderLines
+            .Include(ol => ol.Order)
             .Include(ol => ol.ProductVariant)
                 .ThenInclude(pv => pv.Product)
                     .ThenInclude(p => p.ProductType)
-            .AsQueryable();
+            .Where(ol => ol.Order.Status == OrderStatus.Delivered || ol.Order.Status == OrderStatus.Received);
 
         if (period.FromDate.HasValue)
             query = query.Where(ol => ol.Order.OrderWhen >= period.FromDate.Value);
@@ -298,5 +314,7 @@ public class GetDashboardSummaryHandler(
         public decimal TotalRevenue { get; set; }
         public int TotalProductsSold { get; set; }
         public decimal AverageOrderValue { get; set; }
+        public decimal TotalProfit { get; set; }
+        public decimal ProfitMargin { get; set; }
     }
 }

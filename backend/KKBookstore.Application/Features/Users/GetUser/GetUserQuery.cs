@@ -2,7 +2,6 @@
 using KKBookstore.Constants;
 using KKBookstore.Customers;
 using KKBookstore.Models;
-using KKBookstore.Orders;
 using KKBookstore.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,8 +34,9 @@ public class GetUserQueryHandler(
 
         CustomerTypeDto? customerType = null;
         decimal? totalSpent = null;
-        
-        if (userRoles.Count > 0 && userRoles.Contains(AppRoles.Customer))
+        CustomerTier? spendingTier = null;
+
+        if (userRoles.Any() && userRoles.Contains(AppRoles.Customer))
         {
             customerType = await dbContext.Customers
                 .Include(c => c.CustomerType)
@@ -48,16 +48,23 @@ public class GetUserQueryHandler(
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
-            // Calculate total spent amount from completed orders
-            // Use ToListAsync first to enable client-side evaluation of CalculateTotal()
-            var completedOrders = await dbContext.Orders
-                .Where(o => o.CustomerId == user.Id && 
-                           (o.Status == OrderStatus.Delivered || o.Status == OrderStatus.Received))
-                .ToListAsync(cancellationToken);
-            
-            totalSpent = completedOrders.Sum(o => o.CalculateTotal());
+            var customer = await dbContext.Customers.SingleAsync(u => u.Id == user.Id);
+            totalSpent = customer.TotalSpent;
+
+            // Determine spending tier based on total spent amount
+            if (totalSpent.HasValue)
+            {
+                var customerTypes = await dbContext.CustomerTypes
+                    .OrderByDescending(ct => ct.MinSpending)
+                    .ToListAsync(cancellationToken);
+
+                var applicableCustomerType = customerTypes
+                    .FirstOrDefault(ct => totalSpent.Value >= (decimal)ct.MinSpending);
+
+                spendingTier = applicableCustomerType?.Tier ?? CustomerTier.Default;
+            }
         }
- 
+
         var userDto = new GetUserResponse
         {
             Id = user.Id,
@@ -72,7 +79,8 @@ public class GetUserQueryHandler(
             ImageUrl = user.ImageUrl,
             Roles = userRoles,
             CustomerType = customerType,
-            TotalSpent = totalSpent
+            TotalSpent = totalSpent,
+            SpendingTier = spendingTier
         };
 
         return Result.Success(userDto);

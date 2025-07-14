@@ -19,6 +19,7 @@ public record GetCustomerProductDetailResponse : BaseDto
     public decimal? AverageRating { get; set; }
     public int RatingsCount { get; set; }
     public int TotalStockQuantity { get; set; }
+    public ProductSentimentSummary? SentimentSummary { get; set; }
     public IEnumerable<string> ThumbnailImageUrls { get; set; } = [];
     public IEnumerable<string> LargeImageUrls { get; set; } = [];
     public IEnumerable<ProductTypeAttribute>? ProductTypeAttributes { get; set; }
@@ -48,5 +49,16 @@ public record GetCustomerProductDetailResponse : BaseDto
         public IEnumerable<string> Values { get; set; } = [];
         public IEnumerable<string>? ThumbnailImageUrls { get; set; }
         public IEnumerable<string>? LargeImageUrls { get; set; }
+    }
+
+    public sealed class ProductSentimentSummary
+    {
+        public decimal? AverageSentimentScore { get; set; }
+        public int TotalRatings { get; set; }
+        public int PositiveRatings { get; set; }
+        public int NegativeRatings { get; set; }
+        public int NeutralRatings { get; set; }
+        public string DominantSentiment { get; set; } = string.Empty;
+        public decimal SentimentDistribution { get; set; }
     }
 }

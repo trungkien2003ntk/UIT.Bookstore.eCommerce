@@ -17,6 +17,8 @@ using KKBookstore.Features.Products.GetRelatedProductsByImage;
 using KKBookstore.Features.Products.GetTrendyProductList;
 using KKBookstore.Features.Products.GetUnitMeasures;
 using KKBookstore.Features.Products.GetWeeklyTopSellingProductList;
+using KKBookstore.Features.Products.GetProductsBySentiment;
+using KKBookstore.Application.Features.Products.GetProductSentiment;
 using KKBookstore.Features.Products.LikeProductRating;
 using KKBookstore.Features.Products.ReportProductRating;
 using KKBookstore.Features.Products.SearchProducts;
@@ -265,6 +267,37 @@ public class ProductsController(
         var query = mapper.Map<GetRelatedProductsByImageQuery>(request);
         var result = await Sender.Send(query, cancellationToken);
 
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    /// <summary>
+    /// Get products ranked by sentiment analysis from reviews
+    /// </summary>
+    /// <param name="query">Query parameters for sentiment-based ranking</param>
+    /// <returns>Products ordered by sentiment score</returns>
+    [HttpGet("sentiment-rankings")]
+    public async Task<IActionResult> GetProductsBySentiment(
+        [FromQuery] GetProductsBySentimentQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await Sender.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
+    }
+
+    /// <summary>
+    /// Get detailed sentiment analysis for a specific product
+    /// </summary>
+    /// <param name="productId">Product ID</param>
+    /// <returns>Detailed sentiment information for the product</returns>
+    [HttpGet("{productId:int}/sentiment")]
+    public async Task<IActionResult> GetProductSentiment(
+        int productId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = new GetProductSentimentQuery(productId);
+        var result = await Sender.Send(query, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : ToActionResult(result);
     }
 }

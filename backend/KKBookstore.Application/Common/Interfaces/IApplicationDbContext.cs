@@ -6,6 +6,7 @@ using KKBookstore.Orders;
 using KKBookstore.Products;
 using KKBookstore.Products.Events;
 using KKBookstore.ProductTypes;
+using KKBookstore.Settings;
 using KKBookstore.ShoppingCarts;
 using KKBookstore.Staffs;
 using KKBookstore.StockTransactions;
@@ -69,7 +70,7 @@ public interface IApplicationDbContext
     public DbSet<StockTransferItem> StockTransferItems { get; set; }
     public DbSet<RatingReport> RatingReports { get; set; }
     public DbSet<ModerationAuditLog> ModerationAuditLogs { get; set; }
-
+    public DbSet<ApplicationSetting> Settings { get; set; }
     EntityEntry Entry(object entity);
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity)
         where TEntity : class;

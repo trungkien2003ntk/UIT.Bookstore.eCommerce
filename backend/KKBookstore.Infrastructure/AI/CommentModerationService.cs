@@ -1,6 +1,9 @@
 using KKBookstore.Common.Configuration;
 using KKBookstore.Common.Interfaces;
 using KKBookstore.Common.Models.RequestDtos;
+using KKBookstore.Products;
+using KKBookstore.Settings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
@@ -12,21 +15,29 @@ public class CommentModerationService : ICommentModerationService
     private readonly IGeminiService _geminiService;
     private readonly ILogger<CommentModerationService> _logger;
     private readonly ModerationConfiguration _config;
+    private readonly IApplicationDbContext _dbContext;
 
     public CommentModerationService(
         IGeminiService geminiService,
         ILogger<CommentModerationService> logger,
-        IOptions<ModerationConfiguration> config)
+        IOptions<ModerationConfiguration> config,
+        IApplicationDbContext dbContext)
     {
         _geminiService = geminiService;
         _logger = logger;
         _config = config.Value;
+        _dbContext = dbContext;
     }
 
     public async Task<CommentModerationResult> EvaluateCommentAsync(string comment, string language = "vi")
     {
         try
         {
+            var currentLevel = await _dbContext.Settings
+                .FirstOrDefaultAsync(x => x.Key == ApplicationSettingKeys.CurrentModerationLevel);
+
+            var currLevelEnum = Enum.Parse<ModerationLevel>(currentLevel!.Value);
+
             if (!_config.IsEnabled)
             {
                 _logger.LogInformation("AI moderation is disabled, returning safe result");
@@ -40,17 +51,18 @@ public class CommentModerationService : ICommentModerationService
                 };
             }
 
+            var currentLevelSettings = _config.GetCurrentLevelSettings(currentLevel.Value);
             var prompt = BuildModerationPrompt(comment, language);
 
             var geminiRequest = new GeminiRequest
             {
                 Prompt = prompt,
-                Temperature = _config.AiTemperature,
-                MaxOutputTokens = _config.MaxTokens
+                Temperature = currentLevelSettings.AiTemperature,
+                MaxOutputTokens = currentLevelSettings.MaxTokens
             };
 
-            _logger.LogInformation("Evaluating comment with AI moderation. Language: {Language}, Length: {Length}",
-                language, comment.Length);
+            _logger.LogInformation("Evaluating comment with AI moderation. Level: {Level}, Language: {Language}, Length: {Length}",
+                currLevelEnum, language, comment.Length);
 
             var aiResponse = await _geminiService.GenerateTextAsync(geminiRequest);
 
@@ -64,11 +76,11 @@ public class CommentModerationService : ICommentModerationService
                 };
             }
 
-            var result = ParseAiResponse(aiResponse.Text);
+            var result = ParseAiResponse(aiResponse.Text, currentLevelSettings.AutoHideThreshold);
             result.Success = true;
 
-            _logger.LogInformation("AI moderation completed. Score: {Score}, IsViolation: {IsViolation}, Category: {Category}",
-                result.BadnessScore, result.IsViolation, result.Category);
+            _logger.LogInformation("AI moderation completed. Level: {Level}, Score: {Score}, IsViolation: {IsViolation}, Category: {Category}",
+                currLevelEnum, result.BadnessScore, result.IsViolation, result.Category);
 
             return result;
         }
@@ -83,8 +95,74 @@ public class CommentModerationService : ICommentModerationService
         }
     }
 
+    public async Task<CommentModerationResult> EvaluateCommentWithContextAsync(string comment, int productId, string language = "vi")
+    {
+        try
+        {
+            var currentLevel = await _dbContext.Settings
+                .FirstOrDefaultAsync(x => x.Key == ApplicationSettingKeys.CurrentModerationLevel);
+
+            var currLevelEnum = Enum.Parse<ModerationLevel>(currentLevel!.Value);
+
+            if (!_config.IsEnabled)
+            {
+                _logger.LogInformation("AI moderation is disabled, returning safe result");
+                return new CommentModerationResult
+                {
+                    Success = true,
+                    BadnessScore = 1,
+                    IsViolation = false,
+                    Explanation = "AI moderation disabled",
+                    Category = "None"
+                };
+            }
+
+            // Get product context
+            var product = await _dbContext.Products
+                .Include(p => p.ProductType)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            var currentLevelSettings = _config.GetCurrentLevelSettings(currentLevel.Value);
+            var prompt = BuildContextAwareModerationPrompt(comment, product, language);
+
+            var geminiRequest = new GeminiRequest
+            {
+                Prompt = prompt,
+                Temperature = currentLevelSettings.AiTemperature,
+                MaxOutputTokens = currentLevelSettings.MaxTokens
+            };
+
+            _logger.LogInformation("Evaluating comment with context-aware AI moderation. ProductId: {ProductId}, Level: {Level}, Language: {Language}",
+                productId, currLevelEnum, language);
+
+            var aiResponse = await _geminiService.GenerateTextAsync(geminiRequest);
+
+            if (!aiResponse.Success)
+            {
+                _logger.LogError("Context-aware AI moderation failed: {Error}", aiResponse.ErrorMessage);
+                // Fallback to regular moderation
+                return await EvaluateCommentAsync(comment, language);
+            }
+
+            var result = ParseAiResponse(aiResponse.Text, currentLevelSettings.AutoHideThreshold);
+            result.Success = true;
+
+            _logger.LogInformation("Context-aware AI moderation completed. ProductId: {ProductId}, Score: {Score}, IsViolation: {IsViolation}",
+                productId, result.BadnessScore, result.IsViolation);
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during context-aware comment moderation");
+            // Fallback to regular moderation
+            return await EvaluateCommentAsync(comment, language);
+        }
+    }
+
     private string BuildModerationPrompt(string comment, string language)
     {
+        language ??= "vi";
         var policyText = language.ToLower() switch
         {
             "en" => GetEnglishContentPolicy(),
@@ -144,7 +222,79 @@ COMMENT TO EVALUATE:
 8. SHOULD provide constructive feedback about products";
     }
 
-    private CommentModerationResult ParseAiResponse(string response)
+    private string BuildContextAwareModerationPrompt(string comment, Product? product, string language)
+    {
+        language ??= "vi";
+        var policyText = language.ToLower() switch
+        {
+            "en" => GetEnglishContentPolicy(),
+            "vi" => GetVietnameseContentPolicy(),
+            _ => GetVietnameseContentPolicy()
+        };
+
+        var productContext = "";
+        if (product != null)
+        {
+            productContext = language.ToLower() == "vi"
+                ? $@"
+THÔNG TIN SẢN PHẨM:
+- Tên sản phẩm: {product.Name}
+- Danh mục: {product.ProductType?.DisplayName ?? "Không rõ"}
+- Mô tả: {(string.IsNullOrEmpty(product.Description) ? "Không có mô tả" : product.Description.Substring(0, Math.Min(200, product.Description.Length)))}
+
+Hãy xem xét thông tin sản phẩm khi đánh giá bình luận để hiểu ngữ cảnh phù hợp."
+                : $@"
+PRODUCT CONTEXT:
+- Product Name: {product.Name}
+- Category: {product.ProductType?.DisplayName ?? "Unknown"}
+- Description: {(string.IsNullOrEmpty(product.Description) ? "No description" : product.Description.Substring(0, Math.Min(200, product.Description.Length)))}
+
+Consider this product information when evaluating the comment to understand the appropriate context.";
+        }
+
+        return $@"You are a content moderation AI for an e-commerce book review system. 
+
+CONTENT POLICY:
+{policyText}
+{productContext}
+
+Please evaluate the following comment and provide a JSON response with this exact structure:
+{{
+    ""badnessScore"": <number 1-100>,
+    ""isViolation"": <true/false>,
+    ""category"": ""<violation category or 'None'>"",
+    ""explanation"": ""<one-sentence explanation in {(language == "vi" ? "Vietnamese" : "English")}>"",
+    ""sentimentScore"": <number -1.0 to 1.0>,
+    ""sentimentLabel"": ""<Positive/Negative/Neutral>""
+}}
+
+CONTEXT-BASED EVALUATION RULES:
+- WITH PRODUCT CONTEXT: Evaluate if criticism relates to actual product content. Valid criticism of controversial/questionable content should have LOWER badnessScore.
+- WITHOUT PRODUCT CONTEXT: Aggressive accusations without evidence should have HIGHER badnessScore.
+
+SCORING GUIDE:
+- 1-30: Acceptable content
+- 31-50: Borderline content (may need review)
+- 51-70: Problematic content (likely violation)
+- 71-100: Clear violation (auto-hide recommended)
+
+EVALUATION PRIORITY:
+1. Check for clear policy violations (profanity, threats, spam)
+2. If product context provided: Assess if criticism is relevant to actual product features
+3. If no context: Evaluate based on tone, evidence, and potential to mislead
+
+SENTIMENT GUIDE:
+- sentimentScore: -1.0 (very negative) to 1.0 (very positive)
+- sentimentLabel: Positive (>0.1), Negative (<-0.1), Neutral (-0.1 to 0.1)
+
+If you are uncertain, select the score and category that most closely matches the content. Do not include any extra commentary—respond ONLY with the JSON object, no other text.
+
+COMMENT TO EVALUATE:
+""{comment}""
+";
+    }
+
+    private CommentModerationResult ParseAiResponse(string response, int autoHideThreshold)
     {
         try
         {
@@ -168,15 +318,36 @@ COMMENT TO EVALUATE:
                 var category = parsed.GetProperty("category").GetString() ?? "Unknown";
                 var explanation = parsed.GetProperty("explanation").GetString() ?? "No explanation provided";
 
+                // Try to get sentiment data (optional for backward compatibility)
+                decimal? sentimentScore = null;
+                string? sentimentLabel = null;
+
+                if (parsed.TryGetProperty("sentimentScore", out var sentimentElement))
+                {
+                    sentimentScore = sentimentElement.GetDecimal();
+                }
+
+                if (parsed.TryGetProperty("sentimentLabel", out var labelElement))
+                {
+                    sentimentLabel = labelElement.GetString();
+                }
+
                 // Ensure score is within valid range
                 badnessScore = Math.Max(1, Math.Min(100, badnessScore));
+
+                if (sentimentScore.HasValue)
+                {
+                    sentimentScore = Math.Max(-1.0m, Math.Min(1.0m, sentimentScore.Value));
+                }
 
                 return new CommentModerationResult
                 {
                     BadnessScore = badnessScore,
-                    IsViolation = isViolation || badnessScore >= _config.AutoHideThreshold,
+                    IsViolation = isViolation || badnessScore >= autoHideThreshold,
                     Category = category,
-                    Explanation = explanation
+                    Explanation = explanation,
+                    SentimentScore = sentimentScore,
+                    SentimentLabel = sentimentLabel
                 };
             }
         }

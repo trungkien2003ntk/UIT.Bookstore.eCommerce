@@ -47,11 +47,11 @@ public class RegisterCommandHandler(
                 var customer = dbContext.Customers
                     .IgnoreQueryFilters()
                     .FirstOrDefault(c => c.Email == request.Email);
-                var regularCustomerType = dbContext.CustomerTypes
+                var defaultCustomerType = dbContext.CustomerTypes
                     .IgnoreQueryFilters()
-                    .FirstOrDefault(ct => ct.Tier == CustomerTier.Regular);
+                    .FirstOrDefault(ct => ct.Tier == CustomerTier.Default);
 
-                customer.CustomerTypeId = regularCustomerType.Id;
+                customer.CustomerTypeId = defaultCustomerType.Id;
 
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
